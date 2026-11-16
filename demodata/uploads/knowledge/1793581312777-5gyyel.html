@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第04期 | 固定成本与变动成本</title>
+<style>
+  :root{
+    --green:#2f6b5e;
+    --green-soft:#e7f0ec;
+    --gold:#c9a961;
+    --gold-soft:#f7f0e0;
+    --ink:#23332e;
+    --muted:#6b7a73;
+    --line:#e4ebe7;
+    --bg:#f5f7f6;
+    --card:#ffffff;
+    --red:#b4543b;
+    --red-soft:#f7ece8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:840px;margin:0 auto;padding:28px 20px 56px;}
+
+  /* 头部 */
+  header{
+    background:linear-gradient(135deg,var(--green) 0%,#27574c 100%);
+    border-radius:16px;
+    padding:30px 28px;
+    color:#fff;
+    box-shadow:0 10px 30px rgba(47,107,94,.18);
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";position:absolute;right:-40px;top:-40px;
+    width:180px;height:180px;border-radius:50%;
+    background:radial-gradient(circle,rgba(201,169,97,.35),transparent 70%);
+  }
+  .issue{
+    display:inline-block;background:var(--gold);color:#3a2f12;
+    font-size:13px;font-weight:700;letter-spacing:1px;
+    padding:5px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  header h1{margin:0 0 8px;font-size:30px;letter-spacing:1px;}
+  header .sub{margin:0;font-size:15px;opacity:.9;}
+  .meta{
+    margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;
+    font-size:13px;
+  }
+  .meta span{
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.22);
+    padding:5px 11px;border-radius:8px;
+  }
+
+  /* 卡片通用 */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:24px 24px;
+    margin-top:20px;
+    box-shadow:0 4px 16px rgba(35,51,46,.05);
+  }
+  .card h2{
+    margin:0 0 14px;font-size:19px;color:var(--green);
+    display:flex;align-items:center;gap:10px;
+  }
+  .card h2 .tag{
+    width:8px;height:20px;border-radius:4px;background:var(--gold);
+    display:inline-block;
+  }
+  .lead{color:var(--muted);font-size:14px;margin:0 0 14px;}
+
+  /* 场景 */
+  .scene{background:var(--green-soft);border:none;}
+  .scene .who{font-weight:700;color:var(--green);}
+  .scene p{margin:8px 0;}
+
+  /* 公式卡 */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .fcard{
+    border:1px solid var(--line);border-radius:12px;padding:16px 16px;
+    background:#fbfcfb;
+  }
+  .fcard .ft{font-size:13px;color:var(--green);font-weight:700;margin-bottom:6px;}
+  .fcard .ff{
+    font-size:15px;color:var(--ink);font-weight:600;
+    background:var(--green-soft);border-radius:8px;padding:10px 12px;
+    line-height:1.6;
+  }
+  .fcard .fn{font-size:13px;color:var(--muted);margin-top:8px;}
+
+  /* 算例 */
+  .calc-row{
+    display:grid;grid-template-columns:1fr auto;gap:12px 16px;
+    align-items:baseline;padding:10px 0;border-bottom:1px dashed var(--line);
+  }
+  .calc-row:last-child{border-bottom:none;}
+  .calc-row .k{color:var(--ink);font-size:15px;}
+  .calc-row .v{font-weight:700;color:var(--green);font-size:15px;text-align:right;white-space:nowrap;}
+  .calc-row.total{background:var(--gold-soft);border-radius:10px;padding:12px 14px;margin-top:6px;}
+  .calc-row.total .k{font-weight:700;}
+  .calc-row.total .v{color:#8a6d1f;}
+
+  .note{
+    margin-top:14px;background:var(--gold-soft);border-left:4px solid var(--gold);
+    border-radius:0 10px 10px 0;padding:12px 14px;font-size:14px;color:#5c4a1f;
+  }
+  .callout{
+    margin-top:14px;background:var(--green-soft);border-radius:10px;
+    padding:12px 14px;font-size:14px;color:var(--green);
+  }
+
+  /* 红线 */
+  .rule{
+    display:flex;gap:12px;padding:13px 0;border-bottom:1px solid var(--line);
+  }
+  .rule:last-child{border-bottom:none;}
+  .rule .n{
+    flex:0 0 28px;height:28px;border-radius:50%;background:var(--red);color:#fff;
+    font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;
+  }
+  .rule .t{font-size:14px;}
+  .rule .t b{color:var(--ink);}
+
+  /* 自测 */
+  .quiz{background:var(--green-soft);border:none;}
+  .quiz .q{margin:10px 0 6px;font-weight:600;color:var(--ink);}
+  .quiz .qnum{color:var(--green);font-weight:700;margin-right:6px;}
+  .answer{
+    margin-top:16px;border:1px dashed var(--green);border-radius:12px;
+    padding:16px;background:#fff;
+  }
+  .answer h3{margin:0 0 10px;font-size:15px;color:var(--green);}
+  .answer .a{font-size:14px;margin:6px 0;color:var(--ink);}
+  .answer .a b{color:var(--green);}
+
+  footer{
+    margin-top:24px;text-align:center;font-size:12px;color:var(--muted);
+    line-height:1.6;
+  }
+  footer .div{width:60px;height:3px;background:var(--gold);border-radius:2px;margin:0 auto 12px;}
+
+  @media (max-width:600px){
+    .wrap{padding:18px 14px 40px;}
+    header{padding:24px 18px;}
+    header h1{font-size:24px;}
+    .card{padding:18px 16px;margin-top:16px;}
+    .grid2{grid-template-columns:1fr;}
+    .calc-row{grid-template-columns:1fr;gap:2px;}
+    .calc-row .v{text-align:left;}
+    .meta span{font-size:12px;}
+  }
+
+  /* 自测题折叠：原生 details，不依赖 JS（沙箱预览里也能点开） */
+  details.qz{border:1px solid #e3e8e5;border-radius:12px;background:#fff;margin:0 0 12px;overflow:hidden;transition:border-color .18s,box-shadow .18s;}
+  details.qz:hover{border-color:#cfdcd6;box-shadow:0 3px 12px rgba(47,107,94,.07);}
+  details.qz[open]{border-color:#cfe0d9;box-shadow:0 3px 14px rgba(47,107,94,.08);}
+  details.qz summary{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;list-style:none;user-select:none;}
+  details.qz summary::-webkit-details-marker{display:none;}
+  details.qz summary::before,details.qz summary::after{content:"" !important;display:none !important;}
+  details.qz summary::marker{content:"";}
+  details.qz .qt{flex:1 1 auto;font-weight:700;font-size:15px;line-height:1.6;color:#1f2a26;}
+  details.qz .peek{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:#8a6f2e;background:#f7f1e4;border-radius:999px;padding:3px 11px 3px 9px;margin-top:1px;transition:background .18s,color .18s;}
+  details.qz:hover .peek{background:#f2e8d2;}
+  details.qz[open] .peek{background:#e7f0ed;color:#2a5b50;}
+  details.qz .peek .arw{font-size:10px;line-height:1;transition:transform .2s;}
+  details.qz[open] .peek .arw{transform:rotate(180deg);}
+  details.qz .peek .t-off{display:none;}
+  details.qz[open] .peek .t-on{display:none;}
+  details.qz[open] .peek .t-off{display:inline;}
+  details.qz .qa{border-top:1px dashed #e3e8e5;padding:12px 16px 14px;background:#fbfcfb;font-size:14.5px;line-height:1.75;color:#1f2a26;animation:qzfade .2s ease-out;}
+  details.qz .qa b{color:#2f6b5e;}
+  details.qz .qa span:not([class]){color:#5f6b66;font-size:13.5px;}
+  details.qz .qa .step{display:block;margin:4px 0;}
+  @keyframes qzfade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .qz-lead{font-size:13.5px;color:#5f6b66;margin:-6px 0 14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="issue">第 04 期</span>
+    <h1>固定成本与变动成本</h1>
+    <p class="sub">把门店的钱分成"无论卖多少都要付"和"卖一份才付一份"两类，淡季不慌、旺季敢冲</p>
+    <div class="meta">
+      <span>日期：2026-11-02</span>
+      <span>面向：多门店经营者（财务小白友好）</span>
+      <span>关键词：固定成本 · 变动成本 · 贡献毛利 · 保本销量 · 成本归类</span>
+    </div>
+  </header>
+
+  <!-- 场景 -->
+  <section class="card scene">
+    <h2><span class="tag"></span>一个真实的门店场景</h2>
+    <p><span class="who">阿玲</span>在城西开了一家面馆，同时托管着两家分店。她发现一个奇怪的现象：</p>
+    <p>夏天旅游季，三家店天天排队的日子，月底一算反而没多赚多少；冬天生意清淡，每家店都在亏，但房租、店长工资、设备折旧一样不少地往外掏。</p>
+    <p>她忍不住问："为什么生意好时利润涨得没想象多，生意差时亏得这么狠？我到底该先砍哪笔钱？"</p>
+    <p>答案就在今天的知识点里——先把门店的成本按"会不会随生意好坏变化"拆成两类，很多经营决策就清晰了。这也为后面讲<span class="who">门店盈亏平衡点</span>打好了地基。</p>
+  </section>
+
+  <!-- 定义与公式 -->
+  <section class="card">
+    <h2><span class="tag"></span>定义与公式卡片</h2>
+    <p class="lead">核心思路：判断一笔钱"是否随销量/营业额变化"。会变的叫变动成本，不会变的叫固定成本。</p>
+    <div class="grid2">
+      <div class="fcard">
+        <div class="ft">固定成本（FC）</div>
+        <div class="ff">在一定业务量范围内，<br>总额不随销量变化的成本</div>
+        <div class="fn">例：房租、店长/核心员工底薪、设备折旧、长期软件订阅、营业执照年费、门店招牌摊销</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">变动成本（VC）</div>
+        <div class="ff">总额随销量成正比例<br>变化的成本</div>
+        <div class="fn">例：食材原料、包装耗材、按小时计的兼职、平台外卖抽佣（按单抽成）、燃气随量的部分</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">总成本</div>
+        <div class="ff">总成本 = 固定成本 + 变动成本 × 销量</div>
+        <div class="fn">即：总成本 = FC + VC单位 × Q</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">单位变动成本</div>
+        <div class="ff">单位变动成本 = 每单位产品<br>消耗的变动成本</div>
+        <div class="fn">如一碗面的食材+包装+燃料=9元，即每碗 VC = 9元</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">单位贡献毛利</div>
+        <div class="ff">单位贡献毛利 = 单价 - 单位变动成本</div>
+        <div class="fn">它代表"每多卖一单位，先用来覆盖固定成本、剩下的才是利润"的钱</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">变动成本率</div>
+        <div class="ff">变动成本率 = 变动成本 ÷ 收入 × 100%</div>
+        <div class="fn">与毛利率互为补数：变动成本率 + 贡献毛利率 = 100%</div>
+      </div>
+    </div>
+    <div class="callout">
+      串起来的一句话：<b>利润 =（单价 - 单位变动成本）× 销量 - 固定成本</b>。左边"卖一份赚多少"由变动成本决定，右边"雷打不动要付多少"由固定成本决定。
+    </div>
+  </section>
+
+  <!-- 算例 -->
+  <section class="card">
+    <h2><span class="tag"></span>可直接套用的计算示例</h2>
+    <p class="lead">以阿玲的城西面馆（单店）为例，数字全部算给你看，跟着算一遍就懂。</p>
+
+    <div class="calc-row"><div class="k">每碗面售价（单价 P）</div><div class="v">25 元</div></div>
+    <div class="calc-row"><div class="k">每碗变动成本（面、浇头、汤包、一次性碗筷、燃气）VC单位</div><div class="v">9 元</div></div>
+    <div class="calc-row"><div class="k">每月固定成本：房租 8000 + 店长底薪 6000 + 厨师底薪 9000 + 设备折旧 1500 + 杂费固定 1500</div><div class="v">26000 元</div></div>
+    <div class="calc-row"><div class="k">当月销量（每天约 100 碗）</div><div class="v">3000 碗</div></div>
+
+    <div style="height:6px"></div>
+
+    <div class="calc-row"><div class="k">① 收入 = 25 × 3000</div><div class="v">75000 元</div></div>
+    <div class="calc-row"><div class="k">② 变动成本 = 9 × 3000</div><div class="v">27000 元</div></div>
+    <div class="calc-row"><div class="k">③ 固定成本</div><div class="v">26000 元</div></div>
+    <div class="calc-row"><div class="k">④ 总成本 = 27000 + 26000</div><div class="v">53000 元</div></div>
+    <div class="calc-row"><div class="k">⑤ 利润 = 75000 - 53000</div><div class="v">22000 元</div></div>
+
+    <div class="note">
+      换"贡献毛利法"验算：单位贡献毛利 = 25 - 9 = <b>16 元/碗</b>；总贡献毛利 = 16 × 3000 = <b>48000 元</b>；
+      利润 = 总贡献毛利 - 固定成本 = 48000 - 26000 = <b>22000 元</b>。两种方法结果一致。
+    </div>
+
+    <div class="callout">
+      顺带算一个老板最该记住的数——<b>月保本销量</b>：固定成本 ÷ 单位贡献毛利 = 26000 ÷ 16 = <b>1625 碗</b>。
+      也就是说，这家店每月卖不到 1625 碗（≈每天 55 碗）就在亏钱。这个数字，就是淡季的"生死线"。
+    </div>
+  </section>
+
+  <!-- 判断标准/红线 -->
+  <section class="card">
+    <h2><span class="tag"></span>给经营者的 5 条判断标准与红线</h2>
+
+    <div class="rule"><div class="n">1</div><div class="t"><b>先归类，再谈省钱。</b>每月做一张"成本归类表"，把每笔钱标成固定或变动。常见坑：把店长"绩效奖金"误挂成固定成本——奖金随业绩走，本质是变动。</div></div>
+    <div class="rule"><div class="n">2</div><div class="t"><b>固定成本占比红线。</b>固定成本 ÷ 收入 不宜长期高于 35%。本例 26000 ÷ 75000 = 34.7%，已贴红线，旺季尚可、淡季危险，应考虑降租或缩面积。</div></div>
+    <div class="rule"><div class="n">3</div><div class="t"><b>旺季冲量、淡季压固定。</b>固定成本已被摊掉后，多卖的每一碗几乎全是"纯赚"（贡献毛利）。所以旺季节奏是冲销量；淡季重点是压固定成本 + 保现金流，而不是盲目促销。</div></div>
+    <div class="rule"><div class="n">4</div><div class="t"><b>砍固定要狠，砍变动要稳。</b>淡季可休业、减店长薪、退租降面积（减固定）；但别砍到影响品质的变动成本（食材分量/新鲜度），那会伤复购、恶性循环。</div></div>
+    <div class="rule"><div class="n">5</div><div class="t"><b>多店看"固定能否摊薄"。</b>开第 N 家店时，总固定成本的上升幅度应小于门店数增幅，否则规模不经济——表面多了一家店，实际把利润摊薄了。</div></div>
+  </section>
+
+  <!-- 自测题 -->
+  <section class="card quiz">
+    <h2><span class="tag"></span>今日自测题</h2>
+    <p class="lead">动手算一算，答案在下方。一家烘焙店的数据：固定成本 40000 元/月，每个面包售价 20 元，单位变动成本 8 元。</p>
+    <div class="q"><span class="qnum">①</span>单位贡献毛利是多少？</div>
+    <div class="q"><span class="qnum">②</span>月保本销量是多少个？</div>
+    <div class="q"><span class="qnum">③</span>若月销 5000 个，月利润是多少？</div>
+    <div class="q"><span class="qnum">④</span>若店长工资从 10000 涨到 13000（固定成本变为 43000），月销 5000 个时利润变成多少？这多花的 3000 元，需多卖多少个面包才补得回来？</div>
+
+    <details class="qz">
+      <summary>
+        <span class="qt">四题算完了？点这里对答案</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="qa">
+        <div class="a"><b>①</b> 单位贡献毛利 = 20 - 8 = <b>12 元/个</b>。</div>
+        <div class="a"><b>②</b> 月保本销量 = 固定成本 ÷ 单位贡献毛利 = 40000 ÷ 12 ≈ <b>3334 个</b>（卖不到这个数就亏）。</div>
+        <div class="a"><b>③</b> 利润 =（20 - 8）× 5000 - 40000 = 60000 - 40000 = <b>20000 元</b>。</div>
+        <div class="a"><b>④</b> 固定成本变 43000 后，利润 = 60000 - 43000 = <b>17000 元</b>，比之前少赚 3000 元；需多卖 3000 ÷ 12 = <b>250 个</b>才补回。结论：固定成本每加一点，都得靠"多卖"来还——这就是固定成本的刚性。</div>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <div class="div"></div>
+    财务知识日报 · 第04期 · 固定成本与变动成本<br>
+    本篇呼应第01期《毛利与毛利率》（此处的"变动成本"≈彼处的"食材成本"），并为后续《门店盈亏平衡点》《保本点与目标利润》铺垫。<br>
+    内容仅供门店经营参考，具体税务与用工以当地法规及专业人士意见为准。
+  </footer>
+
+</div>
+</body>
+</html>

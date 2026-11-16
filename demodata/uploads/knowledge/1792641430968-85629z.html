@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第20期 · 风险与回报</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 20 期</span>
+  <h1>今天的概念：<span class="tag">风险与回报</span>（Risk &amp; Return）</h1>
+  <div class="date">2026年10月15日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 表姐和表弟的"下一个十年"：为什么敢买会跌的东西，反而赚得更多</h2>
+    <p>小敏和小豪是表姐弟，30 岁那年各自攒下 <strong>50 万</strong>。两人在家庭群里吵了一架，争论这钱该怎么放。</p>
+    <p>小敏（表姐）说："我要保本。买大额存单，年化 3%，雷打不动，一年稳稳多 1 万 5，睡得着。"——她把钱锁进了银行。</p>
+    <p>小豪（表弟）说："我买沪深 300 指数基金。平均一年能涨 8% 左右，但它会跌，赶上熊市一年能跌 30%。我认了。"——他把 50 万投进了股市指数。</p>
+    <div class="board">
+      <div class="row head"><span class="k">场景</span><span class="v">小敏 · 存单 3%</span><span class="v">小豪 · 指数（预期 8%，波动大）</span></div>
+      <div class="row"><span class="k">第 1 年遇股灾，指数 −20%</span><span class="v">51.5 万（+3%）</span><span class="v">40 万（−20%）← 小敏完胜</span></div>
+      <div class="row"><span class="k">第 2–3 年回暖 +25%、+15%</span><span class="v">54.6 万</span><span class="v">57.5 万 ← 小豪反超</span></div>
+      <div class="row"><span class="k">第 10 年（平滑复利）</span><span class="v">≈ 67.2 万</span><span class="v">≈ 108 万</span></div>
+      <div class="row"><span class="k">关键差别</span><span class="v">少赚的，是"省下的惊吓"</span><span class="v">多赚的 40 万，是扛波动的奖金</span></div>
+    </div>
+    <p>十年下来，小豪比小敏多赚了大约 <strong>40 万</strong>。这 40 万不是运气，是他"扛住了"第 1 年账面亏 10 万的夜晚、忍住没割肉的奖励。市场知道——持有股票很煎熬，所以提前"预付"给他一笔<strong>风险溢价</strong>。</p>
+    <p>再换个角度想：设想两个盒子都要花 <strong>50 块</strong>买。盒子 A 稳稳给你 <strong>51 块</strong>（保证赚 1 块）；盒子 B 摇一摇，50% 给你 100 块、50% 给你 0 块（平均 50 块，不赚不赔，还可能归零）。你愿意为 B 付和 A 一样的钱吗？当然不——除非 B 的最高奖金够大（比如 110 块），让你<strong>平均能赚更多</strong>。B 为了吸引你冒险，必须承诺"平均更高的回报"，这多出来的部分，就是<strong>风险溢价</strong>。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>风险与回报</strong>，是金融里最硬的一条规律：<strong>想拿更高的回报，就得承担更高的风险</strong>。天上不会掉"高回报又零风险"的馅饼——真有这种事，机构的程序早抢光了，轮不到你。</p>
+    <div class="formula">预期回报 = 无风险利率 + 风险溢价</div>
+    <p>公式里的 <strong>"风险溢价"</strong>，就是市场因为你肯担风险、而额外付给你的那笔钱。银行存款/国债接近无风险，溢价接近 0；股票、创业、加密货币风险大，溢价才高——但溢价高，不代表一定赚，只是<strong>"平均下来"更可能赚</strong>。你拿到的每一点超额回报，背后都标着价格：那就是你要扛的波动和亏损可能。</p>
+    <p>🌰 换到你的钱包：有人推销"年化 20%、保本保息"的项目，先别心动——它违背了风险与回报的正相关。真要 20% 的回报，就得做好可能亏掉本金的心理准备。凡是"高收益+无风险"一起出现的，多半是骗局。反过来，如果你只敢放存款，就别眼红别人炒股赚的钱——那是人家用惊吓换来的。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>高回报是对风险的"租金"</strong>：你每多赚 1 个点，都是市场在为它让你承受的不确定性买单。先看"最坏能亏多少"，再看"最好能赚多少"，别只盯着收益。表弟多赚的 40 万，是扛住大跌没割肉的奖金。</li>
+      <li><strong>没有"高收益零风险"</strong>：真有这事早被机构抢光。凡是"保本+年化 15%+"一起出现的，先默认是骗局。风险溢价必然对应风险，超额回报不是白给的。</li>
+      <li><strong>风险要适配自己的承受力</strong>：能接受账户一年跌 30% 还睡得着、且三五年内不用的钱，才适合博高收益；随时要用的钱，老老实实放低风险的"盒子"。按"亏得起多少"决定冒多大险。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：分散投资 —— 别把鸡蛋放在同一个篮子里，为什么"分着放"反而更安全，能让你在少赚一点的前提下，躲开"一把清空"的噩梦。</div>
+</div>
+</body>
+</html>

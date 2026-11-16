@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第6期 · 大数定律与赌徒谬误</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>每日概率学 · 第 6 期</h1>
+<ul>
+<li><strong>日期</strong>：2026-09-26（周六）</li>
+<li><strong>今日概念</strong>：大数定律与赌徒谬误（Law of Large Numbers &amp; Gambler's Fallacy）——"长期频率会收敛到概率，但它从不'补偿'你这一把"</li>
+<li><strong>一句话心智模型</strong>：<strong>大数定律</strong>说的是"试验做得足够多，频率会逼近真实概率"；<strong>赌徒谬误</strong>是把这句话错误理解为"前面偏了，后面就该反过来补"——而独立事件的概率，从来不欠你一个结果。</li>
+</ul>
+<hr>
+<h2>一、故事引入：蒙特卡洛那一夜，连开 26 次黑</h2>
+<p>1913 年 8 月 18 日，欧洲蒙特卡洛赌场的轮盘桌前，发生了概率史上最著名的"集体翻车"。</p>
+<p>轮盘上红与黑各约占一半。可那一晚，球落进黑色格子的次数，像中了邪：</p>
+<blockquote>第 1 次黑，第 2 次黑，第 3 次黑……人们开始窃窃私语。</blockquote>
+<blockquote>第 10 次黑，第 15 次黑，人群开始骚动："红色该来了吧？"</blockquote>
+<blockquote>到了第 20 次黑，赌徒们彻底失去理智——他们疯狂把筹码压在<strong>红色</strong>上，坚信"黑色已经出了这么多次，红色被欠了整整一大笔，马上就要还回来！"</blockquote>
+<p>结果呢？</p>
+<blockquote>黑色一路开到第 <strong>26</strong> 次。然后才终于出现一次红。</blockquote>
+<p>那一夜，无数人因为"等红色还债"而输光了口袋。</p>
+<p>大刘听完这个故事，皱眉："可红色和黑色不是本来就各一半吗？连开 26 次黑，这不公平啊！"</p>
+<p>阿明摇摇头：</p>
+<blockquote>"公平不在'当下这一把'里，而在'无穷多把'里。轮盘的每一次转动都<strong>独立</strong>——前一次是黑，对下一次是红还是黑，<strong>一个影响都没有</strong>。连开 26 次黑，听起来吓人，但它是'小概率事件'不是'不可能事件'，恰好被那一晚撞上了。赌徒们犯的错误，就是以为概率会'记账'、会'还债'——这账，概率根本不记。"</blockquote>
+<p>大刘若有所思："所以'连开这么多次黑，下一把该红了'，是错的？"</p>
+<p>"对。下一把红的概率永远是 ~1/2。把过去的结果硬塞进未来的计算里，就是<strong>赌徒谬误</strong>。"阿明在纸上画了条缓缓贴近虚线的曲线，"而真正管用的，是那条曲线——<strong>大数定律</strong>。"</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 大数定律（弱大数定律，直观版）</h3>
+<p>设一个事件发生的概率恒为 <code>p</code>，重复做 <code>n</code> 次独立试验，记它发生的频率（发生次数 ÷ n）为 <code>fₙ</code>。则：</p>
+<p>```</p>
+<p>当 n → ∞ 时，fₙ 会"收敛"到 p</p>
+<p>```</p>
+<p>即：<strong>试验做得越多，频率离真实概率越近。</strong> 抛硬币 10 次可能 7 次正面（频率 0.7），抛 1000 次可能 510 次（0.51），抛 10 万次大概率是 0.500 上下。</p>
+<p>⚠️ 关键误区：<strong>大数定律是"整体平均"的收敛，不是"逐次补偿"。</strong> 抛 10 次得了 7 次正面，并不等于"后面要多出反面来拉平"——第 11 次正面的概率仍然是 1/2。长期看比例会回归，是因为<strong>后续海量正常结果稀释了前面的偏差</strong>，而不是因为前面被"欠"了什么。</p>
+<h3>2. 赌徒谬误（Gambler's Fallacy）</h3>
+<p>把"长期会回归"误当成"下一把会反转"。典型句式：</p>
+<ul>
+<li>"连出 5 次正面，第 6 次一定是反面。"</li>
+<li>"这老虎机好久没中了，下一把该中大奖了。"</li>
+<li>"股票连跌一周，明天该反弹了。"</li>
+</ul>
+<p>这些全错——<strong>前提必须是事件相互独立</strong>。若每次结果真独立（公平硬币、公平轮盘、独立抽签），历史对当下毫无预测力。</p>
+<h3>3. 它的双胞胎：热手谬误（Hot-hand Fallacy）</h3>
+<p>赌徒谬误是"觉得要反转"，热手谬误正好相反——"觉得会延续"：</p>
+<ul>
+<li>"这球员连中 3 球，手感火热，第 4 球更稳！"</li>
+</ul>
+<p>两者都是把<strong>随机波动</strong>误读成<strong>趋势</strong>。真实世界里有些事有"惯性"（运动员状态确有轻微连续性），但纯独立随机序列里，没有"热手"，也没有"该还的债"。</p>
+<h3>4. 回归均值（Regression to the Mean）—— 别和赌徒谬误搞混</h3>
+<p>回归均值是<strong>真实存在的</strong>现象：极端表现之后，往往会自然回落到平均水平（比如考试超常发挥后下次略降、伤病后恢复）。</p>
+<p>区别：回归均值针对"同一个对象受多种随机因素叠影响的重复测量"；赌徒谬误针对"彼此独立的单次随机事件"。一个真、一个假——别把"该回落"用在了"独立赌局"上。</p>
+<p>💡 一句话心法：<strong>大数定律救得了"长期统计"，救不了"你这一把"。频率收敛靠的是海量新样本稀释偏差，而不是概率还债。把'过去'当'未来的债主'，就是赌徒谬误。</strong></p>
+<hr>
+<h2>三、代表性题目 / 故事（请你来总结 ✍️）</h2>
+<p>请试着回答：① 每次试验是否独立？② "接下来某一次"的概率到底是多少？③ 故事里的人犯了赌徒谬误、热手谬误，还是其实遇上了真实的回归均值？</p>
+<h3>题目 1 · 连抛硬币</h3>
+<p>公平硬币已连续抛出 <strong>8 次正面</strong>。现在请你押第 9 次。</p>
+<blockquote>第 9 次出现正面的概率是多少？如果有人劝你"都 8 次正面了，第 9 次肯定该出反面，押反稳赚"，他的逻辑错在哪？</blockquote>
+<h3>题目 2 · 篮球"热手"</h3>
+<p>球员阿强前两节连中 3 记三分。解说员激动大喊："他手感烫得吓人，下一球必进！" 于是教练把下一攻的最后出手全交给他。</p>
+<blockquote>假设阿强真实命中率本就是 40%、且每次出手独立（不受上一球影响）。那"连中 3 球后第 4 球"的命中率，是变高了、变低了、还是仍是 40%？解说员喊的是热手谬误还是真有道理？若实际数据发现连中后命中率反而略降，这又指向什么？</blockquote>
+<h3>题目 3 · 大小医院的"男孩日"（经典 Kahneman 题）</h3>
+<p>某地区每天出生的婴儿里，男孩比例长期约 50%。有<strong>大医院</strong>（每天约 45 个婴儿）和<strong>小医院</strong>（每天约 15 个婴儿）各一家。</p>
+<blockquote>哪一家更可能出现"某一天男孩比例超过 60%（或低于 40%）"这种<strong>极端偏离</strong>？为什么？用大数定律解释。反过来，若你想用"出生性别"验证"长期确实是 50%"，该信哪家医院多年的统计？</blockquote>
+<hr>
+<h2>四、提示（如需逐题完整推导，回复"揭晓答案"）</h2>
+<ul>
+<li><strong>题目 1</strong>：每次抛硬币独立，概率恒为 1/2——第 9 次正面概率仍是 <strong>1/2</strong>，不是"该反面"。错在混淆了"序列整体"和"单次"：8 次正面让"整段 9 次"的频率预期被拉高，但<strong>第 9 次这一个事件</strong>不带任何历史记忆。赌徒谬误的核心就是给独立事件强加"还债/补偿"叙事。</li>
+<li>延伸：若问"8 次正面后再来 1 次正面"的概率（即连续 9 次正面），那是 (1/2)⁹，极小——但这是"从一开始"算的事前概率；一旦 8 次已经发生，"既成事实"不再计入概率。</li>
+</ul>
+<ul>
+<li><strong>题目 2</strong>：在"独立、命中率恒定 40%"的假设下，第 4 球命中率<strong>仍是 40%</strong>。解说员喊的是典型的<strong>热手谬误</strong>——把随机连中当成了"状态会延续"的趋势。若真实数据显示"连中后反而略降"，那说明并无热手效应，连中只是小样本运气，下球回归本就较低的真实命中率（接近回归均值，而非"延续热手"）。</li>
+<li>心法：判断"热手"真假，要看是否超出独立的随机波动范围，不能凭直觉。</li>
+</ul>
+<ul>
+<li><strong>题目 3</strong>：<strong>小医院</strong>更可能出现极端偏离。样本越小，随机波动越大；大医院每天 45 个，性别比例被"大数"稳住，更难偏离 50%。这正是大数定律的<strong>直接推论</strong>：样本量 n 越大，频率围绕 p 的抖动越小。验证"长期 50%"当然要信<strong>大医院多年</strong>的汇总数据——小医院的单日极端值只是噪声。</li>
+<li>心法：新闻里"某小样本异常"常被当新闻，大样本的稳定规律反而平淡——别忘了谁更可信。</li>
+</ul>
+<hr>
+<blockquote>📌 明日预告：第 7 期 <strong>生日悖论</strong>——为什么一个房间里只要 23 人，就有一半以上的概率"两人生日相同"？反直觉的巧合背后，是组合爆炸而非玄学。</blockquote></div></body></html>

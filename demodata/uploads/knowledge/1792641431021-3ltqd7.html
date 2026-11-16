@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第13期 · 泊松过程</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>每日概率学 · 第 13 期</h1>
+<ul>
+<li><strong>日期</strong>：2026-10-13（周二）</li>
+<li><strong>今日概念</strong>：泊松过程（Poisson Process）——前几期我们认识了"一个随机量长什么样"（泊松分布，第 9 期）、"有惯性的系统怎么演变"（马尔可夫链，第 12 期）。今天换个视角：<strong>随机事件是怎么"在时间里一个一个冒出来"的？</strong> 呼叫中心多久来一通电话、奶茶店多久来一位客人、放射性原子多久衰变一个、网站多久来一个访客——这些"零星、随机、彼此没关联"的事件，背后全被同一个模型管住：<strong>泊松过程</strong>。它最妙的地方在于：只要知道"平均发生率"这一个数 $\lambda$，就能同时推出"一段时间里来几个"（泊松分布）、"两次之间隔多久"（指数分布）、以及"已知总数后时刻怎么散开"三件大事，且严丝合缝地和第 9 期接上。</li>
+<li><strong>一句话心智模型</strong>：<strong>泊松过程 = 一个"在均匀时间里、随机独立地冒出稀有事件"的计数流。它只需一个参数 $\lambda$（单位时间平均发生次数），就同时决定：窗口内事件数 $N(t)\sim\text{Poisson}(\lambda t)$、相邻间隔 $T_i\sim\text{Exp}(\lambda)$（无记忆）、合并/拆分后仍是泊松流（发生率相加/按比例分）。把"随机事件在时间轴上落点"压缩成一条能用 $\lambda$ 算清的流。</strong></li>
+</ul>
+<hr>
+<h2>一、故事引入：阿明的奶茶店"没规律"之谜</h2>
+<p>阿明开了家奶茶店，闲着没事记了一周"客人到达时刻"。结果越看越迷糊："有时一口气来三四个，有时十几分钟一个人没有——这到底有没有规律？我能不能提前知道'接下来一小时大概来多少人'？"</p>
+<p>大刘喝了口茶："有规律的，只是规律不在'来几个人'，而在'平均多频繁来一个'。你只要算出<strong>平均每分钟来几位客人</strong>（叫它 $\lambda$），剩下的全被它管住了。这种'零星事件在时间轴上随机冒出来'的过程，统计里叫<strong>泊松过程</strong>。"</p>
+<p>"零星？"阿明指了指高峰期排队的队伍，"这叫零星？"</p>
+<p>"别急，'稀有'是相对于'一瞬间'说的——在<strong>极短的一刹那</strong>，几乎只可能来 0 个或 1 个客人，不可能'同一毫秒同时冲进来五个'。但<strong>拉长时间</strong>看，它们就随机散开了。三个关键点你记住：</p>
+<ol>
+<li><strong>独立</strong>：'9 点到 10 点来了多少'和'下午 2 点到 3 点来了多少'互不相干——过去不影响将来；</li>
+<li><strong>平稳</strong>：'任意 10 分钟里来客的概率'都一样，不管你挑上午还是半夜；</li>
+<li><strong>稀有</strong>：'一眨眼那么短的时间里'几乎不会扎堆。</li>
+</ol>
+<p>就这三条，能推出一整套东西。比如——"</p>
+<p>大刘在纸上写："<strong>一小时里来几位客人</strong>，服从你第 9 期学过的泊松分布，平均就是 $\lambda\times 60$ 位；<strong>两位客人之间隔多久</strong>，服从指数分布，平均 $1/\lambda$ 分钟；而且'你已经等了 10 分钟还没来，再等 5 分钟的概率'跟'刚开门就等 5 分钟'一模一样——这就是指数分布的无记忆性。反直觉吧？所以'都等这么久了车该来了'纯属错觉。"</p>
+<p>阿明愣了："也就是说，我只用死磕一个数 $\lambda$，就既能答'来几个'又能答'隔多久'？"</p>
+<p>"对。今天我们就把这套'一个 $\lambda$ 管天下'的机制拆开。"</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 先定义"计数过程"</h3>
+<p>设 $N(t)$ = 到时刻 $t$ 为止发生的事件<strong>总数</strong>（$t\ge 0$，且 $N(0)=0$）。比如 $N(30)$ 就是"开店前 30 分钟一共来了几位客人"。这种"随时间累加的计数"叫<strong>计数过程</strong>。泊松过程就是满足下面三条的计数过程。</p>
+<h3>2. 三条公理（大白话版）</h3>
+<ol>
+<li><strong>独立增量</strong>：任意两段<strong>不重叠</strong>的时间，其中的事件数相互独立。过去发生了什么，不影响未来。</li>
+<li><strong>平稳增量</strong>：事件发生只跟"<strong>区间长度</strong>"有关，跟"从几点开始"无关。10 分钟窗口里的来客概率，上午、半夜都一样。</li>
+<li><strong>普通性（稀有性）</strong>：在极短的一瞬 $\Delta t$ 里，几乎只发生 0 或 1 个事件；发生 2 个及以上的概率小到可以忽略（比 $\Delta t$ 还小得多）。即事件不会在瞬时"扎堆爆发"。</li>
+</ol>
+<blockquote>💡 心法：这三条不是让你背的，而是<strong>推导的源头</strong>——下面所有性质都由 ①+②+③ 推出，不用另记。</blockquote>
+<h3>3. 推论一：固定窗口内，事件数 = 泊松分布（接上第 9 期）</h3>
+<p>在长度为 $t$ 的窗口里发生 $k$ 个事件的概率：</p>
+<p>$$P\bigl(N(t)=k\bigr) = \frac{e^{-\lambda t}\,(\lambda t)^k}{k!},\qquad k=0,1,2,\dots$$</p>
+<p>这正是第 9 期学的<strong>泊松分布</strong>！其中 $\lambda t$ 是这窗口内的"平均事件数"。也就是说：</p>
+<blockquote><strong>泊松过程 = 泊松分布的"时间/动态版"。</strong> 泊松分布是"定格照片"，泊松过程是"连续录像"。</blockquote>
+<p>顺带：均值与方差都等于 $\lambda t$（均值 = 方差，这正是泊松分布的特征指纹）。</p>
+<h3>4. 推论二：相邻间隔 = 指数分布（无记忆性）</h3>
+<p>两次相邻事件之间的"等待时间" $T_1, T_2, \dots$ 彼此独立，且全都服从<strong>同一个指数分布</strong>：</p>
+<p>$$T_i \sim \text{Exp}(\lambda),\qquad P(T_i &gt; s)=e^{-\lambda s},\qquad E[T_i]=\frac{1}{\lambda}$$</p>
+<p>这里藏着最反直觉、也最实用的一点：<strong>已经等了 $t$ 分钟还没来，再等 $s$ 分钟的概率，跟刚到就等 $s$ 分钟完全一样（都是 $e^{-\lambda s}$）</strong>。这就是指数分布的<strong>无记忆性</strong>——时间"不记仇"，所以"都等这么久了，该来了"是错觉。</p>
+<p>（小连接：第 9 期我们说泊松分布常用来近似"稀有事件"，而它的"孪生兄弟"指数分布正好描述"这些事件之间的等待时间"，两者同一来源。）</p>
+<h3>5. 推论三：给定总数，到达时刻"均匀散开"</h3>
+<p>如果已知在 $[0,t]$ 这段时间里<strong>一共发生了 $n$ 个</strong>事件，那么这 $n$ 个事件发生的具体时刻，<strong>就好像把 $n$ 个点在 $[0,t]$ 上"随机均匀地撒"一样</strong>（严格说：它们的分布 = $[0,t]$ 上均匀分布的 $n$ 个次序统计量）。</p>
+<p>应用：已知某路口 1 小时发生 5 起事故，则这 5 起的时间点"应当像 5 个点均匀铺在 1 小时里"——这常被用来做"均匀性检验"（要是 5 起全挤在最后 5 分钟，就该怀疑不是单纯的泊松过程了）。</p>
+<h3>6. 合并与拆分（叠加原理）</h3>
+<ul>
+<li><strong>合并</strong>：两条独立的泊松过程（发生率 $\lambda_1$、$\lambda_2$）合在一起，仍是泊松过程，发生率变为 $\lambda_1+\lambda_2$。</li>
+<li><strong>拆分</strong>：一个发生率 $\lambda$ 的泊松流，每个事件以概率 $p$ 归为 A 类、以 $1-p$ 归为 B 类，则 A、B 各自仍是泊松过程，发生率分别为 $\lambda p$ 与 $\lambda(1-p)$。</li>
+</ul>
+<h3>7. 它撑起了哪些大事（开个眼界）</h3>
+<ul>
+<li><strong>排队论</strong>（呼叫中心、银行窗口、M/M/1 队列）、<strong>网络流量</strong>建模；</li>
+<li><strong>可靠性/生存分析</strong>：设备失效、客户流失的"等待时间"；</li>
+<li><strong>保险理赔、交通事故、放射性衰变、地震间隔</strong>等"稀有事件计时"；</li>
+<li>它是"随机点过程"的基石，也是蒙特卡洛模拟与后续随机游走的底层语言。</li>
+</ul>
+<hr>
+<h2>三、代表性题目 / 故事（请你来总结 ✍️）</h2>
+<p>请试着回答：① 窗口内事件数（套泊松分布公式）？② 间隔与等待（套指数分布 + 验证无记忆）？③ 合并/拆分后发生率怎么变？④ 给定总数时时刻为何"均匀散开"？</p>
+<h3>题目 1 · 奶茶店来客：接上泊松分布</h3>
+<p>阿明的店平均每 <strong>2 分钟来 1 位客人</strong>，即发生率 $\lambda = 0.5$ 位/分钟。</p>
+<blockquote>① 算一算"接下来 10 分钟内，<strong>恰好来 8 位</strong>客人"的概率 $P(N(10)=8)$。（提示：先算 $\lambda t$，再代入 $\frac{e^{-\lambda t}(\lambda t)^8}{8!}$）</blockquote>
+<blockquote>② "10 分钟内<strong>至少来 1 位</strong>"的概率？</blockquote>
+<blockquote>③ 这 10 分钟里<strong>期望来几位？方差多少？</strong> 和第 9 期"泊松分布均值 = 方差"对得上吗？</blockquote>
+<h3>题目 2 · 客服热线：指数间隔与无记忆</h3>
+<p>某客服热线平均每分钟来 <strong>0.5 通</strong>电话（$\lambda = 0.5$/分钟，即平均每 2 分钟一通）。</p>
+<blockquote>① "下一通电话在 <strong>3 分钟内</strong>来的概率"是多少？即 $P(T \le 3)$。</blockquote>
+<blockquote>② <strong>验证无记忆性</strong>：你已经等了 2 分钟还没来，问"再等 3 分钟（即到第 5 分钟）才来"的条件概率，是不是等于"从零开始等 3 分钟"的概率？</blockquote>
+<blockquote>③ 平均要等多久来下一通电话？</blockquote>
+<h3>题目 3 · 网站双渠道：合并与拆分</h3>
+<p>两条独立的访客流：A 渠道平均每秒 <strong>3 次</strong>访问（$\lambda_A=3$），B 渠道平均每秒 <strong>5 次</strong>（$\lambda_B=5$）。</p>
+<blockquote>① 把两条流合并，总访问流还是泊松过程吗？<strong>发生率是多少？</strong></blockquote>
+<blockquote>② 已知每个访客以 $1/4$ 概率来自"付费广告"、$3/4$ 自然来源，那么"广告访客流"是泊松过程吗？<strong>发生率多少？</strong></blockquote>
+<blockquote>③ 合并后"两次访问之间的平均间隔"是多少秒？</blockquote>
+<h3>题目 4 · 陷阱：事故时刻的"均匀性"</h3>
+<p>某路口 1 小时内发生了 <strong>5 起</strong>交通事故，且事故流服从泊松过程（发生率未知）。</p>
+<blockquote>① 如果已知这 1 小时"恰好 5 起"，这 5 起事故发生的具体时刻应当长什么样？（提示：像 5 个点在 1 小时内"均匀随机撒"）</blockquote>
+<blockquote>② 交警发现"这 5 起<strong>全都集中在最后 5 分钟</strong>"，你该怀疑什么？用泊松过程的"均匀性"解释。</blockquote>
+<blockquote>③ 反过来，如果事故其实是"早高峰扎堆"（非泊松），那么"给定总数 5，时刻均匀分布"还成立吗？</blockquote>
+<hr>
+<h2>四、提示（如需逐题完整推导，回复"揭晓答案"）</h2>
+<ul>
+<li><strong>题目 1（奶茶店来客）</strong>：</li>
+<li>① $\lambda t = 0.5\times 10 = 5$。$P(N=8)=e^{-5}\cdot 5^8/8!$。$e^{-5}\approx 0.00674$，$5^8=390625$，$8!=40320$，故 $P\approx 0.00674\times 390625/40320 \approx \mathbf{0.0653}$（约 6.5%）。</li>
+<li>② 至少 1 位 $=1-P(N=0)=1-e^{-5}\approx 1-0.00674 \approx \mathbf{99.3\%}$。</li>
+<li>③ $E[N(10)]=\lambda t=5$ 位，$\text{Var}=5$。<strong>均值 = 方差</strong>，和第 9 期对上。</li>
+</ul>
+<ul>
+<li><strong>题目 2（客服热线）</strong>：</li>
+<li>① $P(T\le 3)=1-e^{-\lambda\cdot 3}=1-e^{-1.5}\approx 1-0.2231\approx \mathbf{77.7\%}$。</li>
+<li>② 验证：$P(T&gt;5\mid T&gt;2)=P(T&gt;5)/P(T&gt;2)=e^{-2.5}/e^{-1}=e^{-1.5}=P(T&gt;3)$。<strong>确实相等</strong>——无记忆性成立，"等越久越该来"是错觉。</li>
+<li>③ 平均等待 $E[T]=1/\lambda=1/0.5=\mathbf{2}$ 分钟。</li>
+</ul>
+<ul>
+<li><strong>题目 3（合并与拆分）</strong>：</li>
+<li>① 独立泊松流合并仍是泊松过程，发生率 $\lambda=3+5=\mathbf{8}$/秒。</li>
+<li>② 按比例拆出"广告流"仍是泊松过程，发生率 $\lambda_{\text{广告}}=8\times\tfrac14=\mathbf{2}$/秒（自然流 $8\times\tfrac34=6$/秒）。</li>
+<li>③ 平均间隔 $=1/\lambda_{\text{总}}=1/8=\mathbf{0.125}$ 秒（即每 125 毫秒一次访问）。</li>
+</ul>
+<ul>
+<li><strong>题目 4（事故均匀性）</strong>：</li>
+<li>① 给定 $N(1\text{小时})=5$，5 个时刻 i.i.d. 服从 $[0,1\text{小时}]$ 上的均匀分布（次序统计量），看起来像"5 个点均匀铺满整小时"。</li>
+<li>② 若真均匀，5 个独立均匀点"全落在最后 5 分钟（占 $1/12$ 区间）"的概率约 $(1/12)^5\approx 1/248832\approx \mathbf{4\times10^{-6}}$，几乎不可能；应怀疑"不是单纯泊松过程"或"那 5 分钟有外部诱因"。</li>
+<li>③ <strong>不成立</strong>。均匀性是"泊松过程 + 给定总数"才诞生的推论；若早高峰扎堆（过程非平稳），给定总数后时刻分布也非均匀。</li>
+</ul>
+<hr>
+<blockquote>📌 明日预告：第 14 期 <strong>随机游走与醉汉（Random Walk）</strong>——如果每次"前进/后退"都是一次独立随机步（像抛硬币决定往哪走），一个人走了很久之后会在哪儿？为什么"醉汉迟早会回到家门"（一维、二维必回归，三维几乎不回），以及股价、扩散、布朗运动背后的源头，都在这条看似幼稚的"抛硬币走路"里。</blockquote></div></body></html>

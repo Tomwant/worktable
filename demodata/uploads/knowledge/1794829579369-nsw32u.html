@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美股每日新闻简报 · 2026-11-11</title>
+<style>
+  :root{
+    --bg:#f6f7f9; --card:#ffffff; --ink:#1f2733; --sub:#5b6675; --line:#e6e9ef;
+    --accent:#2b6cb0; --accent-soft:#eaf2fb;
+    --red:#d8382c; --red-soft:#fdecea;     /* 涨 = 红 */
+    --green:#1a9d5a; --green-soft:#e8f6ee;  /* 跌 = 绿 */
+    --amber:#b7791f; --amber-soft:#fdf3e2;
+    --r-card:14px; --gap:18px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.65; font-size:15px;
+  }
+  .wrap{max-width:980px; margin:0 auto; padding:28px 20px 60px;}
+  header.hero{
+    background:linear-gradient(135deg,#1f3a5f,#2b6cb0);
+    color:#fff; border-radius:var(--r-card); padding:26px 28px; margin-bottom:22px;
+  }
+  header.hero h1{margin:0 0 6px; font-size:25px; letter-spacing:.5px;}
+  header.hero .date{opacity:.92; font-size:14px;}
+  header.hero .tag{
+    display:inline-block; margin-top:12px; padding:4px 12px; border-radius:999px;
+    background:rgba(255,255,255,.16); font-size:12.5px;
+  }
+  .card{
+    background:var(--card); border:1px solid var(--line); border-radius:var(--r-card);
+    padding:20px 22px; margin-bottom:var(--gap);
+  }
+  .card h2{
+    margin:0 0 14px; font-size:18px; display:flex; align-items:center; gap:10px;
+    padding-bottom:10px; border-bottom:1px solid var(--line);
+  }
+  .card h2 .num{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:26px; height:26px; border-radius:8px; background:var(--accent-soft);
+    color:var(--accent); font-size:14px; font-weight:700;
+  }
+  .note{font-size:13px; color:var(--sub); margin:4px 0 14px;}
+  /* 指数表 */
+  table{width:100%; border-collapse:collapse; font-size:14px;}
+  th,td{padding:9px 10px; text-align:right; border-bottom:1px solid var(--line);}
+  th:first-child,td:first-child{text-align:left;}
+  thead th{background:#fafbfc; color:var(--sub); font-weight:600; font-size:13px;}
+  tbody tr:last-child td{border-bottom:none;}
+  .up{color:var(--red); font-weight:600;}
+  .down{color:var(--green); font-weight:600;}
+  .flat{color:var(--sub);}
+  /* 指标网格 */
+  .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(210px,1fr)); gap:12px;}
+  .metric{
+    background:#fafbfc; border:1px solid var(--line); border-radius:10px; padding:12px 14px;
+  }
+  .metric .k{font-size:12.5px; color:var(--sub);}
+  .metric .v{font-size:18px; font-weight:700; margin-top:3px;}
+  .metric .d{font-size:12.5px; margin-top:2px;}
+  /* 驱动事件 */
+  .events{display:grid; gap:12px;}
+  .event{
+    display:grid; grid-template-columns:34px 1fr; gap:12px; align-items:start;
+    padding:14px; border:1px solid var(--line); border-radius:10px; background:#fcfdfe;
+  }
+  .event .idx{
+    width:34px; height:34px; border-radius:9px; background:var(--accent); color:#fff;
+    display:flex; align-items:center; justify-content:center; font-weight:700;
+  }
+  .event h3{margin:0 0 4px; font-size:15.5px;}
+  .event p{margin:0; font-size:14px; color:#36404e;}
+  .event .em{color:var(--red); font-weight:600;}
+  .event .emg{color:var(--green); font-weight:600;}
+  /* 板块/个股条 */
+  .row{display:flex; align-items:center; gap:10px; padding:7px 0; border-bottom:1px dashed var(--line); font-size:14px;}
+  .row:last-child{border-bottom:none;}
+  .row .name{flex:1;}
+  .row .chg{min-width:92px; text-align:right; font-weight:600;}
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:6px;}
+  .chip{padding:3px 10px; border-radius:999px; font-size:12.5px; border:1px solid var(--line);}
+  .chip.r{background:var(--red-soft); color:var(--red); border-color:#f6ccca;}
+  .chip.g{background:var(--green-soft); color:var(--green); border-color:#bfe6cf;}
+  .chip.a{background:var(--amber-soft); color:var(--amber); border-color:#f0d9af;}
+  /* 日程 */
+  .cal{display:grid; gap:10px;}
+  .day{border:1px solid var(--line); border-radius:10px; overflow:hidden;}
+  .day .dh{background:#fafbfc; padding:9px 14px; font-weight:600; border-bottom:1px solid var(--line);}
+  .day ul{margin:0; padding:10px 16px 12px 32px;}
+  .day li{margin:3px 0; font-size:14px;}
+  /* 风险提示 */
+  .risk li{margin:6px 0; font-size:14px;}
+  .footer{text-align:center; color:var(--sub); font-size:12.5px; margin-top:10px;}
+  .legend{font-size:12.5px; color:var(--sub); margin:2px 0 12px;}
+  .legend b.r{color:var(--red);} .legend b.g{color:var(--green);}
+  a.src{color:var(--accent); text-decoration:none;}
+  @media (max-width:640px){
+    .grid{grid-template-columns:1fr 1fr;}
+    header.hero h1{font-size:21px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <h1>美股每日新闻简报</h1>
+    <div class="date">2026 年 11 月 11 日（周三）· 影响纳斯达克 / 标普 500 / 道指的核心新闻</div>
+    <div class="tag">最新完整交易日：美东 2026-11-10（周二）收盘</div>
+  </header>
+
+  <!-- 一、市场速览 -->
+  <section class="card">
+    <h2><span class="num">①</span>市场速览 · 指数收盘</h2>
+    <p class="legend">配色遵循中国习惯：<b class="r">红 = 上涨</b>，<b class="g">绿 = 下跌</b>。</p>
+    <table>
+      <thead>
+        <tr><th>指数</th><th>收盘点位</th><th>涨跌点</th><th>涨跌幅</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>道琼斯工业平均指数</td><td>52,231.89</td><td>-157.86</td><td class="down">-0.30%</td></tr>
+        <tr><td>标普 500 指数</td><td>7,520.93</td><td>-29.01</td><td class="down">-0.38%</td></tr>
+        <tr><td>纳斯达克综合指数</td><td>25,065.87</td><td>-187.26</td><td class="down">-0.74%</td></tr>
+        <tr><td>费城半导体指数 (SOX)</td><td>9,998.33</td><td>—</td><td class="down">-0.35%</td></tr>
+        <tr><td>纳斯达克中国金龙指数</td><td>5,696.50</td><td>—</td><td class="down">-1.21%</td></tr>
+      </tbody>
+    </table>
+    <p class="note">对比前一日（11/9 周一，标普 +2.35% 暴力反弹）：本期相当于周一"超跌修复"后的宏观回吐。纳指盘中最大跌幅一度达 1.7%，尾盘收窄至 -0.74%。</p>
+
+    <h2 style="margin-top:22px;"><span class="num">②</span>利率 / 大宗 / 外汇 全景</h2>
+    <div class="grid">
+      <div class="metric"><div class="k">美债 2 年期收益率</div><div class="v">4.748%</div><div class="d down">+19.5bp（盘中高 4.778%）</div></div>
+      <div class="metric"><div class="k">美债 10 年期收益率</div><div class="v">4.994%</div><div class="d down">+13.1bp（盘中破 5.0%，11 月来首次）</div></div>
+      <div class="metric"><div class="k">美债 30 年期收益率</div><div class="v">5.358%</div><div class="d down">+1.94bp</div></div>
+      <div class="metric"><div class="k">美元指数 DXY</div><div class="v">102.25</div><div class="d down">+0.56%</div></div>
+      <div class="metric"><div class="k">WTI 原油（12 月）</div><div class="v">$86.04</div><div class="d down">-0.93%</div></div>
+      <div class="metric"><div class="k">布伦特原油（1 月）</div><div class="v">$91.49</div><div class="d down">-1.17%（盘中破 90，8 月来首次）</div></div>
+      <div class="metric"><div class="k">现货黄金</div><div class="v">$4,032.94</div><div class="d down">-2.61%</div></div>
+      <div class="metric"><div class="k">COMEX 黄金</div><div class="v">$4,040.50</div><div class="d down">-1.80%</div></div>
+      <div class="metric"><div class="k">现货白银</div><div class="v">$51.54</div><div class="d down">-3.53%</div></div>
+      <div class="metric"><div class="k">比特币 BTC</div><div class="v">~$73,000</div><div class="d down">-3% 左右（近三个月低位）</div></div>
+      <div class="metric"><div class="k">VIX 恐慌指数</div><div class="v">~20.85</div><div class="d down">+4.7%（盘中，避险升温）</div></div>
+      <div class="metric"><div class="k">离岸人民币</div><div class="v">6.6766</div><div class="d down">-72bp（兑美元纽约尾盘）</div></div>
+    </div>
+  </section>
+
+  <!-- 二、六大核心驱动事件 -->
+  <section class="card">
+    <h2><span class="num">③</span>今日六大核心驱动事件</h2>
+    <div class="events">
+      <div class="event">
+        <div class="idx">1</div>
+        <div>
+          <h3>10 月核心 CPI 连续第三月 0.3% → 加息预期被彻底点燃</h3>
+          <p>10 月 CPI 环比 <span class="em">+0.4%</span>（预期 +0.3%、前值 +0.6%）；核心 CPI 环比 <span class="em">+0.3%</span>（预期 +0.2%、前值 +0.3%），连续第三个月维持 0.3% 的黏性水平。白宫经济委员会主任哈西特称数据"令人失望"。因去年政府停摆导致对比基数缺失，本次<span class="em">不公布同比数据</span>。CME 显示 12 月加息 50bp 概率由前日 0% 升至 <span class="em">11.8%</span>，"至少再加 25bp"已被完全计入，市场甚至押注到 2027 年中再加息两次。</p>
+        </div>
+      </div>
+      <div class="event">
+        <div class="idx">2</div>
+        <div>
+          <h3>美联储官员集体放鹰：沃勒、洛根明确支持 12 月加息</h3>
+          <p>理事 <span class="em">沃勒（Waller）</span>表示支持 12 月加息、并对一次加 50bp 持开放态度；达拉斯联储主席 <span class="em">洛根（Logan）</span>称"至少还需加息两次、每次 25bp"；法国外贸银行指出核心 CPI 黏性"对美联储不可接受"，12 月加 50bp 已成选项之一。多位官员（鲍曼、古尔斯比、巴尔金、哈玛克等）本周仍有密集讲话。</p>
+        </div>
+      </div>
+      <div class="event">
+        <div class="idx">3</div>
+        <div>
+          <h3>美债遭集中抛售：10Y 盘中破 5%，短端承压最重</h3>
+          <p>CPI 公布后国债被抛售、收益率跳升。2Y 收 4.748%（<span class="em">+19.5bp</span>，盘中高 4.778%）；10Y 收 4.994%（<span class="em">+13.1bp</span>，盘中一度站上 5%、为 11 月以来首次）；1/2/3 年期均涨超 10bp。彭博称短期限美债压力尤其明显，货币市场加大对 2027 年中前再加息两次的押注。</p>
+        </div>
+      </div>
+      <div class="event">
+        <div class="idx">4</div>
+        <div>
+          <h3>英伟达"治理地震"：黄仁勋被董事会调查，两日市值蒸发 ~4300 亿美元</h3>
+          <p>英伟达收跌 <span class="emg">-5.5%</span>（约 -5.47%），领跌道指成分股，市值一度跌破 4 万亿美元。导火索：CEO 黄仁勋被曝与一名被指为中国间谍的女性（Alice Huang）存在未披露关系，董事会已启动独立调查；美国罗森律师事务所代表投资者提起集体诉讼，另有数家律所宣布独立调查是否误导投资者。本周 NVDA 累计已跌近 10%，盘中一度下探 170 美元、较 52 周高点回撤约 30%。</p>
+        </div>
+      </div>
+      <div class="event">
+        <div class="idx">5</div>
+        <div>
+          <h3>油价续跌、金银重挫：地缘缓和压通胀，却也压避险</h3>
+          <p>WTI 收 86.04（-0.93%）、布油收 91.49（-1.17%，盘中破 90 为 8 月来首次）。驱动：特朗普称"极不可能"再对伊动武、美伊"边打边谈"；沙特主要航运公司在美军协调下派油轮经霍尔木兹海峡，中东石油出口接近战前水平。俄乌时隔九个月首度和谈亦压低风险溢价。但黄金 <span class="emg">-2.61%</span>、白银 <span class="emg">-3.53%</span>——油价回落本应缓和通胀，实际却是"美元 + 实际利率双升"压制贵金属，避险买盘缺席。</p>
+        </div>
+      </div>
+      <div class="event">
+        <div class="idx">6</div>
+        <div>
+          <h3>Anthropic 万亿 IPO 逆势推进；中概走弱</h3>
+          <p>Anthropic 更新招股书：拟发行最多 8.25 亿股、定价区间 70–78 美元，融资规模最高约 <span class="em">643.5 亿美元</span>，完全稀释估值最高达 <span class="em">1.405 万亿美元</span>，预计 11 月 19 日登陆纳斯达克——AI 退潮中逆势刷新科技 IPO 纪录。中概方面，纳斯达克中国金龙指数 <span class="emg">-1.21%</span>，热门中概多数收跌（富途 -5.44%、蔚来 -3.23%、阿里 -2.58%）。</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 三、板块与个股 -->
+  <section class="card">
+    <h2><span class="num">④</span>板块与个股</h2>
+    <p class="note">标普 500 十一大板块六跌五涨：科技 -1.40%、材料 -0.55% 领跌；金融 +0.49%、非必需消费品 +0.46% 领涨。费半 -0.35%。</p>
+
+    <h3 style="font-size:15px; margin:4px 0 8px;">大型科技股</h3>
+    <div class="row"><span class="name">亚马逊 (AMZN)</span><span class="chg up">+1.48%</span></div>
+    <div class="row"><span class="name">特斯拉 (TSLA)</span><span class="chg up">+0.46%</span></div>
+    <div class="row"><span class="name">Meta (META)</span><span class="chg flat">持平</span></div>
+    <div class="row"><span class="name">苹果 (AAPL)</span><span class="chg down">-0.62%</span></div>
+    <div class="row"><span class="name">谷歌 (GOOGL)</span><span class="chg down">-0.27%</span></div>
+    <div class="row"><span class="name">微软 (MSFT)</span><span class="chg down">-2.20%</span></div>
+    <div class="row"><span class="name">英伟达 (NVDA)</span><span class="chg down">-5.53%</span></div>
+
+    <h3 style="font-size:15px; margin:16px 0 8px;">半导体 / 芯片</h3>
+    <div class="row"><span class="name">博通 (AVGO)</span><span class="chg up">+4.0%</span></div>
+    <div class="row"><span class="name">AMD (AMD)</span><span class="chg up">+1.0%</span></div>
+    <div class="row"><span class="name">台积电 (TSM)</span><span class="chg up">+2.0%</span></div>
+    <div class="row"><span class="name">高通 (QCOM)</span><span class="chg up">+1.0%+</span></div>
+    <div class="row"><span class="name">美光 (MU)</span><span class="chg down">-1.1%</span></div>
+    <div class="row"><span class="name">闪迪 (SNDK)</span><span class="chg down">-3.0%</span></div>
+    <div class="row"><span class="name">Arm / 英特尔 (INTC)</span><span class="chg down">-2.0%+</span></div>
+    <div class="row"><span class="name">SK 海力士</span><span class="chg down">-3.5%</span></div>
+
+    <h3 style="font-size:15px; margin:16px 0 8px;">其他重点个股</h3>
+    <div class="row"><span class="name">Skydance (SKYD) · 派拉蒙-天舞-华纳合并后首份财报</span><span class="chg down">-8.0%（标普领跌）</span></div>
+    <div class="row"><span class="name">Take-Two (TTWO) · GTA VI 预购火爆</span><span class="chg up">+8.0%</span></div>
+
+    <h3 style="font-size:15px; margin:16px 0 8px;">中概股</h3>
+    <div class="chips">
+      <span class="chip g">金龙指数 -1.21%</span>
+      <span class="chip g">富途 -5.44%</span>
+      <span class="chip g">蔚来 -3.23%</span>
+      <span class="chip g">阿里 -2.58%</span>
+      <span class="chip g">百度 -1.63%</span>
+      <span class="chip g">拼多多 -1.37%</span>
+      <span class="chip r">理想 +1.22%</span>
+      <span class="chip r">BOSS 直聘 +0.77%</span>
+      <span class="chip r">华住 +0.88%</span>
+    </div>
+  </section>
+
+  <!-- 四、其他市场 -->
+  <section class="card">
+    <h2><span class="num">⑤</span>其他市场（11/10 收盘）</h2>
+    <div class="grid">
+      <div class="metric"><div class="k">德国 DAX</div><div class="v">26,347.45</div><div class="d up">+0.31%</div></div>
+      <div class="metric"><div class="k">法国 CAC 40</div><div class="v">8,278.59</div><div class="d up">+0.55%</div></div>
+      <div class="metric"><div class="k">英国 FTSE 100</div><div class="v">10,751.59</div><div class="d down">-0.29%</div></div>
+      <div class="metric"><div class="k">欧洲斯托克 50</div><div class="v">6,327.87</div><div class="d up">+0.59%</div></div>
+      <div class="metric"><div class="k">日经 225</div><div class="v">60,459.58</div><div class="d up">+2.87%</div></div>
+      <div class="metric"><div class="k">韩国 KOSPI</div><div class="v">5,239.13</div><div class="d up">+4.39%</div></div>
+      <div class="metric"><div class="k">恒生指数</div><div class="v">24,557.04</div><div class="d up">+0.44%</div></div>
+      <div class="metric"><div class="k">恒生科技</div><div class="v">4,084.45</div><div class="d up">+1.08%</div></div>
+      <div class="metric"><div class="k">上证指数</div><div class="v">3,663.72</div><div class="d up">+0.08%</div></div>
+      <div class="metric"><div class="k">深成指</div><div class="v">11,241.54</div><div class="d up">+0.86%</div></div>
+      <div class="metric"><div class="k">创业板指</div><div class="v">2,494.40</div><div class="d up">+1.46%</div></div>
+    </div>
+    <p class="note">亚太与欧洲在 11/10 普遍收涨（韩国 KOSPI 单日 +4.39% 领跑），与美股当日回调形成分化——美股受盘前 CPI 冲击更大，而亚欧市场更多反映前一日（11/9）美股暴力反弹的溢出情绪。</p>
+  </section>
+
+  <!-- 五、本周日程 -->
+  <section class="card">
+    <h2><span class="num">⑥</span>本周关键日程（美东时间 ET）</h2>
+    <div class="cal">
+      <div class="day">
+        <div class="dh">周三 11/11 · 退伍军人节</div>
+        <ul>
+          <li>债市（SIFMA）休市，<b>股市照常交易</b>；OPEC 月度油市报告；德国终值 HICP</li>
+        </ul>
+      </div>
+      <div class="day">
+        <div class="dh">周四 11/12</div>
+        <ul>
+          <li>08:30 初请失业金（预期约 19.4 万，前值 18.9 万）</li>
+          <li>10:00 巴尔（Barr）谈"人工智能与不平等"；成屋销售（预期 -5.0%）</li>
+          <li>13:00 30 年期国债拍卖；Nebius (NBIS) 盘前、应用材料 (AMAT) 与思科 (CSCO) 盘后财报</li>
+        </ul>
+      </div>
+      <div class="day">
+        <div class="dh">周五 11/13</div>
+        <ul>
+          <li>08:30 <b>10 月 PPI</b>（预期 +0.4% MoM，核心 +0.3%；前值 +1.3%）—— 本周第二通胀大考</li>
+          <li>欧元区 Q3 GDP 二次估算；杰斐逊（Jefferson）谈技术与生产率（盘后）</li>
+        </ul>
+      </div>
+    </div>
+    <p class="note">本周美联储官员讲话密集（沃勒、洛根、鲍曼、古尔斯比、巴尔金、哈玛克、巴尔、戴利、威廉姆斯等约 17 场），任何偏鹰措辞都可能进一步推升加息定价。CME 当前计入 12 月（12/8–9 会议）加息概率约 80%+。</p>
+  </section>
+
+  <!-- 六、风险提示 -->
+  <section class="card">
+    <h2><span class="num">⑦</span>风险提示</h2>
+    <ul class="risk">
+      <li><b>通胀黏性 → 加息重定价：</b>核心 CPI 连续三月 0.3%，12 月"至少 25bp"已被完全计入，50bp 概率升至 11.8% 且仍在抬升；若 11/13 PPI 再超预期，长端收益率与美元或进一步上行，压制成长股估值。</li>
+      <li><b>英伟达治理危机外溢：</b>黄仁勋被调查 + 集体诉讼，AI 龙头信心受挫；NVDA 两日市值蒸发约 4300 亿美元，需警惕 AI 集群（半导体 / 光通信 / 存储）的情绪连锁反应。</li>
+      <li><b>AI 资本开支 / 监管风险：</b>民主党"蓝潮"后，桑德斯称 43/44 选区支持暂停 AI 数据中心；Anthropic 万亿 IPO 与 CoreWeave 债务压力并存，AI 交易叙事仍处脆弱重估期。</li>
+      <li><b>地缘油价双向风险：</b>美伊"边打边谈"、沙特油轮经霍尔木兹恢复供给令油价回落；但胡塞武装威胁袭击沙特哈立德国王国际机场等核心目标，霍尔木兹通行仍受袭扰，油价随时可能反转推升通胀。</li>
+      <li><b>债市波动传导：</b>10Y 盘中破 5%、MOVE 指数走高，信用利差与二阶波动率（VVIX / SKEW）预警未解除；财报季尾声（88% 标普已披露、Q3 盈利 +31.4%）个股业绩扰动仍在。</li>
+    </ul>
+  </section>
+
+  <p class="footer">
+    本报告由自动化任务生成，数据综合自新华社、央广网、中国金融新闻网、证券时报、中国基金报、腾讯 / 网易财经、Investopedia、HeygoTrade、TradingView 等公开信源，并经跨源交叉校验。
+    所有指数点位、收益率与商品价格均为美东 2026-11-10 收盘口径（除特别标注外）。<br>
+    仅供信息参考，不构成任何投资建议。
+  </p>
+
+</div>
+</body>
+</html>

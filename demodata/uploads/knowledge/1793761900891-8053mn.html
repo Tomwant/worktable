@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融概念 第37期 · 复利</title>
+<style>
+  :root{
+    --c-indigo:#3a4cc0;
+    --c-purple:#8a5cf6;
+    --c-ink:#1f2333;
+    --c-sub:#5b6172;
+    --c-line:#e8eaf2;
+    --c-bg:#f5f6fb;
+    --c-card:#ffffff;
+    --c-accent:#3a4cc0;
+    --c-good:#0f9d76;
+    --c-warn:#d9663a;
+    --r-card:16px;
+    --gap:22px;
+    --shadow:0 6px 24px rgba(58,76,192,.08);
+    --shadow-soft:0 2px 10px rgba(31,35,51,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--c-bg);
+    color:var(--c-ink);
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    padding:0 0 48px;
+  }
+  .wrap{max-width:840px;margin:0 auto;padding:0 18px;}
+
+  /* 头部 */
+  .hero{
+    background:linear-gradient(135deg,var(--c-indigo) 0%,var(--c-purple) 100%);
+    color:#fff;
+    border-radius:0 0 28px 28px;
+    padding:38px 24px 32px;
+    box-shadow:var(--shadow);
+  }
+  .hero .issue{
+    display:inline-block;
+    font-size:13px;letter-spacing:1px;
+    background:rgba(255,255,255,.18);
+    padding:5px 14px;border-radius:999px;
+    margin-bottom:14px;
+  }
+  .hero h1{font-size:34px;font-weight:800;letter-spacing:1px;margin-bottom:8px;}
+  .hero .sub{font-size:16px;opacity:.92;font-weight:400;margin-bottom:18px;}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:13.5px;opacity:.95;}
+  .hero .meta span{display:inline-flex;align-items:center;gap:6px;}
+  .hero .kw{
+    margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;
+  }
+  .hero .kw i{
+    font-style:normal;font-size:12.5px;
+    background:rgba(255,255,255,.16);
+    border:1px solid rgba(255,255,255,.28);
+    padding:4px 11px;border-radius:999px;
+  }
+
+  /* 卡片 */
+  .card{
+    background:var(--c-card);
+    border-radius:var(--r-card);
+    padding:26px 24px;
+    margin-top:var(--gap);
+    box-shadow:var(--shadow-soft);
+    border:1px solid var(--c-line);
+  }
+  .card h2{
+    font-size:20px;font-weight:700;margin-bottom:14px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .card h2 .tag{
+    font-size:12px;font-weight:600;color:#fff;
+    background:linear-gradient(135deg,var(--c-indigo),var(--c-purple));
+    padding:3px 10px;border-radius:8px;letter-spacing:.5px;
+  }
+  .card p{margin-bottom:12px;color:#33384a;font-size:15px;}
+  .card p:last-child{margin-bottom:0;}
+  .lead{font-size:15.5px;color:#33384a;}
+
+  /* 故事里的引文 / 寓言 */
+  .fable{
+    background:linear-gradient(180deg,#f7f8ff,#eef0ff);
+    border-left:4px solid var(--c-indigo);
+    border-radius:0 12px 12px 0;
+    padding:16px 18px;margin:14px 0;
+    color:#2c3147;font-size:15px;
+  }
+  .fable b{color:var(--c-indigo);}
+
+  /* 概念定义卡 */
+  .def{
+    display:grid;grid-template-columns:auto 1fr;gap:18px;align-items:center;
+    background:linear-gradient(135deg,#eef0ff, #f6f0ff);
+    border:1px solid #e3e1fb;border-radius:14px;padding:20px;
+  }
+  .def .sym{
+    width:74px;height:74px;border-radius:18px;flex:none;
+    background:linear-gradient(135deg,var(--c-indigo),var(--c-purple));
+    color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    font-weight:800;font-size:13px;line-height:1.25;text-align:center;box-shadow:var(--shadow);
+  }
+  .def .sym small{font-weight:500;font-size:11px;opacity:.9;}
+  .def .txt h3{font-size:18px;margin-bottom:6px;}
+  .def .txt p{font-size:14.5px;color:#33384a;margin:0;}
+  .formula{
+    margin-top:14px;background:#1f2333;color:#e8ecff;
+    border-radius:10px;padding:12px 16px;font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:14.5px;text-align:center;letter-spacing:.5px;
+  }
+  .formula em{color:#9db0ff;font-style:normal;}
+
+  /* 棋盘 / 翻倍可视化 */
+  .viz-title{font-size:14px;color:var(--c-sub);margin:18px 0 10px;font-weight:600;}
+  .grow{display:flex;flex-direction:column;gap:7px;}
+  .grow .row{display:flex;align-items:center;gap:12px;font-size:13px;color:#444a5e;}
+  .grow .row .sq{flex:none;width:74px;color:var(--c-sub);}
+  .grow .row .bar{
+    height:18px;border-radius:6px;
+    background:linear-gradient(90deg,var(--c-indigo),var(--c-purple));
+    box-shadow:var(--shadow-soft);
+  }
+  .grow .row .val{font-variant-numeric:tabular-nums;color:#2c3147;font-weight:600;}
+
+  .chess{
+    display:grid;grid-template-columns:repeat(8,1fr);gap:3px;margin:18px 0 6px;
+    border-radius:10px;overflow:hidden;border:2px solid #d8daf0;
+  }
+  .chess i{
+    aspect-ratio:1/1;display:flex;align-items:center;justify-content:center;
+    font-size:10px;color:#fff;font-style:normal;
+  }
+  .chess .a{background:#46508f;}
+  .chess .b{background:#aab1e6;}
+  .chess .last{background:linear-gradient(135deg,var(--c-indigo),var(--c-purple));font-weight:700;font-size:9px;}
+  .note{font-size:13px;color:var(--c-sub);margin-top:4px;}
+
+  /* 案例 */
+  .case{
+    border:1px solid var(--c-line);border-radius:12px;padding:16px 18px;margin-bottom:14px;
+    background:#fbfbff;
+  }
+  .case:last-child{margin-bottom:0;}
+  .case h4{font-size:15.5px;margin-bottom:6px;color:var(--c-indigo);}
+  .case p{font-size:14.5px;color:#3a4056;margin:0;}
+
+  /* 关联 */
+  .rel{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .rel .item{
+    background:#f7f8ff;border:1px solid #e8e9fb;border-radius:12px;padding:14px 16px;
+  }
+  .rel .item b{color:var(--c-purple);font-size:14.5px;display:block;margin-bottom:5px;}
+  .rel .item span{font-size:13.5px;color:#444a5e;}
+
+  /* 启示清单 */
+  .tips{list-style:none;counter-reset:t;}
+  .tips li{
+    position:relative;padding:11px 14px 11px 46px;margin-bottom:10px;
+    background:#fbfbff;border:1px solid var(--c-line);border-radius:12px;font-size:14.5px;color:#33384a;
+  }
+  .tips li:before{
+    counter-increment:t;content:counter(t);
+    position:absolute;left:12px;top:11px;
+    width:24px;height:24px;border-radius:50%;
+    background:linear-gradient(135deg,var(--c-indigo),var(--c-purple));
+    color:#fff;font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* 72法则表 */
+  .tbl{width:100%;border-collapse:collapse;margin-top:6px;font-size:14px;}
+  .tbl th,.tbl td{border:1px solid var(--c-line);padding:9px 12px;text-align:center;}
+  .tbl th{background:#eef0ff;color:var(--c-indigo);font-weight:600;}
+  .tbl td{color:#33384a;}
+
+  /* 思考题 */
+  .think{
+    background:linear-gradient(135deg,#fff6ee,#fdeae0);
+    border:1px solid #f3d3bf;border-radius:14px;padding:20px 22px;
+  }
+  .think h3{font-size:16px;color:var(--c-warn);margin-bottom:10px;}
+  .think p{font-size:15px;color:#4a3c30;margin:0;}
+
+  /* 脚注 */
+  .foot{
+    margin-top:30px;text-align:center;font-size:12.5px;color:var(--c-sub);line-height:1.7;
+  }
+  .foot .line{width:60px;height:3px;background:linear-gradient(90deg,var(--c-indigo),var(--c-purple));border-radius:3px;margin:0 auto 14px;}
+
+  @media (max-width:600px){
+    .hero{padding:28px 18px 24px;border-radius:0 0 20px 20px;}
+    .hero h1{font-size:27px;}
+    .hero .sub{font-size:14px;}
+    .card{padding:20px 16px;}
+    .rel{grid-template-columns:1fr;}
+    .def{grid-template-columns:1fr;text-align:center;justify-items:center;}
+    .def .txt{text-align:center;}
+    .grow .row .sq{width:56px;font-size:11px;}
+    .grow .row{font-size:11px;gap:8px;}
+    .grow .row .val{font-size:11px;}
+  }
+</style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="issue">金融概念日报 · 第 37 期</div>
+    <h1>复利</h1>
+    <div class="sub">时间的魔法，也是债务的利刃 —— 藏在每一笔「利滚利」里的长期力量</div>
+    <div class="meta">
+      <span>日期：2026-11-04</span>
+      <span>类型：基础概念 · 数学之美</span>
+      <span>阅读时长：约 7 分钟</span>
+    </div>
+    <div class="kw">
+      <i>复利</i><i>利滚利</i><i>时间价值</i><i>72法则</i><i>定投</i><i>指数增长</i>
+    </div>
+  </header>
+
+  <div class="wrap">
+
+    <!-- 故事 -->
+    <section class="card">
+      <h2><span class="tag">故事</span>棋盘上的米粒</h2>
+      <p class="lead">古印度有一位名叫西萨·班·达希尔的宰相，相传是他发明了国际象棋，并把它献给了国王。国王十分高兴，说："你要什么赏赐，我都可以答应。"</p>
+      <div class="fable">
+        西萨微微一笑，只提了一个看似谦卑的请求：<b>"请在棋盘的第 1 格放 1 粒米，第 2 格放 2 粒，第 3 格放 4 粒，之后每一格的米粒数都是前一格的两倍，直到第 64 格。这就是我想要的全部赏赐。"</b>
+      </div>
+      <p>国王听罢哈哈大笑："不过是一盘米罢了，库房里多的是。"他立刻命人照办。可当侍从开始一粒一粒地摆放时，怪事发生了——第 10 格不过 512 粒，第 20 格已经需要超过 50 万粒，第 30 格突破 5 亿粒……等摆到第 64 格，所需的米粒总数是 <b>2 的 64 次方减 1</b>，约为 <b>1844 亿亿（1.84×10¹⁹）粒</b>。</p>
+      <p>这个数字有多大？按一公斤大米约四万粒估算，它相当于约 4600 亿吨大米——比人类有史以来种出的所有粮食还要多得多。国王根本付不起，而西萨想要的，从来不是米，而是一个道理：<b>当增长以"翻倍"的方式累积，时间会把一个微不足道的起点，变成无法想象的巨大。</b></p>
+      <p>这，就是复利最古老、最生动的寓言。</p>
+    </section>
+
+    <!-- 概念卡片 -->
+    <section class="card">
+      <h2><span class="tag">概念</span>什么是复利</h2>
+      <div class="def">
+        <div class="sym">复利<br><small>利滚利</small></div>
+        <div class="txt">
+          <h3>把赚到的利息，重新变成本金</h3>
+          <p>复利，是指一笔资金产生的利息（或收益）不拿走，而是加入本金，下一期连本带利一起继续生息。与之相对的是<b>单利</b>：利息只按最初本金计算，不再"再生利息"。</p>
+        </div>
+      </div>
+      <div class="formula">
+        A = P × (1 + r)<sup>n</sup> &nbsp;&nbsp; —— &nbsp;&nbsp; <em>A</em> 终值 · <em>P</em> 本金 · <em>r</em> 每期利率 · <em>n</em> 期数
+      </div>
+      <p style="margin-top:14px;">关键在于那个小小的指数 <em>n</em>。在单利里，财富随时间"直线"增长；在复利里，财富随时间是<b>向上弯曲的曲线</b>——前期慢得让人着急，后期快得让人吃惊。西萨棋盘里每格"翻倍"，正是 r=100%、每格一期时的复利：第 n 格的米粒数就是 2 的 n-1 次方。</p>
+    </section>
+
+    <!-- 可视化 -->
+    <section class="card">
+      <h2><span class="tag">可视化</span>翻倍有多快</h2>
+      <p>下面用前 10 格的米粒数，直观感受"每期翻倍"的加速度（条形长度已按比例压缩，仅示意趋势）：</p>
+      <div class="grow">
+        <div class="row"><span class="sq">第 1 格</span><div class="bar" style="width:4%"></div><span class="val">1 粒</span></div>
+        <div class="row"><span class="sq">第 2 格</span><div class="bar" style="width:8%"></div><span class="val">2 粒</span></div>
+        <div class="row"><span class="sq">第 3 格</span><div class="bar" style="width:12%"></div><span class="val">4 粒</span></div>
+        <div class="row"><span class="sq">第 4 格</span><div class="bar" style="width:16%"></div><span class="val">8 粒</span></div>
+        <div class="row"><span class="sq">第 5 格</span><div class="bar" style="width:20%"></div><span class="val">16 粒</span></div>
+        <div class="row"><span class="sq">第 6 格</span><div class="bar" style="width:28%"></div><span class="val">32 粒</span></div>
+        <div class="row"><span class="sq">第 7 格</span><div class="bar" style="width:38%"></div><span class="val">64 粒</span></div>
+        <div class="row"><span class="sq">第 8 格</span><div class="bar" style="width:50%"></div><span class="val">128 粒</span></div>
+        <div class="row"><span class="sq">第 9 格</span><div class="bar" style="width:70%"></div><span class="val">256 粒</span></div>
+        <div class="row"><span class="sq">第 10 格</span><div class="bar" style="width:92%"></div><span class="val">512 粒</span></div>
+      </div>
+
+      <div class="viz-title">整副 64 格棋盘（每格米粒逐格翻倍）</div>
+      <div class="chess">
+        <i class="a">1</i><i class="b">2</i><i class="a">4</i><i class="b">8</i><i class="a">16</i><i class="b">32</i><i class="a">64</i><i class="b">128</i>
+        <i class="b">256</i><i class="a">512</i><i class="b">1k</i><i class="a">2k</i><i class="b">4k</i><i class="a">8k</i><i class="b">16k</i><i class="a">32k</i>
+        <i class="a">65k</i><i class="b">131k</i><i class="a">262k</i><i class="b">524k</i><i class="a">1M</i><i class="b">2M</i><i class="a">4M</i><i class="b">8M</i>
+        <i class="b">16M</i><i class="a">33M</i><i class="b">67M</i><i class="a">134M</i><i class="b">268M</i><i class="a">536M</i><i class="b">1B</i><i class="a">2B</i>
+        <i class="a">4B</i><i class="b">8B</i><i class="a">17B</i><i class="b">34B</i><i class="a">68B</i><i class="b">137B</i><i class="a">274B</i><i class="b">549B</i>
+        <i class="b">1T</i><i class="a">2T</i><i class="b">4T</i><i class="a">9T</i><i class="b">18T</i><i class="a">35T</i><i class="b">70T</i><i class="a">140T</i>
+        <i class="a">281T</i><i class="b">562T</i><i class="a">1Q</i><i class="b">2Q</i><i class="a">4Q</i><i class="b">9Q</i><i class="a">18Q</i><i class="b">36Q</i>
+        <i class="b">72Q</i><i class="a">144Q</i><i class="b">288Q</i><i class="a">576Q</i><i class="b">1e3Q</i><i class="a">2e3Q</i><i class="b">4e3Q</i><i class="last">2⁶³</i>
+      </div>
+      <p class="note">注：格中标 "k/M/B/T/Q" 分别代表千 / 百万 / 十亿 / 万亿 / 十万亿亿级；最后一格 "2⁶³" 即约 9.2×10¹⁸ 粒，是全盘的精华所在。</p>
+    </section>
+
+    <!-- 真实案例 -->
+    <section class="card">
+      <h2><span class="tag">案例</span>现实中的复利</h2>
+
+      <div class="case">
+        <h4>一、巴菲特的"晚熟"财富曲线</h4>
+        <p>沃伦·巴菲特 11 岁买第一只股票，但公开资料显示，他约 99% 的财富是在 50 岁之后才积累起来的。并非中年突然"开窍"，而是早期打下的本金基数的雪球，在数十年里持续滚动、再投资——这正是复利与"足够长的时间"结合的产物。他本人常说，自己把"雪球"放在了一条又长又湿的坡道上。</p>
+      </div>
+
+      <div class="case">
+        <h4>二、信用卡债务的黑暗面</h4>
+        <p>复利不只对存款温柔，对欠款同样冰冷。一张年利率 18% 的信用卡，若只还"最低还款额"，1000 元欠款可能要十几年、并付出数倍利息才能还清。这里复利方向相反：你不是在利滚利地变富，而是在利滚利地变穷。民间称高利贷"驴打滚"，说的就是负向复利。</p>
+      </div>
+
+      <div class="case">
+        <h4>三、72 法则：心算翻倍的捷径</h4>
+        <p>想粗略估算"本金翻倍需要多久"？用 72 除以年化收益率即可。8% 约 9 年翻一倍，12% 约 6 年，4% 约 18 年。反之，通胀 3% 意味着购买力约 24 年减半。这条法则让抽象的"指数"变成可以随手掂量的数字。</p>
+        <table class="tbl">
+          <tr><th>年化收益率</th><th>4%</th><th>6%</th><th>8%</th><th>10%</th><th>12%</th></tr>
+          <tr><td>翻倍所需年数（72 法则）</td><td>18</td><td>12</td><td>9</td><td>7.2</td><td>6</td></tr>
+        </table>
+      </div>
+
+      <div class="case">
+        <h4>四、定投指数基金的"傻瓜雪球"</h4>
+        <p>普通人未必能选对牛股，但每月固定投入、长期持有宽基指数，并把分红再投资，就搭上了复利的便车。关键不在某一年赚多少，而在于"不中断"——时间是朋友，中断才是敌人。</p>
+      </div>
+    </section>
+
+    <!-- 与已学概念关联 -->
+    <section class="card">
+      <h2><span class="tag">关联</span>它和哪些概念是亲戚</h2>
+      <div class="rel">
+        <div class="item"><b>风险与回报</b><span>复利是"回报"在时间维度的放大镜：高回报叠加长时间会产生惊人结果，但高波动会打断雪球。</span></div>
+        <div class="item"><b>机会成本</b><span>早开始与晚开始的差距，是机会成本最直观的画像——晚十年的代价，远不止"少存十年"。</span></div>
+        <div class="item"><b>通货膨胀</b><span>复利若跑不赢通胀，名义数字在涨，实际购买力仍在缩水，雪球只是"看起来"变大。</span></div>
+        <div class="item"><b>沉没成本</b><span>已投入不应左右未来决策；但复利提醒我们，别让"中途赎回"把已滚起的雪球清零。</span></div>
+        <div class="item"><b>杠杆 / 做空</b><span>杠杆放大收益也放大亏损，负向复利比正向更凶狠——爆仓往往发生在"反向加倍"里。</span></div>
+        <div class="item"><b>资产配置</b><span>稳定、可再投资的环境是复利的前提；频繁择时、高费率都在偷偷吃掉指数 n。</span></div>
+      </div>
+    </section>
+
+    <!-- 启示 -->
+    <section class="card">
+      <h2><span class="tag">启示</span>给普通投资者的清单</h2>
+      <ul class="tips">
+        <li><b>尽早开始。</b>时间是复利最大的变量，25 岁起步和 35 岁起步的终点可能差出数倍，金额大小反而是次要的。</li>
+        <li><b>让收益再投资。</b>分红、利息别急着花掉，让它们回到本金里继续滚动，这才是"利滚利"的本意。</li>
+        <li><b>警惕负复利。</b>高利贷、信用卡循环利息、频繁交易的高费率，都在用复利的反方向吞噬你。</li>
+        <li><b>随身带 72 法则。</b>看到"年化 X%"就顺手算一下翻倍年数，既能识破夸张承诺，也能衡量通胀侵蚀。</li>
+        <li><b>降低中断。</b>市场大跌时恐慌赎回（呼应"羊群效应"），等于亲手终止雪球——千万别在最低点离场。</li>
+        <li><b>费率长期致命。</b>每年 1% 和 2% 的管理费，在 30 年尺度上会吞掉一大块终值，优先选低成本工具。</li>
+        <li><b>先求不亏，再求快。</b>复利需要"正收益率 + 足够久"，本金安全永远排在"高收益"前面。</li>
+        <li><b>别被高息迷眼。</b>凡是承诺"稳赚高息"的，先想想它能否扛住时间检验（呼应"庞氏骗局"的红旗信号）。</li>
+      </ul>
+    </section>
+
+    <!-- 思考题 -->
+    <section class="card">
+      <div class="think">
+        <h3>今日思考题</h3>
+        <p>假如 24 岁的你每月定投 1000 元，年化收益 8%，坚持到 60 岁（共 36 年）；另一位朋友从 34 岁才开始，每月同样 1000 元、同样 8%，坚持到 60 岁（共 26 年）。两人最终账户金额大约相差多少？这个差距主要说明了复利的哪一个特征？（可用 72 法则大致感受，不必精确计算。）</p>
+      </div>
+    </section>
+
+    <div class="foot">
+      <div class="line"></div>
+      金融概念日报 · 第 37 期《复利》 · 2026-11-04<br>
+      本页为自包含离线报告，所有样式与图表均由 CSS 生成，未引用任何外部资源。<br>
+      内容仅供学习参考，不构成任何投资建议。
+    </div>
+
+  </div>
+</body>
+</html>

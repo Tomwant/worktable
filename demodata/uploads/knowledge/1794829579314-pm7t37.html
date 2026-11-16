@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第13期 · 策略梯度与REINFORCE_Actor-Critic</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+details.qz{margin:12px 0;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+details.qz summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;font-weight:700;color:var(--ink);transition:background .16s}
+details.qz summary:hover{background:#fdf8f0}
+details.qz summary::-webkit-details-marker{display:none}
+details.qz summary::marker{content:""}
+details.qz summary::after{content:"看答案 ▾";margin-left:auto;flex:0 0 auto;font-size:12px;font-weight:600;color:#8a5a1e;background:#faf0e2;border-radius:999px;padding:2px 10px;white-space:nowrap}
+details.qz[open] summary{background:#fdfaf4;border-bottom:1px dashed var(--line)}
+details.qz[open] summary::after{content:"收起 ▴";background:#f2e6d4}
+details.qz > *:not(summary){padding-left:14px;padding-right:14px}
+details.qz > *:not(summary):last-child{padding-bottom:12px}
+details.qz blockquote:empty{display:none}
+</style></head><body><div class="wrap"><h1>第 13 期 · 策略梯度与 REINFORCE / Actor-Critic</h1>
+<blockquote>一句话：<strong>当动作空间大到装不下、甚至连续不断，与其先估价值再反推动作，不如直接把"策略"训成一个会爬坡的神经网络。</strong></blockquote>
+<hr>
+<h2>一、故事：方向盘转多少度，你没法查表</h2>
+<p>阿明的取餐机器人第 12 期总算用 DQN（第 12 期）背下了大商场的 Q 表——但该机器人现在换了个更难的任务：<strong>它是一台真车，要控制方向盘转角</strong>。</p>
+<p>大刘让阿明试试："你让 DQN 选个动作。"</p>
+<p>阿明愣了："转角是从 −π 到 π 的连续值，Q 表怎么枚举？离散成 360 格？那 0.5 度和 0.6 度中间的精细动作就丢了，而且 <code>argmax</code> 只能吐一个确定角度，可有些路口最优策略明明是'八成向左、两成向右'的随机打法。"</p>
+<p>大刘点点头："所以<strong>别绕弯子了</strong>——你之前第 10、11、12 期都在学'某个状态下每个动作值多少'（价值 / Q 函数），再反推动作。这条路在<strong>离散有限动作</strong>时很香，但碰上连续动作和随机策略就卡壳。<strong>直接把策略 <code>π_θ(a|s)</code> 参数化成神经网络，用梯度上升去抬高它的期望回报</strong>。让策略自己长腿，自己学会'在该状态下该往哪使劲'。"</p>
+<p>这一期，我们讲<strong>策略梯度</strong>这条"直接优化策略"的主线，以及它的两个亲儿子：<strong>REINFORCE</strong>（最朴素的蒙特卡洛版）和 <strong>Actor-Critic</strong>（边走边评、低方差版）。</p>
+<hr>
+<h2>二、概念：直接优化策略</h2>
+<h3>1. 为什么不让策略自己长腿</h3>
+<p>回顾这条 RL 主线：<strong>第 9 期</strong> 多臂老虎机（探索-利用）→ <strong>第 10 期</strong> MDP 与贝尔曼方程（价值函数）→ <strong>第 11 期</strong> TD 与 Q 学习（价值法、离策略）→ <strong>第 12 期</strong> DQN（价值法 + 函数近似）。我们一直在学"价值"，再用 <code>argmax</code> 反推动作。它的两个硬伤：</p>
+<ul>
+<li><strong>连续动作装不下</strong>：方向盘转角、机械臂力矩都是连续的，Q 表无法枚举；离散化既丢精度，又卡不住 <code>argmax</code>。</li>
+<li><strong>随机策略难表达</strong>：最优解有时本身就是"以某概率分布撒动作"，<code>argmax</code> 只能给一个确定动作，表达不了"随机"。</li>
+</ul>
+<p><strong>策略梯度</strong>绕开这两点：直接建模 <code>π_θ(a|s)</code>，再优化它。</p>
+<h3>2. 策略梯度的核心公式</h3>
+<p>目标：最大化期望回报 <code>J(θ) = E_{τ∼π_θ}[ G(τ) ]</code>，<code>τ</code> 是整条轨迹。策略梯度定理给出：</p>
+<p>```</p>
+<p>∇_θ J(θ) = E_{τ∼π_θ}[ Σ_t ∇_θ log π_θ(a_t|s_t) · G_t ]</p>
+<p>```</p>
+<p>三个读点：</p>
+<ul>
+<li><strong>对数导数技巧（似然比）</strong>：<code>∇π / π = ∇logπ</code>，把"改参数如何让某个动作更可能"转成"对数概率的梯度"，<strong>天然不依赖环境模型 P</strong>。</li>
+<li><strong><code>G_t</code> 是从 t 步到结尾的折扣总回报</strong>，它当"评分"——拿高分的动作，其对数概率梯度被正向加权，以后更可能出现。</li>
+<li><strong>无模型</strong>：只要能从环境中采样轨迹，就能用样本均值估计这个期望。</li>
+</ul>
+<h3>3. REINFORCE：最朴素的策略梯度</h3>
+<p>REINFORCE 就是上面公式的<strong>蒙特卡洛版</strong>：跑完一整条轨迹，用实际回报 <code>G_t</code> 当权重做梯度上升。</p>
+<p>```</p>
+<p>θ ← θ + α · Σ_t ∇_θ log π_θ(a_t|s_t) · G_t</p>
+<p>```</p>
+<ul>
+<li><strong>优点</strong>：思想干净，梯度<strong>无偏</strong>——必定往期望更好的方向走。</li>
+<li><strong>致命伤</strong>：<strong>方差爆炸</strong>。一条轨迹里运气成分大，<code>G_t</code> 忽高忽低，梯度方向抖得像醉汉（闭环第 14 期随机游走）。需要下面两味药来压方差。</li>
+</ul>
+<h3>4. 两味降方差的药：基线与 Critic</h3>
+<p><strong>(1) 基线 <code>b(s)</code></strong>：把权重从 <code>G_t</code> 换成 <code>G_t − b(s)</code>。只要 <code>b</code> 只依赖状态、不依赖动作，期望梯度<strong>零变化</strong>（证明见题目 2），但方差大幅降低——相当于"和平时水平比，这局算好还是差"。最自然的基线就是状态价值 <code>V(s)</code>，于是权重变成<strong>优势函数 <code>A(s,a) = G_t − V(s)</code></strong>：比平均好多少，就往哪推多少。</p>
+<p><strong>(2) Actor-Critic（演员-评论家）</strong>：干脆再训一个网络 <code>V_w(s)</code> 当 Critic，在线估计优势，不必等整条轨迹跑完。用 <strong>TD 误差 <code>δ_t = r_t + γV_w(s_{t+1}) − V_w(s_t)</code></strong> 当优势的一个"有偏但低方差"近似：</p>
+<ul>
+<li><strong>Actor（演员 = 策略 <code>π_θ</code>）</strong>：<code>θ ← θ + α · δ_t · ∇_θ log π_θ(a_t|s_t)</code></li>
+<li><strong>Critic（评论家 = 价值 <code>V_w</code>）</strong>：<code>w ← w + β · δ_t · ∇_w V_w(s_t)</code></li>
+</ul>
+<p>Critic 在"预测下一步价值"（闭环第 8 期卡尔曼滤波的"先猜后校"、第 12 期 DQN 的目标网络），Actor 在"按点评调整表演"。两个网络各司其职、互相成就。</p>
+<h3>5. 闭环地图</h3>
+<ul>
+<li><strong>RL 主线</strong>：第 9 期 老虎机 → 第 10 期 MDP 价值 → 第 11 期 TD/Q 学习（价值法）→ 第 12 期 DQN（价值法 + 函数近似）→ <strong>本期 策略梯度（直接优化策略）</strong></li>
+<li><strong>梯度上升本体</strong> = 第 4 / 5 期 SGD：把"期望回报"取负当损失，SGD 往上爬即可</li>
+<li><strong>探索靠策略本身的随机性</strong> = 第 3 期退火噪声 / 第 14 期随机游走</li>
+<li><strong>优势 ≈ TD 误差</strong> = 第 11 期自举、第 8 期预测-校正</li>
+</ul>
+<hr>
+<h2>三、四道代表性题目（点开看思路与答案）</h2>
+<details class="qz">
+<summary>题目 1 · REINFORCE 梯度手算基本功</summary>
+<blockquote><strong>解题思路</strong>：最简单的单状态老虎机：只有 1 个状态，两个动作 A / B，策略用 sigmoid 参数化 <code>π_θ(A) = σ(θ)</code>、<code>π_θ(B) = 1 − σ(θ)</code>。跑一条轨迹：选中动作 A，拿到总回报 <code>G = 3</code>。问在 <code>θ = 0</code> 处，<code>∇_θ J(θ)</code> 是多少？</blockquote>
+<blockquote></blockquote>
+<blockquote>对 sigmoid 有一个标准结论：<code>d/dθ log σ(θ) = 1 − σ(θ)</code>（因为 <code>σ' = σ(1−σ)</code>，除以 <code>σ</code> 即得）。REINFORCE 单样本梯度为 <code>g = ∇_θ log π_θ(A) · G</code>。代入 <code>θ=0</code> 时 <code>σ(0)=0.5</code>：</blockquote>
+<blockquote></blockquote>
+<blockquote><code>g = (1 − σ(0)) · G = (1 − 0.5) · 3 = 0.5 · 3 = 1.5</code></blockquote>
+<blockquote></blockquote>
+<blockquote>正负号也对得上：正 <code>θ</code> 会提高 <code>P(A)</code>，而 A 拿到了正回报，所以梯度应为正——推高 A 的概率，符合直觉。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：<code>∇_θ J(0) = 1.5</code>。梯度为正，说明应增大 <code>θ</code> 以提高动作 A 的概率。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 2 · 基线为什么无偏且能降方差</summary>
+<blockquote><strong>解题思路</strong>：证明"只要基线只依赖状态 <code>b(s)</code>、不依赖动作，减基线不改变期望梯度"，并说明为什么基线<strong>不能</strong>是动作的函数。</blockquote>
+<blockquote></blockquote>
+<blockquote>对任意状态 <code>s</code>，固定它，对动作求期望：</blockquote>
+<blockquote></blockquote>
+<blockquote><code>E_{a∼π}[ ∇_θ log π_θ(a|s) · b(s) ]</code></blockquote>
+<blockquote><code>= Σ_a π_θ(a|s) · ( ∇_θ π_θ(a|s) / π_θ(a|s) ) · b(s)</code></blockquote>
+<blockquote><code>= b(s) · Σ_a ∇_θ π_θ(a|s)</code></blockquote>
+<blockquote><code>= b(s) · ∇_θ ( Σ_a π_θ(a|s) )</code></blockquote>
+<blockquote><code>= b(s) · ∇_θ 1 = 0</code></blockquote>
+<blockquote></blockquote>
+<blockquote>关键在于 <code>Σ_a π_θ(a|s) = 1</code> 是常数，其梯度为 0。所以 <code>E[∇logπ · b(s)] = 0</code>，减去 <code>b(s)</code> 后期望梯度不变——<strong>无偏</strong>。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>为什么 <code>b</code> 不能是 <code>a</code> 的函数</strong>：若 <code>b = b(a,s)</code>，则 <code>E[∇logπ · b(a,s)] = Σ_a ∇π(a)·b(a,s)</code>，一般无法抵消成 0，会引入偏差，破坏"策略梯度定理"的保证。因此标准基线是状态价值 <code>V(s)</code>（只依赖 <code>s</code>）。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>为什么能降方差</strong>：<code>G_t</code> 里包含"这个状态本来就高回报"的水平项，它对"哪个动作更好"毫无信息量，却让梯度忽大忽小。减去一个与状态强相关的 <code>b(s)</code>（如 <code>V(s)</code>）就把这层"背景噪音"剥离掉，只留下"相对平均水平，这步是好是差"的<strong>优势</strong>，方差自然缩小。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：证明如上，<code>E[∇logπ·b(s)] = b(s)·∇1 = 0</code>，故无偏；基线必须只依赖状态、不依赖动作，否则有偏。降方差源于剥离了与动作无关的状态背景奖励。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 3 · Actor-Critic 一步更新</summary>
+<blockquote><strong>解题思路</strong>：Critic 用线性价值 <code>V_w(s) = w · s</code>，当前 <code>w = 0.5</code>。观察到一步转移：<code>s_t = 2</code>，执行动作后得即时奖励 <code>r_t = 1</code>，下一状态 <code>s_{t+1} = 3</code>，折扣 <code>γ = 0.9</code>。给定该动作的对数概率梯度 <code>∇_θ log π_θ(a_t|s_t) = 0.5</code>，学习率 <code>α = 0.1</code>，Critic 学习率 <code>β = 0.1</code>。求 TD 误差 <code>δ</code>、Actor 参数增量 <code>Δθ</code>、Critic 参数更新后的 <code>w</code>。</blockquote>
+<blockquote></blockquote>
+<blockquote>先算 TD 误差（当优势的近似）：</blockquote>
+<blockquote><code>δ = r_t + γ·V_w(s_{t+1}) − V_w(s_t)</code></blockquote>
+<blockquote><code>= 1 + 0.9 · (0.5 · 3) − (0.5 · 2)</code></blockquote>
+<blockquote><code>= 1 + 0.9 · 1.5 − 1.0</code></blockquote>
+<blockquote><code>= 1 + 1.35 − 1.0 = 1.35</code></blockquote>
+<blockquote></blockquote>
+<blockquote>Actor 更新：</blockquote>
+<blockquote><code>Δθ = α · δ · ∇_θ log π = 0.1 · 1.35 · 0.5 = 0.0675</code></blockquote>
+<blockquote></blockquote>
+<blockquote>Critic 更新，<code>∇_w V_w(s) = s = 2</code>：</blockquote>
+<blockquote><code>Δw = β · δ · ∇_w V_w(s_t) = 0.1 · 1.35 · 2 = 0.27</code></blockquote>
+<blockquote><code>w_new = 0.5 + 0.27 = 0.77</code></blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：<code>δ = 1.35</code>，<code>Δθ = 0.0675</code>，<code>w</code> 由 0.5 更新为 0.77。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 4 · 连续动作为什么 DQN 做不到、策略梯度能</summary>
+<blockquote><strong>解题思路</strong>：这就是本期故事里阿明卡住的场景。设策略网络输出一个高斯分布：动作 <code>a ∼ N( μ(s), σ² )</code>，其中均值 <code>μ(s) = θᵀs</code>，标准差 <code>σ</code> 固定（与 <code>θ</code> 无关）。请写出 <code>∇_θ log π_θ(a|s)</code> 的显式形式，并说明它如何化解 DQN 在连续动作上的困境。</blockquote>
+<blockquote></blockquote>
+<blockquote>高斯密度：</blockquote>
+<blockquote><code>π_θ(a|s) = (1 / (σ√(2π))) · exp( −(a − μ)² / (2σ²) )</code></blockquote>
+<blockquote></blockquote>
+<blockquote>取对数：</blockquote>
+<blockquote><code>log π_θ(a|s) = −(a − μ)² / (2σ²) − log( σ√(2π) )</code></blockquote>
+<blockquote></blockquote>
+<blockquote>对 <code>θ</code> 求梯度（<code>σ</code> 与 <code>θ</code> 无关，对数常数项消失，且 <code>μ = θᵀs</code>）：</blockquote>
+<blockquote><code>∇_θ log π_θ(a|s) = ∇_θ[ −(a − μ)² / (2σ²) ]</code></blockquote>
+<blockquote><code>= −(1/(2σ²)) · 2(a − μ) · (−∇_θ μ)</code></blockquote>
+<blockquote><code>= (a − μ)/σ² · ∇_θ μ</code></blockquote>
+<blockquote><code>= (a − μ)/σ² · s</code></blockquote>
+<blockquote></blockquote>
+<blockquote>即 <code>∇_θ log π = s · (a − μ) / σ²</code>。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>为什么化解困境</strong>：DQN 需要对每个动作算 Q 值再 <code>argmax</code>，连续动作空间不可枚举、离散化丢精度；而策略梯度<strong>直接对"采样出的那个连续动作"算对数概率梯度</strong>，用"实际动作偏离均值多少"来微调 <code>θ</code>——连续空间天然支持，无需枚举。这正是策略梯度相比价值法最硬核的优势。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：<code>∇_θ log π_θ(a|s) = s · (a − μ) / σ²</code>，其中 <code>μ = θᵀs</code>。它通过对连续动作的对数概率求导，让策略能直接在连续空间中学习，绕开了 DQN 必须离散化 / 枚举动作的死结。</blockquote>
+</details>
+<hr>
+<h2>四、明日预告</h2>
+<p><strong>第 14 期（概念序列第 34 项）：信赖域与 PPO（Proximal Policy Optimization）—— 给策略梯度系上安全带。</strong></p>
+<p>本期策略梯度有个隐患：一步更新步子迈太大，策略可能直接"翻车"（新策略偏离旧策略太远，采样分布失配，梯度估计崩掉）。下期讲 <strong>TRPO / PPO</strong> 如何用"信任域"或"裁剪目标"把每次更新关进笼子里，既稳又快——这也是今天 ChatGPT 背后 RLHF 真正在用的方法。</p>
+<hr>
+<p>*归档说明：本文件为每日概率学推送 D 盘归档分支第 13 期（目录最大期数顺排），含完整故事、概念、四道题及完整解题思路与答案。*</p></div></body></html>

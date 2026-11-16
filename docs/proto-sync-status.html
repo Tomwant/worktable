@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>原型 · 定时任务状态入口</title>
+<style>
+:root{
+  --bg1:#f6f4fa; --bg2:#efeaf7; --surface-solid:#fdfcff;
+  --surface:rgba(255,255,255,.68); --surface-2:rgba(125,91,166,.055);
+  --text:#2a2338; --text-2:#5d5473; --text-3:#8f87a3;
+  --line:rgba(255,255,255,.9); --line-2:rgba(90,70,130,.14); --line-3:rgba(90,70,130,.22);
+  --accent:#7d5ba6; --accent-deep:#63478a; --accent-soft:rgba(125,91,166,.14);
+  --warm:#c9a961; --warm-soft:rgba(201,169,97,.16);
+  --danger:#b8434f; --danger-soft:rgba(184,67,79,.12);
+  --ok:#3f8f5e; --ok-soft:rgba(63,143,94,.13);
+  --r-input:14px; --r-card:22px;
+}
+[data-theme="dark"]{
+  --bg1:#191426; --bg2:#1f1a30; --surface-solid:#221c33;
+  --surface:rgba(45,37,64,.72); --surface-2:rgba(196,167,231,.07);
+  --text:#e9ede8; --text-2:#b6c1ba; --text-3:#a9b5ae;
+  --line:rgba(255,255,255,.12); --line-2:rgba(255,255,255,.12); --line-3:rgba(255,255,255,.22);
+  --accent:#c4a7e7; --accent-deep:#a385cf; --accent-soft:rgba(196,167,231,.16);
+  --warm:#dcb97a; --warm-soft:rgba(220,185,122,.18);
+  --danger:#f09595; --danger-soft:rgba(240,149,149,.16);
+  --ok:#7fc79b; --ok-soft:rgba(127,199,155,.15);
+}
+[data-theme="dark"] .btn.task.stale b{color:var(--warm)}
+[data-theme="dark"] .feed .ic{color:var(--accent)}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;padding:26px 26px 60px;
+  font:14px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(700px 460px at 12% -6%, var(--bg2), transparent 70%),
+    radial-gradient(620px 420px at 92% 4%, rgba(196,167,231,.24), transparent 72%),
+    var(--bg1);
+}
+.wrap{max-width:980px;margin:0 auto}
+.tool{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+.tool small{color:var(--text-3);font-size:12px}
+.tbtn{
+  border:1px solid var(--line-2);background:var(--surface-solid);color:var(--text-2);
+  border-radius:999px;padding:6px 14px;font-size:12px;cursor:pointer;
+}
+
+/* ---- 知识库页头（仅用于还原上下文） ---- */
+.panel{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:22px 24px;backdrop-filter:blur(8px);
+}
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--text-3);margin:0}
+.page-head h1{font-size:23px;margin:5px 0 3px;font-weight:800}
+.page-head p{margin:0;font-size:13px;color:var(--text-2)}
+.selectors{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.count{font-size:12px;color:var(--text-3)}
+.btn{
+  border:1px solid var(--line-2);background:var(--surface-solid);color:var(--text);
+  border-radius:var(--r-input);height:34px;padding:0 15px;font-size:12.5px;
+  cursor:pointer;display:inline-flex;align-items:center;gap:7px;
+  transition:border-color .16s, box-shadow .16s, transform .16s;
+}
+.btn:hover{border-color:var(--accent-soft);box-shadow:0 6px 16px -12px rgba(86,58,140,.6)}
+.btn.primary{
+  background:linear-gradient(135deg,var(--accent),var(--accent-deep));color:#fff;border-color:transparent;
+  min-width:132px;justify-content:center;
+}
+.btn.ghost{background:transparent}
+/* 新按钮：定时任务状态入口。滞后时按钮自己带状态色，不用点开才知道 */
+.btn.task .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);flex:0 0 auto}
+.btn.task.stale{border-color:var(--warm-soft);background:var(--warm-soft);color:var(--text)}
+.btn.task.stale .dot{background:var(--warm)}
+.btn.task.stale b{font-size:11.5px;font-weight:700;color:#a5802f}
+.btn.task.fail{border-color:var(--danger-soft);background:var(--danger-soft)}
+.btn.task.fail .dot{background:var(--danger)}
+
+.mock-list{margin-top:16px;display:flex;flex-direction:column;gap:8px}
+.mock-row{
+  height:52px;border-radius:16px;background:var(--surface-solid);border:1px solid var(--line-2);
+  display:flex;align-items:center;padding:0 16px;font-size:12.5px;color:var(--text-3);
+}
+
+/* ---- 弹窗 ---- */
+.mask{
+  position:fixed;inset:0;background:rgba(30,22,46,.34);backdrop-filter:blur(3px);
+  display:none;align-items:center;justify-content:center;padding:24px;z-index:9;
+}
+.mask.on{display:flex}
+.modal{
+  width:min(560px,94vw);background:var(--surface-solid);border-radius:var(--r-card);
+  border:1px solid var(--line);box-shadow:0 30px 70px -30px rgba(50,30,90,.5);
+  overflow:hidden;
+}
+.m-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:20px 22px 0}
+.m-hd h3{margin:0;font-size:15.5px;font-weight:750}
+.m-hd p{margin:3px 0 0;font-size:11.5px;color:var(--text-3)}
+.badge{
+  display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;
+  font-size:11px;padding:4px 10px;border-radius:999px;
+  background:var(--warm-soft);color:var(--warm);font-weight:650;
+}
+.badge i{width:6px;height:6px;border-radius:50%;background:currentColor}
+.m-bd{padding:16px 22px 0}
+
+.pg-top{display:flex;align-items:baseline;gap:2px;margin-bottom:7px}
+.pg-top b{font-size:20px;font-weight:800;letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.pg-top > span{font-size:11.5px;color:var(--text-3)}
+.pg-top .pc{margin-left:auto;font-size:11.5px;color:var(--text-3)}
+.bar{height:6px;border-radius:99px;background:var(--line-2);overflow:hidden}
+.bar > i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent),var(--accent-deep))}
+
+.feeds{margin-top:15px;display:flex;flex-direction:column;gap:7px}
+.feed{
+  display:grid;grid-template-columns:30px 1fr auto;align-items:center;gap:11px;
+  padding:11px 12px;border-radius:14px;border:1px solid var(--line-2);
+  background:var(--surface-solid);
+}
+.feed.stale{border-color:var(--warm-soft);background:var(--warm-soft)}
+.feed.fail{border-color:var(--danger-soft);background:var(--danger-soft)}
+.feed .ic{
+  width:30px;height:30px;border-radius:10px;display:grid;place-items:center;
+  background:var(--surface-2);color:var(--accent-deep);font-size:16px;font-weight:700;
+}
+.feed .nm{font-size:12.5px;font-weight:650;display:flex;align-items:center;gap:7px}
+.feed .sb{font-size:11px;color:var(--text-3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.feed .sb em{font-style:normal;color:var(--warm);font-weight:700}
+.st{font-size:11px;padding:3px 9px;border-radius:999px;white-space:nowrap;font-weight:650}
+.st.done{background:var(--ok-soft);color:var(--ok)}
+.st.wait{background:var(--surface-2);color:var(--text-3)}
+.st.stale{background:var(--warm);color:#fff}
+.st.fail{background:var(--danger);color:#fff}
+.st.running{background:var(--accent-soft);color:var(--accent)}
+
+.m-ft{
+  margin-top:16px;padding:14px 22px;border-top:1px dashed var(--line-3);
+  display:flex;align-items:center;gap:10px;
+}
+.m-ft .hint{font-size:11px;color:var(--text-3);flex:1;min-width:0;line-height:1.55}
+.m-ft .acts{display:flex;gap:8px;flex:0 0 auto}
+
+.note{
+  margin-top:16px;font-size:12px;color:var(--text-3);line-height:1.8;
+}
+.note b{color:var(--text-2)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="tool">
+    <small>原型：知识库右上角新增「定时任务」入口（点一下看三路状态）</small>
+    <button class="tbtn" onclick="toggleTheme()">切换深浅色</button>
+  </div>
+
+  <div class="panel">
+    <div class="page-head">
+      <div>
+        <p class="eyebrow">知识库</p>
+        <h1>个人知识库</h1>
+        <p>每一次思考，都不会白白飘过。</p>
+      </div>
+      <div class="selectors">
+        <small class="count">84 条内容</small>
+        <!-- 新增：定时任务状态入口 -->
+        <button class="btn task stale" id="taskBtn" onclick="openModal()">
+          <span class="dot"></span>定时任务<b>· 1 项滞后</b>
+        </button>
+        <button class="btn primary">+ 导入 HTML</button>
+      </div>
+    </div>
+
+    <div class="mock-list">
+      <div class="mock-row">第26期 · 美股每日新闻简报 …</div>
+      <div class="mock-row">第6期 · 变分推断与KL散度 …</div>
+      <div class="mock-row">第25期 · 美股每日新闻简报 …</div>
+    </div>
+  </div>
+
+  <p class="note">
+    <b>按钮自带状态</b>：全绿时小圆点是绿的、不写数字；有一路滞后就变金色并写「1 项滞后」；同步失败变红。
+    这样不点开也已经知道有没有问题。
+  </p>
+</div>
+
+<!-- 弹窗 -->
+<div class="mask" id="mask" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="m-hd">
+      <div>
+        <h3>定时任务更新状态</h3>
+        <p>2026年10月29日 · 后台每分钟自动检查一次</p>
+      </div>
+      <span class="badge"><i></i>1 项滞后</span>
+    </div>
+
+    <div class="m-bd">
+      <div class="pg-top">
+        <b>67</b><span>%</span>
+        <span class="pc">2 / 3 今天已更新</span>
+      </div>
+      <div class="bar"><i style="width:67%"></i></div>
+
+      <div class="feeds">
+        <div class="feed">
+          <span class="ic">◈</span>
+          <div>
+            <div class="nm">金融概念</div>
+            <div class="sb">第26期 · 美联储议息前瞻 · 10-29 今天</div>
+          </div>
+          <span class="st done">已更新</span>
+        </div>
+
+        <div class="feed">
+          <span class="ic">◇</span>
+          <div>
+            <div class="nm">概率学概念</div>
+            <div class="sb">第6期 · 变分推断与KL散度 · 10-29 今天</div>
+          </div>
+          <span class="st done">已更新</span>
+        </div>
+
+        <!-- 关键：卡住的那一路，在这一屏里直接标出来 -->
+        <div class="feed stale">
+          <span class="ic">◉</span>
+          <div>
+            <div class="nm">实时新闻</div>
+            <div class="sb">第25期 · 美股每日新闻简报 · 最新 10-27 · <em>已 2 天没更新</em></div>
+          </div>
+          <span class="st stale">滞后 2 天</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="m-ft">
+      <span class="hint">实时新闻已 2 天无新产出，检查任务与产出目录。</span>
+      <div class="acts">
+        <button class="btn ghost" onclick="closeModal()">关闭</button>
+        <button class="btn primary" onclick="checkNow(this)">立即检查</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function toggleTheme(){
+  const el = document.documentElement
+  el.dataset.theme = el.dataset.theme === 'dark' ? 'light' : 'dark'
+}
+function openModal(){ document.getElementById('mask').classList.add('on') }
+function closeModal(){ document.getElementById('mask').classList.remove('on') }
+function checkNow(btn){
+  btn.textContent = '检查中…'
+  btn.disabled = true
+  setTimeout(() => { btn.textContent = '立即检查'; btn.disabled = false }, 1200)
+}
+</script>
+</body>
+</html>

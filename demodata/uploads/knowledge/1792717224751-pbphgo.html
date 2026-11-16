@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第1期 · 随机图与渗流</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>第 1 期 · 随机图与渗流：六度分隔与"突然连通"的相变</h1>
+<blockquote>本期概念：<strong>随机图（Erdős–Rényi 模型）</strong> 与 <strong>渗流（Percolation）</strong>。</blockquote>
+<blockquote>核心直觉——<strong>连接是"相变"出来的</strong>：边数跨过一条看不见的临界线，系统会从一个个孤立小圈子，瞬间熔成一张覆盖全局的巨网。疾病能不能蔓延、互联网抗不抗揍、你和陌生人隔几步，全由这条线决定。</blockquote>
+<hr>
+<h2>一、故事引入：阿明的"朋友圈突然连通"之谜</h2>
+<p>阿明把母校 <strong>1000 名毕业生</strong>拉进一个群，想看看大家私下还聊不聊得来。他做了一件简单的事：把每个人当作一个<strong>节点</strong>，对<strong>任意两个人</strong>，都以同一个小概率 <code>p</code> 随机连一条"好友边"。这就是数学家 <strong>Erdős 和 Rényi</strong> 在 1959 年定义的随机图 <code>G(n, p)</code>——<code>n</code> 个人，<code>p</code> 是每条边存在的独立概率。</p>
+<p>阿明先试了 <code>p = 0.0008</code>（平均每人约 0.8 个好友）。点开可视化：群被切成<strong>几百个互不连通的小圈子</strong>，最大的那坨也才 7、8 个人，像一地碎玻璃。</p>
+<p>大刘在旁边说："你把概率翻倍试试？多这么一丁点边，能有多大区别。"</p>
+<p>阿明把 <code>p</code> 调到 <code>0.0015</code>（平均每人 1.5 个好友）。再一看——<strong>最大的圈子突然吞掉了 580 人，超过总人数的一半</strong>。从 0.8 到 1.5，平均好友数只多了 0.7，却从"七零八落"跳到了"一呼百应"。</p>
+<p>"这不科学，"大刘瞪眼，"加几条边而已，怎么像开水一样'咕咚'一下就沸了？"</p>
+<p>阿明笑了："这叫<strong>相变（phase transition）</strong>。随机图里藏着一条临界线——平均度 <code>⟨k⟩ = 1</code>。线这边是一地碎玻璃，线那边是瞬间熔成的一片海。临界点附近，系统对参数<strong>极度敏感</strong>，这正是概率里最反直觉、也最迷人的地方。"</p>
+<p>后来大刘做了个公共卫生的课题：怎么用"消毒、戴口罩"把<strong>传染链</strong>掐断？阿明说："你那张接触网，本质就是一张随机图；病毒沿着边'渗流'。只要把每条边的'有效传染概率'压到临界值以下，病就渗不过去——渗流不发生，大暴发就不可能。"</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>2.1 随机图 <code>G(n, p)</code>：从"撒边"说起</h3>
+<ul>
+<li><strong>节点</strong>：<code>n</code> 个（人、网页、城市……）。</li>
+<li><strong>边</strong>：<code>C(n, 2)</code> 条可能的边，每条<strong>独立</strong>地以概率 <code>p</code> 出现。</li>
+<li><strong>平均度（average degree）</strong>：<code>⟨k⟩ = p · (n − 1) ≈ p·n</code>。这是整张图的"平均每个节点的朋友数"，是后面一切的旋钮。</li>
+</ul>
+<p>直觉钩子：如果 <code>⟨k⟩</code> 很小，绝大多数边没出现，图必然是碎的；<code>⟨k⟩</code> 变大，边越来越多——但<strong>不是线性地"慢慢连通"，而是越过某点后"哗"地连通</strong>。</p>
+<h3>2.2 平均度与两条临界线（相变）</h3>
+<p>随机图最漂亮的发现，是存在<strong>两条由平均度刻画的临界线</strong>：</p>
+<p>| 平均度 <code>⟨k⟩</code> | 现象 | 直觉 |</p>
+<p>|---|---|---|</p>
+<p>| <code>⟨k⟩ &lt; 1</code> | 没有巨无霸分量，最大圈子约 <code>ln n</code> 大小 | 边太少，连不成片 |</p>
+<p>| <code>⟨k⟩ = 1</code> | <strong>巨型分量诞生的临界点</strong> | 相变点 |</p>
+<p>| <code>⟨k⟩ &gt; 1</code> | 出现占整体比例 <code>S &gt; 0</code> 的<strong>巨连通分量（giant component）</strong>，<code>S ≈ 1 − e^{−⟨k⟩S}</code> | 突然熔成一片海 |</p>
+<p>| <code>⟨k⟩ ≈ ln n</code> | 整张图<strong>几乎一定全连通</strong>（任意两点可达） | 彻底连成一张网 |</p>
+<ul>
+<li><strong>巨分量阈值 <code>p ≈ 1/n</code></strong>（对应 <code>⟨k⟩ ≈ 1</code>）：跨过它，才出现覆盖常数比例人群的"大圈子"。</li>
+<li><strong>连通阈值 <code>p ≈ (ln n)/n</code></strong>（对应 <code>⟨k⟩ ≈ ln n</code>）：跨过它，连最边缘的孤点都被拉进网里。</li>
+<li>两条线相差约 <strong><code>ln n</code> 倍</strong>——对大网络来说这是个巨大的鸿沟。</li>
+</ul>
+<blockquote><strong>为什么叫"相变"？</strong> 就像水加热到 100°C 从液态"突变"成气态，随机图在 <code>⟨k⟩ = 1</code> 处，连通性从"碎"到"巨"地跳变。参数只动一点点，宏观性质天翻地覆。这正是大刘"加几条边就沸了"的困惑之源。</blockquote>
+<h3>2.3 六度分隔：为什么巨网并不"远"</h3>
+<p>巨网出现后，另一个反直觉的事实是——<strong>它并不"大"到走不到</strong>。</p>
+<p>在 <code>G(n, p)</code> 里，任意两点间的<strong>最短距离（直径）</strong>约为：</p>
+<p>```</p>
+<p>d ≈ ln n / ln ⟨k⟩</p>
+<p>```</p>
+<p>这是<strong>对数级</strong>增长：网络规模翻 1000 倍，平均距离只翻约 3 倍。1967 年 Milgram 的实验发现，任意两个美国人平均只隔 <strong>约 6 步</strong>——这就是著名的<strong>六度分隔（six degrees of separation）</strong>。</p>
+<p>直觉：你朋友的朋友的朋友……每跳一层，人数按 <code>⟨k⟩</code> 倍爆炸（≈ 50 倍），几跳就覆盖全人类。所以"世界很小"不是鸡汤，是随机图的数学结论。</p>
+<h3>2.4 渗流：消毒能否阻断传染链</h3>
+<p><strong>渗流（percolation）</strong> 是随机图在"格子"上的表亲：在方格/网络上，每条边（或每个点）以概率 <code>p</code> <strong>打开（可通行）</strong>，否则关闭。</p>
+<ul>
+<li><code>p &lt; p_c</code>（临界概率）：只存在<strong>有限大小</strong>的连通簇，流体/病毒<strong>渗不过整张网</strong> → <strong>渗流不发生</strong>。</li>
+<li><code>p &gt; p_c</code>：出现<strong>无限大</strong>的连通簇 → <strong>渗流发生</strong>，病毒可跨网暴发。</li>
+<li>经典值：二维方格 bond percolation 的 <code>p_c = 1/2</code>。</li>
+</ul>
+<p>这恰好是传染病模型的本质：把接触边当作"可传染边"，每条边有效传染概率为 <code>q</code>。在随机图(mean-field)近似下，<strong>大暴发发生的条件等价于 <code>⟨k⟩·q &gt; 1</code></strong>——也就是 <strong>基本再生数 <code>R₀ &gt; 1</code></strong>。要阻断，就把 <code>q</code> 压到 <code>1/⟨k⟩</code> 以下：要么<strong>少接触</strong>（降 <code>p</code>，社交距离），要么<strong>降每条边传染率</strong>（口罩、疫苗）。</p>
+<blockquote>闭环回顾：第 5 期"期望值"、第 10 期"中心极限定理"、第 14 期"随机游走"、第 19 期"重尾"——它们都默认"系统平滑可近似"。而今天这张图告诉你：<strong>有些系统天生有临界点，平滑思维会彻底失灵</strong>。</blockquote>
+<hr>
+<h2>三、代表性题目 / 故事（你来总结）</h2>
+<p>下面四题，先别急着看答案，自己推一遍——把"临界线"和"对数直径"两个直觉用进去。</p>
+<h3>题目 1 · 朋友圈爆发</h3>
+<p>某 App 有 <code>n = 1000</code> 个用户，按 <code>G(n, p)</code> 随机连好友。</p>
+<ul>
+<li>(a) 当平均度 <code>⟨k⟩ = 0.8</code> 时，最大的朋友圈大概多少人？</li>
+<li>(b) 当平均度 <code>⟨k⟩ = 1.5</code> 时，最大的朋友圈占全体的比例约多少？</li>
+</ul>
+<h3>题目 2 · 连通阈值</h3>
+<p>一个 <code>n = 10⁶</code> 用户的社交网络，想让"任意两人几乎一定能互加好友链"成立，<code>p</code> 至少要多大？此时平均每人要连多少个好友？对比"出现巨分量"的阈值差多少倍？</p>
+<h3>题目 3 · 六度验证</h3>
+<p>全球 <code>n = 80 亿</code> 人，按平均度 <code>⟨k⟩ = 50</code> 的随机图建模。任意两人之间的平均距离约几步？这和"六度分隔"对得上吗？</p>
+<h3>题目 4 · 消毒阻断传染</h3>
+<p>某社区平均每人每天有 <code>⟨k⟩ = 20</code> 次有效接触。每次接触传播病毒的真实概率（戴口罩前）为 <code>q</code>。</p>
+<ul>
+<li>(a) 大暴发（出现覆盖全社区的传染网）发生的临界 <code>q_c</code> 是多少？</li>
+<li>(b) 若通过戴口罩、消毒把每条边的传染率降到 <code>q = 0.03</code>，能否阻断大暴发？需要再把接触次数压到多少以下（或 <code>q</code> 再降到多少）才稳？</li>
+</ul>
+<hr>
+<h2>四、解题思路（参考答案，写全供你对照）</h2>
+<h3>题目 1 · 朋友圈爆发</h3>
+<p><strong>思路</strong>：直接看平均度与临界线 <code>⟨k⟩ = 1</code> 的关系。</p>
+<ul>
+<li>(a) <code>⟨k⟩ = 0.8 &lt; 1</code>：处于"碎玻璃"区。理论上最大连通分量大小约 <code>ln n = ln(1000) ≈ 6.9</code>，即<strong>约 7 人</strong>（占 0.7%）。其余全是两三人小圈。</li>
+<li>(b) <code>⟨k⟩ = 1.5 &gt; 1</code>：出现巨分量，其比例 <code>S</code> 满足自洽方程 <code>S = 1 − e^{−⟨k⟩S}</code>。</li>
+</ul>
+<p>代入 <code>⟨k⟩ = 1.5</code>：试 <code>S = 0.58</code> → 右边 <code>= 1 − e^{−0.87} ≈ 1 − 0.419 = 0.581</code>；<code>S ≈ 0.58</code> 收敛。</p>
+<p>所以最大圈子约占 <strong>58%，即约 580 人</strong>。</p>
+<ul>
+<li><strong>结论</strong>：平均好友数从 0.8 涨到 1.5（仅 +0.7），最大圈子从 7 人飙到 580 人——<strong>相变的力量</strong>。</li>
+</ul>
+<h3>题目 2 · 连通阈值</h3>
+<p><strong>思路</strong>：连通阈值 <code>p ≈ (ln n)/n</code>，巨分量阈值 <code>p ≈ 1/n</code>。</p>
+<ul>
+<li><code>ln(10⁶) = 13.8155</code>，故 <code>p ≈ 13.8155 / 10⁶ ≈ 1.38 × 10⁻⁵</code>。</li>
+<li>此时平均度 <code>⟨k⟩ ≈ p·n = ln n ≈ 13.8</code>——即每人平均要连 <strong>约 14 个</strong>好友，整图才几乎一定全连通。</li>
+<li>对比巨分量阈值 <code>p ≈ 1/n = 10⁻⁶</code>，平均度仅 1。两者相差 <code>ln n ≈ 13.8</code> 倍：从"出现大圈子"到"彻底连成一片"，中间还差一个数量级的边。</li>
+</ul>
+<h3>题目 3 · 六度验证</h3>
+<p><strong>思路</strong>：用直径公式 <code>d ≈ ln n / ln ⟨k⟩</code>。</p>
+<ul>
+<li><code>ln(8×10⁹) = ln 8 + ln 10⁹ ≈ 2.079 + 20.723 = 22.802</code>。</li>
+<li><code>ln 50 ≈ 3.912</code>。</li>
+<li><code>d ≈ 22.802 / 3.912 ≈ 5.83</code> → <strong>约 6 步</strong>。</li>
+<li>与 Milgram 的"六度分隔"惊人吻合——说明真实社交网在"平均距离"这一点上，和随机图模型高度一致。</li>
+</ul>
+<h3>题目 4 · 消毒阻断传染</h3>
+<p><strong>思路</strong>：大暴发 ⟺ 渗流发生 ⟺ <code>R₀ = ⟨k⟩·q &gt; 1</code>，临界 <code>q_c = 1/⟨k⟩</code>。</p>
+<ul>
+<li>(a) <code>⟨k⟩ = 20</code> → <code>q_c = 1/20 = 0.05</code>。即每条接触传染率超过 <strong>5%</strong>，就会暴发。</li>
+<li>(b) <code>q = 0.03 &lt; 0.05</code> → <code>R₀ = 20 × 0.03 = 0.6 &lt; 1</code>，<strong>能阻断</strong>大暴发（传染网渗不过去）。</li>
+</ul>
+<p>若想更稳（冗余），可把接触数压到 <code>⟨k⟩ &lt; 1/q = 33.3</code>（其实已满足）；或把 <code>q</code> 再降到比如 <code>0.02</code>（<code>R₀ = 0.4</code>）。</p>
+<ul>
+<li><strong>政策直觉</strong>：阻断大暴发不用把 <code>q</code> 降到 0，只要压到 <code>1/⟨k⟩</code> 这条临界线之下——这就是"社交距离 + 口罩"的数学底线。</li>
+</ul>
+<hr>
+<h2>五、明日预告</h2>
+<p>下一期聊 <strong>信息级联与羊群效应（Information Cascades）</strong>：当每个人只看"前面的人怎么选"，真实信号会被淹没，群体会盲从出一个<strong>可能全错的共识</strong>。它正好是本期"连通网如何放大行为"的延续——网连上了，谣言和恐慌也会渗流。</p>
+<blockquote>今天留个问题给你：本期四题里，哪一步最让你"没想到"？是相变（0.8→1.5 的跳跃）、对数直径（80 亿人只隔 6 步）、还是 <code>R₀ &gt; 1</code> 那条临界线？想清楚一个，就够用了。</blockquote></div></body></html>

@@ -1,0 +1,31 @@
+{
+  "name": "spring-workbench",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "concurrently -k \"npm:dev:web\" \"npm:dev:api\"",
+    "dev:web": "vite",
+    "dev:api": "node server/index.js",
+    "build": "vite build",
+    "build:demo": "vite build --mode demo",
+    "preview": "vite preview",
+    "export:demo": "node scripts/export-demo.mjs",
+    "desktop": "electron electron/main.cjs",
+    "desktop:dev": "concurrently -k \"npm:dev:web\" \"npm:dev:api\" \"wait-on http://localhost:3001 && electron electron/main.cjs\""
+  },
+  "dependencies": {
+    "@vitejs/plugin-vue": "latest",
+    "concurrently": "^10.0.5",
+    "dotenv": "^17.4.2",
+    "express": "^5.2.1",
+    "mysql2": "^3.24.2",
+    "naive-ui": "^2.45.3",
+    "vite": "latest",
+    "vue": "latest"
+  },
+  "devDependencies": {
+    "electron": "^40.0.0",
+    "wait-on": "^9.0.0"
+  }
+}

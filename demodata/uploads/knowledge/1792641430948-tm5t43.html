@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第12期 · 锚定效应</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 12 期</span>
+  <h1>今天的概念：<span class="tag">锚定效应</span>（Anchoring Effect）</h1>
+  <div class="date">2026年9月27日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 那个"¥1999"其实从没存在过</h2>
+    <p>小美逛商场，看中一件大衣。吊牌上赫然印着：<strong>原价 ¥1999，划掉，现价 ¥599</strong>。她心里一算"省了 1400！"立刻掏钱。可她不知道，这件衣服出厂批价才 280，所谓的 1999 是商家<strong>凭空写上去的第一个数字</strong>。这个数字一出现，就像船抛下的锚，把小美心里"这衣服值多少"的标尺，死死钉在了高处——于是 599 显得便宜得不像话。</p>
+    <p>同样的把戏，阿伟在二手车市场也撞上了。车商开口就报"<strong>这车指导价 18 万，我帮你申请个友情价 13 万</strong>"。阿伟觉得捡了大便宜，乐呵呵签了。其实同款市价才 11 万，他多花了 2 万。那个 18 万，就是锚——它把阿伟对"这车值多少"的判断，硬生生拽到了高空，哪怕最后砍到 13 万，他还在感恩。</p>
+    <p>最扎心的是小琳的工资。她上份工作月薪 8000，新公司面试问期望，她脱口而出"<strong>9000 以上就行</strong>"。结果拿到 10000，她感激涕零。可同岗位的市场价是 13000——她的<strong>旧工资，成了钉死她谈判上限的锚</strong>。面试官根本不用压价，她自己就把价码压了下去。你看，锚不一定是谁设的局，有时是我们<strong>自己心里先抛下的那根</strong>。</p>
+    <div class="board">
+      <div class="row head"><span class="k">同一个东西，先看到哪个数字，决定你觉得它"值多少"</span><span class="v">锚 vs 真实价</span></div>
+      <div class="row"><span class="k">大衣：先见 ¥1999</span><span class="v">¥599 显得超值（实批价 ¥280）</span></div>
+      <div class="row"><span class="k">大衣：若先见 ¥280</span><span class="v">¥599 会被当成抢劫</span></div>
+      <div class="row"><span class="k">二手车：先见 ¥18万</span><span class="v">¥13万 像捡漏（实值 ¥11万）</span></div>
+      <div class="row"><span class="k">工资：先锚 ¥8000</span><span class="v">要 ¥9000，错过 ¥13000</span></div>
+    </div>
+    <p>看明白这张表，你就发现：<strong>我们对"贵不贵、值不值"的判断，常常不是看东西本身，而是看它旁边那个第一个出现的数字</strong>。锚一抛下，后面的所有比较，都绕着它转。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>锚定效应</strong>，是行为金融学里的一条经典偏差：人在做判断时，会<strong>过度依赖最先接触到的那个信息（"锚"）</strong>，哪怕它和决策毫不相干，后续估计也会像被磁铁吸住一样，围着这个锚上下小幅调整，而很难彻底摆脱它。简单说——<strong>第一眼看到的那个数，会偷偷替你定好后面所有判断的参照系</strong>。</p>
+    <div class="formula">判断 ≈ 锚点 ± 调整　→　调整往往不足　⇒　最终值被锚"吸住"</div>
+    <p>这条规律往下延伸，能解释无数"非理性"：其一，<strong>定价与议价的话语权，在于谁来抛第一个数</strong>。卖房先挂高价、拍卖先抬起拍价、面试官先报薪范围——谁先开口设锚，谁就占了先机；所以谈薪时尽量<strong>让对方先出价</strong>，或自己先抛一个有据可依的、偏高的真实市场锚。其二，<strong>折扣的魔法全在"原价"那个锚</strong>，"史上最低""限购 3 天"都是把锚立得又高又急，逼你当场下单。其三，<strong>投资里最危险的锚，是"我的成本价"</strong>——很多人死捂一只跌了的股票，不是因为它好，而是"我 50 块买的，得等回本再卖"，那个买入价成了锚，蒙住了"现在该不该卖"的真正判断。</p>
+    <p>🌰 换到你的钱包：剁手前先问自己——"<strong>这个'原价'是真的吗？还是刚给我看的？</strong>"谈工资前，先去查<strong>市场中位数</strong>，用它当自己的锚，别让旧工资替你谈。买股票被套时，把"我的成本"忘掉，只问"<strong>以今天的价格，它还值不值得买？</strong>"——能拆掉锚的人，才不容易被牵着走。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>第一眼的数字会替你定标尺</strong>：人对价值的判断极度依赖最先出现的"锚"，后续的"划算不划算"都绕着它转——所以虚假原价能把 599 包装成捡漏。</li>
+      <li><strong>抢设锚的人掌握主动权</strong>：议价、定价、拍卖，谁先抛第一个数谁就占先机。谈薪资尽量让对方先出价，或用自己的"市场真实锚"去对冲对方的虚高锚。</li>
+      <li><strong>最该拆掉的锚，是"我的成本价"</strong>：别被买入价绑架，被套时只看"现在这个价还值不值得持有"，而不是"等回本再卖"——成本价是过去，决策要看未来。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：羊群效应 —— 为什么基金火的时候大家排队买、跌的时候又排队卖？为什么明知可能是泡沫，你还忍不住跟着冲？当身边人都在跑，你很难停下自己的脚。</div>
+</div>
+</body>
+</html>

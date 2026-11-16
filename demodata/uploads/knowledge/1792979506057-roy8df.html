@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第3期 · 模拟退火与随机优化</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>第 3 期：模拟退火与随机优化（用"噪声"跳出局部最优）</h1>
+<blockquote><strong>今日概念</strong>：模拟退火（Simulated Annealing, SA）——一种借「金属退火」灵感、用随机扰动逃离局部最优的随机优化算法。</blockquote>
+<blockquote><strong>一句话</strong>：当问题地形充满陷阱（局部最优），与其死守"只许变好"的贪心，不如先"加热乱跳"、再"慢慢降温锁定"，让算法有概率翻过山丘、找到真正的全局最低谷。</blockquote>
+<hr>
+<h2>一、故事引入：阿明被一座"假山谷"困住了</h2>
+<p>阿明是一家物流公司的调度，最近接了个愁人的活儿——给 10 个配送点排一条<strong>最短回路</strong>（这就是经典的「旅行商问题 / TSP」）。他把地图摊开，凭直觉画了一条路线，发现确实比原来短，挺开心。</p>
+<p>可大刘看了一眼，泼了盆冷水："你这条线中间还<strong>交叉</strong>着呢，绕远了。交叉一解开，还能短一截。"</p>
+<p>阿明不服，动手把交叉处解开，路线果然短了。<strong>但问题来了</strong>：他每动一步，都只接受"比现在更短"的改法。结果改着改着，路线卡在了一个"局部看起来最顺、再动一步都会变长"的状态——可大刘心里清楚，全盘重排后还有一条明显更短的路线，只是中间要先经过一段"暂时变长"的弯路。</p>
+<p>阿明急了："我每一步都在优化，凭什么还不是最好？"</p>
+<p>大刘笑了："你这是<strong>贪心爬山</strong>——山腰上有个小坑你就蹲下了，根本没胆量爬出坑、翻过眼前那座山，去够另一边的深谷。真正的炼钢师傅怎么做的？<strong>先把铁烧到通红，让原子乱蹦、跳出小坑；再慢慢冷却，原子才会在最低能态定下来。</strong> 这叫退火。你的算法，也该'退火'。"</p>
+<p>阿明恍然大悟：<strong>给搜索加点"受控的乱"，反而能找到更优的解。</strong> 这条思路，就是模拟退火。</p>
+<hr>
+<h2>二、概念讲解：退火是怎么"算"出来的</h2>
+<h3>1. 我们要解决什么</h3>
+<p>很多现实问题本质是：在一个<strong>巨大且坑洼的解空间</strong>里，找使某个目标函数 <code>f(x)</code> <strong>最小</strong>（或最大）的解。</p>
+<ul>
+<li>目标 <code>f(x)</code> 就像"地形高度"，我们要找的是<strong>最低谷（全局最优）</strong>。</li>
+<li>麻烦在于：地形上到处是<strong>局部最优（假山谷）</strong>，贪心式"只接受变好"的搜索一进坑就出不来。</li>
+</ul>
+<h3>2. 核心机制：Metropolis 接受准则</h3>
+<p>模拟退火在每一步都从当前解 <code>x</code> 随机走到一个"邻居解" <code>x'</code>，算能量变化 <code>ΔE = f(x') − f(x)</code>：</p>
+<ul>
+<li>若 <code>ΔE ≤ 0</code>（新解更好或更平）：<strong>总是接受</strong>。</li>
+<li>若 <code>ΔE &gt; 0</code>（新解更差）：<strong>以概率 <code>p = exp(−ΔE / T)</code> 接受</strong>，否则拒绝。</li>
+</ul>
+<p><strong>这里 <code>T</code> 是"温度"</strong>。注意这个指数：</p>
+<ul>
+<li><code>T</code> 高时，<code>exp(−ΔE/T) → 1</code>，几乎<strong>什么都敢接受</strong> → 大范围探索；</li>
+<li><code>T</code> 低时，<code>exp(−ΔE/T) → 0</code>，几乎<strong>只接受变好</strong> → 精细利用。</li>
+</ul>
+<blockquote><strong>关键直觉</strong>：温度高 = 敢翻山；温度低 = 沉淀精修。先高后低，就是"退火"。</blockquote>
+<h3>3. 降温时间表（Cooling Schedule）</h3>
+<p>温度不能一下子降到 0（否则退化成贪心），也不能永远高温（永不收敛）。常见做法：</p>
+<ul>
+<li><strong>几何降温</strong>：<code>T_{k+1} = α · T_k</code>（<code>α</code> 取 0.85~0.99），每轮乘一个系数缓慢冷却；</li>
+<li><strong>理论保证</strong>：若降温足够慢（"准静态/绝热"退火），系统平稳分布会一直跟随真实玻尔兹曼分布，最终<strong>收敛到全局最优</strong>（Hajeck 1988 定理）。</li>
+</ul>
+<h3>4. 它和前面哪些期是"亲戚"</h3>
+<ul>
+<li><strong>第 14 期 随机游走</strong>：在解空间里靠随机步游走，SA 的"邻居游走"就是它的升级版；</li>
+<li><strong>第 15 期 蒙特卡洛</strong>：靠大量随机采样逼近难算量，SA 本质是一条"温度可调的马尔可夫采样链"；</li>
+<li><strong>第 12 期 马尔可夫链</strong>：在温度 <code>T</code> 下，状态 <code>x</code> 的<strong>平稳分布</strong>就是玻尔兹曼分布 <code>P_T(x) ∝ exp(−f(x)/T)</code>；<code>T→0</code> 时该分布把所有概率质量压到全局最小 <code>f*</code> 上；</li>
+<li><strong>第 6 期 大数定律</strong>：降温足够慢时，每一温度下的随机扰动都"充分平均"后才进入下一温度。</li>
+</ul>
+<h3>5. 应用版图</h3>
+<p>TSP 与车辆路径、VLSI 芯片布线、神经网络训练（初代随机优化）、调度排程、组合优化、玻尔兹曼机/统计物理。</p>
+<hr>
+<h2>三、代表性题目（含完整解题思路与答案）</h2>
+<blockquote>题目用 <code>&gt;</code> 引用块给出，解题与答案同样在引用块内，方便你对照。</blockquote>
+<h3>题 1：接受概率基本功</h3>
+<blockquote>某一步从当前解走到邻居解，能量变化 <code>ΔE = f(x') − f(x) = 2</code>（新解更差）。</blockquote>
+<blockquote>（1）当温度 <code>T = 5</code> 时，接受这个更差解的概率是多少？</blockquote>
+<blockquote>（2）当温度降到 <code>T = 1</code> 时，概率又是多少？</blockquote>
+<blockquote>（3）这两个数字说明了什么？</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>【解题思路与答案】</strong></blockquote>
+<blockquote>按 Metropolis 准则，对更差解（<code>ΔE &gt; 0</code>）的接受概率为 <code>p = exp(−ΔE / T)</code>。</blockquote>
+<blockquote>- （1）<code>T = 5</code>：<code>p = exp(−2/5) = exp(−0.4) ≈ 0.6703</code>，约 <strong>67%</strong> 会接受。</blockquote>
+<blockquote>- （2）<code>T = 1</code>：<code>p = exp(−2) ≈ 0.1353</code>，约 <strong>13.5%</strong> 会接受。</blockquote>
+<blockquote>- （3）<strong>温度越高，越敢接受"变差"的解</strong>——这正是 SA 能跳出局部坑的来源；温度越低，行为越像只许变好的贪心。</blockquote>
+<h3>题 2：局部最优陷阱（对比贪心）</h3>
+<blockquote>考虑函数地形：<code>f(x)</code> 在区间 <code>[0, 10]</code> 上有两个谷——浅谷在 <code>x≈2</code> 处 <code>f≈−3</code>，深谷在 <code>x≈8</code> 处 <code>f≈−5</code>，二者之间隔着一座山 <code>f(5)=2</code>。从 <code>x=0</code> 出发：</blockquote>
+<blockquote>（1）若采用"只接受使 f 下降的步"的<strong>贪心爬山</strong>，最终会停在哪个谷？</blockquote>
+<blockquote>（2）若采用模拟退火，最终更可能停在哪个谷？为什么？</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>【解题思路与答案】</strong></blockquote>
+<blockquote>- （1）贪心从 <code>x=0</code> 沿下坡走到浅谷 <code>x≈2</code>（此时 <code>f≈−3</code>），前方是上坡的山 <code>f(5)=2</code>；因为贪心<strong>绝不接受 f 上升的步</strong>，它永远翻不过山，永久卡在浅谷，得到 <strong>−3</strong>。</blockquote>
+<blockquote>- （2）模拟退火在高温阶段，允许以可观概率接受"跨过山 <code>f(5)=2</code>"这种 <code>ΔE&gt;0</code> 的步，翻过山后温度渐降、收敛到深谷 <code>x≈8</code>，得到 <strong>−5</strong>。</blockquote>
+<blockquote><strong>结论</strong>：贪心停在局部最优（−3），退火停在全局最优（−5）——这就是"敢乱跳"的价值。</blockquote>
+<h3>题 3：降温时间表的影响（定性分析）</h3>
+<blockquote>有人说"温度降得越快越好，省时间"。对吗？分别说明：</blockquote>
+<blockquote>（1）降温<strong>太快</strong>（T 骤降）会怎样？</blockquote>
+<blockquote>（2）降温<strong>太慢</strong>（T 长期偏高）会怎样？</blockquote>
+<blockquote>（3）工程上一般怎么折中？</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>【解题思路与答案】</strong></blockquote>
+<blockquote>- （1）降温太快：系统还没来得及探索就被"冻结"，接受概率迅速趋 0，几乎退化成随机起点的贪心 → <strong>高概率落进局部最优</strong>。</blockquote>
+<blockquote>- （2）降温太慢：T 长期偏高，探索充分、解质量高，但<strong>计算开销大、收敛慢</strong>。</blockquote>
+<blockquote>- （3）折中：常用几何降温 <code>T_{k+1}=α·T_k</code>（α≈0.85~0.99）或 <code>1/k</code> 降温；目标是让每一步的平稳分布"缓慢跟随"真实玻尔兹曼分布，在"解质量"与"耗时"间取平衡。（理想极限：准静态退火 → 收敛全局最优。）</blockquote>
+<h3>题 4：闭环与现实映射（TSP + 玻尔兹曼分布）</h3>
+<blockquote>n = 10 城市的 TSP，用 <strong>2-opt</strong> 邻域（反转路径中的一段）来搜索：</blockquote>
+<blockquote>（1）为什么纯局部搜索（只接受更短路径）容易卡住？</blockquote>
+<blockquote>（2）用玻尔兹曼分布 <code>P_T(x) ∝ exp(−f(x)/T)</code> 解释：为什么"温度 T 趋近 0"时，算法理论上会收敛到全局最短路径？这和第 12 期、第 15 期有什么关系？</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>【解题思路与答案】</strong></blockquote>
+<blockquote>- （1）2-opt 局部搜索容易卡在"仍有交叉、但任一单次 2-opt 反转都会变长"的局部最优布局；它<strong>没有机制跨过"先变长再变短"的反转</strong>。</blockquote>
+<blockquote>- （2）在温度 T 下，SA 的平稳分布是玻尔兹曼分布 <code>P_T(x) ∝ exp(−f(x)/T)</code>：路径越长（f 越大），概率越低。当 <code>T→0</code>，<code>exp(−f(x)/T)</code> 在最小值 <code>f*</code> 处趋于 1、其余趋于 0，分布把所有质量压到全局最短路径上 → <strong>理论收敛到全局最优</strong>。</blockquote>
+<blockquote><strong>闭环</strong>：这正是第 12 期"马尔可夫链平稳分布"（<code>P_T</code> 就是那条链的平稳分布）与第 15 期"蒙特卡洛随机采样"的结合——<strong>模拟退火 = 一条温度可调、平稳分布随 T 漂移的马氏链</strong>。</blockquote>
+<hr>
+<h2>四、明日预告</h2>
+<p><strong>第 4 期：随机梯度下降（SGD）——用噪声加速学习。</strong></p>
+<p>炼钢退火靠"降温"收敛，模型训练靠"加噪"逃离鞍点：SGD 每次只用一小批样本估计梯度，反而比精确梯度下降更快跳出平坦区的伪最优。我们下期把"随机扰动如何帮助优化"这条线，从组合优化接到机器学习。</p>
+<hr>
+<p>*归档说明：本文件为每日概率学推送的完整存档，含故事、概念、代表性题目与完整解题思路（含答案）。期号 N 按 <code>D:/spring-workbench/reports/probability/</code> 目录已有最大期数顺排；本期为该目录第 3 期（概念序列第 23 项）。*</p></div></body></html>

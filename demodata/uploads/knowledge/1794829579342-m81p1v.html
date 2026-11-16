@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第16期 · 直接偏好优化DPO</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+details.qz{margin:12px 0;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+details.qz summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;font-weight:700;color:var(--ink);transition:background .16s}
+details.qz summary:hover{background:#fdf8f0}
+details.qz summary::-webkit-details-marker{display:none}
+details.qz summary::marker{content:""}
+details.qz summary::after{content:"看答案 ▾";margin-left:auto;flex:0 0 auto;font-size:12px;font-weight:600;color:#8a5a1e;background:#faf0e2;border-radius:999px;padding:2px 10px;white-space:nowrap}
+details.qz[open] summary{background:#fdfaf4;border-bottom:1px dashed var(--line)}
+details.qz[open] summary::after{content:"收起 ▴";background:#f2e6d4}
+details.qz > *:not(summary){padding-left:14px;padding-right:14px}
+details.qz > *:not(summary):last-child{padding-bottom:12px}
+details.qz blockquote:empty{display:none}
+</style></head><body><div class="wrap"><h1>第 16 期 · 直接偏好优化 DPO：跳过奖励模型，把偏好变成监督学习</h1>
+<blockquote><strong>一句话</strong>：RLHF 要先训一个「奖励模型 RM」再用 PPO 去优化策略；DPO 直接把奖励「重新参数化」掉，让偏好数据变成一段离线监督式分类损失——两步走的事，一步塌缩成一步。</blockquote>
+<hr>
+<h2>一、故事：阿明的「两段式疲劳」</h2>
+<p>阿明上个月刚把第 15 期的 <strong>RLHF 奖励模型</strong>跑通：先拿人类偏好数据训出一个打分器 RM，再用第 14 期的 <strong>PPO-Clip</strong> 在线采样、用 RM 当奖励去微调策略，还时刻用 KL 把策略拽在 SFT 参考模型附近。</p>
+<p>跑完他瘫在椅子上跟大刘吐槽：</p>
+<blockquote>阿明：「两步走太累人了。先训 RM——标注一多 RM 就过拟合、还容易被『奖励黑客』骗（你第 15 期讲过）；再跑 PPO——又要在线 rollout、又要价值网络估优势、KL 系数 β 调得我头秃，稍不留神还 performance collapse（第 14 期那个坑）。有没有更省事的？」</blockquote>
+<p>大刘笑：「有。你有没有想过——<strong>奖励模型这一步，其实可以整个删掉</strong>。」</p>
+<p>阿明：「删了奖励，我拿什么告诉模型『哪条回答更好』？」</p>
+<p>大刘：「你手里不是有现成的偏好对 <code>(y_w ≻ y_l)</code> 吗？DPO 的妙处在于：它把『奖励』用『策略相对参考模型的对数概率比』重新写出来，于是<strong>原本的『先 RM 后 PPO』，塌缩成一段直接吃偏好对的分类损失</strong>——连在线采样都省了，离线一次性训完。」</p>
+<p>阿明：「那锚定（别让模型跑偏）靠什么管？」</p>
+<p>大刘：「同一个 β。只不过 PPO 里 β 是 KL 系数、要手调；DPO 里 β 直接焊进损失里，是一颗『安全阀门』。来，我给你拆。」</p>
+<hr>
+<h2>二、概念：DPO 到底省掉了什么</h2>
+<h3>1. 起点：Bradley-Terry 偏好模型（接第 15 期）</h3>
+<p>人类偏好常用 BT 模型刻画：给定同一个提示 x，回答 y_w 比 y_l 更受偏好的概率为</p>
+<blockquote><strong>P(y_w ≻ y_l | x) = σ( r(x, y_w) − r(x, y_l) )</strong></blockquote>
+<p>其中 σ 是 sigmoid，r 是「真实奖励」。RLHF 的做法是：先估出 r（训练 RM），再去最大化这个奖励（PPO）。DPO 问的是——<strong>能不能不显式估 r，直接优化策略？</strong></p>
+<h3>2. 关键一招：把奖励「重新参数化」掉</h3>
+<p>DPO 证明了：在最优策略 π* 下，奖励可以写成策略与参考策略（SFT 模型 π_ref）的对数比：</p>
+<blockquote><strong>r̂(x, y) = β · log( π_θ(y | x) / π_ref(y | x) ) + β · log Z(x)</strong></blockquote>
+<p>注意末尾的 <strong>Z(x) 只依赖 x、不依赖 y</strong>。把它代回 BT 公式时，配对相减，Z(x) <strong>正好消去</strong>：</p>
+<blockquote><strong>P(y_w ≻ y_l | x) = σ( β·log(π_θ(y_w|x)/π_ref(y_w|x)) − β·log(π_θ(y_l|x)/π_ref(y_l|x)) )</strong></blockquote>
+<p>于是「奖励」被彻底替换成「策略 vs 参考」的比值。<strong>奖励模型从此消失。</strong></p>
+<h3>3. DPO 损失：长这样</h3>
+<p>我们把上面这个概率取负对数，就得到一个可以直接梯度下降的分类损失（在偏好数据集上求期望）：</p>
+<blockquote><strong>L_DPO(θ) = − E[ log σ( β·log(π_θ(y_w|x)/π_ref(y_w|x)) − β·log(π_θ(y_l|x)/π_ref(y_l|x)) ) ]</strong></blockquote>
+<p>几个要点：</p>
+<ul>
+<li><strong>离线</strong>：只用现成偏好对，不需要像 PPO 那样在线生成 rollout。</li>
+<li><strong>单阶段</strong>：没有 RM、没有价值网络、没有 PPO-Clip。</li>
+<li><strong>π_ref 在这场训练里被冻结</strong>，只提供「锚点」。</li>
+</ul>
+<h3>4. 直觉：为什么它天然会「自校正」</h3>
+<p>把损失对 log 概率的梯度写出来，会发现更新权重是 <strong>w = 1 − σ(β·Δ)</strong>（Δ 是「好回答减差回答」的 β·对数比差）：</p>
+<ul>
+<li>当模型<strong>还没对齐</strong>（Δ 很小甚至为负）→ σ 小 → w 大 → 用力同时<strong>抬高 y_w、压低 y_l</strong>。</li>
+<li>当模型<strong>已经对齐</strong>（Δ 很大）→ σ→1 → w→0 → 梯度自动归零，<strong>不再瞎改</strong>。</li>
+</ul>
+<p>也就是说，DPO 自带「对齐好了就收手」的机制，不像 PPO 那样需要额外设计学习率衰减来防过冲。</p>
+<h3>5. β：唯一旋钮，也是安全阀（接第 14 期）</h3>
+<p>β 是 DPO 里<strong>唯一需要调的超参</strong>，它等价于 PPO 里「KL(π_θ ‖ π_ref) 的系数」：</p>
+<ul>
+<li><strong>β 小</strong> → KL 锚定弱 → 策略可大幅偏离 SFT，偏好拟合猛，但<strong>容易过优化、遗忘通用能力、被噪声/黑客信号带偏</strong>。</li>
+<li><strong>β 大</strong> → 死死拽在参考模型附近，<strong>稳但欠拟合偏好</strong>。</li>
+</ul>
+<p>这跟第 14 期讲的「步长=温度、PPO 靠 KL 约束防塌方」是同一枚硬币——只是 DPO 把它焊进了损失。</p>
+<h3>6. 闭环地图</h3>
+<ul>
+<li><strong>第 15 期 奖励模型 / BT 模型</strong>：DPO 直接吃同一个 BT 偏好概率，只是不训显式 r。</li>
+<li><strong>第 14 期 信赖域与 PPO</strong>：β 即 PPO 的 KL 系数；DPO = 一次性离线版 PPO。</li>
+<li><strong>第 26 期 变分推断与 KL 散度 / 第 16 期 熵与信息论</strong>：β·log(π/π_ref) 就是策略相对参考的 KL 缩放，整条线都是 KL 在当家。</li>
+<li><strong>第 5 期 期望值与决策 / 第 19 期 重尾分布</strong>：过优化、奖励黑客、单点主导——DPO 同样逃不掉，β 是唯一兜底。</li>
+</ul>
+<hr>
+<h2>三、四道代表题（你先总结，再点开对答案）</h2>
+<details class="qz">
+<summary>题目 1 · DPO 损失对数比手算</summary>
+<blockquote><strong>解题思路</strong>：先把隐式奖励写成 β·log(π_θ/π_ref)。分别算好回答与差回答的对数比：</blockquote>
+<blockquote>- 好回答：π_θ(y_w|x)=0.6，π_ref(y_w|x)=0.3 → log 比值 = ln(0.6/0.3)=ln2≈0.6931</blockquote>
+<blockquote>- 差回答：π_θ(y_l|x)=0.2，π_ref(y_l|x)=0.5 → log 比值 = ln(0.2/0.5)=ln0.4≈−0.9163</blockquote>
+<blockquote>- 两者相减 Δ = 0.6931−(−0.9163)=1.6094</blockquote>
+<blockquote>- 乘 β=0.5 得 βΔ=0.8047</blockquote>
+<blockquote>- 代进 sigmoid：σ(0.8047)=1/(1+e^{−0.8047})，e^{−0.8047}≈0.4472 → σ≈0.6910</blockquote>
+<blockquote>- 损失 = −ln(0.6910)≈0.3699</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：隐式奖励差（含 β）βΔ≈<strong>0.8047</strong>（不含 β 的对数比差 Δ≈1.6094）；该样本 DPO 损失 ≈ <strong>0.370</strong>。数值越小表示当前策略已越贴合偏好。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 2 · 梯度权重与自校正方向</summary>
+<blockquote><strong>解题思路</strong>：DPO 对「好/差回答的对数比差」Δ 的梯度权重是 <strong>w = 1 − σ(βΔ)</strong>。设 β=0.5，当前 βΔ=1.2：</blockquote>
+<blockquote>- σ(1.2)=1/(1+e^{−1.2})，e^{−1.2}≈0.3012 → σ≈0.7685</blockquote>
+<blockquote>- w = 1−0.7685 = 0.2315</blockquote>
+<blockquote>- 梯度：∂L/∂(βΔ_w) = −β·w = −0.5×0.2315 ≈ −0.1157（对好回答为负 → 抬高其概率）；对差回答符号相反，+0.1157（压低其概率）。</blockquote>
+<blockquote>- 当偏好已对齐（βΔ → +∞）：σ→1，w→0，梯度<strong>自动归零</strong>——这就是「对齐好了就收手」的自校正性，不需要额外学习率衰减。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：权重 <strong>w≈0.2315</strong>；梯度对 y_w 为负（抬高概率）、对 y_l 为正（压低概率）；βΔ→∞ 时 σ→1、w→0，更新量归零，DPO 自带稳定阀。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 3 · DPO 与 RLHF/PPO 怎么区分</summary>
+<blockquote><strong>解题思路</strong>：对照第 14、15 期，列出 DPO 与「RM+PPO」的三点不同，以及 DPO 为此<strong>失去</strong>了什么：</blockquote>
+<blockquote>- <strong>不同①（阶段）</strong>：RLHF 先训显式奖励模型 RM 再用 PPO 在线优化；DPO 跳过 RM，偏好数据直接离线吃。</blockquote>
+<blockquote>- <strong>不同②（机制）</strong>：PPO 要在线 rollout + 价值网络(critic)估优势 + PPO-Clip；DPO 无价值网络、无在线采样，纯离线监督式分类。</blockquote>
+<blockquote>- <strong>不同③（约束）</strong>：PPO 用 KL 系数把策略拽在 π_ref 附近（第 14 期）；DPO 把同一个 KL 焊进损失（β 等价 KL 系数），但仍有这颗旋钮。</blockquote>
+<blockquote>- <strong>DPO 失去的</strong>：显式、可解释的奖励信号（难知道「模型到底在优化什么」）；以及在线探索训练分布外 prompt 的能力（DPO 只看训练里的偏好对，分布偏移风险更大）。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：三点不同如上；DPO 失去的是「可解释奖励」与「分布外在线探索」，换来了「省 RM、省 rollout、单阶段更稳」。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 4 · β 过优化与偏好噪声陷阱</summary>
+<blockquote><strong>解题思路</strong>：DPO 建立在 BT 假设「偏好无噪声且传递」之上。若标注有噪声（比如 20% 偏好标反），或存在奖励黑客（第 15 期），把 β 设得极小会怎样？</blockquote>
+<blockquote>- β 极小 → KL 锚定几乎失效 → 策略可任意偏离 SFT，为「讨好」被污染/被黑客的偏好信号而<strong>过度优化</strong>，甚至遗忘通用能力、塌缩成单一模板。</blockquote>
+<blockquote>- 隐式奖励 r̂ 同样会被噪声污染；此时 <strong>β 是唯一安全阀</strong>：调大 β 把策略拽回参考分布，抑制过优化，代价是欠拟合偏好。</blockquote>
+<blockquote>- 实践对策：① 按标注质量调 β（噪声大→大 β，常落在 0.01–0.1 区间）；② 用迭代 DPO / 自我博弈时警惕分布漂移（接明日预告）；③ 监控「偏好准确率」和生成多样性，而非只盯损失下降。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：β 过小 + 噪声标注 → 过优化/奖励黑客/模板塌缩；β 是兜底旋钮，调大可抑制但会欠拟合；应配合数据质量调 β 并监控多样性（闭环第 15 期奖励欺骗、第 19 期重尾单点主导）。</blockquote>
+</details>
+<hr>
+<h2>四、明日预告</h2>
+<p><strong>第 17 期（概念序列第 37 项）：迭代 DPO 与自我博弈——让模型自己教自己</strong></p>
+<p>离线 DPO 一回就够了吗？当偏好数据用尽，可以让「当前模型生成的新回答」彼此配对，再喂回 DPO（迭代 DPO / SPIN）。这既绕开了人力标注，也埋下分布漂移的新坑——我们下期拆。</p></div></body></html>

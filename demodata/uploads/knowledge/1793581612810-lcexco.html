@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融概念 第35期 · 期货</title>
+<style>
+  :root{
+    --primary:#3a4cc0;
+    --accent:#8a5cf6;
+    --bg:#f5f7fb;
+    --card:#ffffff;
+    --text:#1f2430;
+    --muted:#6b7280;
+    --line:#eceef3;
+    --soft:#f0f3fb;
+    --warn:#c0392b;
+    --ok:#2e7d5b;
+    --radius:16px;
+    --gap:20px;
+    --pad:28px;
+    --shadow:0 6px 24px rgba(40,52,110,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.75;
+    padding:32px 16px 56px;
+  }
+  .wrap{max-width:820px;margin:0 auto;}
+
+  /* 头部 */
+  .header{
+    background:linear-gradient(120deg,var(--primary),var(--accent));
+    border-radius:var(--radius);
+    padding:36px var(--pad);
+    color:#fff;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  .header::after{
+    content:"";position:absolute;right:-60px;top:-60px;
+    width:220px;height:220px;border-radius:50%;
+    background:rgba(255,255,255,.12);
+  }
+  .header::before{
+    content:"";position:absolute;right:30px;bottom:-80px;
+    width:160px;height:160px;border-radius:50%;
+    background:rgba(255,255,255,.08);
+  }
+  .issue{
+    display:inline-block;font-size:13px;letter-spacing:2px;
+    background:rgba(255,255,255,.18);padding:5px 14px;border-radius:999px;
+    margin-bottom:14px;
+  }
+  .header h1{font-size:34px;line-height:1.2;margin-bottom:10px;font-weight:700;}
+  .header .sub{font-size:15px;opacity:.92;max-width:560px;}
+  .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;font-size:13px;}
+  .meta span{background:rgba(255,255,255,.16);padding:4px 12px;border-radius:8px;}
+  .tags{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;}
+  .tags b{font-weight:400;opacity:.85;align-self:center;margin-right:2px;}
+  .tags i{
+    font-style:normal;background:rgba(255,255,255,.14);
+    padding:4px 10px;border-radius:8px;font-size:12px;
+  }
+
+  /* 卡片 */
+  .card{
+    background:var(--card);border-radius:var(--radius);
+    padding:var(--pad);margin-top:var(--gap);box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .card h2{
+    font-size:20px;margin-bottom:16px;padding-left:14px;
+    border-left:4px solid var(--primary);line-height:1.3;
+  }
+  .card p{margin-bottom:12px;color:#333;}
+  .card p:last-child{margin-bottom:0;}
+  .lead{font-size:16px;color:var(--text);}
+
+  /* 故事高亮 */
+  .story{background:linear-gradient(180deg,#fafbff,#f3f6ff);border:1px solid #e6ebfb;}
+  .story .scene{
+    font-size:14px;color:var(--muted);margin-bottom:10px;letter-spacing:1px;
+  }
+
+  /* 概念卡片 */
+  .defbox{
+    background:var(--soft);border-radius:12px;padding:20px 22px;
+    border:1px solid #e7ecfb;margin-bottom:16px;
+  }
+  .defbox .term{font-size:18px;font-weight:700;color:var(--primary);margin-bottom:8px;}
+  .defbox .term small{font-weight:400;color:var(--muted);font-size:13px;margin-left:8px;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:8px;}
+  .grid3 .cell{
+    background:#fff;border:1px solid var(--line);border-radius:10px;
+    padding:14px;font-size:13px;
+  }
+  .grid3 .cell b{display:block;color:var(--primary);margin-bottom:4px;font-size:14px;}
+
+  /* 案例 */
+  .case{border-left:4px solid var(--warn);padding-left:16px;}
+  .case .label{font-size:13px;color:var(--warn);font-weight:700;letter-spacing:1px;margin-bottom:6px;}
+  .case .num{color:var(--warn);font-weight:700;}
+
+  /* 关联 */
+  .relate{background:#fbfaff;border:1px dashed #d9c9fb;}
+  .relate ul{margin:0;padding-left:20px;}
+  .relate li{margin-bottom:10px;}
+  .relate li b{color:var(--accent);}
+
+  /* 启示清单 */
+  .tips{list-style:none;counter-reset:t;padding:0;}
+  .tips li{
+    counter-increment:t;position:relative;padding:14px 14px 14px 52px;
+    border-bottom:1px solid var(--line);font-size:15px;
+  }
+  .tips li:last-child{border-bottom:none;}
+  .tips li::before{
+    content:counter(t);position:absolute;left:12px;top:14px;
+    width:26px;height:26px;border-radius:50%;
+    background:linear-gradient(120deg,var(--primary),var(--accent));
+    color:#fff;font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* 思考题 */
+  .think{
+    background:linear-gradient(120deg,#3a4cc0,#8a5cf6);
+    color:#fff;border-radius:var(--radius);padding:26px var(--pad);
+    margin-top:var(--gap);box-shadow:var(--shadow);
+  }
+  .think h2{font-size:19px;margin-bottom:12px;color:#fff;}
+  .think p{color:rgba(255,255,255,.95);}
+  .think .q{font-size:16px;line-height:1.8;}
+
+  /* 脚注 */
+  .foot{
+    text-align:center;color:var(--muted);font-size:12px;
+    margin-top:28px;line-height:1.7;
+  }
+  .foot a{color:var(--primary);text-decoration:none;}
+
+  @media (max-width:600px){
+    body{padding:18px 10px 40px;}
+    .header{padding:26px 18px;}
+    .header h1{font-size:26px;}
+    .card{padding:20px 16px;}
+    .grid3{grid-template-columns:1fr;}
+    .think{padding:22px 18px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="header">
+    <span class="issue">第 35 期</span>
+    <h1>期货：一张写给未来的价格契约</h1>
+    <div class="sub">从面包坊与麦田的一纸约定，看懂人类如何把"不确定的明天"提前定价。</div>
+    <div class="meta">
+      <span>日期：2026-11-02</span>
+      <span>阅读时长：约 6 分钟</span>
+      <span>难度：入门</span>
+    </div>
+    <div class="tags">
+      <b>关键词</b>
+      <i>标准化合约</i><i>保证金</i><i>对冲</i><i>价格发现</i><i>杠杆</i>
+    </div>
+  </header>
+
+  <section class="card story">
+    <div class="scene">— 一则关于面包与小麦的故事 —</div>
+    <p class="lead">老周在城里开了一家面包坊，每天要用掉两百斤面粉；阿禾在乡下种了三十亩冬小麦。两人互不认识，却被同一件事牵动——小麦的价格。</p>
+    <p>春天，粮贩子放话："今年天旱，秋天麦价怕是要涨。"老周一听就慌：面粉要是贵一倍，面包还怎么卖？阿禾也犯愁：万一秋天大丰收，麦价跌到谷底，自己一年白干。</p>
+    <p>于是两人在镇上找了位见证人，立了张字据：<b>无论秋天市价多少，阿禾按每斤 1.5 元、在 10 月 1 日交给老周两千斤小麦。</b>字据一签，老周安心做面包，阿禾安心种地。</p>
+    <p>到了秋天，麦价真的涨到了 2.2 元。阿禾本可以多赚一千四百元，却只能按 1.5 元交货——他"亏"了。可老周也躲过一劫：若没这张字据，他得花 2.2 元抢粮，面包坊早撑不下去。反过来，若秋天麦价跌到 1.0 元，老周看似"亏"了，阿禾却保住了 1.5 元的身价。</p>
+    <p>这张"提前约定、未来交割"的字据，就是<b>远期契约</b>的雏形。而把这种契约<b>标准化</b>、放到交易所里让所有人自由买卖，它就有了新名字——<b>期货</b>。</p>
+  </section>
+
+  <section class="card">
+    <h2>概念卡片：什么是期货</h2>
+    <div class="defbox">
+      <div class="term">期货（Futures）<small>在交易所买卖的标准化远期合约</small></div>
+      <p>期货是买卖双方约定：在<b>未来的某个时间</b>，以<b>今天确定的价格</b>，买入或卖出<b>一定数量的标准化商品或金融资产</b>。它不是"货"，而是一张"必须履约的契约"。</p>
+    </div>
+    <div class="grid3">
+      <div class="cell"><b>标的</b>原油、黄金、大豆、股指、国债等，凡能标准化的都可入场。</div>
+      <div class="cell"><b>合约规模</b>每手代表多少吨/多少点，由交易所统一规定。</div>
+      <div class="cell"><b>交割月</b>几月到期履约，清清楚楚写进合约。</div>
+      <div class="cell"><b>保证金</b>不必付全款，只需交约 5%–15% 押金即可持仓。</div>
+      <div class="cell"><b>双向</b>既可"先买后卖"，也可"先卖后买"（做空）。</div>
+      <div class="cell"><b>每日结算</b>盈亏每天清算，保证金不足须补足。</div>
+    </div>
+    <p style="margin-top:16px;">它和"远期"最大的区别，在于<b>标准化与可交易</b>：远期是甲乙双方私下定制，很难转手；期货像超市货架上的统一规格商品，你随时可以买、可以卖、可以平仓离场。</p>
+  </section>
+
+  <section class="card case">
+    <div class="label">真实案例 · 巴林银行的崩塌</div>
+    <p>1995 年，英国历史最悠久的投资银行之一——巴林银行，因一个交易员而轰然倒闭。这位名叫里森的交易员，在新加坡交易所大量买卖<span class="num">日经 225 指数期货</span>。他赌日本股市上涨，却赶上了阪神大地震后股市暴跌。</p>
+    <p>期货的<b>保证金机制</b>本是为控制风险，却在这里变成了放大器：里森用极少的押金撬动了天量的合约，亏损以亿计地滚动。最终巴林银行 accumulat 亏损约 <span class="num">14 亿美元</span>，资不抵债，被以 1 英镑的象征价收购。</p>
+    <p>这个故事的警示在于：期货是中性的工具，用来<b>对冲</b>还是用来<b>豪赌</b>，差别在天壤之间。</p>
+  </section>
+
+  <section class="card relate">
+    <h2>与往期概念的关联</h2>
+    <ul>
+      <li><b>第 34 期《期权》</b>：期权是"买不买都行"的<b>权利</b>，期货是"到时必须交收"的<b>义务</b>。两者同属衍生品家族，都能用来对冲风险，但期货没有"放弃权"，约束力更强。</li>
+      <li><b>第 32 期《对冲》</b>：故事中老周与阿禾的约定，正是一次朴素的对冲——把价格波动的风险，从自己身上转移到契约对手方。</li>
+      <li><b>第 7 期《杠杆》</b>：保证金交易天然带杠杆，盈利与亏损都被放大，这正是巴林银行悲剧的根源。</li>
+      <li><b>第 4 期《风险与回报》</b>：期货把"未来价格不确定"变成可交易的风险，让愿意承担风险的人（投机者）和想甩掉风险的人（套保者）各取所需。</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>给普通投资者的启示清单</h2>
+    <ol class="tips">
+      <li><b>认清期货的两大功能。</b>一是"价格发现"——千万人的买卖汇聚成明天的预期价格；二是"风险管理"——让生产者、消费者提前锁定成本。它首先是工具，不是赌场。</li>
+      <li><b>保证金是双刃剑。</b>用 10% 的钱控制 100% 的合约，涨 10% 你赚一倍，跌 10% 你也亏光押金。杠杆放大的是概率，不是确定性。</li>
+      <li><b>分清"套保"与"投机"。</b>真有现货头寸要保护，才叫对冲；纯粹押方向涨跌，本质是在和全市场博弈，胜率远低于想象。</li>
+      <li><b>看不懂的合约不碰。</b>交割规则、保证金比例、最后交易日都不清楚，就进场，等于蒙眼开车。</li>
+      <li><b>把它当作"价格信号"而非"致富捷径"。</b>普通人不必亲自下场，读懂期货曲线（如原油、铜、国债），反而能提前感知经济冷暖。</li>
+    </ol>
+  </section>
+
+  <section class="think">
+    <h2>今日思考题</h2>
+    <p class="q">如果老周和阿禾当初没有立那张字据，秋天小麦价格暴涨一倍，谁会陷入被动？再想想你自己的生活——房租、学费、出国旅行这些"未来注定要付的固定开销"，有没有哪一笔，其实可以像老周那样，提前"锁定价格"来降低不确定性？</p>
+  </section>
+
+  <footer class="foot">
+    本系列由自动化任务每日生成，内容仅作金融常识科普，不构成任何投资建议。<br>
+    往期回顾：第 34 期《期权》、第 33 期《黑天鹅事件》、第 32 期《对冲》…… 概念之间彼此呼应，欢迎串联阅读。
+  </footer>
+
+</div>
+</body>
+</html>

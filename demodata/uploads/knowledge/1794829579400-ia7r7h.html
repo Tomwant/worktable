@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第09期 · 存货周转</title>
+<style>
+  :root{
+    --green:#2f6b5e;
+    --green-d:#234f45;
+    --gold:#c9a961;
+    --gold-soft:#f7f1e4;
+    --ink:#1f2b27;
+    --muted:#5d6b66;
+    --line:#e3e8e5;
+    --bg:#f4f7f5;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:24px 18px 48px;}
+
+  /* 头部 */
+  .hero{
+    background:linear-gradient(135deg,var(--green) 0%,var(--green-d) 100%);
+    border-radius:16px;
+    padding:30px 28px 26px;
+    color:#fff;
+    box-shadow:0 10px 30px rgba(47,107,94,.22);
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;right:-40px;top:-40px;
+    width:180px;height:180px;border-radius:50%;
+    background:radial-gradient(circle at center,rgba(201,169,97,.30),transparent 70%);
+  }
+  .badge{
+    display:inline-block;
+    background:rgba(201,169,97,.20);
+    border:1px solid rgba(201,169,97,.55);
+    color:var(--gold);
+    font-size:13px;font-weight:700;letter-spacing:1px;
+    padding:4px 12px;border-radius:999px;
+  }
+  .hero h1{font-size:30px;margin:14px 0 6px;font-weight:800;letter-spacing:1px;}
+  .hero .sub{font-size:15px;color:#dfeae6;margin:0 0 16px;max-width:620px;}
+  .meta{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:13.5px;color:#cfe0db;}
+  .meta b{color:#fff;font-weight:600;}
+  .tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;}
+  .tag{
+    font-size:12.5px;background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.22);
+    padding:3px 11px;border-radius:999px;color:#eef5f2;
+  }
+
+  /* 通用卡片 */
+  .card{
+    background:var(--card);
+    border-radius:16px;
+    padding:24px 22px;
+    margin-top:20px;
+    box-shadow:0 6px 20px rgba(31,43,39,.06);
+    border:1px solid #eef2f0;
+  }
+  .card h2{
+    font-size:20px;margin:0 0 4px;color:var(--green-d);
+    display:flex;align-items:center;gap:10px;font-weight:800;
+  }
+  .card h2 .bar{width:6px;height:22px;border-radius:4px;background:linear-gradient(var(--green),var(--gold));}
+  .card .lead{font-size:14px;color:var(--muted);margin:0 0 16px;}
+
+  /* 场景 */
+  .scene{
+    background:linear-gradient(180deg,#fbfcfb,#f6f9f7);
+    border-left:4px solid var(--gold);
+    border-radius:0 14px 14px 0;
+    padding:18px 20px;
+    font-size:15px;
+  }
+  .scene .who{font-weight:700;color:var(--green);}
+  .scene .q{margin-top:10px;color:var(--green-d);font-weight:600;}
+
+  /* 公式卡网格 */
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;}
+  .fcard{
+    border:1px solid var(--line);
+    border-radius:14px;
+    padding:16px 16px 14px;
+    background:#fff;
+  }
+  .fcard .ft{font-size:14.5px;font-weight:700;color:var(--green);margin-bottom:8px;}
+  .formula{
+    background:var(--gold-soft);
+    border:1px solid #ecdfc4;
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:14px;
+    color:#5a4a23;
+    font-weight:600;
+    line-height:1.7;
+  }
+  .fcard .fe{font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.65;}
+
+  /* 算例 */
+  .step{
+    display:flex;gap:14px;align-items:flex-start;
+    border:1px solid var(--line);border-radius:12px;
+    padding:14px 16px;margin-bottom:12px;background:#fff;
+  }
+  .step .no{
+    flex:0 0 auto;width:30px;height:30px;border-radius:50%;
+    background:var(--green);color:#fff;font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .step .st{font-size:14.5px;}
+  .step .st b{color:var(--green-d);}
+  .num{font-variant-numeric:tabular-nums;font-weight:700;color:#1f2b27;}
+
+  .cmp{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:6px;}
+  .store{
+    border:1px solid var(--line);border-radius:14px;padding:16px;background:#fff;
+  }
+  .store .nm{font-weight:800;color:var(--green-d);font-size:15px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+  .store .pill{font-size:12px;padding:2px 9px;border-radius:999px;font-weight:600;}
+  .pill.fast{background:#e7f0ed;color:#2a5b50;}
+  .pill.slow{background:#f7eaea;color:#9a4a44;}
+  .barwrap{margin-top:8px;}
+  .barwrap .lab{font-size:12.5px;color:var(--muted);margin-bottom:4px;display:flex;justify-content:space-between;}
+  .track{height:14px;background:#eef2f0;border-radius:999px;overflow:hidden;}
+  .fill{height:100%;border-radius:999px;}
+  .fill.g{background:linear-gradient(90deg,var(--green),#3f8a78);}
+  .fill.r{background:linear-gradient(90deg,#c97b6b,#a85545);}
+
+  /* 红线 */
+  .line{
+    display:flex;gap:12px;align:flex-start;
+    padding:13px 0;border-bottom:1px dashed var(--line);
+  }
+  .line:last-child{border-bottom:none;}
+  .dot{
+    flex:0 0 auto;width:10px;height:10px;border-radius:50%;
+    background:var(--gold);margin-top:8px;
+    box-shadow:0 0 0 4px rgba(201,169,97,.18);
+  }
+  .line .lt{font-size:14.5px;}
+  .line .lt b{color:var(--green-d);}
+
+  /* 自测题 */
+  .quiz{
+    border:1px solid #e3e8e5;
+    border-radius:12px;
+    background:#fff;
+    margin-bottom:12px;
+    transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+  }
+  .quiz:hover{
+    border-color:#bcc7c2;
+    box-shadow:0 6px 18px rgba(47,107,94,.10);
+    transform:translateY(-2px);
+  }
+  .quiz summary{
+    display:flex;align-items:flex-start;gap:12px;
+    padding:14px 16px;cursor:pointer;user-select:none;list-style:none;
+  }
+  .quiz summary::-webkit-details-marker{display:none;}
+  .quiz summary::marker{content:"";}
+  .q{flex:1 1 auto;font-size:15px;font-weight:600;line-height:1.6;}
+  .peek{
+    flex:0 0 auto;display:inline-flex;align-items:center;gap:4px;
+    background:#f7f1e4;color:#8a6f2e;font-size:12.5px;
+    border-radius:999px;padding:3px 11px 3px 9px;white-space:nowrap;
+  }
+  details[open] .peek{background:#e7f0ed;color:#2a5b50;}
+  details[open] .peek .arw{transform:rotate(180deg);}
+  .t-off{display:none;}
+  details[open] .t-on{display:none;}
+  details[open] .t-off{display:inline;}
+  .arw{display:inline-block;transition:transform .2s ease;}
+  .ans{
+    border-top:1px dashed #e3e8e5;
+    padding:12px 16px 14px;
+    background:#fbfcfb;font-size:14.5px;
+    animation:fade .35s ease;
+  }
+  @keyframes fade{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+  .ans b{color:var(--green-d);}
+  .ans .calc{
+    display:block;background:var(--gold-soft);border:1px solid #ecdfc4;
+    border-radius:8px;padding:8px 12px;margin-top:8px;
+    font-size:13.5px;color:#5a4a23;line-height:1.7;
+  }
+
+  .foot{
+    margin-top:26px;text-align:center;font-size:13px;color:var(--muted);
+    border-top:1px solid var(--line);padding-top:18px;line-height:1.7;
+  }
+  .foot .next{color:var(--green);font-weight:700;}
+
+  @media (max-width:600px){
+    .wrap{padding:16px 12px 36px;}
+    .hero{padding:24px 18px; border-radius:14px;}
+    .hero h1{font-size:24px;}
+    .hero .sub{font-size:14px;}
+    .card{padding:18px 15px; border-radius:14px;}
+    .card h2{font-size:18px;}
+    .grid{grid-template-columns:1fr;}
+    .cmp{grid-template-columns:1fr;}
+    .step{padding:12px;gap:10px;}
+    .quiz summary{padding:12px;}
+    .quiz summary .q{font-size:14px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="badge">第 09 期</span>
+    <h1>存货周转</h1>
+    <p class="sub">货压在仓库里没变成钱，才是很多门店"账面赚钱、现金紧张"的真凶。今天把它算明白。</p>
+    <div class="meta">
+      <span>日期：<b>2026-11-10</b></span>
+      <span>面向：<b>多店经营者 / 财务小白</b></span>
+      <span>阅读时长：<b>约 8 分钟</b></span>
+    </div>
+    <div class="tags">
+      <span class="tag">存货周转次数</span>
+      <span class="tag">周转天数</span>
+      <span class="tag">平均存货</span>
+      <span class="tag">压货占款</span>
+      <span class="tag">多店对比</span>
+    </div>
+  </header>
+
+  <!-- 场景 -->
+  <section class="card">
+    <h2><span class="bar"></span>门店场景</h2>
+    <div class="scene">
+      <p>你管着 <span class="who">3 家社区便利店</span>。上个月财务报：3 家店合计净利润 <b>4.2 万</b>，账面挺好看。可你打开银行账户，余额反而比月初少了 <b>3 万</b>；仓库盘点又发现：整箱临期饮料堆在角落、过季礼盒落灰，而每天早上热销的鲜奶、面包却经常 <b>10 点就断货</b>。</p>
+      <p class="q">你纳闷：货明明都进来了，钱去哪了？——答案藏在"存货周转"里：你赚的是账面利润，但货没及时卖成钱，现金就被库存吃掉了。</p>
+    </div>
+  </section>
+
+  <!-- 定义与公式 -->
+  <section class="card">
+    <h2><span class="bar"></span>定义与公式</h2>
+    <p class="lead">先把五个词和算式讲清楚，后面算例才好跟着算。</p>
+    <div class="grid">
+
+      <div class="fcard">
+        <div class="ft">1. 什么是存货</div>
+        <div class="formula">存货 = 为了卖而进、还没卖掉的那部分货</div>
+        <div class="fe">对便利店、超市、餐饮门店，存货基本就是"商品库存"：货架上的、仓库里的、甚至已付款还没上架的货都算。</div>
+      </div>
+
+      <div class="fcard">
+        <div class="ft">2. 平均存货余额</div>
+        <div class="formula">平均存货余额 =（期初存货 + 期末存货）÷ 2</div>
+        <div class="fe">用平均值而不是某一天，是为了抹平"月初刚补货、月末快卖空"的波动，更接近真实水平。</div>
+      </div>
+
+      <div class="fcard">
+        <div class="ft">3. 存货周转次数</div>
+        <div class="formula">存货周转次数 = 营业成本 ÷ 平均存货余额</div>
+        <div class="fe">这段时间里，你的平均库存被"卖空再补满"倒腾了几遍。次数越多，货走得越快。</div>
+      </div>
+
+      <div class="fcard">
+        <div class="ft">4. 存货周转天数</div>
+        <div class="formula">周转天数 = 计算期天数 ÷ 周转次数<br>也可写成：周转天数 = 平均存货余额 × 天数 ÷ 营业成本</div>
+        <div class="fe">一批货从进店到卖完，平均要多少天。天数越短，压在货上的钱回笼越快。</div>
+      </div>
+
+      <div class="fcard" style="grid-column:1 / -1;">
+        <div class="ft">5. 关键直觉：周转天数 = 现金流速度</div>
+        <div class="formula">周转天数，本质是「你的钱被困在货里多少天」</div>
+        <div class="fe">天数越长，占用资金越多、过期/贬值风险越大；天数越短，同样的钱能多转几圈、多赚几轮。所以周转不是冷冰冰的指标，它就是你的现金回笼速度。</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 算例 -->
+  <section class="card">
+    <h2><span class="bar"></span>算例：跟着算一遍</h2>
+    <p class="lead">用一家便利店真实可比的数据，把公式套进去。</p>
+
+    <p style="font-size:14.5px;margin:0 0 10px;"><b style="color:var(--green-d);">主算例 · 某便利店 3 月</b></p>
+    <div style="font-size:14px;color:var(--muted);margin-bottom:12px;">
+      期初存货（3/1）＝8 万元 ｜ 期末存货（3/31）＝12 万元 ｜ 当月营业成本＝30 万元 ｜ 当月天数＝31 天
+    </div>
+
+    <div class="step">
+      <span class="no">1</span>
+      <span class="st"><b>算平均存货：</b>（8 ＋ 12）÷ 2 ＝ <span class="num">10 万元</span></span>
+    </div>
+    <div class="step">
+      <span class="no">2</span>
+      <span class="st"><b>算周转次数：</b>30 ÷ 10 ＝ <span class="num">3 次</span>　→　这个月把平均库存倒腾了 3 遍</span>
+    </div>
+    <div class="step">
+      <span class="no">3</span>
+      <span class="st"><b>算周转天数：</b>31 ÷ 3 ≈ <span class="num">10.3 天</span>　→　每批货约 10 天卖完一轮，钱就回笼一轮</span>
+    </div>
+
+    <p style="font-size:14.5px;margin:20px 0 6px;"><b style="color:var(--green-d);">多店对比 · 同样卖出 20 万成本的货</b></p>
+    <div class="cmp">
+      <div class="store">
+        <div class="nm">门店 A（周转快）<span class="pill fast">占款少</span></div>
+        <div style="font-size:13.5px;color:var(--muted);">平均存货 4 万元</div>
+        <div style="font-size:13.5px;margin-top:6px;">周转次数 ＝ 20 ÷ 4 ＝ <b style="color:var(--green-d);">5 次</b></div>
+        <div class="barwrap">
+          <div class="lab"><span>周转天数</span><span>6.2 天</span></div>
+          <div class="track"><div class="fill g" style="width:20%;"></div></div>
+        </div>
+      </div>
+      <div class="store">
+        <div class="nm">门店 B（周转慢）<span class="pill slow">压货多</span></div>
+        <div style="font-size:13.5px;color:var(--muted);">平均存货 10 万元</div>
+        <div style="font-size:13.5px;margin-top:6px;">周转次数 ＝ 20 ÷ 10 ＝ <b style="color:#9a4a44;">2 次</b></div>
+        <div class="barwrap">
+          <div class="lab"><span>周转天数</span><span>15.5 天</span></div>
+          <div class="track"><div class="fill r" style="width:50%;"></div></div>
+        </div>
+      </div>
+    </div>
+    <p style="font-size:14px;margin-top:12px;color:var(--ink);">
+      同样卖出 20 万成本的货，<b style="color:#9a4a44;">B 店比 A 店多压了 6 万元</b>（10 − 4）在货上——这些钱本可拿去补畅销品、发工资或还贷款。周转慢，亏的是"钱的时间价值"。
+    </p>
+  </section>
+
+  <!-- 判断标准 / 红线 -->
+  <section class="card">
+    <h2><span class="bar"></span>给经营者的红线</h2>
+    <p class="lead">把指标变成可执行的判断，每月盘点时对照看。</p>
+
+    <div class="line"><span class="dot"></span><span class="lt"><b>红线 1 · 周转天数连续上升：</b>若 2–3 个月持续变长，说明货越压越多，先停手进货、查清是采购过量还是销售下滑，别等现金被吃光。</span></div>
+    <div class="line"><span class="dot"></span><span class="lt"><b>红线 2 · 临期/过期库存超 5%：</b>过期商品是 100% 亏损，占比过高说明采购预测或陈列动销失灵，直接吞掉利润。</span></div>
+    <div class="line"><span class="dot"></span><span class="lt"><b>红线 3 · 畅销品断货率超 10%：</b>周转不是越快越好，要快在"对的东西"；为零库存牺牲畅销品，是捡芝麻丢西瓜。</span></div>
+    <div class="line"><span class="dot"></span><span class="lt"><b>红线 4 · 同业态多店差超 2 倍：</b>若 A 店 6 天、B 店 15 天，要么 A 严重压货，要么 B 陈列/促销/位置有问题，必须逐店归因。</span></div>
+    <div class="line"><span class="dot"></span><span class="lt"><b>红线 5 · 周转天数 vs 供应商账期：</b>供应商给 30 天账期、你 15 天回款，等于白用供应商 15 天钱；若周转 45 天 ＞ 账期 30 天，你得先自掏腰包垫钱，现金压力陡增。</span></div>
+  </section>
+
+  <!-- 自测题 -->
+  <section class="card">
+    <h2><span class="bar"></span>今日自测题</h2>
+    <p class="lead" style="margin-bottom:14px;">先自己算一遍，再点答案对一下。</p>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q1：某门店月初存货 5 万、月末存货 7 万，当月营业成本 36 万，当月按 30 天计。求存货周转次数和周转天数。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">
+        A1：平均存货 ＝（5 ＋ 7）÷ 2 ＝ <b>6 万元</b>；周转次数 ＝ 36 ÷ 6 ＝ <b>6 次</b>；周转天数 ＝ 30 ÷ 6 ＝ <b>5 天</b>。即该店平均 5 天卖完一轮库存。
+        <span class="calc">算式：平均存货=(5+7)/2=6；次数=36/6=6；天数=30/6=5（天）</span>
+      </div>
+    </details>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q2：甲、乙两家店当月营业成本都是 24 万。甲平均存货 3 万，乙平均存货 6 万（均按 30 天）。求各自周转天数，相差几天？乙比甲多压多少货？</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">
+        A2：甲周转次数 ＝ 24 ÷ 3 ＝ 8 次，周转天数 ＝ 30 ÷ 8 ＝ <b>3.75 天</b>；乙周转次数 ＝ 24 ÷ 6 ＝ 4 次，周转天数 ＝ 30 ÷ 4 ＝ <b>7.5 天</b>；相差 ＝ 7.5 − 3.75 ＝ <b>3.75 天</b>；乙多压货 ＝ 6 − 3 ＝ <b>3 万元</b>。同样卖 24 万成本的货，乙店多占 3 万现金。
+        <span class="calc">甲：24/3=8次，30/8=3.75天；乙：24/6=4次，30/4=7.5天；差=3.75天；多压=6-3=3万</span>
+      </div>
+    </details>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q3（判断）："存货周转天数越短越好，所以门店应该把存货尽量压到零。" 这句话对还是错？说明理由。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">
+        A3：<b>错。</b>周转天数短代表货走得快、占款少，这是好事；但压到零会造成畅销品断货，丢掉销售和回头客，还可能因失去批量采购折扣而抬高成本。目标是"刚好够卖、不积压也不过缺"，而不是一味求低。判断好坏必须同时看「周转天数 ＋ 缺货率」。
+        <span class="calc">结论：错。零库存→断货丢客+失去批量折扣；正确目标是周转快且不断货，需结合缺货率综合看。</span>
+      </div>
+    </details>
+  </section>
+
+  <footer class="foot">
+    本辑为「门店经营财务知识日报」第 09 期 · 内容自包含，可单独阅读与分享。<br>
+    下期预告：<span class="next">周转率与周转天数</span> —— 讲清"周转"这个家族：存货、应收、应付一起看，才算真正懂经营节奏。
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="NUSlUtcezoqzU8BudtvUvs">
+<head data-page-node-id="xtrto8RPuGXERY0RriGD7X">
+<meta charset="UTF-8" data-page-node-id="jMtJEF4374IircbZpxkUC0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="IGm6FMMZQCTG3KkoV4Q1jw">
+<title>计划打卡 · 年计划绑定与年度累计 原型 v1</title>
+<style>
+  :root{
+    --bg1:#fbf6ec; --bg2:#f3ecdf;
+    --card:rgba(255,255,255,.62); --card-bd:rgba(80,60,30,.12);
+    --line:rgba(80,60,30,.14); --ink:#3b3a34; --muted:#8f8778;
+    --accent:#4a9e66; --accent-soft:rgba(74,158,102,.13);
+    --blue:#6a7ff5; --blue-soft:rgba(106,127,245,.13);
+    --amber:#e9a23b; --amber-soft:rgba(233,162,59,.15);
+    --rose:#e0567c; --rose-soft:rgba(224,86,124,.12);
+    --r-card:22px; --r-in:14px;
+    --shadow:0 10px 30px -18px rgba(80,60,30,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:"PingFang SC","Microsoft YaHei",system-ui,sans-serif;color:var(--ink);
+    background:linear-gradient(160deg,var(--bg1),var(--bg2)) fixed;padding-bottom:60px}
+  .topbar{display:flex;align-items:center;gap:14px;padding:14px 26px;position:sticky;top:0;z-index:20;
+    background:rgba(255,255,255,.55);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);
+    border-bottom:1px solid var(--card-bd)}
+  .logo{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px}
+  .logo i{width:22px;height:22px;border-radius:8px;display:inline-block;
+    background:linear-gradient(135deg,#4a9e66,#6a7ff5)}
+  .nav{display:flex;gap:6px;margin-left:8px}
+  .nav a{font-size:12.5px;padding:6px 13px;border-radius:999px;color:var(--muted);text-decoration:none}
+  .nav a.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+  .top-tag{margin-left:auto;font-size:11.5px;color:var(--muted);
+    background:rgba(255,255,255,.7);border:1px solid var(--card-bd);padding:5px 12px;border-radius:999px}
+  .wrap{max-width:1160px;margin:22px auto 0;padding:0 22px}
+  .hint-card{background:var(--card);border:1px solid var(--card-bd);border-radius:var(--r-card);
+    padding:16px 20px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+  .hint-card h3{font-size:14px;margin-bottom:10px;display:flex;align-items:center;gap:8px}
+  .dot-accent{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block}
+  .chain{display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:12.5px;color:var(--muted)}
+  .chain b{color:var(--ink);background:rgba(255,255,255,.8);border:1px solid var(--card-bd);
+    padding:4px 12px;border-radius:999px;font-weight:600}
+  .chain em{font-style:normal;color:var(--accent);font-weight:700}
+  .rule{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;font-size:12px}
+  .rule span{background:var(--accent-soft);color:#2f6b45;padding:4px 11px;border-radius:999px}
+  .rule span.warn{background:rgba(224,86,124,.1);color:#b04967}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+  @media(max-width:900px){.grid{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--card-bd);border-radius:var(--r-card);
+    padding:18px 20px;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:var(--shadow)}
+  .sec-title{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
+  .sec-title h2{font-size:16.5px}
+  .sec-title small{color:var(--muted);font-size:12px}
+  .form{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+  .in{flex:1;min-width:130px;border:1px solid var(--line);border-radius:var(--r-in);padding:9px 13px;
+    background:rgba(255,255,255,.75);font-size:13px;outline:none;color:var(--ink)}
+  .in:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(74,158,102,.13)}
+  .in.num{flex:0 0 86px;min-width:86px;text-align:center}
+  .in.sel{flex:0 0 auto;min-width:0;cursor:pointer}
+  .btn{border:0;border-radius:999px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;
+    background:linear-gradient(135deg,#4a9e66,#3f8f5b);color:#fff;white-space:nowrap}
+  .btn:active{transform:translateY(1px)}
+  .list{display:flex;flex-direction:column;gap:9px}
+  .item{background:rgba(255,255,255,.6);border:1px solid var(--card-bd);border-radius:16px;padding:11px 13px}
+  .item-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+  .cat-dot{width:10px;height:10px;border-radius:50%;flex:none}
+  .it-name{font-weight:600;font-size:13.5px}
+  .it-sub{font-size:11.5px;color:var(--muted);margin-left:2px}
+  .ghost{border:1px solid var(--line);background:rgba(255,255,255,.7);border-radius:999px;
+    padding:5px 12px;font-size:12px;color:var(--ink);cursor:pointer;font-weight:500}
+  .ghost:hover{border-color:var(--accent);color:var(--accent)}
+  .chip{font-size:11.5px;border-radius:999px;padding:3px 10px;font-weight:500;white-space:nowrap}
+  .chip.bind{background:var(--blue-soft);color:#4c5fd0;border:1px solid rgba(106,127,245,.28)}
+  .chip.free{background:rgba(128,120,105,.1);color:var(--muted);border:1px dashed var(--line)}
+  .chip.cat{background:var(--accent-soft);color:#2f6b45}
+  .num{font-variant-numeric:tabular-nums;font-weight:700;color:var(--accent)}
+  .num.blue{color:var(--blue)}
+  .arr{margin-left:auto;cursor:pointer;border:0;background:none;font-size:12px;color:var(--muted);
+    display:flex;align-items:center;gap:3px;font-weight:600}
+  .arr:hover{color:var(--accent)}
+  .arr::after{content:"";width:6px;height:6px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;
+    transform:rotate(45deg) translateY(-2px);transition:transform .18s}
+  .item.open .arr::after{transform:rotate(-135deg) translateY(-1px)}
+  .detail{display:none;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line)}
+  .item.open .detail{display:block}
+  .prog{flex:0 0 150px;display:flex;align-items:center;gap:7px}
+  .bar{flex:1;height:7px;border-radius:99px;background:rgba(80,60,30,.1);overflow:hidden}
+  .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#4a9e66,#7cc08f);transition:width .35s}
+  .prog small{font-size:11px;color:var(--muted);white-space:nowrap}
+  .sub-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin:2px 0 0 18px}
+  .mt{display:inline-flex;align-items:center;justify-content:center;min-width:44px;height:21px;
+    border-radius:7px;font-size:11.5px;font-weight:700;color:#fff;background:var(--blue)}
+  .mt.amber{background:var(--amber)} .mt.rose{background:var(--rose)} .mt.grey{background:#9a9386}
+  .mini-select{font-size:11.5px;border:1px solid var(--line);border-radius:999px;padding:4px 8px;
+    background:rgba(255,255,255,.8);color:var(--ink);outline:none;cursor:pointer}
+  .task-row{display:flex;align-items:center;gap:10px;font-size:12.8px;padding:5px 2px}
+  .task-row + .task-row{border-top:1px dashed rgba(80,60,30,.08)}
+  .task-row .cnt{margin-left:auto;color:var(--muted);font-size:11.5px;font-variant-numeric:tabular-nums}
+  .task-row .cnt b{color:var(--accent)}
+  .ck{appearance:none;width:17px;height:17px;border-radius:6px;border:1.6px solid var(--line);
+    background:#fff;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;
+    flex:none;transition:all .15s;font-size:11px;color:#fff}
+  .ck:checked{background:var(--accent);border-color:var(--accent)}
+  .ck:checked::after{content:"✓"}
+  .full{margin-top:18px}
+  .today-list{display:flex;flex-direction:column}
+  .today-row{display:flex;align-items:center;gap:11px;padding:9px 4px;border-bottom:1px dashed rgba(80,60,30,.09);font-size:13.5px}
+  .today-row:last-child{border-bottom:0}
+  .live{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;align-items:center}
+  .live .bub{background:var(--blue-soft);border:1px solid rgba(106,127,245,.25);border-radius:14px;
+    padding:7px 14px;font-size:12.5px;color:#4859b8}
+  .live .bub b{font-size:15px;font-variant-numeric:tabular-nums}
+  .empty{font-size:12.5px;color:var(--muted);padding:14px;text-align:center;border:1px dashed var(--line);border-radius:14px}
+  .foot{margin-top:18px;text-align:center;font-size:12px;color:var(--muted)}
+  .note-in{width:100%;border:0;background:rgba(255,255,255,.6);border-radius:10px;padding:8px 11px;font-size:12.5px;margin-top:8px;outline:none}
+  .mini{display:inline-flex;flex-wrap:wrap;gap:4px;align-items:center;font-size:11px;color:var(--muted);margin-left:auto}
+  .mini b{color:var(--ink)}
+  .tag-new{background:var(--amber-soft);color:#a06a13;border:1px solid rgba(233,162,59,.3);font-size:10.5px;padding:2px 8px;border-radius:999px;margin-left:6px;vertical-align:1px}
+</style>
+</head>
+<body data-page-node-id="6sjS3HEJzLqFULWYT1bvCG">
+
+<div class="topbar" data-page-node-id="llY32piyB8WmALMKFqgVXC">
+  <div class="logo" data-page-node-id="Lx5Ti6CByv4f4qCcx1NW2n"><i data-page-node-id="urxf3cb2kT2p5HBd6sDSbq"></i>春日工作台</div>
+  <nav class="nav" data-page-node-id="VvqfgnzWZ7uyES2fOB1Eet">
+    <a data-page-node-id="Hll8FVPBCFylwNoDHHuAFE">工作台</a><a data-page-node-id="NGdQkqLlkM2cJNC3IQNWAq">资金管理</a><a class="on" data-page-node-id="iiriA1siQO9j08vLWZWDtk">计划打卡</a><a data-page-node-id="93kNupS2ZAgfjWsmYq0NgE">每日发现</a><a data-page-node-id="90YRx5u01gH6L4W2q98ZKq">知识库</a>
+  </nav>
+  <span class="top-tag" data-page-node-id="yfv52KoyfaCVk6YhYW7LFh">交互原型 v1 · 待确认</span>
+</div>
+
+<div class="wrap" data-page-node-id="Jw81sj1H8QFeamNPd9R9GX">
+
+  <!-- 需求理解说明 -->
+  <div class="hint-card" data-page-node-id="MM1IFi8RFHksnbRfGsDM9j">
+    <h3 data-page-node-id="2ZKZ8omJeyGydI1QZyiIu1"><span class="dot-accent" data-page-node-id="uQenTN2vJ4UjQrGvHD0qA5"></span>这次要解决的问题：年度累计“看不到、对不上”</h3>
+    <div class="chain" data-page-node-id="lzJQaPDPS2BQxGTf7o1Ax5">
+      <b data-page-node-id="dd8k5JR7dNk1kdb57rMJZv">年计划</b><em data-page-node-id="hO4Aq4VFs4MvqWYKTWKoB9">▼ 手动绑定</em><b data-page-node-id="nuy5dIxcfK0S7ZBRs68zH3">月计划</b><em data-page-node-id="ohfX1GVJpHxxpInoTFDdHQ">▸ 包含</em><b data-page-node-id="p7WXkI9gEEDV3Bs9qITx2k">打卡项</b><em data-page-node-id="7Vrs7vdXnyIcBvinbJ5MSd">▸ 每日勾选完成一次</em><em style="color:var(--blue)" data-page-node-id="ZjUVUy1DLdX3sA4zQO5LCr">月累计 +1 且 年累计 +1</em>
+    </div>
+    <div class="rule" data-page-node-id="xAhDPWY70nakTpDW6UZnjR">
+      <span data-page-node-id="4ES5zXG2hzUWxqCu0Hzm7X">① 月计划绑定到哪张年计划，界面直接可见、随时可改</span>
+      <span data-page-node-id="nRNsfHXPhlrxKJjtfjjBcx">② 年计划下能看到它绑定的全部月计划明细</span>
+      <span data-page-node-id="PAHyE1FgzSQ3fkIsWKIulD">③ 年计划可设年度目标次数，显示 X/Y 进度</span>
+      <span class="warn" data-page-node-id="rh9bfTYLRGRgVDeMHyfCOi">④ 没绑年计划的“独立月计划”仍可打卡，但不计入任何年度累计（卡片上灰色标注，不再让人误会）</span>
+    </div>
+  </div>
+
+  <div class="grid" data-page-node-id="OU6T2IkmdAhL6FG7lBU17h">
+    <!-- ============ 年计划卡 ============ -->
+    <section class="card" data-page-node-id="1Dbw3XH8qaeEzDnx46Ik6W">
+      <div class="sec-title" data-page-node-id="RUHrisxKevZhujbJVv3HKF"><h2 data-page-node-id="GjXdCX8Ig9gb5Cqnvxp6LK">年计划</h2><small data-page-node-id="HQuFJ6aDNUhH2cPZd6CCYW">2026 年</small><span style="margin-left:auto" class="tag-new" data-page-node-id="L1nUGaK4jhSWX8341uKSbo">新增目标次数</span></div>
+      <div class="form" data-page-node-id="Y67v9aUfaBNPMPsoUDSMaE">
+        <input class="in" id="yp-name" placeholder="年度目标，如：一年读完 24 本书" data-page-node-id="HTcB8GyxIUItL8IGxYkiQv">
+        <select class="in sel" id="yp-cat" data-page-node-id="a8YhYGPHZ3QCtzyXoJdXPc">
+          <option data-page-node-id="mseuJCAEqP4LuZolfAC4Ss">学习</option><option data-page-node-id="vlNo7npd8HY095Rh8GQOwg">健康</option><option data-page-node-id="ho85vZaLrmLf2v6q0dj4o7">习惯</option><option data-page-node-id="1R4mkdzMYES5Ao3skd7ewK">工作</option><option data-page-node-id="zy9K0cFznAiL4ZvOpg7Jmr">未分类</option>
+        </select>
+        <input class="in num" id="yp-target" type="number" min="1" placeholder="目标次" data-page-node-id="xkrH09zIU4URNAMXv01fid">
+        <button class="btn" onclick="addYP()" data-page-node-id="2wrssHooCmqEGp4L5guPXa">新增</button>
+      </div>
+      <div class="list" id="yp-list" data-page-node-id="P4UCsKmLQE9N7lbzgIEotf"></div>
+    </section>
+
+    <!-- ============ 月计划卡 ============ -->
+    <section class="card" data-page-node-id="4glfJdSb6l7PQLSRdYhwAP">
+      <div class="sec-title" data-page-node-id="QE31lfyDgLU8RTRraE8BsA"><h2 data-page-node-id="NaRx9jYSJCl6J4RWnZAyOL">月计划</h2><small data-page-node-id="efyFRlcRXqqjxi555ww2TD">2026 年</small>
+        <div style="margin-left:auto" id="month-tabs" class="mini-select-group" data-page-node-id="ULAXHWPa0BoS3BXHHok6xo"></div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin:-4px 0 10px" data-page-node-id="C0JbVAXe3yOgjXAIv0U94e">把月计划绑到年计划后，它每天的完成都会计入那张年计划</div>
+      <div class="form" data-page-node-id="rnGXFy4Ew9ZPFQkGi1loAW">
+        <input class="in" id="mp-name" placeholder="本月想推进什么？" data-page-node-id="OtZdW5h1AGqmIuOf9YjZOu">
+        <select class="in sel" id="mp-bind" data-page-node-id="9fiKb3jAamP8AugZHQgMpS"></select>
+        <button class="btn" onclick="addMP()" data-page-node-id="lEso7D9kn1WdEEC2ePaqtW">新增</button>
+      </div>
+      <div class="list" id="mp-list" data-page-node-id="MkH1Nvv3cIZKVIqY7mwCRR"></div>
+    </section>
+  </div>
+
+  <!-- ============ 今日打卡演示 ============ -->
+  <section class="card full" data-page-node-id="1pZqds4gjHuD34zWM0qoQ0">
+    <div class="sec-title" data-page-node-id="2KVnfTE1yUKa7MPtKHHcYh">
+      <h2 data-page-node-id="XUdCsSSKcKJ7w8jKKHrcoF">每日打卡</h2><small id="today-line" data-page-node-id="p5eYYCUfrDVUt2QmsAfyoZ">2026 年 9 月 9 日 · 周三</small>
+      <span style="margin-left:auto;font-size:12px;color:var(--muted)" data-page-node-id="Eg11zm4HbRmFtFx02uNiI8">勾选即保存 → 看右侧年度/月度数字 +1</span>
+    </div>
+    <div class="today-list" id="today-list" data-page-node-id="1iFhFDgWkejNNxebICbPGF"></div>
+    <div class="live" data-page-node-id="lLppR6pp8HwfmxFPTdcwyU">
+      <span class="bub" style="background:var(--accent-soft);border-color:rgba(74,158,102,.28);color:#2f6b45" id="live-year" data-page-node-id="ZiNTISxTsVMiwRqtjYJb6q"></span>
+      <span class="bub" id="live-month" data-page-node-id="ROy12biOr0ClEjnx1TsEfg"></span>
+      <span class="bub" style="background:rgba(128,120,105,.08);color:var(--muted)" id="live-free" data-page-node-id="Z8WNGogJCdbxJOAgBnBusA"></span>
+      <span style="margin-left:auto" data-page-node-id="v73K5uJDdsOyQG4hk8dmtQ"><button class="ghost" onclick="resetToday()" data-page-node-id="euGkFwX3dwZFixrKlIzxcA">重置今日</button></span>
+    </div>
+  </section>
+
+  <p class="foot" data-page-node-id="Qx0BKgjSGEgqGZEk43Kww9">原型数据均为演示。确认方向后按此改动：<b data-page-node-id="VoncfG388eBAdUnSeP80eK">src/stores/domain.js</b>（年度目标字段+统计口径+绑定查询）与 <b data-page-node-id="JzR3x4S6ijNkkvoZhbVpEh">src/views/CheckinView.vue</b>（年/月计划卡片 UI）。</p>
+</div>
+
+<script>
+// ---------- 演示数据 ----------
+const CUR_MONTH = 9;
+let YP = [
+  { id:'yp1', year:2026, name:'一年读完 24 本书', cat:'学习', target:24 },
+  { id:'yp2', year:2026, name:'全年跑步 100 次',  cat:'健康', target:100 },
+];
+let MP = [
+  { id:'mp1', year:2026, month:9,  name:'九月 · 阅读推进', yp:'yp1', cat:'学习', tasks:[{id:'t1',name:'阅读 ≥30 分钟'},{id:'t2',name:'写读书笔记'}] },
+  { id:'mp2', year:2026, month:8,  name:'八月 · 阅读推进', yp:'yp1', cat:'学习', tasks:[{id:'t3',name:'阅读 ≥30 分钟'},{id:'t4',name:'写读书笔记'}] },
+  { id:'mp3', year:2026, month:9,  name:'九月 · 跑步训练', yp:'yp2', cat:'健康', tasks:[{id:'t5',name:'跑步 ≥3km'},{id:'t6',name:'拉伸放松'}] },
+  { id:'mp4', year:2026, month:9,  name:'九月 · 早睡习惯', yp:null, cat:'习惯', tasks:[{id:'t7',name:'23:30 前入睡'}] }, // 独立：不计年度
+];
+// 历史完成次数（不含今日），今日勾选在此基础上 +1
+const HIST = { t1:6, t2:2, t3:5, t4:1, t5:4, t6:3, t7:5 };
+let today = {};                 // {taskId: true}
+let viewMonth = CUR_MONTH;      // 月计划卡当前查看月份
+let open = {};                  // 展开状态
+
+// ---------- 计算 ----------
+const $ = s => document.querySelector(s);
+function taskDone(id){ return (HIST[id]||0) + (today[id]?1:0); }
+function monthDone(p){ return p.tasks.reduce((s,t)=>s+taskDone(t.id),0); }
+function ypDone(id){ return MP.filter(p=>p.yp===id).reduce((s,p)=>s+monthDone(p),0); }
+function ypTasks(id){ return MP.filter(p=>p.yp===id).reduce((s,p)=>s+p.tasks.length,0); }
+function ypPlans(id){ return MP.filter(p=>p.yp===id); }
+function fmt(n){ return (n|0).toLocaleString(); }
+
+// ---------- 渲染 ----------
+function catColor(c){ const m={'学习':'#6a7ff5','健康':'#4a9e66','习惯':'#e9a23b','工作':'#e0567c'}; return m[c]||'#9a9386'; }
+
+function renderYP(){
+  const box = $('#yp-list');
+  if(!YP.length){ box.innerHTML='<div class="empty">还没有年计划，上面填一项开始</div>'; return; }
+  box.innerHTML = YP.map(y=>{
+    const done = ypDone(y.id), bound = ypPlans(y.id);
+    const pc = y.target ? Math.min(100, Math.round(done/y.target*100)) : 0;
+    const openCls = open['y'+y.id] ? 'open':'';
+    const rows = bound.map(p=>`
+      <div class="sub-row" style="margin:4px 0 0 0">
+        <span class="mt ${p.month===8?'amber':'grey'}">${p.month}月</span>
+        <b style="font-size:12.5px">${p.name}</b>
+        <span class="it-sub">打卡项 ${p.tasks.length} 项</span>
+        <span style="margin-left:auto" class="num blue">${fmt(monthDone(p))} 次</span>
+        <button class="ghost" onclick="unbind('${p.id}',event)">解绑</button>
+      </div>`).join('');
+    const body = bound.length
+      ? `<div style="margin-top:6px">${rows}</div>
+         <div style="font-size:11px;color:var(--muted);margin-top:8px">年度累计 <b class="num">${fmt(done)}</b> = 上方 ${bound.length} 张月计划完成次数加总（每完成一次每日打卡 +1）</div>`
+      : `<div class="empty" style="margin-top:6px">还没绑定任何月计划 → 去右侧「月计划」添加并选这张年计划<br><span style="font-size:11px">（或把已有月计划在行内下拉里改成这张）</span></div>`;
+    return `<div class="item ${openCls}">
+      <div class="item-head">
+        <span class="cat-dot" style="background:${catColor(y.cat)}"></span>
+        <span class="it-name">${y.name}</span>
+        <span class="chip cat">${y.cat}</span>
+        ${y.target?`<span class="prog"><span class="bar"><i style="width:${pc}%"></i></span><small><b class="num">${fmt(done)}</b>/${fmt(y.target)} · ${pc}%</small></span>`
+                  :`<span class="it-sub">累计 ${fmt(done)} 次 · 未设年度目标</span>`}
+        <button class="arr" onclick="toggle('y${y.id}')">${openCls?'收起':'明细'}</button>
+      </div>
+      <div class="detail">${body}</div>
+    </div>`;
+  }).join('');
+}
+
+function monthTabs(){
+  const box = $('#month-tabs');
+  box.innerHTML = Array.from({length:12},(_,i)=>i+1).map(m=>
+    `<button class="ghost" style="${m===viewMonth?'background:var(--blue);color:#fff;border-color:var(--blue)':''}" onclick="setViewMonth(${m})">${m}月</button>`).join('');
+}
+
+function bindOptions(selId, cur){
+  const yps = YP.map(y=>`<option value="${y.id}" ${cur===y.id?'selected':''}>${y.name}</option>`).join('');
+  $(selId).innerHTML = `<option value="">独立月计划（不绑年计划）</option>${yps}`;
+}
+
+function renderMP(){
+  const list = MP.filter(p=>p.year===2026 && p.month===viewMonth);
+  const box = $('#mp-list');
+  if(!list.length){ box.innerHTML=`<div class="empty">2026 年 ${viewMonth} 月还没有月计划。上方新建一个，并选择要绑定的年计划。</div>`; return; }
+  box.innerHTML = list.map(p=>{
+    const openCls = open['m'+p.id]?'open':'';
+    const y = YP.find(x=>x.id===p.yp);
+    const tasks = p.tasks.map(t=>`
+      <div class="task-row">
+        <span class="cat-dot" style="background:${catColor(t.name.includes('跑步')||t.name.includes('拉伸')?'健康':p.cat)}"></span>
+        <span>${t.name}</span>
+        <span class="cnt">已完成 <b>${fmt(taskDone(t.id))}</b> 次${today[t.id]?' <span style="color:var(--accent)">(含今日 ✓)</span>':''}</span>
+      </div>`).join('') + (p.tasks.length?'':'<div class="empty" style="padding:8px">还没有打卡项</div>');
+    return `<div class="item ${openCls}">
+      <div class="item-head">
+        <span class="cat-dot" style="background:${catColor(p.cat)}"></span>
+        <span class="mt ${p.month===8?'amber':'grey'}">${p.month}月</span>
+        <span class="it-name">${p.name}</span>
+        ${y?`<span class="chip bind">→ ${y.name}</span>`:`<span class="chip free">独立 · 不计年度</span>`}
+        <span class="it-sub">累计</span><span class="num ${y?'':'blue'}">${fmt(monthDone(p))} 次</span>
+        <select class="mini-select" onchange="rebind('${p.id}',this.value)">
+          <option value="" ${!p.yp?'selected':''}>独立</option>
+          ${YP.map(yy=>`<option value="${yy.id}" ${p.yp===yy.id?'selected':''}>绑定 ${yy.name}</option>`).join('')}
+        </select>
+        <button class="arr" onclick="toggle('m${p.id}')">${openCls?'收起':'打卡项'}</button>
+      </div>
+      <div class="detail">${tasks}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderToday(){
+  // 今日可打卡：当前查看? 固定本月全部月计划的打卡项（含独立）
+  const box = $('#today-list');
+  const rows = MP.filter(p=>p.year===2026 && p.month===CUR_MONTH).flatMap(p=>
+    p.tasks.map(t=>{
+      const y = YP.find(x=>x.id===p.yp);
+      return `<div class="today-row">
+        <input type="checkbox" class="ck" ${today[t.id]?'checked':''} onchange="toggleToday('${t.id}',this.checked)">
+        <span>${t.name}</span>
+        <span class="chip cat">${p.cat}</span>
+        ${y?`<span class="chip bind">计入「${y.name}」</span>`:`<span class="chip free">独立计划 · 只计月度</span>`}
+        <span class="mini">今日${today[t.id]?'<b style="color:var(--accent)">已完成 ✓</b>':'<b>未完成</b>'} · 月累计已含</span>
+      </div>`;
+    }));
+  box.innerHTML = rows.length? rows : '<div class="empty">本月还没有打卡项</div>';
+
+  // 汇总
+  const bindPlans = MP.filter(p=>p.year===2026 && p.month===CUR_MONTH && p.yp);
+  const ypTags = YP.filter(y=>ypPlans(y.id).some(p=>p.month===CUR_MONTH)).map(y=>{
+    const done = ypDone(y.id);
+    return `「${y.name}」年度 <b>${fmt(done)}</b>/${y.target||'—'}${y.target?`（${Math.min(100,Math.round(done/y.target*100))}%）`:''}`;
+  }).join('　');
+  $('#live-year').innerHTML = ypTags || '本月绑定了年计划的月计划尚未创建';
+  const mm = bindPlans.map(p=>`「${p.name}」月累计 <b>${fmt(monthDone(p))}</b>`).join('　');
+  $('#live-month').innerHTML = mm || '—';
+  const free = MP.filter(p=>p.year===2026 && p.month===CUR_MONTH && !p.yp);
+  $('#live-free').innerHTML = free.length ? `独立月计划 ${free.length} 张不计年度（本月）` : '本月无独立月计划';
+}
+
+function renderAll(){ renderYP(); renderMP(); renderToday(); }
+
+// ---------- 交互 ----------
+function toggle(k){ open[k]=!open[k]; renderAll(); }
+function setViewMonth(m){ viewMonth=m; monthTabs(); renderMP(); }
+function toggleToday(id, on){ today[id]=!!on; renderAll(); }
+function resetToday(){ today={}; renderAll(); }
+function unbind(mpId, ev){ ev && ev.stopPropagation(); const p=MP.find(x=>x.id===mpId); if(p) p.yp=null; renderAll(); }
+function rebind(mpId, ypId){ const p=MP.find(x=>x.id===mpId); if(p){ p.yp = ypId||null; renderAll(); } }
+function addYP(){
+  const name=$('#yp-name').value.trim(), target=+$('#yp-target').value||0;
+  if(!name){ alert('请填写年计划名称'); return; }
+  YP.unshift({ id:'yp'+Date.now(), year:2026, name, cat:$('#yp-cat').value, target:target||null });
+  $('#yp-name').value=''; $('#yp-target').value='';
+  bindOptions('#mp-bind',''); renderAll();
+}
+function addMP(){
+  const name=$('#mp-name').value.trim(), ypId=$('#mp-bind').value;
+  if(!name){ alert('请填写月计划名称'); return; }
+  const y=YP.find(x=>x.id===ypId);
+  MP.push({ id:'mp'+Date.now(), year:2026, month:viewMonth, yp:ypId||null, cat:y?y.cat:'未分类',
+    tasks:[{ id:'t'+Date.now(), name:'示例打卡项' }] });
+  $('#mp-name').value='';
+  renderAll();
+}
+
+// ---------- 初始化 ----------
+monthTabs();
+bindOptions('#mp-bind','');
+renderAll();
+</script>
+</body>
+</html>

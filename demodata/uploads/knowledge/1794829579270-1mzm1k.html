@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融概念_第40期_分散投资_2026-11-10</title>
+<style>
+  :root{
+    --accent:#3a4cc0;
+    --accent2:#8a5cf6;
+    --bg:#f5f6fb;
+    --card:#ffffff;
+    --text:#1f2330;
+    --muted:#6b7280;
+    --line:#e6e8f0;
+    --r:16px;
+    --shadow:0 6px 24px rgba(40,48,90,.08);
+    --gap:20px;
+    --pos:#2f9e6b;
+    --neg:#d9534f;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.75;
+    padding:0 0 48px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 18px;}
+
+  /* 头部 */
+  header{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;
+    padding:42px 28px 36px;
+    border-radius:0 0 28px 28px;
+    box-shadow:var(--shadow);
+    margin-bottom:var(--gap);
+  }
+  .issue{
+    display:inline-block;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35);
+    padding:5px 14px;
+    border-radius:999px;
+    font-size:14px;
+    letter-spacing:1px;
+    margin-bottom:16px;
+  }
+  header h1{font-size:34px;font-weight:800;letter-spacing:1px;margin-bottom:8px;}
+  header .sub{font-size:16px;opacity:.92;font-weight:400;}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px;font-size:13px;opacity:.9;}
+  .meta span{background:rgba(255,255,255,.14);padding:4px 12px;border-radius:8px;}
+  .keywords{margin-top:14px;font-size:13px;opacity:.85;}
+
+  /* 卡片 */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    padding:26px 26px 28px;
+    margin-bottom:var(--gap);
+    box-shadow:var(--shadow);
+  }
+  .card h2{
+    font-size:21px;
+    margin-bottom:16px;
+    padding-left:14px;
+    border-left:5px solid var(--accent);
+    line-height:1.4;
+  }
+  .card p{margin-bottom:14px;color:#34384a;}
+  .card p:last-child{margin-bottom:0;}
+  .card strong{color:var(--accent);}
+  .lead{font-size:16px;color:#2a2e3c;}
+
+  /* 概念卡 */
+  .defbox{
+    background:linear-gradient(135deg,#f0f2ff,#f7f0ff);
+    border:1px solid #e3e0fb;
+    border-radius:12px;
+    padding:20px 22px;
+    margin:6px 0 18px;
+  }
+  .defbox .label{
+    font-size:13px;color:var(--accent);font-weight:700;letter-spacing:1px;
+    text-transform:uppercase;margin-bottom:8px;
+  }
+  .formula{
+    font-family:"Courier New",monospace;
+    background:#1f2330;color:#e8ecff;
+    padding:14px 16px;border-radius:10px;
+    font-size:14px;overflow-x:auto;margin:10px 0 4px;
+  }
+  .insight{
+    margin-top:14px;padding:14px 16px;
+    background:#fff7ec;border-left:4px solid #f0a93b;border-radius:0 10px 10px 0;
+    font-size:15px;color:#6b4a12;
+  }
+
+  /* 船队可视化 */
+  .fleet{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 6px;}
+  .ship{
+    flex:1 1 60px;min-width:60px;
+    background:linear-gradient(180deg,#dfe4ff,#c7cef7);
+    border:1px solid #bcc4ee;
+    border-radius:10px 10px 8px 8px;
+    padding:14px 4px 10px;text-align:center;font-size:12px;color:#3a3f63;font-weight:600;
+    position:relative;
+  }
+  .ship .sail{
+    width:0;height:0;margin:0 auto 8px;
+    border-left:11px solid transparent;border-right:11px solid transparent;
+    border-bottom:18px solid var(--accent);
+  }
+  .ship.sunk{
+    background:#e8e8ee;border-color:#d2d2da;color:#9a9aa6;
+  }
+  .ship.sunk .sail{border-bottom-color:#b4b4be;}
+  .ship.sunk::after{
+    content:"沉";position:absolute;top:6px;right:8px;font-size:11px;color:#d9534f;font-weight:700;
+  }
+
+  /* 相关系数矩阵 */
+  .matrix-note{font-size:14px;color:var(--muted);margin:6px 0 14px;}
+  .matrix{
+    display:grid;grid-template-columns:78px repeat(4,1fr);gap:6px;
+    max-width:420px;margin:0 auto;
+  }
+  .matrix div{
+    padding:10px 4px;text-align:center;border-radius:8px;font-size:13px;font-weight:600;
+  }
+  .matrix .head{background:#f0f1f7;color:#444;font-weight:700;}
+  .matrix .rowhead{background:#f0f1f7;color:#444;font-weight:700;display:flex;align-items:center;justify-content:center;}
+  .c-hi{background:#f8d2d0;color:#a3322f;}
+  .c-mid{background:#fdeccb;color:#9a6a12;}
+  .c-lo{background:#d4efe1;color:#1f7a4d;}
+
+  /* 案例对比条 */
+  .bars{margin:16px 0 4px;}
+  .bar-row{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+  .bar-name{width:140px;font-size:13px;color:#444;flex-shrink:0;}
+  .bar-track{flex:1;background:#eef0f7;border-radius:8px;height:26px;overflow:hidden;position:relative;}
+  .bar-fill{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-size:12px;font-weight:600;}
+  .bf-a{background:linear-gradient(90deg,#d9534f,#e97b6e);}
+  .bf-b{background:linear-gradient(90deg,#2f9e6b,#5cc08c);}
+
+  /* 关联列表 */
+  .link-list{list-style:none;}
+  .link-list li{
+    padding:12px 14px;margin-bottom:10px;
+    background:#f7f8fc;border-left:3px solid var(--accent2);border-radius:0 10px 10px 0;
+    font-size:15px;
+  }
+  .link-list li b{color:var(--accent2);}
+
+  /* 启示 */
+  .tips{counter-reset:tip;list-style:none;}
+  .tips li{
+    position:relative;padding:12px 14px 12px 50px;margin-bottom:10px;
+    background:#fafbff;border:1px solid #eceefa;border-radius:10px;font-size:15px;
+  }
+  .tips li::before{
+    counter-increment:tip;content:counter(tip);
+    position:absolute;left:12px;top:11px;
+    width:26px;height:26px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* 思考题 */
+  .think{
+    background:linear-gradient(135deg,#2a2f5e,#4a3f8c);color:#fff;
+    border-radius:var(--r);padding:28px 26px;box-shadow:var(--shadow);
+    margin-bottom:var(--gap);
+  }
+  .think h2{color:#fff;font-size:20px;margin-bottom:14px;border-left:5px solid #b9a6ff;padding-left:14px;}
+  .think p{color:#e9ebff;font-size:15.5px;}
+
+  footer{
+    text-align:center;color:var(--muted);font-size:13px;line-height:1.8;
+    padding:0 18px;
+  }
+  footer .line{width:60px;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;margin:0 auto 14px;}
+
+  @media (max-width:600px){
+    header{padding:30px 18px 26px;border-radius:0 0 20px 20px;}
+    header h1{font-size:26px;}
+    .card{padding:20px 16px 22px;}
+    .bar-name{width:96px;font-size:12px;}
+    .ship{flex:1 1 28%;min-width:0;}
+    .matrix{grid-template-columns:58px repeat(4,1fr);}
+    .matrix div{font-size:11px;padding:8px 2px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <span class="issue">第 40 期</span>
+  <h1>分散投资</h1>
+  <div class="sub">不把鸡蛋放进同一个篮子的真正含义</div>
+  <div class="meta">
+    <span>日期：2026-11-10</span>
+    <span>主题：投资组合风险管理</span>
+    <span>形式：故事 + 科普</span>
+  </div>
+  <div class="keywords">关键词：分散投资 · 相关性 · 非系统性风险 · 再平衡 · 资产配置</div>
+</header>
+
+<div class="wrap">
+
+  <!-- 故事 -->
+  <section class="card">
+    <h2>故事 · 十艘船与一场风暴</h2>
+    <p class="lead">十六世纪，远洋香料贸易的利润能让人一夜暴富，也能让人一夜归零。商人老周每次运货，都把同一批胡椒分装到十艘不同的船上。伙伴们笑他："多雇船多花钱，不如押一艘快船，早早到港卖高价。"老周只是笑笑。</p>
+    <p>有一年台风季，十艘船里真有一艘沉了。老周损失了十分之一，照样盈利；而那位把全部家当压在"快船"上的伙伴，船翻在人还在海上时，十年积累付诸东流。</p>
+
+    <div class="fleet">
+      <div class="ship"><div class="sail"></div>船一</div>
+      <div class="ship"><div class="sail"></div>船二</div>
+      <div class="ship"><div class="sail"></div>船三</div>
+      <div class="ship"><div class="sail"></div>船四</div>
+      <div class="ship sunk"><div class="sail"></div>船五</div>
+      <div class="ship"><div class="sail"></div>船六</div>
+      <div class="ship"><div class="sail"></div>船七</div>
+      <div class="ship"><div class="sail"></div>船八</div>
+      <div class="ship"><div class="sail"></div>船九</div>
+      <div class="ship"><div class="sail"></div>船十</div>
+    </div>
+    <p style="font-size:14px;color:var(--muted);text-align:center;">十艘船里沉一艘，整体只损十分之一 —— 这就是"分散"最朴素的样子。</p>
+
+    <p>几百年后，这个朴素道理进了金融课本，叫"分散投资"。但 2008 年金融危机给了它一记重击：无数人以为自己"分散"了——股票、房产、大宗商品都买了，结果危机一来，样样齐跌。原来他们分散的是"名字"，没分散"风险"。</p>
+    <p>这就引出了分散投资真正的精髓：<strong>分散的关键不是买了多少样东西，而是这些东西在危机时会不会一起跌。</strong></p>
+  </section>
+
+  <!-- 概念卡片 -->
+  <section class="card">
+    <h2>概念卡片 · 什么是分散投资</h2>
+    <div class="defbox">
+      <div class="label">Definition</div>
+      <p><strong>分散投资（Diversification）</strong>：通过持有彼此<strong>相关性低</strong>的多种资产，降低单一标的或单一风险事件对整体组合的冲击。它的目标是让"坏事情"只伤到组合的一小块，而不是一锅端。</p>
+    </div>
+
+    <p>用数学表达，组合的整体波动（方差）取决于两件事：每项资产自身的波动，以及它们<strong>两两之间的相关系数 ρ</strong>：</p>
+    <div class="formula">σ²(p) = Σ wᵢ²·σᵢ²  +  ΣΣ wᵢ·wⱼ·σᵢ·σⱼ·ρᵢⱼ</div>
+    <p style="font-size:14px;color:var(--muted);">其中 w 是权重、σ 是波动、ρ 是相关系数。当 ρ 越低、甚至为负时，第二项会抵消第一部分，整体波动被压下去。</p>
+
+    <div class="insight"><strong>关键洞见：</strong>分散消除的是<strong>非系统性风险</strong>（单个公司、单个行业特有的风险，如某 CEO 丑闻、某工厂失火）；它<strong>无法消除系统性风险</strong>（整个市场一起下跌，如经济衰退、战争）。真正拉开差距的，是"相关性 ρ"而不是"持有数量 N"。</div>
+  </section>
+
+  <!-- 真实案例 -->
+  <section class="card">
+    <h2>真实案例 · 三堂分散投资课</h2>
+
+    <p><strong>案例一 · 2008 金融危机：伪分散之殇</strong><br>
+    许多人自认安全：股票基金 + 房产 + 大宗商品基金都买了。危机中三者相关系数飙到接近 1（同涨同跌），组合跌幅堪比满仓股票。教训：<strong>跨资产 ≠ 已分散</strong>，要看危机时的真实相关性，而不是牛市里的"各自美丽"。</p>
+
+    <p><strong>案例二 · 长期资本管理公司（LTCM，1998）：聪明人的集中</strong><br>
+    由诺贝尔奖得主坐镇的对冲基金，表面持仓上百种，实则都在押注"各国利差终将收敛"这同一个宏观主题。俄罗斯违约引发全球流动性冻结，所有头寸同时反向，四个月内亏掉 46 亿美元。分散在"不同名字"之下，风险却高度同源。</p>
+
+    <p><strong>案例三 · 普通投资者的两篮鸡蛋</strong><br>
+    甲把 100 万全买新能源板块 5 只股票；乙买 40 万宽基指数 + 30 万国债 + 20 万黄金 + 10 万现金。牛市里甲可能跑赢，但一次行业政策利空，甲回撤可达 30%+，乙仅个位数。分散牺牲了部分上限，换来了"睡得着觉"。</p>
+
+    <div class="bars">
+      <div class="bar-row">
+        <div class="bar-name">甲（单一行业）</div>
+        <div class="bar-track"><div class="bar-fill bf-a" style="width:85%;">回撤 -32%</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-name">乙（跨资产分散）</div>
+        <div class="bar-track"><div class="bar-fill bf-b" style="width:22%;">回撤 -7%</div></div>
+      </div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);text-align:center;">同样的利空冲击下，分散组合把"伤"摊薄成了"擦伤"。</p>
+  </section>
+
+  <!-- 相关系数可视化 -->
+  <section class="card">
+    <h2>关联一 · 不同资产，平时与危机时的相关系数</h2>
+    <p class="matrix-note">下方为示意矩阵（数值越高 = 越同涨同跌 = 越不分散）。注意：危机时本该"绿"的格子会瞬间变"红"。</p>
+    <div class="matrix">
+      <div class="head"></div><div class="head">股票</div><div class="head">债券</div><div class="head">黄金</div><div class="head">现金</div>
+      <div class="rowhead">股票</div><div class="c-hi">1.0</div><div class="c-mid">0.2</div><div class="c-lo">-0.1</div><div class="c-lo">0.0</div>
+      <div class="rowhead">债券</div><div class="c-mid">0.2</div><div class="c-hi">1.0</div><div class="c-lo">0.1</div><div class="c-lo">0.0</div>
+      <div class="rowhead">黄金</div><div class="c-lo">-0.1</div><div class="c-lo">0.1</div><div class="c-hi">1.0</div><div class="c-lo">0.0</div>
+      <div class="rowhead">现金</div><div class="c-lo">0.0</div><div class="c-lo">0.0</div><div class="c-lo">0.0</div><div class="c-hi">1.0</div>
+    </div>
+    <p style="font-size:13px;color:var(--muted);text-align:center;margin-top:14px;">股票与债券、黄金、现金相关性低（绿格），这才是分散该选的搭配。</p>
+  </section>
+
+  <!-- 与往期关联 -->
+  <section class="card">
+    <h2>关联二 · 和已经学过的概念怎么连</h2>
+    <ul class="link-list">
+      <li><b>风险与回报：</b>分散降低波动（风险）的同时，通常也压低了潜在最高收益——用收益上限，换下行保护。</li>
+      <li><b>资产配置：</b>分散是资产配置的"手段"，配置决定"往哪些篮子分、各分多少"。</li>
+      <li><b>对冲：</b>对冲是主动抵消某一特定风险（像买保险），分散是被动摊薄风险，二者互补而非互斥。</li>
+      <li><b>羊群效应：</b>羊群会让所有人挤进同一资产，制造"伪分散"，危急时一起踩踏。</li>
+      <li><b>黑天鹅事件：</b>极端事件中相关性趋于 1，分散的护城河会被暂时淹没，需配合现金等真正不相关资产。</li>
+      <li><b>机会成本：</b>过度分散会稀释收益、增加管理费，本身就是一种机会成本。</li>
+    </ul>
+  </section>
+
+  <!-- 启示 -->
+  <section class="card">
+    <h2>启示清单 · 给普通投资者的八条</h2>
+    <ol class="tips">
+      <li>看<strong>相关性</strong>，不看数量。十只同行业基金 ≠ 分散。</li>
+      <li>跨<strong>资产类别</strong>：股票、债券、现金、商品、房产各占一定比例。</li>
+      <li>跨<strong>地域、行业、市值</strong>，避免同源风险把篮子一起打翻。</li>
+      <li>定期<strong>再平衡</strong>：涨多的卖一点补涨少的，强制"低买高卖"。</li>
+      <li>警惕<strong>伪分散</strong>：同一主题的多只基金、同一产业链的上下游股票。</li>
+      <li>分散消除的是非系统性风险；系统性风险要靠降低整体仓位或持现金应对。</li>
+      <li>过度分散稀释收益、抬高成本，三五十只足够，不必持有上百只。</li>
+      <li>分散不能保证不亏，它让亏损"可控、可恢复"，而不是"一次性归零"。</li>
+    </ol>
+  </section>
+
+  <!-- 思考题 -->
+  <section class="think">
+    <h2>今日思考题</h2>
+    <p>如果市场连创新高、估值偏贵，而你手里有笔闲钱，你会选择（A）全部买入看好的热门板块博收益，还是（B）按自己的资产配置比例分散建仓？在你看来，"分散"和"抓住机会"之间，你更看重哪一边，又为什么？</p>
+  </section>
+
+  <footer>
+    <div class="line"></div>
+    金融概念日报 · 第 40 期《分散投资》<br>
+    生成日期：2026-11-10 · 内容仅供学习，不构成任何投资建议<br>
+    往期回看：锚定效应 / 羊群效应 / 心理账户 / 信用与利率 / 对冲 / 黑天鹅事件 / 期权 / 期货 / 庞氏骗局 / 复利 / 机会成本 / 通货膨胀
+  </footer>
+
+</div>
+</body>
+</html>

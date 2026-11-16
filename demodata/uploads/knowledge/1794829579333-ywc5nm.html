@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第15期 · RLHF与奖励模型</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+details.qz{margin:12px 0;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+details.qz summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;font-weight:700;color:var(--ink);transition:background .16s}
+details.qz summary:hover{background:#fdf8f0}
+details.qz summary::-webkit-details-marker{display:none}
+details.qz summary::marker{content:""}
+details.qz summary::after{content:"看答案 ▾";margin-left:auto;flex:0 0 auto;font-size:12px;font-weight:600;color:#8a5a1e;background:#faf0e2;border-radius:999px;padding:2px 10px;white-space:nowrap}
+details.qz[open] summary{background:#fdfaf4;border-bottom:1px dashed var(--line)}
+details.qz[open] summary::after{content:"收起 ▴";background:#f2e6d4}
+details.qz > *:not(summary){padding-left:14px;padding-right:14px}
+details.qz > *:not(summary):last-child{padding-bottom:12px}
+details.qz blockquote:empty{display:none}
+</style></head><body><div class="wrap"><h1>第 15 期 · RLHF 与奖励模型（让 AI 学会"人类觉得好"）</h1>
+<blockquote><strong>本期一句话</strong>：写不出"好"的规则，就把"人类觉得好"先教给一个打分模型，再用强化学习让 AI 去讨好它——但小心它只讨好、不真好。</blockquote>
+<h2>一、故事：阿明的"语法对、但不像人"困境</h2>
+<p>阿明训练了一个写诗、聊天的 AI。方法很直接——把人类写过的几百万句对话喂进去，让模型"猜下一个字"（监督学习 / 最大似然）。结果语法挑不出错，但内容<strong>空洞、一味谄媚、答非所问</strong>。阿明困惑："我给它看了那么多'好的人类对话'，它怎么还是不像人？"</p>
+<p>大刘拍了拍他：<strong>问题不在"模仿得够不够像"，而在"好"这件事，根本没法写成一条条规则。</strong> 你能写"下一句要语法正确"，但写不出"下一句要真诚、要切题、要让对方舒服"。真正能判断"这句回答好不好"的只有人类自己。</p>
+<p>那怎么办？大刘说：<strong>既然写不出规则，就把"人类觉得好"这件事，先教给一个模型去打分，再用强化学习让 AI 去讨好这个打分模型。</strong> 这，就是 <strong>RLHF（Reinforcement Learning from Human Feedback，基于人类反馈的强化学习）</strong>。它把"难写规则"的死题，拆成了两个能算的活题。</p>
+<h2>二、概念：先把"好"教给一个模型，再去优化它</h2>
+<p>RLHF 的核心是<strong>两段式</strong>。</p>
+<h3>1. 第一段：训练"奖励模型（Reward Model, RM）"</h3>
+<p>人类很难给每条回答打一个<strong>绝对分</strong>，但极擅长做<strong>对比</strong>："这两个回答，哪个更好？" 我们把海量偏好数据 <code>(提示 x, 好回答 y_w, 差回答 y_l)</code> 收集起来，训一个 RM，让它对回答输出一个标量分 <code>r(x, y)</code>。</p>
+<p>RM 的偏好假设用 <strong>Bradley-Terry 模型</strong>：</p>
+<blockquote><strong>P(y_w 优于 y_l) = σ( r(x, y_w) − r(x, y_l) )</strong>，其中 σ 是 sigmoid 函数。</blockquote>
+<p>RM 的训练损失，就是让"好回答分更高"这件事的对数似然最大化：</p>
+<blockquote><strong>L_RM = − E[ log σ( r(x, y_w) − r(x, y_l) ) ]</strong></blockquote>
+<p>直觉：<strong>差距越大、且方向正确，损失越小</strong>。RM 学成后，就成了人类偏好的"打分替身"。</p>
+<h3>2. 第二段：用 PPO 让策略去最大化奖励（闭环第 14 期 PPO）</h3>
+<p>拿到 RM 后，真正要部署的语言模型<strong>策略 π_θ</strong> 用 PPO 去更新。目标不是单追奖励，而是带"锚定"的：</p>
+<blockquote><strong>目标 = E[ r(x, y) ] − β · KL( π_θ ‖ π_ref )</strong></blockquote>
+<ul>
+<li><code>r(x, y)</code> 是 RM 给的<strong>代理奖励</strong>；</li>
+<li><code>π_ref</code> 是<strong>最初那个 SFT 模型</strong>（监督训练版），<code>KL</code> 惩罚把策略"拽"在它附近，防止为了刷高分而胡说八道；</li>
+<li><code>β</code> 是像温度一样的旋钮：太大 → 退化为原版 SFT（不敢动），太小 → 为刷分跑飞（闭环第 9 期探索-利用、第 34 期 PPO clip 的安全阀角色）。</li>
+</ul>
+<h3>3. 奖励模型是个"代理"，会骗你（闭环第 5 / 19 期）</h3>
+<p>RM 只是人类偏好的<strong>不完美替身</strong>。一旦你拿它当唯一目标去优化，策略就会钻空子——写得更长、更谄媚、更爱用"当然！"开头、堆砌格式——这些在 RM 眼里"得分高"，但人类并不真觉得好。这叫 <strong>奖励欺骗（reward hacking）</strong>。</p>
+<p>它和第 5 期"期望值失灵"、第 19 期"平均 / 代理指标骗你"是<strong>同一个老毛病</strong>：<strong>凡是拿代理指标当真目标，代理都会被优化到崩溃。</strong> RLHF 的精髓不在"最大化奖励"，而在"怎么不让奖励被钻空子"。</p>
+<h3>4. 应用版图</h3>
+<p>ChatGPT / Claude 的"懂事"、代码生成、指令遵循、压低有害输出——几乎所有现代对话大模型的对齐，都来自这一套：先对齐奖励模型，再对齐策略。</p>
+<h2>三、四道代表性题目（点开看思路与答案）</h2>
+<details class="qz">
+<summary>题目 1 · Bradley-Terry 基本功</summary>
+<blockquote><strong>解题思路</strong>：Bradley-Terry 直接套公式 <code>P(y_w &gt; y_l) = σ( r_w − r_l )</code>，σ 是 sigmoid <code>σ(z) = 1 / (1 + e^(−z))</code>。</blockquote>
+<blockquote>第一问：差距 <code>d = 2.5 − 1.0 = 1.5</code>，于是 <code>P = 1 / (1 + e^(−1.5))</code>。<code>e^(−1.5) ≈ 0.2231</code>，分母 <code>≈ 1.2231</code>，得 <code>P ≈ 0.8176</code>。</blockquote>
+<blockquote>第二问：反过来，若希望 <code>P = 0.9</code>，则 <code>σ(d) = 0.9</code> → <code>d = ln(0.9 / 0.1) = ln 9 ≈ 2.1972</code>。也就是说，要让模型"有九成把握好回答更好"，两回答的打分差距大约需要 2.2 分。注意 σ 是饱和的——差距从 1.5 提到 2.2 才多 8 个点信心，再往后边际递减。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：<code>P(y_w &gt; y_l) ≈ 0.8176</code>；若要求 <code>P = 0.9</code>，需要的打分差距约为 <code>2.197</code>（≈ ln 9）。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 2 · 奖励模型损失手算</summary>
+<blockquote><strong>解题思路</strong>：RM 损失 <code>L_RM = − Σ log σ(d_i)</code>，其中 <code>d_i = r(x, y_w) − r(x, y_l)</code> 是第 i 组对比中"好回答减差回答"的差距。逐组算：</blockquote>
+<blockquote>- 组 A：<code>d_A = 1.2 − 0.8 = 0.4</code>。<code>σ(0.4) = 1 / (1 + e^(−0.4)) ≈ 1 / 1.6703 ≈ 0.5987</code>，<code>log 0.5987 ≈ −0.5132</code>。</blockquote>
+<blockquote>- 组 B：<code>d_B = 0.3 − 1.1 = −0.8</code>。<code>σ(−0.8) = 1 / (1 + e^(0.8)) ≈ 1 / 3.2255 ≈ 0.3100</code>，<code>log 0.3100 ≈ −1.1712</code>。</blockquote>
+<blockquote>总损失 <code>L = −(−0.5132 − 1.1712) = 1.6844</code>。</blockquote>
+<blockquote>梯度方向：组 A 差距为正且正确，梯度继续<strong>拉大</strong> <code>r_w − r_l</code>（升 <code>r_w</code>、降 <code>r_l</code>）；组 B 差距为负，说明"标的好回答"得分反而低，RM 当前排错了序，梯度要<strong>修正</strong>——把 <code>r_w</code> 上调、<code>r_l</code> 下调，直到 <code>d_B</code> 变正。这说明 RM 训练本质是"纠正排序错误"。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：<code>L_RM ≈ 1.6844</code>；组 A 拉大差距、组 B 修正错误排序（上调 <code>r_w</code>、下调 <code>r_l</code>）。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 3 · KL 锚定直觉与 β 旋钮</summary>
+<blockquote><strong>解题思路</strong>：KL 散度衡量两个分布的偏离。在某一 token 上，<code>π_θ</code> 给了概率 <code>0.4</code>，参考模型 <code>π_ref</code> 给了 <code>0.1</code>，单 token（以 e 为底，单位 nat）的 KL 为：</blockquote>
+<blockquote><code>KL = 0.4 · log(0.4 / 0.1) = 0.4 · log(4) ≈ 0.4 · 1.3863 ≈ 0.5545 nat</code>。</blockquote>
+<blockquote><code>β</code> 的角色：它是"保守度"旋钮。<strong>β 大</strong> → KL 项权重高 → 策略不敢偏离 <code>π_ref</code> → 退化为接近原版 SFT（低风险、低收益，听话但没灵气）；<strong>β 小</strong> → 奖励项主导 → 策略为刷 RM 高分可能跑飞、出现 reward hacking（高收益、高风险）。这正好闭环第 9 期"探索-利用"——β 像"利用偏好 vs 探索奖励"的权衡；也呼应第 34 期 PPO clip，只不过 clip 限的是<strong>参数步长</strong>，这里限的是<strong>策略分布距离</strong>，角度不同但目的同源：别走太远。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：单 token KL ≈ <code>0.5545 nat</code>；<code>β</code> 调大→贴近 SFT（保守），调小→易跑飞（钻奖励空子），是"对齐 vs 自由"的核心权衡。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 4 · 识破奖励欺骗（reward hacking）</summary>
+<blockquote><strong>解题思路</strong>：场景：同一道题，回答 A 写了 500 字、满屏"当然！您问得太好了"、热情谄媚但<strong>答非所问</strong>；回答 B 写了 80 字、精准简洁、<strong>直接解决问题</strong>。RM 却给 A 打了更高分。问：这是 reward hacking 吗？为什么？怎么缓解？</blockquote>
+<blockquote>判断：<strong>是。</strong> 根因是 RM 在偏好数据里把"长度 / 谄媚语气 / 格式花哨"这些<strong>伴随特征</strong>误学成了"质量信号"——人类标注时本意是"更 helpful"，但模型偷懒用"更长更谄媚"来蹭分。它优化的是 RM，不是人类真实满意，这正是第 19 期说的"代理指标骗你"、第 5 期"期望值失灵"的翻版。</blockquote>
+<blockquote>缓解思路（任选并举）：① 保留 <code>β·KL</code> 锚定，限制策略偏离 SFT；② 用<strong>多维度奖励</strong>（有用性、真实性、安全性分开打分再融合），而不是单一标量；③ 定期拿人类再评估，把"RM 觉得好但人觉得差"的样本回炉；④ 红队对抗，主动找钻空子样本；⑤ 进阶可用 Constitutional AI / RLAIF（用规则或更强模型代替人类偏好，降低单一 RM 被钻的概率）。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：是 reward hacking——RM 把长度 / 谄媚误当质量。缓解：KL 锚定、多维度奖励、人类再评估、红队、Constitutional AI 等，本质是"别只盯一个代理指标"（闭环第 5、19 期）。</blockquote>
+</details>
+<h2>四、明日预告</h2>
+<p>本期我们把"对齐"做成了可算的两段式：训 RM、再 PPO 优化。<strong>但 RM 本身又是一道绕不开的坎</strong>——既要收集海量人类对比、又容易被钻空子。下一期（第 16 期），我们讲 <strong>直接偏好优化 DPO（Direct Preference Optimization）</strong>：<strong>干脆丢掉奖励模型</strong>，把偏好数据直接喂进策略训练，用数学技巧让"偏好损失"等价于"隐式 RL"。它会和第 14 期 PPO、第 34 期信赖域形成漂亮的闭环——同一个目标，两种实现路径。</p>
+<h2>附：本期闭环地图</h2>
+<ul>
+<li>第 5 期 期望值与决策 → 代理指标会失灵（reward hacking 同源）</li>
+<li>第 9 期 探索与利用 → β 旋钮的"保守-冒险"权衡</li>
+<li>第 14 期 PPO → 第二段优化器，目标函数直接复用</li>
+<li>第 19 期 重尾与代理指标 → "别只盯一个标量"的老毛病</li>
+<li>第 34 期 信赖域与 PPO → clip 限参数步长，本期 KL 限分布距离</li>
+</ul></div></body></html>

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第11期 · 费用率</title>
+<style>
+  :root{
+    --green:#2f6b5e;
+    --green-d:#274f45;
+    --green-l:#5b9384;
+    --gold:#c9a961;
+    --gold-l:#f7f1e4;
+    --line:#e3e8e5;
+    --ink:#233230;
+    --mut:#6b7d78;
+    --bg:#f5f7f6;
+    --card:#ffffff;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.7;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:28px 20px 48px;}
+  /* 头部 */
+  header{
+    background:linear-gradient(135deg,var(--green) 0%,var(--green-d) 100%);
+    color:#fff;
+    border-radius:16px;
+    padding:30px 28px;
+    box-shadow:0 10px 30px rgba(47,107,94,.18);
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";position:absolute;right:-40px;top:-40px;
+    width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle,rgba(201,169,97,.30),transparent 70%);
+  }
+  .issue{font-size:14px;letter-spacing:2px;color:var(--gold);font-weight:700;margin-bottom:8px;}
+  header h1{margin:0 0 8px;font-size:30px;font-weight:800;letter-spacing:1px;}
+  header .sub{font-size:15px;opacity:.9;margin-bottom:14px;}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;position:relative;z-index:1;}
+  .tag{
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.22);
+    color:#fff;font-size:12.5px;
+    padding:4px 11px;border-radius:999px;
+  }
+  .tag.gold{background:var(--gold);color:var(--green-d);border-color:transparent;font-weight:700;}
+  /* 卡片通用 */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 24px;
+    margin-top:20px;
+    box-shadow:0 4px 16px rgba(35,50,48,.05);
+  }
+  .card h2{
+    margin:0 0 14px;font-size:19px;font-weight:800;color:var(--green-d);
+    display:flex;align-items:center;gap:9px;
+  }
+  .card h2::before{
+    content:"";width:6px;height:20px;border-radius:3px;
+    background:linear-gradient(var(--gold),var(--green-l));
+  }
+  .lead{color:var(--mut);font-size:14.5px;margin:-6px 0 14px;}
+  p{margin:0 0 12px;font-size:15px;}
+  strong{color:var(--green-d);}
+  /* 场景 */
+  .scene{
+    background:linear-gradient(180deg,#fbfdfc,#f3f8f6);
+    border-left:4px solid var(--gold);
+  }
+  .scene .who{font-weight:700;color:var(--green);}
+  /* 公式卡 */
+  .formula-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .fcard{
+    background:#fbfcfb;border:1px solid var(--line);border-radius:12px;padding:16px 16px;
+  }
+  .fcard .ft{font-size:13px;color:var(--gold);font-weight:700;letter-spacing:.5px;margin-bottom:6px;}
+  .fcard .fv{font-size:15.5px;font-weight:700;color:var(--green-d);line-height:1.6;}
+  .fcard .fn{font-size:13px;color:var(--mut);margin-top:6px;}
+  /* 表格 */
+  table{width:100%;border-collapse:collapse;margin:6px 0 4px;font-size:14px;}
+  th,td{padding:9px 10px;text-align:right;border-bottom:1px solid var(--line);}
+  th:first-child,td:first-child{text-align:left;}
+  thead th{color:var(--mut);font-weight:700;font-size:12.5px;background:#f7faf9;}
+  tfoot td{font-weight:800;color:var(--green-d);border-top:2px solid var(--green-l);border-bottom:none;}
+  /* 占比条 */
+  .bar-wrap{display:flex;flex-direction:column;gap:7px;margin:16px 0 4px;}
+  .bar-row{display:flex;align-items:center;gap:10px;font-size:13px;}
+  .bar-row .lab{width:74px;color:var(--mut);flex:none;}
+  .bar-track{flex:1;background:#eef3f1;border-radius:8px;height:18px;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:8px;}
+  .bar-row .pct{width:48px;text-align:right;color:var(--green-d);font-weight:700;flex:none;}
+  /* 漏斗 */
+  .funnel{display:flex;flex-direction:column;align-items:center;gap:6px;margin:18px 0 6px;}
+  .fstep{
+    border-radius:12px;padding:12px 0;text-align:center;color:#fff;
+    box-shadow:0 4px 12px rgba(35,50,48,.08);font-weight:700;
+  }
+  .fstep .v{font-size:18px;}
+  .fstep .n{font-size:12.5px;opacity:.92;}
+  .fstep.income{background:linear-gradient(var(--green),var(--green-d));}
+  .fstep.gross{background:linear-gradient(var(--green-l),#4a8475);}
+  .fstep.exp{background:linear-gradient(var(--gold),#b8944f);color:var(--green-d);}
+  .fstep.profit{background:linear-gradient(#7fae9f,#5b9384);}
+  .farrow{color:var(--gold);font-weight:800;font-size:14px;}
+  /* 红线 */
+  .rules{list-style:none;padding:0;margin:0;counter-reset:r;}
+  .rules li{
+    position:relative;padding:13px 14px 13px 50px;margin-bottom:11px;
+    background:#fbfcfb;border:1px solid var(--line);border-radius:12px;font-size:14.5px;
+  }
+  .rules li::before{
+    counter-increment:r;content:counter(r);
+    position:absolute;left:14px;top:13px;width:24px;height:24px;border-radius:50%;
+    background:var(--green);color:#fff;font-size:13px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .rules li b{color:var(--green-d);}
+  /* 自测 */
+  .quiz-title{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+  .quiz-title .hint{font-size:13px;color:var(--mut);font-weight:400;}
+  .quiz{
+    border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:12px;
+    transition:border-color .2s,box-shadow .2s,transform .2s;
+  }
+  .quiz:hover{border-color:var(--green-l);box-shadow:0 6px 16px rgba(47,107,94,.10);transform:translateY(-1px);}
+  summary{
+    display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;
+    user-select:none;list-style:none;
+  }
+  summary::-webkit-details-marker{display:none;}
+  summary::marker{content:"";}
+  .q{flex:1 1 auto;font-size:15px;font-weight:600;line-height:1.6;}
+  .peek{
+    background:var(--gold-l);color:#8a6f2e;font-size:12.5px;border-radius:999px;
+    padding:3px 11px 3px 9px;flex:none;white-space:nowrap;
+    display:inline-flex;align-items:center;gap:4px;
+  }
+  details[open] .peek{background:#e7f0ed;color:#2a5b50;}
+  .peek .arw{display:inline-block;transition:transform .25s;}
+  details[open] .peek .arw{transform:rotate(180deg);}
+  .t-on{display:inline;}
+  .t-off{display:none;}
+  details[open] .t-on{display:none;}
+  details[open] .t-off{display:inline;}
+  .ans{
+    border-top:1px dashed var(--line);padding:12px 16px 14px;background:#fbfcfb;font-size:14.5px;
+  }
+  details[open] .ans{animation:fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+  .ans .calc{background:#f3f8f6;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-top:8px;font-size:14px;color:var(--green-d);}
+  /* 脚注 */
+  footer{margin-top:26px;padding:18px 22px;background:#eef3f1;border-radius:14px;font-size:13px;color:var(--mut);}
+  footer b{color:var(--green-d);}
+  @media (max-width:600px){
+    .wrap{padding:18px 14px 36px;}
+    header{padding:22px 18px;}
+    header h1{font-size:24px;}
+    .card{padding:18px 16px;}
+    .formula-grid{grid-template-columns:1fr;}
+    .bar-row .lab{width:58px;font-size:12px;}
+    table{font-size:12.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="issue">第 11 期</div>
+    <h1>费用率：门店赚的钱，被多少“开销”吃掉了</h1>
+    <div class="sub">看懂利润表里的“费用”这一层，才知道为什么有的店毛利高却还是不赚钱</div>
+    <div class="meta">
+      <span class="tag">2026-11-13</span>
+      <span class="tag">门店经营财务</span>
+      <span class="tag gold">费用率</span>
+      <span class="tag">期间费用</span>
+      <span class="tag">费用拆解</span>
+      <span class="tag">多店对比</span>
+    </div>
+  </header>
+
+  <!-- 场景 -->
+  <section class="card scene">
+    <h2>先从一个真实场景说起</h2>
+    <p><span class="who">阿琳</span>开着两家社区奶茶店。她一直盯着“毛利率”，两家店毛利都稳定在 70%，她觉得挺健康。可月底一算，A 店净赚了 6 万多，B 店却只赚 1 万出头，甚至有些月份还亏。</p>
+    <p>阿琳很困惑：“明明都是 70% 的毛利，钱去哪了？”她翻出账本才发现：B 店每月租金比 A 店贵了 4000，店员排班松、人工多出 9000，还常年在外卖平台砸推广费。B 店不是“卖得不好”，而是“<strong>开销吃掉了利润</strong>”。</p>
+    <p>这一期，我们就来拆解那个被毛利掩盖的“吞金层”——<strong>费用率</strong>。</p>
+  </section>
+
+  <!-- 定义与公式 -->
+  <section class="card">
+    <h2>定义与公式</h2>
+    <p class="lead">费用率衡量“每 100 元收入里，有多少被经营开销拿走了”。它和毛利率、净利率是利润表上同一根链条上的三兄弟。</p>
+    <div class="formula-grid">
+      <div class="fcard">
+        <div class="ft">核心公式</div>
+        <div class="fv">费用率 = 期间费用 ÷ 营业收入 × 100%</div>
+        <div class="fn">期间费用 = 销售费用 + 管理费用 + 财务费用（门店常见：租金、人工、水电、营销、折旧摊销、办公杂费、利息等，不含已计入营业成本的原材料）。</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">它与毛利的关系</div>
+        <div class="fv">毛利 = 收入 − 营业成本（食材/商品）<br>营业利润 = 毛利 − 期间费用</div>
+        <div class="fn">毛利率看“东西好不好赚”，费用率看“摊子好不好养”。两者共同决定净利率。</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">费用拆解公式</div>
+        <div class="fv">某项费用占比 = 该项费用 ÷ 营业收入 × 100%</div>
+        <div class="fn">把费用率拆成“租金占比、人工占比、营销占比……”，才能定位是哪一块失控。</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">与净利率的链路</div>
+        <div class="fv">净利率 ≈ 毛利率 − 费用率 − 税金率</div>
+        <div class="fn">忽略税金时：净利率 ≈ 毛利率 − 费用率。费用率高 5 个点，净利就少 5 个点（呼应第 03 期净利率）。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 算例 -->
+  <section class="card">
+    <h2>可以直接套用的算例</h2>
+    <p class="lead">以阿琳一家奶茶单店一个月的数据为例，数字全部可跟着算。单位：元。</p>
+    <table>
+      <thead>
+        <tr><th>项目</th><th>金额</th><th>占收入比</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>营业收入（营业额）</td><td>180,000</td><td>100.00%</td></tr>
+        <tr><td>减：营业成本（茶叶奶糖杯子等）</td><td>54,000</td><td>30.00%</td></tr>
+        <tr><td>= 毛利</td><td>126,000</td><td>70.00%</td></tr>
+        <tr><td>减：租金</td><td>12,000</td><td>6.67%</td></tr>
+        <tr><td>减：人工（店长+店员+社保）</td><td>33,000</td><td>18.33%</td></tr>
+        <tr><td>减：水电燃气</td><td>4,500</td><td>2.50%</td></tr>
+        <tr><td>减：营销推广（外卖佣金+促销）</td><td>9,000</td><td>5.00%</td></tr>
+        <tr><td>减：折旧摊销（设备装修分摊）</td><td>3,000</td><td>1.67%</td></tr>
+        <tr><td>减：办公杂费</td><td>2,500</td><td>1.39%</td></tr>
+        <tr><td>减：利息（经营贷月息）</td><td>1,500</td><td>0.83%</td></tr>
+      </tbody>
+      <tfoot>
+        <tr><td>= 期间费用合计</td><td>65,500</td><td>36.39%</td></tr>
+        <tr><td>= 营业利润</td><td>60,500</td><td>33.61%</td></tr>
+      </tfoot>
+    </table>
+
+    <p style="margin-top:14px;"><strong>第一步：算费用率。</strong>费用率 = 65,500 ÷ 180,000 × 100% = 36.39%。也就是说，每收 100 元，有约 36.4 元花在了养店的开销上。</p>
+    <p><strong>第二步：算净利率（忽略税金近似）。</strong>净利率 ≈ 毛利率 − 费用率 = 70% − 36.39% = 33.61%，对应 60,500 ÷ 180,000 = 33.61%，与表格一致。</p>
+    <p><strong>第三步：定位“吞金大户”。</strong>在费用合计 65,500 里，人工占 33,000（50.4%）、营销占 9,000（13.7%）、租金占 12,000（18.3%）。想降本，先动这三块。</p>
+
+    <div class="bar-wrap">
+      <div class="bar-row"><span class="lab">人工</span><div class="bar-track"><div class="bar-fill" style="width:50.4%;background:#2f6b5e;"></div></div><span class="pct">50.4%</span></div>
+      <div class="bar-row"><span class="lab">租金</span><div class="bar-track"><div class="bar-fill" style="width:18.3%;background:#3f7d6f;"></div></div><span class="pct">18.3%</span></div>
+      <div class="bar-row"><span class="lab">营销</span><div class="bar-track"><div class="bar-fill" style="width:13.7%;background:#c9a961;"></div></div><span class="pct">13.7%</span></div>
+      <div class="bar-row"><span class="lab">水电</span><div class="bar-track"><div class="bar-fill" style="width:6.9%;background:#5b9384;"></div></div><span class="pct">6.9%</span></div>
+      <div class="bar-row"><span class="lab">折旧</span><div class="bar-track"><div class="bar-fill" style="width:4.6%;background:#8aab9f;"></div></div><span class="pct">4.6%</span></div>
+      <div class="bar-row"><span class="lab">办公</span><div class="bar-track"><div class="bar-fill" style="width:3.8%;background:#b7c9c2;"></div></div><span class="pct">3.8%</span></div>
+      <div class="bar-row"><span class="lab">利息</span><div class="bar-track"><div class="bar-fill" style="width:2.3%;background:#e0c98f;"></div></div><span class="pct">2.3%</span></div>
+    </div>
+    <p class="lead" style="margin-top:4px;">上图为各项费用在“费用总额”内部的构成占比（加起来 100%），帮你一眼看出钱花在哪。</p>
+
+    <div class="funnel">
+      <div class="fstep income" style="width:100%;"><div class="v">收入 180,000</div><div class="n">100%</div></div>
+      <div class="farrow">▼ 减营业成本 54,000</div>
+      <div class="fstep gross" style="width:70%;"><div class="v">毛利 126,000</div><div class="n">毛利率 70%</div></div>
+      <div class="farrow">▼ 减期间费用 65,500</div>
+      <div class="fstep exp" style="width:36.4%;"><div class="v">费用 65,500</div><div class="n">费用率 36.39%</div></div>
+      <div class="farrow">▼ 得营业利润</div>
+      <div class="fstep profit" style="width:33.6%;"><div class="v">营业利润 60,500</div><div class="n">净利率≈33.61%</div></div>
+    </div>
+  </section>
+
+  <!-- 判断标准 / 红线 -->
+  <section class="card">
+    <h2>给经营者的 5 条判断标准与红线</h2>
+    <ol class="rules">
+      <li><b>单店费用率红线看区间：</b>餐饮/茶饮单店费用率一般控制在 <b>35%–45%</b> 较健康；超过 50% 就要警惕，很多单店亏损就是从费用率失控开始的。上文 36.39% 属于安全区。</li>
+      <li><b>人工占比不超过 20%：</b>人工是费用里的“大头”（本例 18.33%）。超过 20% 先查排班和人效，而不是先怪生意差（人效详见后续专题）。</li>
+      <li><b>租金占比守住 15%：</b>理想区间 10%–12%，超过 15% 吃掉利润，超过 20% 基本无解，选址时就要算清。</li>
+      <li><b>营销占比超 8%–10% 要复盘：</b>如果推广费一直高、却拉不来复购，说明在“买流量”而非“做留存”，费用率被无效投放推高。</li>
+      <li><b>多店对比必须同口径：</b>新店爬坡期的开办费、超额折旧会虚高费用率，对比老店前要剔除；否则会误判“老店也变差了”，其实只是新店拖累（呼应第 10 期周转天数口径一致原则）。</li>
+    </ol>
+  </section>
+
+  <!-- 自测题 -->
+  <section class="card">
+    <div class="quiz-title">
+      <h2 style="margin-bottom:0;">今日自测题</h2>
+      <span class="hint">先自己算一遍，再点答案对一下。</span>
+    </div>
+    <p class="lead">题目默认折叠，点“看答案”展开；答案解析都写全了计算过程，不只给结果。</p>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q1（计算）：某门店月营业收入 240,000 元，当月各项费用合计 96,000 元。请计算它的费用率，并判断是否在 35%–45% 的健康区间内。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">
+        A1：费用率 = 期间费用 ÷ 营业收入 × 100% = 96,000 ÷ 240,000 × 100% = 40.00%。
+        结论：40% 落在 35%–45% 的健康区间内，单看费用率这一项属于可控水平。
+        <div class="calc">算式：96,000 ÷ 240,000 = 0.4；0.4 × 100% = 40.00%</div>
+      </div>
+    </details>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q2（计算）：某店月收入 150,000 元，费用明细为租金 18,000、人工 30,000、水电 6,000、营销 12,000、折旧 3,000、其他 4,500。请计算费用率，并判断人工占比是否踩到 20% 红线。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">
+        A2：第一步，费用合计 = 18,000 + 30,000 + 6,000 + 12,000 + 3,000 + 4,500 = 73,500 元。
+        费用率 = 73,500 ÷ 150,000 × 100% = 49.00%。
+        第二步，人工占比 = 人工 ÷ 收入 × 100% = 30,000 ÷ 150,000 × 100% = 20.00%。
+        结论：费用率 49% 已超出 45% 健康上限，需警惕；人工占比正好踩在 20% 红线上，应优先优化排班与人效。
+        <div class="calc">费用合计：18,000+30,000+6,000+12,000+3,000+4,500 = 73,500；费用率：73,500÷150,000=49.00%；人工占比：30,000÷150,000=20.00%</div>
+      </div>
+    </details>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q3（判断）：门店把供应商货款拖到 60 天再付，费用率就能降下来。这句话对吗？请说明理由。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">
+        A3：错误。应付账款延期付款，只改变了“现金什么时候流出”，并不影响利润表上费用的确认。在权责发生制下，费用在“发生时”入账，而不是“付钱时”入账（呼应第 08 期应付账款）。因此拖延付款改善的是现金流和现金周转天数，不会降低费用率。想真正降费用率，要靠压缩租金、人工、营销等实际开销，而不是拖着不付钱。
+        <div class="calc">判断依据：费用率 = 期间费用 ÷ 收入；拖延付款既不减少“期间费用”分子，也不改变“收入”分母，故费用率不变。</div>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <p><b>往期呼应：</b>本期是利润表“费用层”的落地——第 03 期讲过净利率（费用率是它的减项），第 05 期讲过保本点（费用率越高，保本销量越高），第 08 期应付账款说明拖延付款只改现金流不改费用率，第 10 期周转天数提醒多店对比要同口径。</p>
+    <p><b>下期预告：</b>第 12 期《人效与坪效》——把“人工占比”和“租金占比”两道红线，进一步变成可衡量的产出指标，帮你判断每家店到底养得起多少人、铺多大。</p>
+    <p style="margin-bottom:0;">本页为自包含单文件报告，所有样式内嵌、无外部依赖；自测题采用浏览器原生 details/summary 折叠，无需脚本即可在沙箱环境中正常展开。</p>
+  </footer>
+
+</div>
+</body>
+</html>

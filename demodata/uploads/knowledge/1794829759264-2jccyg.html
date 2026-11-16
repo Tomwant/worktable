@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美股每日新闻简报 · 2026-11-16</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#ffffff; --ink:#1c2330; --muted:#6b7280;
+    --line:#e6e8ee; --accent:#2f6df0; --accent-soft:#eef3ff;
+    --up:#d12b3b; --up-soft:#fdecee;        /* 涨=红（中国惯例） */
+    --down:#1aa05a; --down-soft:#e8f6ee;     /* 跌=绿（中国惯例） */
+    --warn:#b9770a; --warn-soft:#fff4e2;
+    --shadow:0 1px 3px rgba(20,30,50,.06),0 4px 14px rgba(20,30,50,.05);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.65;font-size:15px;-webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:980px;margin:0 auto;padding:28px 20px 60px;}
+  header.top{
+    background:linear-gradient(135deg,#1f2a44,#2f6df0);
+    color:#fff;border-radius:16px;padding:26px 28px;box-shadow:var(--shadow);
+  }
+  header.top h1{margin:0 0 6px;font-size:24px;letter-spacing:.5px;}
+  header.top .sub{opacity:.9;font-size:13.5px;}
+  header.top .meta{margin-top:14px;display:flex;flex-wrap:wrap;gap:10px;}
+  header.top .pill{background:rgba(255,255,255,.16);border-radius:999px;padding:4px 12px;font-size:12.5px;}
+  h2.sec{font-size:18px;margin:34px 0 14px;padding-left:11px;border-left:4px solid var(--accent);}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;box-shadow:var(--shadow);margin-bottom:16px;}
+  .grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .idx{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfcfe;}
+  .idx .nm{font-size:13px;color:var(--muted);}
+  .idx .val{font-size:22px;font-weight:700;margin:4px 0 2px;letter-spacing:.3px;}
+  .idx .ch{font-size:13.5px;font-weight:600;}
+  .up{color:var(--up);background:var(--up-soft);}
+  .down{color:var(--down);background:var(--down-soft);}
+  .tag{display:inline-block;padding:1px 8px;border-radius:6px;font-size:12px;font-weight:600;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th,td{text-align:left;padding:9px 10px;border-bottom:1px solid var(--line);}
+  th{color:var(--muted);font-weight:600;background:#fafbfd;}
+  tr:last-child td{border-bottom:none;}
+  td.num{font-variant-numeric:tabular-nums;font-weight:600;}
+  .drv{display:flex;gap:14px;align-items:flex-start;}
+  .drv .no{flex:0 0 30px;height:30px;border-radius:50%;background:var(--accent-soft);color:var(--accent);
+    font-weight:700;display:flex;align-items:center;justify-content:center;font-size:15px;}
+  .drv .body{flex:1;}
+  .drv h3{margin:2px 0 4px;font-size:15.5px;}
+  .drv p{margin:0;color:#374151;font-size:13.5px;}
+  .drv .hl{color:var(--accent);font-weight:600;}
+  .note{font-size:12.5px;color:var(--muted);margin-top:6px;}
+  .risk li{margin:6px 0;font-size:13.5px;}
+  .foot{margin-top:30px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:14px;}
+  .pillrow{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px;}
+  .mini{font-size:12.5px;color:var(--muted);}
+  .cal{background:var(--warn-soft);border:1px solid #f0d9a8;border-radius:10px;padding:10px 12px;font-size:13px;color:#8a5d00;margin-bottom:14px;}
+  @media (max-width:820px){
+    .grid3,.grid2{grid-template-columns:1fr;}
+    header.top h1{font-size:20px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <h1>美股每日新闻简报</h1>
+    <div class="sub">纳斯达克 · 标普500 · 道琼斯 核心指数与影响因子每日追踪</div>
+    <div class="meta">
+      <span class="pill">生成日期：2026-11-16（周一）</span>
+      <span class="pill">收盘数据截至：美东 2026-11-13（周五）</span>
+      <span class="pill">盘前/消息面：11-16 亚欧时段</span>
+    </div>
+  </header>
+
+  <div class="cal"><b>口径提示：</b>今日为周一，北京时间 19:46（美东 06:46），美股尚未开盘（北京时间 22:30 开市）。故"收盘数据"沿用最新完整交易日 <b>11/13 周五</b>，与上期周六版同一基准；本期增量在于周末消息面、11/16 盘前期货/个股异动与本周日程。文中盘前数据均为盘中快照，<b>不构成开盘预测</b>。</div>
+
+  <!-- 市场速览 -->
+  <h2 class="sec">一、市场速览（11/13 周五收盘）</h2>
+  <div class="card">
+    <div class="grid3">
+      <div class="idx">
+        <div class="nm">道琼斯工业平均</div>
+        <div class="val">52,347.55</div>
+        <div class="ch up">▲ 0.10%（+50.46）</div>
+      </div>
+      <div class="idx">
+        <div class="nm">标普500</div>
+        <div class="val">7,561.67</div>
+        <div class="ch down">▼ 0.40%（-30.73）</div>
+      </div>
+      <div class="idx">
+        <div class="nm">纳斯达克综合</div>
+        <div class="val">25,136.27</div>
+        <div class="ch down">▼ 0.91%（-229.82）</div>
+      </div>
+    </div>
+    <div class="pillrow" style="margin-top:14px;">
+      <span class="tag down">11/13 科技板块 -1.70% 领跌</span>
+      <span class="tag up">必需消费 +1.39% / 能源 +0.96% 领涨</span>
+      <span class="tag down">11/16 盘前 纳指期货 -0.3%~-0.9%</span>
+    </div>
+    <table style="margin-top:14px;">
+      <tr><th>周期</th><th>道指</th><th>标普500</th><th>纳指</th><th>说明</th></tr>
+      <tr><td>本周（11/9→11/13）</td><td class="num up">+2.07%</td><td class="num up">+2.51%</td><td class="num up">+2.27%</td><td class="mini">终结四连跌，10月初来三大指数首次周线齐涨</td></tr>
+      <tr><td>距 10/6 历史高点</td><td class="num">—</td><td class="num down">约 -3.6%</td><td class="num down">约 -9.3%</td><td class="mini">标普高点 7,844.52 / 纳指高点 27,722.75</td></tr>
+      <tr><td>年内（截至 11/13）</td><td class="num up">≈+7%~9%</td><td class="num up">+10.46%</td><td class="num up">+8.15%</td><td class="mini">标普/纳指为行情 feed 区间口径，道指为估算</td></tr>
+    </table>
+    <p class="note">11/13 三大指数高开低走、涨跌不一；标普十一大板块六涨五跌。11/16 盘前受英伟达治理风波与存储/光通信集体下挫拖累，纳指期货一度跌 0.22%→0.91%，道指期货微涨、标普期货小幅走低。</p>
+  </div>
+
+  <!-- 利率 / 商品 / 外汇 一览 -->
+  <div class="card">
+    <div class="grid2">
+      <div>
+        <h3 style="margin:0 0 8px;font-size:15px;">利率与美元</h3>
+        <table>
+          <tr><th>指标</th><th>11/13 收盘</th><th>变化</th></tr>
+          <tr><td>美债 2Y</td><td class="num">4.848%</td><td class="num down">-2.46bp</td></tr>
+          <tr><td>美债 10Y</td><td class="num">5.137%</td><td class="num up">+1.22bp</td></tr>
+          <tr><td>美债 30Y</td><td class="num">5.468%</td><td class="num up">+1.34bp</td></tr>
+          <tr><td>美元指数 DXY</td><td class="num">103.41</td><td class="num up">+0.23%（逼近19个月高点）</td></tr>
+          <tr><td>离岸人民币</td><td class="num">≈6.67</td><td class="num">—</td></tr>
+        </table>
+        <p class="note">CME：12月加息25bp概率约 87%–89%、50bp约 11%–12%；市场定价未来两次会议累计加息至少50bp概率约七成，甚至有源预计至明年3月累计加息三次（至4.50%–4.75%）。</p>
+      </div>
+      <div>
+        <h3 style="margin:0 0 8px;font-size:15px;">大宗商品与加密</h3>
+        <table>
+          <tr><th>品种</th><th>最新</th><th>变化</th></tr>
+          <tr><td>WTI 原油</td><td class="num">88.92 美元</td><td class="num up">+0.20%（11/16盘前跌破88）</td></tr>
+          <tr><td>布伦特原油</td><td class="num">96.29 美元</td><td class="num up">+0.49%（11/16盘前跌近1%）</td></tr>
+          <tr><td>COMEX 黄金</td><td class="num">3,887.60</td><td class="num up">+0.06%（现货金约3,856–3,873）</td></tr>
+          <tr><td>COMEX 白银</td><td class="num">48.65 美元</td><td class="num down">-2.83%</td></tr>
+          <tr><td>比特币</td><td class="num">≈72,000–74,000</td><td class="num">承压（沿用前值，本期未见显著异动）</td></tr>
+        </table>
+        <p class="note">黄金"多头惨烈一周"：冲破4,100后狂泻约250美元、跌回一年前。核心通胀超预期 + 美联储鹰派共振推高利率与美元，持续压制贵金属；技术面关注3,850支撑，失守则试探3,800。</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 六大核心驱动 -->
+  <h2 class="sec">二、六大核心驱动事件</h2>
+  <div class="card">
+    <div class="drv"><div class="no">1</div><div class="body">
+      <h3>「AI 审判周」开场：英伟达财报 + Anthropic IPO 双重大考</h3>
+      <p>本周 AI 主线须连过三关——算力需求、公开市场买单、应用变现。最重一关为<span class="hl">英伟达 11/17 盘后（北京 11/18 凌晨）发布 FY2027 Q3 财报</span>，这是黄仁勋离任后首份业绩：LSEG 预期营收 <span class="hl">1,092 亿美元（同比约 +91%）</span>、调整后 EPS 2.48 美元；Visible Alpha 预期营收 1,094 亿、净利约 609 亿；公司指引为 1,080 亿±2%。另一关是 <span class="hl">Anthropic 预计 11/18 定价、11/19 登陆纳斯达克</span>，拟 IPO+私募合计募资最高 904 亿美元、发行价 70–78 美元、完全稀释估值约 1.4 万亿美元，有望成史上最大 IPO 之一。</p>
+    </div></div>
+    <div class="drv" style="margin-top:14px;"><div class="no">2</div><div class="body">
+      <h3>黄仁勋辞职风波发酵：FT 曝考虑回归，11/16 盘前 AI 硬件集体跳水</h3>
+      <p>据《金融时报》，随硅谷盟友组建"作战室"游说并争取白宫支持，<span class="hl">黄仁勋正考虑重返英伟达担任 CEO</span>；"Stand with Jensen"请愿已获逾 12 万人签名，马斯克等公开支持。诺奖得主"AI 教父"辛顿称其"犯了重大错误、但英伟达能挺过去"。临时 CEO Kress 将于 11/18 美东中午召开全员大会。受此不确定性与获利了结影响，<span class="hl">11/16 盘前英伟达跌 0.7%–1.5%</span>，存储/光通信集体重挫：闪迪 -4.6%~-5%+、美光 -4.0%、SK海力士 -4.1%、西数 -3.4%~-5%、Coherent -4.7%~-6%、Lumentum -4.2%、康宁 -3.2%、迈威尔 -4.2%。英伟达市值已从 10月初约 5.8 万亿降至 3.9 万亿美元。</p>
+    </div></div>
+    <div class="drv" style="margin-top:14px;"><div class="no">3</div><div class="body">
+      <h3>美联储鹰派升温：12月加息几成定局，2027年或延续紧缩</h3>
+      <p>10月 CPI 超预期把加息重新推回定价。柯林斯（波士顿）、戴利（旧金山）均表态"政策方向走高、需进一步收紧"；沃勒此前提出 12月或需加息 50bp，带动短期美债收益率一周上行近 40bp。市场除完全计入 12月加息外，<span class="hl">开始押注 12月与明年1月连续加息</span>、紧缩阶段累计约 85bp。美联储主席沃什 11/16 在旧金山举办公开专题论坛（其五大改革工作组唯一对外公开会议），研判 AI 对通胀、就业与金融市场的影响，政策信号受关注。</p>
+    </div></div>
+    <div class="drv" style="margin-top:14px;"><div class="no">4</div><div class="body">
+      <h3>美债收益率上行 + 美元逼近19个月高点，黄金跌回一年前</h3>
+      <p>10Y 美债重上 <span class="hl">5.1%</span>、30Y 报 5.468%，美元指数升至 103.41、逼近 19个月高位。双重压力下黄金遭遇"惨烈一周"——现货金在 4,100 上方狂泻约 250 美元、回落至约 3,856–3,887，白银 11/13 单日 -2.83%。ING 指出，市场正接受美联储 12月与明年1月连续加息情景，未来数周难见扭转鹰派与美元强势的因素；金价技术面偏弱，失守 3,850 或下探 3,800。</p>
+    </div></div>
+    <div class="drv" style="margin-top:14px;"><div class="no">5</div><div class="body">
+      <h3>地缘与油价：霍尔木兹两油轮剧烈爆炸，IEA 转向「供应过剩」</h3>
+      <p>伊朗革命卫队称 11/16 两艘油轮在美军"直接指挥和支援"下试图经由霍尔木兹一条"非法南部航线"航行、触雷后发生多次剧烈爆炸，地缘风险未消。但 IEA 报告称，随海湾出口恢复，<span class="hl">10月全球石油供应首次超过需求</span>、可观测库存增 5,200万桶为 6月来首次回升，预计四季度市场转向供应过剩，2026 全球日均需求下调 270万桶至 1.023亿桶；柴油等成品油仍偏紧。多空交织下 11/16 盘前油价跳水，美油跌破 88、布油跌近 1%。</p>
+    </div></div>
+    <div class="drv" style="margin-top:14px;"><div class="no">6</div><div class="body">
+      <h3>星舰首次机械臂「捕获」回收 + 13F 集中披露 + 日本 GDP 负增长</h3>
+      <p>特斯拉/SpaceX 重型火箭"星舰"第二级飞船 11/14 返回地球、<span class="hl">首次由发射塔机械臂"捕获"回收</span>。11/16 为 Q3 机构 13F 申报截止日，伯克希尔、桥水、城堡、潘兴广场及段永平旗下基金等集中披露，市场聚焦巴菲特持仓与大资金在 AI 芯片、中概股上的最新布局。宏观方面，日本 Q3 实际 GDP 季率初值 -0.02%（4个季度来首次负增长）、年率 -0.1%；韩国 10月 ICT 出口 703.5亿美元（同比 +202%），芯片出口 +259.4%、SSD 出货暴增 584.3%。英特尔遭股东证券欺诈集体诉讼，盘前跌近 4%。</p>
+    </div></div>
+  </div>
+
+  <!-- 板块与个股 -->
+  <h2 class="sec">三、板块与个股</h2>
+  <div class="card">
+    <h3 style="margin:0 0 10px;font-size:15px;">标普十一大板块（11/13 收盘：六涨五跌）</h3>
+    <table>
+      <tr><th>领涨方向</th><th>表现</th><th>领跌方向</th><th>表现</th></tr>
+      <tr><td>必需消费品</td><td class="num up">+1.39%</td><td>科技</td><td class="num down">-1.70%</td></tr>
+      <tr><td>能源</td><td class="num up">+0.96%</td><td>非必需消费品</td><td class="num down">-0.45%</td></tr>
+    </table>
+
+    <h3 style="margin:16px 0 8px;font-size:15px;">11/16 盘前重点异动（盘中快照，非开盘预测）</h3>
+    <table>
+      <tr><th>方向</th><th>个股/板块</th><th>盘前涨跌</th></tr>
+      <tr><td>芯片龙头</td><td>英伟达 NVDA</td><td class="num down">-0.72% ~ -1.5%</td></tr>
+      <tr><td>存储</td><td>闪迪 / 美光 / SK海力士 / 西数 / 希捷</td><td class="num down">-2.5% ~ -5%+</td></tr>
+      <tr><td>光通信</td><td>Coherent / Lumentum / 康宁 / 应用光电 / Ciena</td><td class="num down">-3.2% ~ -6%</td></tr>
+      <tr><td>大型科技</td><td>特斯拉 / 亚马逊 / Meta / 谷歌（苹果、微软小涨）</td><td class="num down">-0.7% ~ -1.3%</td></tr>
+      <tr><td>医药生物（逆势）</td><td>礼来 / 强生 / 诺和诺德</td><td class="num up">+0.4% ~ +1.5%</td></tr>
+    </table>
+
+    <h3 style="margin:16px 0 8px;font-size:15px;">科技七巨头（11/13 收盘回顾）</h3>
+    <table>
+      <tr><th>焦点</th><th>要点</th></tr>
+      <tr><td>英伟达 NVDA</td><td>11/13 再跌约 2%，上周累跌约 12%–13%（2025年4月来最大单周跌幅），收约 163 美元，较10月高点回落逾30%</td></tr>
+      <tr><td>苹果 / 微软</td><td>11/16 盘前小幅上涨（+0.30% / +0.46%），防御属性受青睐</td></tr>
+      <tr><td>其余四巨头</td><td>11/16 盘前普遍走低，谷歌 -0.74%、亚马逊 -1.02%、Meta -0.96%、特斯拉 -1.34%</td></tr>
+    </table>
+  </div>
+
+  <!-- 其他市场 -->
+  <h2 class="sec">四、其他市场</h2>
+  <div class="card">
+    <div class="grid2">
+      <div>
+        <h3 style="margin:0 0 8px;font-size:15px;">股市与亚太（11/16）</h3>
+        <table>
+          <tr><th>市场</th><th>点位</th><th>涨跌</th></tr>
+          <tr><td>日经225</td><td class="num">61,348.21</td><td class="num up">高开 +0.34%</td></tr>
+          <tr><td>韩国综指</td><td class="num">5,305.40</td><td class="num up">高开 +0.28%</td></tr>
+          <tr><td>欧洲/美股</td><td class="num">—</td><td class="mini">上周欧股偏强、资金由美 AI 板块轮动</td></tr>
+        </table>
+        <p class="note">日韩 11/16 双双高开，但美股盘前期货转跌，需留意日内情绪反复。</p>
+      </div>
+      <div>
+        <h3 style="margin:0 0 8px;font-size:15px;">债券 / 外汇 / 加密</h3>
+        <table>
+          <tr><th>资产</th><th>动态</th></tr>
+          <tr><td>美债</td><td>2Y 4.848% / 10Y 5.137% / 30Y 5.468%；10Y 重上5%压制成长股估值</td></tr>
+          <tr><td>美元</td><td>DXY 103.41（+0.23%），欧元1.1022、美元/日元159.70</td></tr>
+          <tr><td>人民币</td><td>离岸 ≈6.67</td></tr>
+          <tr><td>加密</td><td>BTC ≈72k–74k 承压（沿用前值）</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- 本周日程 -->
+  <h2 class="sec">五、本周关键日程（美东时间，11/16–11/20）</h2>
+  <div class="card">
+    <table>
+      <tr><th>日期</th><th>事件</th><th>关注点</th></tr>
+      <tr><td>11/16 周一</td><td>纽约联储制造业指数(8:30)；沃什旧金山公开论坛；13F 申报截止</td><td>制造业景气、AI 政策信号、顶级机构持仓</td></tr>
+      <tr><td>11/17 周二</td><td>10月零售销售「恐怖数据」+进出口价格(8:30)；工业产出(9:15)；家得宝/迪士尼盘前；<b>英伟达盘后财报</b></td><td>消费韧性 + NVDA 业绩定调（北京 11/18 凌晨）</td></tr>
+      <tr><td>11/18 周三</td><td>新屋开工/营建许可(8:30)；<b>FOMC 会议纪要(14:00)</b>；塔吉特/劳氏/TJX 盘前；Kress 全员大会(12:00)</td><td>加息路径细节、消费与英伟达管理层交接</td></tr>
+      <tr><td>11/19 周四</td><td>沃尔玛 / 阿里巴巴盘前财报；费城联储；初请；领先指标；<b>Anthropic IPO 上市</b></td><td>零售巨头指引、AI 龙头估值兑现</td></tr>
+      <tr><td>11/20 周五</td><td>10月州级就业失业数据(10:00)；密歇根大学消费者信心终值</td><td>就业与通胀预期、周度头寸</td></tr>
+    </table>
+    <p class="note">零售销售预期：整体环比持平、剔除汽车后约 +0.4%。FOMC 纪要来自 10/27–28 会议，早于最新 CPI/PPI，内容或难完全反映当前通胀形势，市场对官员最新讲话关注度更高。</p>
+  </div>
+
+  <!-- 风险提示 -->
+  <h2 class="sec">六、风险提示</h2>
+  <div class="card">
+    <ul class="risk">
+      <li><b>英伟达"财报+治理"双风险：</b>黄仁勋去留未定、市场更关注管理层稳定与算力扩张战略能否延续；若业绩、指引或路线图不及预期，或冲击整条 AI 链情绪。</li>
+      <li><b>Anthropic IPO 定价与吸收能力（11/19）：</b>约1.4万亿美元估值、最高904亿美元募资，史上最大上市交易之一，存在估值兑现与市场承接的不确定性。</li>
+      <li><b>美联储鹰派 + 长端利率/美元：</b>12月加息基本定价、50bp概率抬升，市场押注2027年初延续紧缩；10Y 重上5%、美元逼近19个月高点，持续压制高估值成长股。</li>
+      <li><b>「恐怖数据」零售销售（11/17）：</b>若消费韧性超预期→加息预期进一步升温；若明显走弱→引发经济放缓担忧，双向波动风险加大。</li>
+      <li><b>地缘与油价反复：</b>霍尔木兹油轮再爆爆炸，与 IEA"四季度供应过剩"判断拉锯；柴油等成品油偏紧、俄能源设施受袭，通胀端仍有扰动。</li>
+      <li><b>黄金技术面破位：</b>跌回一年前、日K沿布林带向下发散，失守3,850支撑或进一步下探3,800，避险逻辑阶段性失效。</li>
+      <li><b>情绪传导：</b>11/16 盘前 AI 硬件集体跳水的持续性待观察，警惕开盘后跌幅扩大或扩散至更广科技板块。</li>
+    </ul>
+  </div>
+
+  <div class="foot">
+    <p><b>数据纪律：</b>本报告以"美东月日 + 官方指数 feed + 跨源一致性"三重校验；已剔除旧年份/错月份回收稿（如部分媒体误引 2024 年道指 4.8万、tickerdaily 虚构行情等）。11/13 收盘数据经新华社、中国金融信息网、中国证券网、新浪财经、行情 feed 交叉确认，多源完全一致；盘前数据为 11/16 亚欧时段快照，均标注口径、不构成开盘预测；分歧项（如 2Y 收益率、油价合约口径、黄金现货/期货）已并列标注。</p>
+    <p><b>信源：</b>新华社、新华财经、中国证券网、中新经纬、证券时报、新浪财经、和讯外汇、腾讯新闻/21财经、网易财经（智通财经）、华盛通、金融界、Sirius Investors、CME FedWatch 等公开报道。本报告仅供研究参考，不构成投资建议。</p>
+  </div>
+
+</div>
+</body>
+</html>

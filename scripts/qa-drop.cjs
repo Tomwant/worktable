@@ -1,0 +1,31 @@
+const path = require('path')
+const { createRequire } = require('module')
+const home = process.env.USERPROFILE || 'C:/Users/LEGION'
+const PW = path.join(home, 'AppData', 'Local', 'npm-cache', '_npx', 'e41f203b7505f1fb', 'node_modules')
+const pwReq = createRequire(path.join(PW, '..', '__pw__.js'))
+const { chromium } = pwReq('playwright')
+const { mkdirSync } = require('node:fs')
+;(async () => {
+  const OUT = 'outputs'
+  mkdirSync(OUT, { recursive: true })
+  const errors = []
+  const browser = await chromium.launch()
+  const ctx = await browser.newContext({ viewport: { width: 1600, height: 950 }, deviceScaleFactor: 2 })
+  const page = await ctx.newPage()
+  page.on('pageerror', e => errors.push('PAGEERROR: ' + e.message))
+  const shot = async (n) => page.screenshot({ path: `${OUT}/${n}.png` })
+  const clickSel = async (loc) => { try { await loc.click({ timeout: 4000 }); await page.waitForTimeout(600) } catch (e) { errors.push(e.message) } }
+  await page.goto('http://localhost:5175/', { waitUntil: 'networkidle', timeout: 35000 })
+  await page.click('.side nav button:has-text("计划打卡")', { timeout: 5000 })
+  await page.waitForTimeout(700)
+  // 年计划「选择分类」(nth=0)
+  await clickSel(page.locator('.row2 .app-sel').nth(0)); await shot('naive-cat-year-open')
+  await page.keyboard.press('Escape'); await page.waitForTimeout(300)
+  // 月计划「关联年计划」(nth=1)
+  await clickSel(page.locator('.row2 .app-sel').nth(1)); await shot('naive-cat-month-plan-open')
+  await page.keyboard.press('Escape'); await page.waitForTimeout(300)
+  // 月计划「选择分类」(nth=2)
+  await clickSel(page.locator('.row2 .app-sel').nth(2)); await shot('naive-cat-month-open')
+  await browser.close()
+  console.log(errors.length ? 'ERRORS:\n' + errors.join('\n') : 'DROPDOWN QA OK')
+})()

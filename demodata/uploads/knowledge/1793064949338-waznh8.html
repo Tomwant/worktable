@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融概念 · 第31期 · 信用与利率</title>
+<style>
+  :root{
+    --ink:#1f2430;
+    --sub:#6b7280;
+    --line:#e7e9ef;
+    --bg:#f6f7fb;
+    --card:#ffffff;
+    --accent:#e0613a;
+    --accent-soft:#fdeee7;
+    --tag:#eef2f7;
+    --quote:#f4f6fa;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.8;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:32px 20px 56px;}
+  .head{
+    background:linear-gradient(135deg,#fff 0%,#fff 60%,var(--accent-soft) 100%);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:30px 32px;
+    position:relative;
+    overflow:hidden;
+  }
+  .head::after{
+    content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;
+    background:radial-gradient(circle,var(--accent-soft) 0%,transparent 70%);
+  }
+  .issue{
+    display:inline-block;font-size:13px;font-weight:700;letter-spacing:1px;
+    color:var(--accent);background:var(--accent-soft);padding:5px 12px;border-radius:999px;
+  }
+  h1{font-size:30px;margin:14px 0 6px;letter-spacing:1px;}
+  .en{color:var(--sub);font-size:15px;font-weight:500;margin:0;}
+  .meta{margin-top:14px;color:var(--sub);font-size:13px;}
+
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-top:22px;
+  }
+  .card h2{
+    font-size:19px;margin:0 0 16px;display:flex;align-items:center;gap:10px;
+  }
+  .card h2 .dot{width:9px;height:9px;border-radius:50%;background:var(--accent);display:inline-block;}
+  .label{
+    display:inline-block;font-size:12px;font-weight:700;color:var(--accent);
+    background:var(--accent-soft);padding:3px 10px;border-radius:6px;margin-bottom:12px;
+  }
+  p{margin:0 0 14px;}
+  p:last-child{margin-bottom:0;}
+  .story{font-size:16px;color:#2a3140;}
+  .name{font-weight:700;color:var(--accent);}
+  .quote{
+    background:var(--quote);border-left:4px solid var(--accent);
+    padding:14px 18px;border-radius:8px;margin:16px 0;color:#374151;font-size:15px;
+  }
+  .quote .who{display:block;font-size:13px;color:var(--sub);margin-top:8px;font-style:normal;}
+  ul.tips{list-style:none;margin:0;padding:0;}
+  ul.tips li{
+    position:relative;padding:14px 16px 14px 52px;margin-bottom:12px;
+    background:var(--tag);border-radius:12px;font-size:15px;
+  }
+  ul.tips li:last-child{margin-bottom:0;}
+  ul.tips li b{color:var(--accent);}
+  ul.tips li .num{
+    position:absolute;left:14px;top:50%;transform:translateY(-50%);
+    width:26px;height:26px;border-radius:50%;background:var(--accent);color:#fff;
+    font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  }
+  .next{
+    margin-top:22px;background:linear-gradient(135deg,#1f2430,#2c3344);
+    color:#fff;border-radius:16px;padding:24px 28px;
+  }
+  .next .label{background:rgba(255,255,255,.12);color:#ffd9c9;}
+  .next h2{font-size:18px;margin:0 0 8px;color:#fff;display:flex;align-items:center;gap:10px;}
+  .next h2 .dot{width:9px;height:9px;border-radius:50%;background:#ff8a5c;display:inline-block;}
+  .next p{color:#c9cfda;margin:0;font-size:14px;}
+  .footer{text-align:center;color:var(--sub);font-size:12px;margin-top:30px;}
+  .footer .line{width:40px;height:3px;background:var(--accent);border-radius:2px;margin:0 auto 12px;}
+  .calc{
+    background:var(--quote);border:1px dashed var(--accent);
+    border-radius:12px;padding:16px 18px;margin:16px 0;font-size:15px;color:#374151;
+  }
+  .calc b{color:var(--accent);}
+  .twocol{display:flex;gap:14px;flex-wrap:wrap;margin:16px 0;}
+  .twocol .box{flex:1;min-width:240px;background:var(--tag);border-radius:12px;padding:16px 18px;font-size:15px;}
+  .twocol .box .who{font-weight:700;color:var(--accent);margin-bottom:6px;display:block;}
+  .twocol .box .rate{font-size:22px;font-weight:700;color:var(--ink);margin:6px 0;}
+  .twocol .box .sub{color:var(--sub);font-size:13px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="head">
+    <span class="issue">第 31 期</span>
+    <h1>信用与利率</h1>
+    <p class="en">Credit &amp; Interest Rate · 你过去每一次履约，都在给未来的自己打折</p>
+    <div class="meta">2026-10-27 ｜ 每日一个金融概念（故事版）</div>
+  </div>
+
+  <div class="card">
+    <span class="label">今 日 故 事</span>
+    <div class="story">
+      <p>阿梅和阿强是大学同学，同年毕业、各自攒了 10 万块，都盯上了街角一家要转让的小咖啡馆，各差 40 万启动金，于是都跑去借钱。两个人要开的，几乎是同一家店。</p>
+
+      <p>阿梅毕业就办了张信用卡，每月按时还；工资流水稳定；从没逾期过。银行把她的情况扫了一遍，说："你信用记录干净，年利率 <b style="color:var(--accent)">4.5%</b>，批了。"</p>
+
+      <p>阿强嫌办信用卡麻烦，平时用花呗但不上征信；有回临时周转，在一家网贷逾期了 30 天，留下一条记录。银行看了直摇头："信用空白，还带一条逾期——要么不批，要么给你 <b style="color:var(--accent)">11%</b> 的利率。"</p>
+
+      <div class="twocol">
+        <div class="box">
+          <span class="who">阿梅（信用好）</span>
+          <div class="rate">年利率 4.5%</div>
+          <span class="sub">40 万借 5 年，月供约 ¥7,455<br>总利息约 4.7 万</span>
+        </div>
+        <div class="box">
+          <span class="who">阿强（信用差）</span>
+          <div class="rate">年利率 11%</div>
+          <span class="sub">40 万借 5 年，月供约 ¥8,699<br>总利息约 12.2 万</span>
+        </div>
+      </div>
+
+      <p>两个人开的是差不多的店，可因为"过去"不一样，每年要为同一笔钱多付或少付近 1.2 万利息。五年算下来——</p>
+
+      <div class="calc">
+        <b>同一笔 40 万的"信用差价"：</b><br>
+        阿梅总利息 ≈ 4.7 万，阿强总利息 ≈ 12.2 万。<br>
+        两者相差 <b>约 7.5 万</b>——够阿强再付小半家店的首付了。<br>
+        （数字为按等额本息测算的示意，只为说明差距量级。）
+      </div>
+
+      <p class="quote">"我和阿梅开的明明是差不多的店，凭什么我每年要多还一万多？银行说因为我'以前不靠谱'。可那都是好几年前的事了啊。"<span class="who">—— 阿强拿到还款计划表那天</span></p>
+
+      <p>阿强想不通：我人要靠谱，做生意也会拼命还，为什么银行只看"过去"？因为他没看清一件事：<span class="name">银行借出的不是钱，是"你将来还钱的可能性"</span>。而"可能性"这件事，银行是用一个数字来定价的——那个数字，就是利率里的"风险溢价"。</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2><span class="dot"></span>这背后的道理</h2>
+    <p><b style="color:var(--accent)">信用与利率</b>，是一对绑在一起的概念。信用（Credit）是你"说到做到的履历"——过去每一次按时还款、每一笔守约，都在往一份隐形存折里存钱；利率（Interest Rate）则是这份履历被翻译成的真金白银：你越值得信赖，别人借你钱要的"租金"就越低。</p>
+    <p>第一层：<b>信用不是道德标签，而是被定价的资产。</b>银行把"你赖账的概率"换算成一个数字，加进利率里。信用好 = 风险低 = 利率低；信用差或空白 = 风险高 = 利率高，甚至借不到。阿梅省下的 7.5 万，本质是她多年守约攒下的"折扣券"。</p>
+    <p>第二层：<b>利率是"现在用钱、将来还"的租金，也是时间的翻译器。</b>今天借 100、明年还 105，那 5 块就是你为"提前享用"付的租金。它把"今天的 100 块"和"明年的 100 块"换算成可比的价——利率越高，未来的钱越不值钱（现值越低）。所以利率不只是借款人的成本，也是所有"今天 vs 明天"决策的共同标尺。</p>
+    <p>第三层：<b>这套定价从上到下都通用。</b>政府发的国债几乎不会赖账，利率最低，叫"无风险利率"；小公司发债风险高，利率就高，两者之差叫"信用利差"。而央行一旦调整基准利率，从房贷到理财、从企业贷款到你的余额宝，几乎所有利率都跟着动——因为基准利率是整张"钱的价格网"的锚。</p>
+    <p>最后别忘了：<span class="name">信用会利滚利地放大差距</span>。好信用 → 低利率 → 省下的钱再投入、把生意做好、还款更轻松 → 信用更好，这是正向的复利；坏信用 → 高利息压身 → 稍有波动就逾期 → 信用更差，这是反向的复利，越滚越沉，叫"坏信用陷阱"。阿强卡在的就是后者。</p>
+  </div>
+
+  <div class="card">
+    <h2><span class="dot"></span>三点记住</h2>
+    <ul class="tips">
+      <li><span class="num">1</span><b>信用是隐形存折：</b>每一次按时还、每一笔守约，都在往里存"低利率"的资格。别以为征信"看不见"就无所谓——它每天都在替你定价。</li>
+      <li><span class="num">2</span><b>利率是时间的翻译器：</b>它把今天的钱和未来的钱换算成可比的价。借钱是付租金，存钱是收租金；利率越高，未来的钱越不值钱。</li>
+      <li><span class="num">3</span><b>好信用会利滚利：</b>低利率省下的钱能生出更多钱，坏信用却像反向复利越滚越沉。守信用不是道德加分，是实打实的财务回报率。</li>
+    </ul>
+  </div>
+
+  <div class="next">
+    <span class="label">下 期 预 告</span>
+    <h2><span class="dot"></span>第 32 期 · 对冲</h2>
+    <p>风雨总会来，但聪明人不会赌天晴。下期聊聊：当"确定要下雨"和"怕淋湿"同时成立，我们如何用一把"金融伞"，把最坏的那部分损失，提前转嫁出去。</p>
+  </div>
+
+  <div class="footer">
+    <div class="line"></div>
+    本卡片为自包含单文件，可离线阅读与转发 ｜ 概念循环序列第 15 / 16 个（信用与利率）
+  </div>
+
+</div>
+</body>
+</html>

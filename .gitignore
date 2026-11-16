@@ -1,0 +1,25 @@
+node_modules/
+dist/
+.env
+server/*.db
+
+# ===== 本地自测产物，不进仓库 =====
+# AI 自测脚本、临时探针
+_*.mjs
+# 根目录截图（各轮验收留下的）
+/*.png
+# 截图输出目录
+outputs/
+# 本地临时文件（用户约定一律放 D 盘）
+D:/dev/
+
+# ===== 项目内部数据 =====
+# 工作台自己的记忆与工作目录
+.workbuddy/
+# 后台上传目录：演示版用的是 public/uploads/knowledge 里的副本，不重复提交 2.4MB 报告
+server/uploads/
+
+# ===== 系统杂项 =====
+.DS_Store
+Thumbs.db
+*.log

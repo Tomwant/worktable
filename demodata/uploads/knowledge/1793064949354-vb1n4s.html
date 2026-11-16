@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第4期 · 随机梯度下降SGD</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>第 4 期 · 随机梯度下降（SGD）：用噪声逼出最优解</h1>
+<blockquote><strong>今日概念</strong>：随机梯度下降 Stochastic Gradient Descent（SGD）</blockquote>
+<blockquote><strong>一句话</strong>：要找一个巨大山谷的最低点，不必每次都量遍所有地形——随手抓一小撮样本估个方向，边走边改，噪声反而帮你跳出假坑。</blockquote>
+<hr>
+<h2>一、故事：阿明的"下山省力气"难题</h2>
+<p>阿明开了家<strong>外卖配送</strong>公司，手里几<strong>千万</strong>条历史订单，想训练一个模型预测"某区域某时段该派几名骑手"。他要找的，是让<strong>预测误差最小</strong>的那组参数 <strong>θ</strong>（一个山谷的最低点）。</p>
+<ul>
+<li><strong>老办法（全批量梯度下降）</strong>：每走一步，都拿全部几千万条订单算一次"该往哪走"，方向<strong>极准</strong>，但<strong>一步就要十几分钟</strong>，模型还没训完竞争对手就上市了。</li>
+<li><strong>大刘的损招（SGD）</strong>：每步只<strong>随机抽一小批</strong>（比如 32 条）订单估方向。方向<strong>抖、有噪声</strong>，但<strong>一步 0.1 秒</strong>。走十万步下来，反而先到了谷底附近，还顺手绕开了几个<strong>假的最低点</strong>（浅坑）。</li>
+</ul>
+<p>阿明一开始嫌"这方向乱跳，能靠谱吗？"大刘笑："<strong>噪声不是 bug，是 feature</strong>——它让你不会卡在第一个小坑里；而且抽得越多越准，最后自然安静下来。"</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 它在优化什么</h3>
+<p>我们要最小化<strong>期望风险</strong> L(θ) = 𝔼_ξ[ℓ(θ; ξ)]，其中 ξ 是一条随机样本（一笔订单），ℓ 是单样本损失。</p>
+<ul>
+<li><strong>全批量梯度</strong>：G(θ) = ∇L(θ) = (1/n) Σᵢ ∇ℓ(θ; ξᵢ) —— 算全部 n 条样本。</li>
+<li><strong>SGD 梯度估计</strong>：随机抽一个（或一小批 b 个）样本，用 g(θ) = (1/b) Σⱼ ∇ℓ(θ; ξᵢⱼ) 当方向。</li>
+</ul>
+<h3>2. 为什么"噪声"能用——它是<strong>无偏估计</strong></h3>
+<blockquote><strong>核心公式</strong>：𝔼[g(θ)] = G(θ)</blockquote>
+<p>每个样本梯度都是"真梯度"的一个<strong>无偏样本</strong>，平均回去就是真值。这直接接上第 9 期（随机变量期望）和第 15 期（蒙特卡洛：把难算量当样本均值逼近）。</p>
+<p><strong>方差</strong>才是代价：单样本估计的方差是 σ²；<strong>抽 b 个取平均，方差降到 σ²/b</strong>（标准误 = σ/√b，闭环第 10 期 CLT）。批量越大越稳，但越慢——这就是 SGD 的根本权衡。</p>
+<h3>3. 学习率 η：步长 = 探索/利用的"温度"</h3>
+<p>η 太大→在谷底<strong>乱蹦停不下来</strong>；η 太小→<strong>半天挪不动</strong>。它被戏称为"温度"，和第 3 期模拟退火的退火温度同构：大 η 像高温乱撞（能跳出局部极小），小 η 像低温精细收敛。</p>
+<p><strong>收敛的黄金条件（Robbins–Monro，1951）</strong>：</p>
+<ul>
+<li>Σ ηₜ = ∞（步子总和要够大，才走得够远）</li>
+<li>Σ ηₜ² &lt; ∞（单步噪声要被"平均掉"，否则永远抖）</li>
+</ul>
+<p>经典解：<strong>ηₜ = c/t</strong>。</p>
+<h3>4. 它本质是个<strong>随机过程</strong></h3>
+<ul>
+<li>SGD 的迭代序列 <strong>{θₜ} 是一条马尔可夫链</strong>（第 12 期）——下一步只取决于当前 θₜ 和新抽到的样本。</li>
+<li>接近最优解时，步子退化为<strong>带收缩的随机游走</strong>（第 14 期）：θ 在 θ* 附近 ±噪声地板 抖动。</li>
+<li>这些抖动的分布近似<strong>正态</strong>（第 10 期 CLT）。</li>
+<li>想把它从"优化"升级成"采样后验"？给梯度里再加固定温度噪声 → 第 5 期要讲的 <strong>SGLD</strong>（接第 16 期熵）。</li>
+</ul>
+<h3>5. 关键直觉（背下来）</h3>
+<ul>
+<li><strong>批量 b 越大 → 方差 σ²/b 越小 → 越稳但越慢</strong>。</li>
+<li><strong>学习率 η 太小 → 慢；η 太大 → 永远震荡停不准</strong>。</li>
+<li><strong>末段噪声地板 ≈ η·σ</strong>：想更准就调小 η，但要付出变慢的代价（学习率的偏差–方差权衡）。</li>
+<li><strong>应用版图</strong>：深度学习训练、大规模推荐/搜索、在线学习、强化学习策略优化。</li>
+</ul>
+<hr>
+<h2>三、四道代表性题目（你先总结，答案在第四节）</h2>
+<blockquote><strong>题 1 · 无偏估计基本功</strong></blockquote>
+<blockquote>设 4 个样本在某 θ 处的单样本梯度分别为 2、0、−1、1。</blockquote>
+<blockquote>(a) 全批量梯度 G 是多少？</blockquote>
+<blockquote>(b) 若每步随机抽 1 个样本当 g，验证 𝔼[g] = G，并算 Var(g)。</blockquote>
+<blockquote>(c) 若每步抽 2 个（有放回取平均）当 g，Var 变为多少？</blockquote>
+<blockquote><strong>题 2 · 学习率衰减选择题</strong></blockquote>
+<blockquote>下列三种 ηₜ 中，哪些满足 Robbins–Monro 收敛条件（Σηₜ=∞ 且 Σηₜ²&lt;∞）？</blockquote>
+<blockquote>(A) ηₜ = 1/t　(B) ηₜ = 1/√t　(C) ηₜ = 0.1（常数）</blockquote>
+<blockquote>不满足的会出什么毛病？</blockquote>
+<blockquote><strong>题 3 · 手算一次 SGD 轨迹</strong></blockquote>
+<blockquote>最小化 f(θ) = (θ − 2)²。用单样本 SGD：每步抽一个"观察点"(x=1, y=2)，梯度近似为 2·1·(θ·1 − 2) = 2(θ − 2)，更新 θ ← θ − η·2(θ−2)，η = 0.1。</blockquote>
+<blockquote>从 θ₀ = 0 出发，写出 θ₁、θ₂、θ₃，并说它最终趋向哪。</blockquote>
+<blockquote><strong>题 4 · 噪声地板与学习率权衡（闭环模拟退火）</strong></blockquote>
+<blockquote>在最优解 θ* 附近，模型曲率 H&gt;0，真实梯度 ≈ H(θ − θ*)，每步还叠零均值噪声 εₜ（方差 σ²）。更新 θ ← θ − η[H(θ−θ*) + ε]。</blockquote>
+<blockquote>(a) 忽略噪声时，θ 以多快速度收敛到 θ*？（收缩因子？）</blockquote>
+<blockquote>(b) 加上噪声后，θ 会在 θ* 附近维持多大范围的"永久抖动"？它随 η 怎么变？</blockquote>
+<blockquote>(c) 这和第 3 期模拟退火的"温度太高冻不进谷底 / 温度太低冻结在局部"有何对应？</blockquote>
+<hr>
+<h2>四、完整解题思路（含答案）</h2>
+<blockquote><strong>题 1 答案</strong></blockquote>
+<blockquote>(a) G = (2 + 0 − 1 + 1) / 4 = <strong>0.5</strong>。</blockquote>
+<blockquote>(b) 抽样均匀，𝔼[g] = (2+0−1+1)/4 = 0.5 = G ✓（无偏）。</blockquote>
+<blockquote>　　𝔼[g²] = (4+0+1+1)/4 = 1.5，Var(g) = 1.5 − 0.5² = <strong>1.25</strong>。</blockquote>
+<blockquote>(c) 抽 2 个取平均，方差降为原来的 1/2：<strong>Var = 1.25 / 2 = 0.625</strong>。</blockquote>
+<blockquote>　　→ 印证"批量 b 越大方差越小"，单样本(σ²=1.25) 到 双样本(0.625) 减半。</blockquote>
+<blockquote><strong>题 2 答案</strong></blockquote>
+<blockquote>(A) ηₜ=1/t：Σ1/t = ∞（调和级数发散），Σ1/t² &lt; ∞（收敛）→ <strong>满足，a.s. 收敛</strong> ✓。</blockquote>
+<blockquote>(B) ηₜ=1/√t：Σ1/√t = ∞，但 Σ(1/√t)² = Σ1/t = ∞ → <strong>第二个条件不满足</strong>，不保证 a.s. 收敛（只能"平均后"收敛）。</blockquote>
+<blockquote>(C) ηₜ=0.1 常数：Σ=∞，Ση²=∞ → <strong>不满足</strong>，噪声永不被平均，θ 在 θ* 附近以<strong>固定幅度永久抖动</strong>，停不准。</blockquote>
+<blockquote>口诀：<strong>要"走得够远"又要"抖得净"</strong>，1/t 两全，常数步长只满足前者。</blockquote>
+<blockquote><strong>题 3 答案</strong></blockquote>
+<blockquote>梯度 = 2(θ − 2)，更新 θ ← θ − 0.1·2(θ − 2) = θ − 0.2(θ−2) = 0.8θ + 0.4。</blockquote>
+<blockquote>- θ₀ = 0</blockquote>
+<blockquote>- θ₁ = 0.8·0 + 0.4 = <strong>0.4</strong></blockquote>
+<blockquote>- θ₂ = 0.8·0.4 + 0.4 = 0.32 + 0.4 = <strong>0.72</strong></blockquote>
+<blockquote>- θ₃ = 0.8·0.72 + 0.4 = 0.576 + 0.4 = <strong>0.976</strong></blockquote>
+<blockquote>递推 θₜ = 0.8θₜ₋₁ + 0.4，不动点 θ* 满足 θ* = 0.8θ* + 0.4 → 0.2θ* = 0.4 → θ* = <strong>2</strong>。</blockquote>
+<blockquote>即逐步逼近真实最小值点 θ=2（每步保留 0.8、补回 0.4），无噪声时严格收敛。</blockquote>
+<blockquote><strong>题 4 答案</strong></blockquote>
+<blockquote>(a) 忽略噪声：θₜ₊₁ − θ* = (1 − ηH)(θₜ − θ*)，<strong>收缩因子 1 − ηH</strong>（要求 0&lt;ηH&lt;2 才稳定）。</blockquote>
+<blockquote>(b) 加噪声：稳态方差 ≈ <strong>η²σ² / [1 − (1−ηH)²] ≈ ησ²/(2H)</strong>（小 η 近似）。即<strong>永久抖动幅度 ∝ η</strong>：η 减半，噪声地板约减半，但收敛变慢——这正是学习率的偏差–方差权衡。</blockquote>
+<blockquote>(c) 对应模拟退火：η 像"温度"。η 太大=温度太高，永远在谷里蹦（冻不进谷底）；η 太小=温度太低，可能在浅坑（局部极小）里<strong>冻结</strong>出不来。两者都要靠<strong>先大后小的退火式调度</strong>平衡——SGD 的 1/t 衰减，正是退火的数学版。</blockquote>
+<hr>
+<h2>五、明日预告</h2>
+<p><strong>第 5 期 · 随机梯度朗之万动力学（SGLD）：给 SGD 加噪声，从"优化"变"采样"</strong></p>
+<ul>
+<li>把第 4 期 SGD 的学习率 reinterpret 成"温度"，再注入固定高斯噪声，迭代就不再是找最低点，而是<strong>从模型的后验分布里抽样</strong>——优化器秒变 MCMC 采样器（闭环第 15 期蒙特卡洛、第 16 期熵/温度）。</li>
+<li>故事预告：阿明想不只"猜一个最佳参数"，还要"给参数一个置信区间"，大刘把 SGD 调成"带醉意的随机游走"就搞定了。</li>
+</ul></div></body></html>

@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>每日发现 · 完整内容阅读视图原型</title>
+<style>
+:root{
+  --bg1:#f4efe4; --bg2:#eaf1e7;
+  --surface:rgba(255,255,255,.58); --surface-2:rgba(255,255,255,.36); --surface-solid:#fffdf7;
+  --text:#33302a; --text-2:#7a746a; --text-3:#a8a094;
+  --line:rgba(255,255,255,.66); --line-2:rgba(80,60,30,.12); --line-3:rgba(80,60,30,.24);
+  --accent:#4a9e66; --accent-deep:#398a54; --accent-soft:rgba(74,158,102,.13);
+  --warm:#e09a66; --warm-soft:rgba(224,154,102,.16);
+  --danger:#cf6a57; --danger-soft:rgba(207,106,87,.14);
+  --blur:blur(20px) saturate(150%);
+  --r-input:14px; --r-card:22px; --r-top:26px;
+  --shadow:0 1px 2px rgba(80,60,30,.05),0 12px 36px -14px rgba(80,60,30,.22),inset 0 1px 0 rgba(255,255,255,.6);
+  --ease:cubic-bezier(.22,.9,.34,1);
+}
+[data-theme="dark"]{
+  --bg1:#151b17; --bg2:#101a1e;
+  --surface:rgba(255,255,255,.055); --surface-2:rgba(255,255,255,.05); --surface-solid:#1c2420;
+  --text:#e9ede8; --text-2:#b6c1ba; --text-3:#a9b5ae;
+  --line:rgba(255,255,255,.12); --line-2:rgba(255,255,255,.12); --line-3:rgba(255,255,255,.22);
+  --accent:#66d18d; --accent-deep:#4fc37c; --accent-soft:rgba(102,209,141,.15);
+  --warm:#efaa7c; --warm-soft:rgba(239,170,124,.18);
+  --danger:#f09595; --danger-soft:rgba(240,149,149,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 16px 44px -16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family:'Noto Sans SC','PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));background-attachment:fixed;
+  color:var(--text);min-height:100vh;padding:28px 24px 60px;transition:background .3s,color .3s;
+}
+.wrap{max-width:1080px;margin:0 auto}
+
+/* 顶栏 */
+.bar{display:flex;align-items:center;gap:12px;margin-bottom:22px}
+.brand{font-size:15px;font-weight:800;letter-spacing:.2px}
+.nav{display:flex;gap:2px;background:var(--surface);border:1px solid var(--line);border-radius:100px;padding:4px;margin-left:8px;backdrop-filter:var(--blur)}
+.nav span{font-size:12.5px;font-weight:600;color:var(--text-2);padding:5px 13px;border-radius:100px;cursor:pointer;white-space:nowrap}
+.nav span.on{background:var(--accent-soft);color:var(--accent-deep)}
+.bar .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+.tbtn{height:32px;padding:0 14px;border-radius:100px;border:1px solid var(--line-2);background:var(--surface);color:var(--text-2);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .2s}
+.tbtn:hover{border-color:var(--line-3);color:var(--text)}
+.tbtn.on{background:var(--accent-soft);color:var(--accent-deep);border-color:transparent}
+
+.page-head{margin-bottom:18px}
+.eyebrow{font-size:11px;font-weight:700;letter-spacing:1.6px;text-transform:uppercase;color:var(--text-3);margin-bottom:6px}
+h1{font-size:26px;font-weight:800;letter-spacing:-.4px}
+.sub{font-size:13px;color:var(--text-2);margin-top:6px}
+
+/* 卡片 */
+.list{display:flex;flex-direction:column;gap:14px}
+.card{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);
+  padding:20px;backdrop-filter:var(--blur);box-shadow:var(--shadow);
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease);cursor:pointer;position:relative;
+}
+.card:hover{transform:translateY(-2px);box-shadow:0 1px 2px rgba(80,60,30,.06),0 18px 44px -16px rgba(80,60,30,.3),inset 0 1px 0 rgba(255,255,255,.6)}
+.card.collapsed .body{display:none}
+
+/* 卡片头：第 N 天 + 标题 */
+.card-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.day{
+  flex-shrink:0;display:inline-flex;align-items:baseline;gap:2px;
+  font-size:11px;font-weight:800;color:var(--accent-deep);
+  background:var(--accent-soft);padding:4px 9px;border-radius:100px;line-height:1;margin-top:2px;
+}
+.day b{font-size:14px;font-weight:800;letter-spacing:-.5px}
+.card-head h3{font-size:15.5px;font-weight:700;line-height:1.45;flex:1;min-width:0}
+.card-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.badge-auto{display:inline-flex;align-items:center;gap:3px;font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:100px;background:var(--warm-soft);color:var(--warm);white-space:nowrap;line-height:1.5}
+.date{font-size:11.5px;color:var(--text-3);white-space:nowrap}
+
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;color:var(--text-3);font-size:11.5px;margin-bottom:8px}
+.meta-row .type{padding:1px 7px;border-radius:100px;background:var(--surface-2);border:1px solid var(--line-2);font-weight:600}
+
+/* 摘要：两行截断 */
+.summary{color:var(--text-2);font-size:13.5px;line-height:1.7;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.chip{font-size:10.5px;font-weight:600;color:var(--accent-deep);background:var(--accent-soft);padding:2px 9px;border-radius:100px}
+.read{font-size:12px;font-weight:600;color:var(--accent-deep);background:none;border:0;cursor:pointer;font-family:inherit;padding:0;margin-top:10px}
+.read:hover{text-decoration:underline}
+
+/* 弹窗 */
+.mask{
+  position:fixed;inset:0;background:rgba(30,24,18,.42);backdrop-filter:blur(6px);
+  display:none;align-items:center;justify-content:center;padding:24px;z-index:50;
+}
+.mask.show{display:flex}
+.modal{
+  width:100%;max-width:980px;max-height:88vh;background:var(--surface-solid);
+  border:1px solid var(--line);border-radius:var(--r-top);box-shadow:0 30px 80px -20px rgba(0,0,0,.4);
+  display:flex;flex-direction:column;overflow:hidden;animation:pop .26s var(--ease);
+}
+@keyframes pop{from{opacity:0;transform:translateY(14px) scale(.985)}to{opacity:1;transform:none}}
+.m-head{padding:22px 26px 16px;border-bottom:1px solid var(--line-2);flex-shrink:0}
+.m-top{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.m-title{font-size:19px;font-weight:800;line-height:1.4;letter-spacing:-.3px;flex:1;min-width:0}
+.x{width:30px;height:30px;border-radius:50%;border:1px solid var(--line-2);background:transparent;color:var(--text-2);cursor:pointer;font-size:15px;line-height:1;flex-shrink:0;font-family:inherit}
+.x:hover{border-color:var(--line-3);color:var(--text)}
+.m-meta{display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:11.5px;color:var(--text-3)}
+.m-body{padding:24px 26px 30px;overflow-y:auto;flex:1}
+.m-foot{padding:12px 26px;border-top:1px solid var(--line-2);display:flex;gap:8px;justify-content:flex-end;flex-shrink:0;background:var(--surface-2)}
+.btn{height:32px;padding:0 15px;border-radius:var(--r-input);font-size:12.5px;font-weight:600;cursor:pointer;font-family:inherit;border:1px solid var(--line-2);background:var(--surface);color:var(--text-2);transition:all .2s}
+.btn:hover{border-color:var(--line-3);color:var(--text)}
+.btn.danger{color:var(--danger);border-color:transparent;background:var(--danger-soft)}
+.btn.primary{background:var(--accent);color:#fff;border-color:transparent;min-width:104px}
+.btn.primary:hover{background:var(--accent-deep)}
+
+/* 正文排版（Markdown 渲染结果） */
+.md{font-size:14px;line-height:1.85;color:var(--text-2)}
+.md h2{font-size:16px;font-weight:800;color:var(--text);margin:26px 0 10px;letter-spacing:-.2px;padding-left:11px;border-left:3px solid var(--accent);line-height:1.4}
+.md h2:first-child{margin-top:0}
+.md p{margin:10px 0}
+.md ul{margin:10px 0;padding-left:20px}
+.md li{margin:5px 0}
+.md strong{color:var(--text);font-weight:700}
+.md code{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px;background:var(--surface-2);border:1px solid var(--line-2);border-radius:6px;padding:1px 5px}
+.md table{width:100%;border-collapse:collapse;margin:14px 0;font-size:13px}
+.md th,.md td{border:1px solid var(--line-2);padding:8px 12px;text-align:left}
+.md th{background:var(--surface-2);font-weight:700;color:var(--text)}
+.md blockquote{border-left:3px solid var(--line-3);padding:2px 0 2px 14px;color:var(--text-3);margin:12px 0}
+.md hr{border:0;border-top:1px solid var(--line-2);margin:20px 0}
+
+/* HTML 内容：iframe 渲染 */
+.html-frame{width:100%;border:1px solid var(--line-2);border-radius:var(--r-input);background:#fff;height:520px}
+
+.hint{
+  display:flex;gap:9px;align-items:flex-start;font-size:12px;color:var(--text-2);
+  background:var(--surface-2);border:1px solid var(--line-2);border-radius:var(--r-input);padding:11px 14px;margin-bottom:22px;line-height:1.65;
+}
+.hint b{color:var(--text);font-weight:700}
+.note{font-size:11.5px;color:var(--text-3);text-align:center;margin-top:26px;line-height:1.8}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="bar">
+    <div class="brand">工作台</div>
+    <div class="nav">
+      <span>⌂ 工作台</span><span>✓ 计划打卡</span><span>¥ 资金管理</span><span class="on">✦ 每日发现</span><span>⌕ 知识库</span><span>❖ 功能地图</span>
+    </div>
+    <div class="right">
+      <button class="tbtn on" id="dayMode" onclick="toggleDayMode()">第 N 天 · 同类累计</button>
+      <button class="tbtn" onclick="toggleTheme()">◐ 深色</button>
+    </div>
+  </div>
+
+  <div class="page-head">
+    <p class="eyebrow">Discover</p>
+    <h1>每日发现</h1>
+    <p class="sub">定时任务每天投递的内容，完整保留在这里。</p>
+  </div>
+
+  <div class="hint">
+    <span>💡</span>
+    <div><b>这个原型演示三件事：</b>① 每张卡片标出「第 N 天」；② 点卡片在弹窗里看<b>完整正文</b>（不再是两行摘要）；③ 内容如果是 <b>HTML</b>，弹窗里用 iframe 直接渲染出来。右上角可以切换深色和第 N 天的口径。</div>
+  </div>
+
+  <div class="list" id="list"></div>
+
+  <p class="note">原型 · 仅用于确认版式与交互，未改动任何真实代码</p>
+</div>
+
+<div class="mask" id="mask" onclick="if(event.target===this)closeModal()">
+  <div class="modal">
+    <div class="m-head">
+      <div class="m-top">
+        <span class="day" id="mDay"><b>3</b>天</span>
+        <div class="m-title" id="mTitle"></div>
+        <button class="x" onclick="closeModal()">✕</button>
+      </div>
+      <div class="m-meta" id="mMeta"></div>
+    </div>
+    <div class="m-body" id="mBody"></div>
+    <div class="m-foot">
+      <button class="btn danger">删除</button>
+      <button class="btn">编辑</button>
+      <button class="btn primary" onclick="closeModal()">关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ 演示数据（真实内容，取自我实机投递的三条） ============ */
+const items = [
+  {
+    day: 3, date: '2026-10-22', source: '定时任务 · 金融概念', type: 'markdown',
+    title: '流动性陷阱：利率降到零，为什么还是没人借钱',
+    tags: ['金融', '每日'],
+    content: `## 一个渔村的故事
+
+海边有个渔村，村民靠打鱼为生。村长（相当于中央银行）发现最近生意冷清，就想了个办法：把借钱的利息降到几乎为零，鼓励大家借钱买船、扩产。
+
+按教科书的逻辑，钱便宜了，大家应该抢着借。可结果没人借。
+
+- 老张说："鱼卖不出去，买新船就是多一条船停着。"
+- 老李说："我宁可把钱压在床底下，至少不会亏。"
+
+村长再怎么降息，利率已经接近零，还是没人动。这就是**流动性陷阱**。
+
+## 本质是什么
+
+利率是"放弃持有现金的补偿"。当所有人一致认为未来会更差、资产还会跌，任何正的利率都不足以让他们放弃现金——他们宁愿持有流动性本身。
+
+此时货币政策**失效**：降息没用，因为钱进不了实体；央行印的钱只是堆在银行体系里，变成超额准备金。
+
+## 三个识别信号
+
+1. 名义利率接近零下限（或实际利率为负）
+2. 货币供应量在涨，但信贷增速不动（钱在金融体系空转）
+3. 通胀预期持续为负（大家预期东西越来越便宜，更愿意等）
+
+## 对照今天的市场
+
+纳指 26702.86（+1.05%）、标普 7757.17（+0.58%），风险资产在涨——当下**不是**流动性陷阱。但沪指 23867.74（-1.32%）、恒指 23651.87（-0.90%），资金明显在分化。
+
+流动性陷阱的危险不在于利率低，而在于**预期**。一旦"未来更差"成为共识，再便宜的钱也没人敢借。`
+  },
+  {
+    day: 2, date: '2026-10-22', source: '定时任务 · 实时新闻', type: 'markdown',
+    title: '美股三大指数集体收涨，纳指涨 1.05%，SpaceX 涨超 7%',
+    tags: ['新闻', '每日'],
+    content: `## 收盘数据（10 月 21 日）
+
+| 指数 | 点位 | 涨跌 |
+|---|---|---|
+| 道琼斯工业 | 52856.09 | +0.69% |
+| 纳斯达克 | 26702.86 | +1.05% |
+| 标普 500 | 7757.17 | +0.58% |
+| 费城半导体 | — | +1.97% |
+
+## 板块与个股
+
+- **半导体领涨**：CREDO +6.28%、MACOM +3.85%、AMD +3.36%、英格特 +3.35%、ARM 涨超 2%
+- **科技巨头**：SpaceX +7.79%（季度利润超预期）、特斯拉 +3.41%、英伟达 +2.54%、苹果 +1.32%；谷歌 -1.62%、亚马逊 -0.10%
+- **存储**：西部数据 +3.89%、希捷 +3.22%、SK 海力士 +2.48%、美光 +1.96%
+- **中概股走弱**：小鹏 -5%，阿里巴巴、京东、理想、拼多多均跌超 3%
+
+## 其他市场
+
+- 现货黄金 4134.77 美元/盎司（-0.16%）
+- WTI 原油 97.95 美元/桶（+0.82%）
+- 沪指 23867.74（-1.32%）、恒指 23651.87（-0.90%）
+- 日经 225 64621.24（+0.85%）、韩国 KOSPI 5735.66（+3.29%）
+
+## 一句话
+
+AI 与半导体仍是资金主线，传统互联网巨头出现分化；中概、A 股、港股同步承压，风险偏好呈现地域性割裂。`
+  },
+  {
+    day: 3, date: '2026-10-22', source: '定时任务 · 概率学概念', type: 'markdown',
+    title: '大数定律不会救你：赌徒谬误的真面目',
+    tags: ['概率', '每日'],
+    content: `## 一个赌场里的误会
+
+轮盘连开 10 次红。旁边的人说："下一把肯定是黑了，红开太多了。"
+
+这句话错在哪？轮盘没有记忆。每一把黑红的概率仍然约 47.4%（美式轮盘含 0 和 00）。前 10 次的结果不会"欠"你一次黑。
+
+**大数定律说的是长期频率趋近概率，不是"短期会补偿回来"。** 它从来不是纠偏机制，只是分母变大之后，前面的偏差被稀释了。
+
+## 一个反直觉的推论
+
+假设你连开 100 次红（概率极低但非零）。第 101 次：
+
+- 赌徒谬误的答案：该黑了，押黑。
+- 正确认知：仍是 47.4%，押什么都没优势。
+
+真正改变的是**总比例**，不是**下一次**。
+
+## 三道题（你去总结）
+
+1. 抛硬币连续 5 次正面，第 6 次正面的概率是多少？
+2. 某彩票过去 10 期没出 7，第 11 期出 7 的概率会变大吗？
+3. 一个基金连续 3 年跑赢大盘，第 4 年继续跑赢的概率，跟"连赢 3 年"这件事有关系吗？
+
+## 三个容易混的概念
+
+| 概念 | 说的是什么 |
+|---|---|
+| 大数定律 | 样本量趋于无穷时，频率收敛于真实概率 |
+| 赌徒谬误 | 错误地认为短期会"补偿"长期偏差 |
+| 回归均值 | 极端结果之后往往回到平均，但**不指定方向和时间** |
+
+记住一句话：概率不欠任何人一次补偿。`
+  },
+  {
+    day: 1, date: '2026-10-21', source: '定时任务 · 金融概念', type: 'html',
+    title: '（示例）如果定时任务产出的是 HTML 页面',
+    tags: ['示例', 'HTML'],
+    content: `<!DOCTYPE html><html><head><meta charset="utf-8"><style>
+body{font-family:-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;margin:0;padding:26px;background:#fbf9f4;color:#33302a}
+h1{font-size:20px;margin:0 0 6px}
+.sub{color:#8a8478;font-size:12px;margin-bottom:20px}
+.row{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:20px}
+.stat{background:#fff;border:1px solid #e8e2d6;border-radius:14px;padding:14px}
+.stat .k{font-size:11px;color:#8a8478;margin-bottom:6px}
+.stat .v{font-size:19px;font-weight:800}
+.up{color:#c0453a}.down{color:#3f7f57}
+table{width:100%;border-collapse:collapse;font-size:12.5px;background:#fff;border-radius:12px;overflow:hidden}
+th,td{padding:9px 12px;text-align:left;border-bottom:1px solid #efe9dd}
+th{background:#f2eee4;font-weight:700;font-size:11.5px;color:#6b665c}
+.bar{height:6px;border-radius:3px;background:#efe9dd;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:#4a9e66}
+.note{margin-top:16px;font-size:11.5px;color:#8a8478;line-height:1.7}
+</style></head><body>
+<h1>板块资金流向</h1>
+<div class="sub">2026-10-21 收盘 · 由定时任务自动生成</div>
+<div class="row">
+  <div class="stat"><div class="k">半导体</div><div class="v up">+1.97%</div><div class="bar"><i style="width:79%"></i></div></div>
+  <div class="stat"><div class="k">存储</div><div class="v up">+2.41%</div><div class="bar"><i style="width:88%"></i></div></div>
+  <div class="stat"><div class="k">中概互联</div><div class="v down">-3.12%</div><div class="bar"><i style="width:31%;background:#cf6a57"></i></div></div>
+</div>
+<table>
+<tr><th>标的</th><th>涨跌</th><th>成交额</th></tr>
+<tr><td>CREDO</td><td class="up">+6.28%</td><td>18.4 亿</td></tr>
+<tr><td>西部数据</td><td class="up">+3.89%</td><td>9.7 亿</td></tr>
+<tr><td>SK 海力士</td><td class="up">+2.48%</td><td>22.1 亿</td></tr>
+<tr><td>小鹏汽车</td><td class="down">-5.02%</td><td>6.3 亿</td></tr>
+</table>
+<p class="note">这是一段完整 HTML：有样式、有表格、有进度条。<br>工作台里会原样渲染出来，而不是显示成一堆标签代码。</p>
+</body></html>`
+  }
+]
+
+/* ============ 第 N 天口径 ============ */
+let dayMode = 'same'   // same = 同类累计 / global = 全部记录累计
+function dayLabel(item) {
+  if (dayMode === 'global') return { n: items.indexOf(item) + 1 }
+  return { n: item.day }
+}
+function toggleDayMode() {
+  dayMode = dayMode === 'same' ? 'global' : 'same'
+  const b = document.getElementById('dayMode')
+  b.textContent = dayMode === 'same' ? '第 N 天 · 同类累计' : '第 N 天 · 全部累计'
+  render()
+}
+
+/* ============ 极简 Markdown 渲染 ============ */
+function mdToHtml(src) {
+  const lines = String(src).split('\n')
+  let html = '', list = [], table = []
+  const flushList = () => { if (list.length) { html += '<ul>' + list.map(x => '<li>' + inline(x) + '</li>').join('') + '</ul>'; list = [] } }
+  const flushTable = () => {
+    if (!table.length) return
+    const rows = table.filter(r => !/^\|?[\s:-]+\|/.test(r))
+    const cells = r => r.replace(/^\||\|$/g, '').split('|').map(c => c.trim())
+    let t = '<table><thead><tr>' + cells(rows[0]).map(c => '<th>' + inline(c) + '</th>').join('') + '</tr></thead><tbody>'
+    for (let i = 1; i < rows.length; i++) t += '<tr>' + cells(rows[i]).map(c => '<td>' + inline(c) + '</td>').join('') + '</tr>'
+    html += t + '</tbody></table>'; table = []
+  }
+  const inline = s => String(s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+    .replace(/`([^`]+)`/g, '<code>$1</code>')
+  for (const raw of lines) {
+    const line = raw.trimEnd()
+    if (/^\|.*\|$/.test(line)) { flushList(); table.push(line); continue }
+    flushTable()
+    if (!line.trim()) { flushList(); continue }
+    if (/^###\s+/.test(line)) { flushList(); html += '<h2>' + inline(line.replace(/^###\s+/, '')) + '</h2>'; continue }
+    if (/^##\s+/.test(line)) { flushList(); html += '<h2>' + inline(line.replace(/^##\s+/, '')) + '</h2>'; continue }
+    if (/^#\s+/.test(line)) { flushList(); html += '<h2>' + inline(line.replace(/^#\s+/, '')) + '</h2>'; continue }
+    if (/^[-*]\s+/.test(line)) { list.push(line.replace(/^[-*]\s+/, '')); continue }
+    if (/^\d+\.\s+/.test(line)) { list.push(line.replace(/^\d+\.\s+/, '')); continue }
+    if (/^>\s?/.test(line)) { flushList(); html += '<blockquote>' + inline(line.replace(/^>\s?/, '')) + '</blockquote>'; continue }
+    if (/^---$/.test(line)) { flushList(); html += '<hr>'; continue }
+    flushList(); html += '<p>' + inline(line) + '</p>'
+  }
+  flushList(); flushTable()
+  return html
+}
+
+/* ============ 渲染列表 ============ */
+function render() {
+  document.getElementById('list').innerHTML = items.map((it, i) => {
+    const d = dayLabel(it)
+    const plain = it.content.replace(/<[^>]+>/g, ' ').replace(/[#*|>-]/g, ' ').replace(/\s+/g, ' ').trim()
+    return `<article class="card" onclick="openModal(${i})">
+      <div class="card-head">
+        <span class="day"><b>${d.n}</b>天</span>
+        <h3>${it.title}</h3>
+        <div class="card-actions">
+          <span class="badge-auto">⟳ 自动收录</span>
+          <span class="date">${it.date}</span>
+        </div>
+      </div>
+      <div class="meta-row">
+        <span>${it.source}</span>
+        <span class="type">${it.type === 'html' ? 'HTML' : 'Markdown'}</span>
+        <span>· ${plain.length} 字</span>
+      </div>
+      <p class="summary">${plain.slice(0, 110)}…</p>
+      <div class="tags">${it.tags.map(t => `<span class="chip">#${t}</span>`).join('')}</div>
+      <button class="read" onclick="event.stopPropagation();openModal(${i})">阅读全文 →</button>
+    </article>`
+  }).join('')
+}
+
+/* ============ 弹窗 ============ */
+function openModal(i) {
+  const it = items[i], d = dayLabel(it)
+  document.getElementById('mDay').innerHTML = `<b>${d.n}</b>天`
+  document.getElementById('mTitle').textContent = it.title
+  document.getElementById('mMeta').innerHTML =
+    `<span class="badge-auto">⟳ 自动收录</span>` +
+    `<span>${it.source}</span><span>·</span><span>${it.date}</span>` +
+    `<span class="type">${it.type === 'html' ? 'HTML 页面' : 'Markdown'}</span>` +
+    it.tags.map(t => `<span class="chip">#${t}</span>`).join('')
+  const body = document.getElementById('mBody')
+  if (it.type === 'html') {
+    body.innerHTML = `<iframe class="html-frame" sandbox srcdoc="${it.content.replace(/"/g, '&quot;')}"></iframe>`
+  } else {
+    body.innerHTML = `<div class="md">${mdToHtml(it.content)}</div>`
+  }
+  body.scrollTop = 0
+  document.getElementById('mask').classList.add('show')
+}
+function closeModal() { document.getElementById('mask').classList.remove('show') }
+
+/* ============ 主题 ============ */
+function toggleTheme() {
+  const h = document.documentElement
+  const dark = h.getAttribute('data-theme') === 'dark'
+  h.setAttribute('data-theme', dark ? 'light' : 'dark')
+  document.querySelectorAll('.tbtn').forEach(b => { if (b.textContent.includes('深色') || b.textContent.includes('浅色')) b.textContent = dark ? '◐ 深色' : '◑ 浅色' })
+}
+
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal() })
+render()
+</script>
+</body>
+</html>

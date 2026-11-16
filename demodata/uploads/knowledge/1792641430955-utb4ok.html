@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第15期 · 信用与利率</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 15 期</span>
+  <h1>今天的概念：<span class="tag">信用与利率</span>（Credit &amp; Interest Rate）</h1>
+  <div class="date">2026年10月5日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 同一笔 20 万的车款，小满和大壮借出了天差地别</h2>
+    <p>小满和大壮是大学同学，今年都想贷款买辆代步车，各去银行借了 <strong>20 万、3 年期</strong>。可还款计划单一下来，两人都愣了：同样的钱，成本差出一辆小电驴。</p>
+    <p>小满平时是个"规矩人"：花呗按时还、信用卡从不逾期、公积金连续缴存五年没断过。银行一查她的征信，打分很高，给她的消费贷利率是 <strong>年化 4%</strong>。大壮相反，大学起就爱到处借网贷、花呗偶尔忘还、换工作频繁缴存断断续续，征信上一堆"小污点"，同一家银行只肯给他 <strong>年化 12%</strong>——还是"看在同学份上"的照顾价。</p>
+    <div class="board">
+      <div class="row head"><span class="k">同样是借 20 万 / 3 年</span><span class="v">信用好 vs 信用差</span></div>
+      <div class="row"><span class="k">小满（征信干净）</span><span class="v">利率 4% → 总利息约 ¥24,000</span></div>
+      <div class="row"><span class="k">大壮（征信有污点）</span><span class="v">利率 12% → 总利息约 ¥72,000</span></div>
+      <div class="row"><span class="k">差距</span><span class="v">多花 ¥48,000，够买辆小电驴</span></div>
+      <div class="row"><span class="k">本质</span><span class="v">不是银行偏心，是"借钱的价格"不同</span></div>
+    </div>
+    <p>这还没完。小满因为信用好，后来买房时房贷利率又比别人低了 0.5 个百分点，<strong>30 年下来生生省出几十万</strong>；还能免押金租车、信用卡积分换机票。大壮想办张好点的信用卡被拒，急用钱时只能去借年化 20% 多的网贷，越借越贵、越贵越借。你看，<strong>信用这东西，平时看不见，要用钱的那一刻，它直接变成了你口袋里（或口袋外）的真金白银</strong>。</p>
+    <p>更隐蔽的"利率陷阱"藏在信用卡的免息期里。小满有回刷了 1 万块买电脑，券商免息期 45 天，她卡着点在第 44 天还清，<em>相当于白用银行 1 万块一个半月，一分利息没付</em>。可她同事阿珍觉得"晚几天没事"，拖了三个月才还。结果傻眼：信用卡不是从逾期那天算利息，而是<strong>从消费当天起、按全额计日息万分之五</strong>，年化约 18%——三个月光利息就滚到几百块，还不算违约金。阿珍这才懂：<strong>免息期是银行送的礼物，逾期复利是它悄悄设的陷阱</strong>。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>信用</strong>，是你过去所有"借钱还钱"记录攒下的隐形简历；<strong>利率</strong>，是借用别人金钱（和时间）所付的"租金"。两者是一体两面：<strong>你的信用越好，借钱的利率就越低；利率越低，同样一笔钱的成本越便宜</strong>。银行不是在做慈善，它用利率给"违约风险"标价——你越可能赖账，它要的"租金"就越高。</p>
+    <div class="formula">信用 ↑ → 违约风险 ↓ → 利率 ↓ → 同样一笔钱成本更低；利率 = 钱的时间价格</div>
+    <p>这条规律往下延伸，能解释很多"同样的钱、不同的命"：其一，<strong>利率是钱的时间价格</strong>。今天借 100 块、明年还 104 块，那 4 块就是"占用这笔钱一整年"的租金；免息期之所以"免费"，是银行用它在赌你会继续刷卡、将来迟早付利息。其二，<strong>复利是利率最锋利的一面</strong>。信用卡逾期、网贷利滚利，本质都是"利息生利息"，拖得越久涨得越凶——同样是 18%，借一年和借三年，差距不是 3 倍而是远超 3 倍。其三，<strong>信用能换钱，也能反噬</strong>：好的信用让你以最低成本撬动车、房、创业；信用一旦崩塌，不仅利率高到还不起，更会处处碰壁——租不了房、出不了境、连工作都可能受影响。信用，是把双刃的"隐形资产"。</p>
+    <p>🌰 换到你的钱包：养信用没有捷径，就是<strong>"该还的别拖、该断的别借"</strong>——花呗信用卡设自动还款、不碰高息网贷、别给陌生人做担保。借钱前先问"<strong>这利率，我凭信用拿得到最低档吗？</strong>"；用信用卡就卡着免息期还清，把"免费用的钱"当奖励，别把它当可以拖欠的额度。当信用变成你最低的借款利率，你才真正在替未来的自己省钱。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>信用就是你的"借钱利率"，是多年攒出的隐形资产</strong>：征信干净的人借 20 万 3 年总利息约 2.4 万，有污点的人要 7.2 万。银行用利率给"违约风险"标价，你越靠谱，借钱的"租金"越便宜。养信用没有捷径，就是按时还、别乱借。</li>
+      <li><strong>利率是钱的时间价格：免息期是礼物，逾期复利是陷阱</strong>：信用卡免息期内还款等于白用银行钱；一旦逾期，从消费当天起按全额计日息万五（年化约 18%）利滚利。复利是利率最锋利的一面，拖得越久涨得越凶。</li>
+      <li><strong>信用能换钱，也能反噬</strong>：好信用让你以最低成本撬动车、房、创业，还能免押、换积分；信用崩塌则利率高到还不起、处处碰壁。它是把双刃的隐形资产——平时看不见，要用钱的那一刻直接变现。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：对冲（Hedging）—— 为什么航空公司要提前"锁死"未来半年的油价？为什么农民给庄稼买保险、工厂给原料买跌价保护？当风险无法消除，聪明人怎么做才能"两边都少亏一点"？一份合约，如何把不确定的未来，先钉死一个能接受的价格。</div>
+</div>
+</body>
+</html>

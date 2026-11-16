@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第12期 · 马尔可夫链</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>每日概率学 · 第 12 期</h1>
+<ul>
+<li><strong>日期</strong>：2026-10-10（周六）</li>
+<li><strong>今日概念</strong>：马尔可夫链（Markov Chain）——前几期我们研究"一个量"（分布、期望、方差）和"两个量一起动"（协方差/相关）。但很多真实系统还有一个特征：<strong>会随时间演变，而且"下一步去哪儿"和"现在在哪儿"高度相关，和"过去怎么来的"基本无关</strong>。比如天气有惯性（今天晴、明天多半还晴）、猫的心情有惯性、股价短期有黏性、你刷网页的跳转也有惯性。把这种"<strong>未来只取决于现在，不取决于过去</strong>"的系统抽象成一张可计算的表，就是<strong>马尔可夫链</strong>。今天我们就拆开这条"健忘"的假设，并学会算两件最实用的东西：多步之后去哪（转移矩阵乘方），以及跑久了稳定在哪儿（平稳分布）。</li>
+<li><strong>一句话心智模型</strong>：<strong>马尔可夫链 = 一组状态 + 一条"给定现在，过去对未来没额外信息"的转移规则 +（通常）一个长跑后稳定的平稳分布。把"有惯性的随机过程"压缩成一张每行和为 1 的矩阵 P，P 的 n 次方告诉你 n 步后去哪，不动点 πP = π 告诉你长期占比。</strong></li>
+</ul>
+<hr>
+<h2>一、故事引入：团子的"心情开关"</h2>
+<p>阿明最近养了只猫叫团子。他盯着团子记了一个月的"心情日记"，发现一件怪事："团子今天黏人，明天十有七八还黏人；今天高冷，明天多半也高冷。可它到底是黏还是冷，好像<strong>只跟今天有关</strong>，跟昨天、前天没啥关系——我记那么长的历史，好像白记了。"</p>
+<p>大刘笑了："你无意中撞上了一个超级厉害的工具——<strong>马尔可夫链</strong>。它的核心假设就一句话：<strong>未来只取决于现在，不取决于过去。</strong> 团子明天的状态，只看它今天；至于它前天、大前天是黏还是冷，全都不影响。"</p>
+<p>"等等，"阿明皱眉，"这不科学吧？万一它连着三天高冷，第四天更容易黏回来呢？"</p>
+<p>"好问题！"大刘竖起手指，"如果'连三天高冷'真的会影响第四天，那'只看今天'这个假设就<strong>不成立</strong>了——那就不是一阶马尔可夫链。但现实里很多'有惯性'的系统（天气、心情、股价、网页跳转），'只看今天'是个又好用又近似对的假设。更妙的是，这种链跑久了会自己<strong>稳定</strong>下来：不管团子今天黏还是冷，过很久之后，你再去看它，黏人和高冷的比例竟会收敛到一个固定数字。今天我们就把这两件事算明白。"</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 马尔可夫性质：一条"健忘"的假设</h3>
+<p>马尔可夫性质（又称无记忆性）写成条件概率就是：</p>
+<p>$$P(X_{n+1}=j \mid X_n=i,\; X_{n-1},\dots,X_0) = P(X_{n+1}=j \mid X_n=i)$$</p>
+<p>直觉翻译：<strong>给定"现在"，"过去"对预测"未来"不再提供额外信息。</strong></p>
+<p>⚠️ 一个极常见的误解：这<strong>不</strong>意味着"过去和现在无关"。过去当然塑造了现在；关键是"一旦现在已知，过去就多余了"。好比你已知团子<strong>此刻</strong>黏人，那它是怎么变成黏人的（昨天黏不黏）已经不影响你对明天的预测。</p>
+<h3>2. 状态空间、转移概率、转移矩阵</h3>
+<ul>
+<li><strong>状态空间</strong>：系统可能处的状态集合。团子：<code>{黏人, 高冷}</code>；天气：<code>{晴, 雨}</code>。</li>
+<li><strong>一步转移概率</strong> $P(i\to j)$：从状态 $i$ 走一步到状态 $j$ 的概率。</li>
+<li><strong>转移矩阵 $P$</strong>：第 $i$ 行第 $j$ 列放 $P(i\to j)$。<strong>每一行加起来必须等于 1</strong>（从 $i$ 出发，下一步总得落在这几个状态里的某一个）。</li>
+</ul>
+<p>团子的矩阵（行 = 今天，列 = 明天）：</p>
+<p>| 今天 \ 明天 | 黏人 | 高冷 |</p>
+<p>|---|---|---|</p>
+<p>| <strong>黏人</strong> | 0.7 | 0.3 |</p>
+<p>| <strong>高冷</strong> | 0.4 | 0.6 |</p>
+<p>（读表：今天黏人 → 明天黏人 0.7、→ 高冷 0.3；今天高冷 → 明天黏人 0.4、→ 高冷 0.6）</p>
+<h3>3. 多步转移：把矩阵"乘"起来</h3>
+<p>想知道"从状态 $i$ 出发，走 $n$ 步后到 $j$ 的概率"？答案就是 <strong>$P$ 的 $n$ 次方</strong> 的第 $(i,j)$ 个格子：</p>
+<p>$$P^{(n)} = P^n$$</p>
+<p>例如"今天黏人，后天（隔一步）还黏人吗"？就看 $P^2$ 的第一行第一列。矩阵乘法满足"路径求和"：两步从黏人到黏人 = 黏→黏→黏 + 黏→冷→黏。</p>
+<h3>4. 平稳分布：长跑之后"稳定"在哪儿</h3>
+<p>如果一直走下去，很多马尔可夫链会进入一个"无论再怎么走，各状态占比都不变"的稳定状态，记作行向量 $\pi$，满足：</p>
+<p>$$\pi P = \pi,\qquad \sum_i \pi_i = 1$$</p>
+<p>$\pi_i$ 读作"<strong>长期来看，处于状态 $i$ 的时间占比</strong>"（也是"随机选一个时刻，系统处于 $i$ 的概率"）。</p>
+<p>对团子求解：$\pi=[\pi_{\text{黏}},\pi_{\text{冷}}]$，由 $\pi P=\pi$ 且 $\pi_{\text{黏}}+\pi_{\text{冷}}=1$：</p>
+<p>$$0.3\,\pi_{\text{黏}} = 0.4\,\pi_{\text{冷}} \;\Rightarrow\; \pi_{\text{黏}} = \tfrac{4}{3}\pi_{\text{冷}} \;\Rightarrow\; \pi_{\text{冷}}=\tfrac{3}{7}\approx 42.9\%,\; \pi_{\text{黏}}=\tfrac{4}{7}\approx 57.1\%$$</p>
+<p>也就是说，长期看团子大约 <strong>57% 时间黏人、43% 时间高冷</strong>——跟你开头记的那一个月，其实差不多！平稳分布就是这套"健忘动力学"的终点站。</p>
+<blockquote>💡 心法：马尔可夫链 = ①一组状态 + ②一个"只由现在决定未来"的转移规则（即矩阵 $P$）+ ③（通常）一个长跑后稳定的平稳分布 $\pi$。它把"有惯性的随机系统"压缩成一张能算的表。</blockquote>
+<h3>5. 它撑起了哪些大事（开个眼界）</h3>
+<ul>
+<li><strong>PageRank</strong>：Google 把"网页互相链接"看成一次随机跳转，平稳分布 $\pi$ 就是网页的重要性排名——被重要网页指向越多的页，$\pi$ 越大。</li>
+<li><strong>语音识别 / 输入法</strong>：下一个字（或音素）主要只取决于上一个，用"隐马尔可夫模型（HMM）"建模。</li>
+<li><strong>排队论、基因序列比对、蒙特卡洛模拟、强化学习</strong>……背后都是马尔可夫思想。</li>
+</ul>
+<hr>
+<h2>三、代表性题目 / 故事（请你来总结 ✍️）</h2>
+<p>请试着回答：① 多步之后去哪（用矩阵乘法）？② 长期占比（平稳分布）是多少？③ "只看今天"这个假设什么时候成立、什么时候只是近似？</p>
+<h3>题目 1 · 团子的心情：两步转移与平稳分布</h3>
+<p>转移矩阵（行 = 今天，列 = 明天）：</p>
+<p>| 今天 \ 明天 | 黏人 | 高冷 |</p>
+<p>|---|---|---|</p>
+<p>| <strong>黏人</strong> | 0.7 | 0.3 |</p>
+<p>| <strong>高冷</strong> | 0.4 | 0.6 |</p>
+<blockquote>① 如果团子今天黏人，算一算"后天（隔一步）还黏人"的概率——也就是 $P^2$ 第一行第一列。</blockquote>
+<blockquote>② 算平稳分布 $\pi$：解 $\pi P=\pi$ 且 $\pi_{\text{黏}}+\pi_{\text{冷}}=1$。长期里团子黏人占比多少？</blockquote>
+<blockquote>③ 直觉验证：$\pi P=\pi$ 这个"不动点"意味着什么？为什么从黏人或从高冷出发，跑久了都会收敛到同一比例？</blockquote>
+<h3>题目 2 · 天气晴雨：经典二分链</h3>
+<p>"今天晴，明天 70% 晴、30% 雨；今天雨，明天 50% 晴、50% 雨。"</p>
+<blockquote>① 写出 2×2 转移矩阵 $P$。</blockquote>
+<blockquote>② 算两步转移矩阵 $P^2$（四个格子各是多少）。</blockquote>
+<blockquote>③ 求平稳分布：长期晴天的比例是多少？和"晴的惯性更强（0.7 &gt; 0.5）"这个直觉一致吗？</blockquote>
+<h3>题目 3 · 股价三状态：涨 / 平 / 跌</h3>
+<p>每天股价相对昨日状态：涨(U)、平(F)、跌(D)。转移矩阵：</p>
+<p>| 今天 \ 明天 | 涨 | 平 | 跌 |</p>
+<p>|---|---|---|---|</p>
+<p>| <strong>涨</strong> | 0.5 | 0.3 | 0.2 |</p>
+<p>| <strong>平</strong> | 0.3 | 0.4 | 0.3 |</p>
+<p>| <strong>跌</strong> | 0.4 | 0.3 | 0.3 |</p>
+<blockquote>① 先检查：每一行加起来是否都等于 1？（确认这是个合法的转移矩阵）</blockquote>
+<blockquote>② 求平稳分布 $\pi=[\pi_U,\pi_F,\pi_D]$：长期里股价"涨 / 平 / 跌"各占多少？（提示：先由方程推出 $\pi_F = 1/3$）</blockquote>
+<blockquote>③ 为什么"跌"的平稳占比反而最低？从转移概率里找原因。</blockquote>
+<h3>题目 4 · 陷阱：马尔可夫性质会"翻车"吗？</h3>
+<p>阿明改口："我发现团子有个规律——<strong>只要连续两天的状态相同（黏黏 或 冷冷），第三天一定切换；只要连续两天不同（黏冷 或 冷黏），第三天一定保持。</strong>"（例：黏黏 → 必冷；黏冷 → 必黏）</p>
+<blockquote>① 这种情况下，光看"今天"还能预测"明天"吗？为什么"只看今天"不够？</blockquote>
+<blockquote>② 如何把这条规律重新塞回马尔可夫框架？提示：把"状态"从 {黏, 冷} 扩展成"相邻两天的组合"。</blockquote>
+<blockquote>③ 一句话总结：马尔可夫性质什么时候严格成立、什么时候只是近似？</blockquote>
+<hr>
+<h2>四、提示（如需逐题完整推导，回复"揭晓答案"）</h2>
+<ul>
+<li><strong>题目 1（团子心情）</strong>：</li>
+<li>① $P^2 = P \times P$。黏人→黏人（两步）= $0.7\times0.7 + 0.3\times0.4 = 0.49 + 0.12 = \mathbf{0.61}$。即"今天黏人，后天还黏人"概率 <strong>61%</strong>。</li>
+<li>② 由 $\pi_{\text{黏}} = 0.7\pi_{\text{黏}} + 0.4\pi_{\text{冷}}$ 且和为 1，得 $0.3\pi_{\text{黏}} = 0.4\pi_{\text{冷}} \Rightarrow \pi_{\text{黏}}=(4/3)\pi_{\text{冷}} \Rightarrow \pi_{\text{冷}}=3/7\approx\mathbf{42.9\%}$，$\pi_{\text{黏}}=4/7\approx\mathbf{57.1\%}$。</li>
+<li>③ $\pi P=\pi$ 表示"从 $\pi$ 出发，走一步后各状态占比<strong>恰好不变</strong>"——它是一个不动点。因此不管初始今天是黏还是冷，乘足够多次 $P^n$ 后都会逼近同一个 $\pi$。</li>
+</ul>
+<ul>
+<li><strong>题目 2（天气晴雨）</strong>：</li>
+<li>① $P = \begin{bmatrix}0.7 &amp; 0.3 \\ 0.5 &amp; 0.5\end{bmatrix}$。</li>
+<li>② $P^2$：晴→晴 $=0.7^2+0.3\times0.5=0.64$，晴→雨 $=0.7\times0.3+0.3\times0.5=0.36$，雨→晴 $=0.5\times0.7+0.5\times0.5=0.60$，雨→雨 $=0.5\times0.3+0.5^2=0.40$。</li>
+<li>③ $\pi_{\text{晴}}=5/8=\mathbf{62.5\%}$，$\pi_{\text{雨}}=3/8=\mathbf{37.5\%}$。与直觉一致——晴的"自留"概率(0.7)高于雨(0.5)，所以长期晴更多。</li>
+</ul>
+<ul>
+<li><strong>题目 3（股价三状态）</strong>：</li>
+<li>① 每行和均为 1（$0.5+0.3+0.2=1$ 等），是合法转移矩阵。</li>
+<li>② 由 $\pi P=\pi$ 推得 $\pi_F=1/3$；联立解得 $\pi_{\text{跌}}=7/27\approx\mathbf{25.9\%}$，$\pi_{\text{涨}}=11/27\approx\mathbf{40.7\%}$，$\pi_{\text{平}}=9/27=\mathbf{33.3\%}$。即长期 涨 40.7% / 平 33.3% / 跌 25.9%。</li>
+<li>③ "跌"最低：从"跌"出发有 0.4 直接反弹到"涨"，且"跌→跌"仅 0.3，跌态最不稳定、最容易离开；而"涨"有 0.5 自留，又持续吸纳从平、跌流来的占比。</li>
+</ul>
+<ul>
+<li><strong>题目 4（马尔可夫性质翻车）</strong>：</li>
+<li>① 不能。明天的状态取决于"今天和昨天是否相同"，需要<strong>昨天 + 今天</strong>两个信息；只看今天（单个状态）无法区分"黏黏"和"黏冷"这两种不同走向。一阶马尔可夫性质在此<strong>不成立</strong>。</li>
+<li>② 把状态扩展为"相邻两天组合"：$\{黏黏, 黏冷, 冷黏, 冷冷\}$ 共 4 个状态，新规则下"下一步只由当前组合决定"，又变回一阶马尔可夫——这叫"<strong>高阶马尔可夫 → 扩展状态空间的一阶马尔可夫</strong>"。</li>
+<li>③ 当"未来真只依赖现在"时，马尔可夫性质严格成立（如简单天气模型）；当未来还偷偷依赖更早的过去时，它只是近似——要么扩大状态把历史打包进去，要么承认模型有偏差。</li>
+</ul>
+<hr>
+<blockquote>📌 明日预告：第 13 期 <strong>泊松过程（Poisson Process）</strong>——如果说马尔可夫链讲的是"状态怎么变"，那泊松过程讲的是"<strong>随机事件怎么在时间里冒出来</strong>"：呼叫中心多久来一通电话、放射性原子多久衰变一个、网站多久来一个访客。看"稀有事件在均匀时间里随机独立地发生"这条假设，如何只用一个数 $\lambda$（发生率）就管住一切，并和我们已经学过的"泊松分布"严丝合缝地接上。</blockquote></div></body></html>

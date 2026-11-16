@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第22期 · 流动性</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 22 期</span>
+  <h1>今天的概念：<span class="tag">流动性</span>（Liquidity）</h1>
+  <div class="date">2026年10月17日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 老周和老李的"压箱底"</h2>
+    <p>老周和老李是镇上两个小老板，前几年都赚到了钱，账面资产都"有好几百万"。可到了今年，两人的结局天差地别。</p>
+    <p>老周开社区便利店，一直坚持"快进快出"：货只压一周的库存，利润留一部分放活期周转，还备着一张随用随取的银行信用额度。钱永远在流动，从没被锁死。</p>
+    <p>老李做的是定制家具。前两年行情好，他把赚的钱全砸进一台昂贵的<strong>进口数控雕刻机</strong>，又囤了一批<strong>小众木种</strong>。机器很专业、木种很冷门，但他想着"这些都是值钱家当"。</p>
+    <p>今年房地产降温，定制家具订单骤减。老李想转行、想回笼资金：雕刻机二手没人要——太专用，买主得刚好做同款工艺；小众木种更没人接盘。想贱卖都没买家，而房租、工人工资、设备维护费却照付不误。他账面资产还写着几百万，可连 <strong>20 万工资</strong> 都发不出。</p>
+    <p>老周那边，便利店是刚需，货一周周转一次。小区封控半月，他靠手头现金加信用额度照样撑住，没慌。</p>
+    <div class="board">
+      <div class="row head"><span class="k">对比</span><span class="v">行情变冷时</span></div>
+      <div class="row"><span class="k">老周 · 便利店周转</span><span class="v">货7天变现金，活钱+信用额度随时取 → 扛住了</span></div>
+      <div class="row"><span class="k">老李 · 雕刻机+小众木种</span><span class="v">专用设备/冷门原料没人接盘 → 账面百万、口袋空空</span></div>
+      <div class="row"><span class="k">关键差别</span><span class="v">同样"有几百万资产"，能快速少折价变现金的，才是真有钱</span></div>
+    </div>
+    <p>老李看着仓库里那台沉默的机器苦笑："原来我的钱，是'死'在里面的。"</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>流动性</strong>，说的是：<strong>一项资产能以接近市价、快速变现成现金的能力</strong>。变现越快、折价越小，流动性越好。它和"收益""风险"并列为看待资产的第三个重要维度。</p>
+    <div class="formula">流动性 ≈ 变现速度 × 价格折让　（越快、折让越小，流动性越好）</div>
+    <p>把所有资产排成一条光谱，越往右越难卖、折价越狠：<strong>现金 &gt; 活期 / 货币基金 &gt; 短债 &gt; 股票 &gt; 房产 &gt; 收藏品 &gt; 专用设备 / 冷门原料</strong>。老李的机器和木种之所以"死"，是因为它们<strong>资产专用性太高</strong>——只适合极少数买家的特殊用途，一旦行业转冷，几乎找不到接盘人。</p>
+    <p>🌰 换到你的钱包和生意：一个人、一家公司能不能扛过危机，往往不看账面净资产，而看"<strong>能立刻动用的现金</strong>"。老李的教训有三层——① 别把现金全锁进长期、专用的资产里；② 警惕"专用资产陷阱"，越专业越冷门，行情一变越卖不掉；③ 个人或企业都要留"活水"：个人留 3–6 个月开支的活钱，企业留周转现金加随用随取的信用额度。记住：<strong>账面富贵，不如手头活钱</strong>。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>账面资产 ≠ 可用现金</strong>：同样写"几百万"，能快速、少折价变现的才是真钱。先问自己"真要用，几天能到手、折多少"。</li>
+      <li><strong>警惕"专用资产陷阱"</strong>：越专业、越冷门的资产（专用设备、小众原料、特殊藏品），资产专用性越高，行情一变就越卖不掉、折价越狠。</li>
+      <li><strong>永远留一口"活水"</strong>：个人备 3–6 个月开支的活钱；企业留周转现金加随用随取额度，别把现金全锁死在长期或专用资产里。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：杠杆 —— 借来的钱如何放大收益、也放大风险，为什么"撬动"世界的同时，也可能在转身间压垮自己。</div>
+</div>
+</body>
+</html>

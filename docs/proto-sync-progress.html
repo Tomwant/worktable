@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>原型 · 知识库自动更新进度弹窗</title>
+<style>
+:root{
+  --bg1:#f4efe4; --bg2:#eaf1e7;
+  --surface:rgba(255,255,255,.62); --surface-2:rgba(255,255,255,.4); --surface-solid:#fffdf7;
+  --text:#33302a; --text-2:#7a746a; --text-3:#a8a094;
+  --line:rgba(255,255,255,.7); --line-2:rgba(80,60,30,.12); --line-3:rgba(80,60,30,.24);
+  --accent:#4a9e66; --accent-deep:#398a54; --accent-soft:rgba(74,158,102,.13);
+  --warm:#e09a66; --warm-soft:rgba(224,154,102,.18);
+  --danger:#cf6a57;
+  --r-card:22px; --r-input:14px;
+  --shadow:0 1px 2px rgba(80,60,30,.05),0 12px 36px -14px rgba(80,60,30,.22),inset 0 1px 0 rgba(255,255,255,.6);
+  --ease:cubic-bezier(.22,.9,.34,1);
+}
+[data-theme="dark"]{
+  --bg1:#151b17; --bg2:#101a1e;
+  --surface:rgba(255,255,255,.06); --surface-2:rgba(255,255,255,.05); --surface-solid:#1c2420;
+  --text:#e9ede8; --text-2:#b6c1ba; --text-3:#a9b5ae;
+  --line:rgba(255,255,255,.12); --line-2:rgba(255,255,255,.12); --line-3:rgba(255,255,255,.22);
+  --accent:#66d18d; --accent-deep:#4fc37c; --accent-soft:rgba(102,209,141,.15);
+  --warm:#efaa7c; --warm-soft:rgba(239,170,124,.18);
+  --danger:#f09595;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 16px 44px -16px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;font-family:'Noto Sans SC',-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  -webkit-font-smoothing:antialiased;color:var(--text);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));display:flex;align-items:center;justify-content:center;padding:40px 20px;
+  transition:background .4s,color .4s;
+}
+/* 模拟背后的知识库页 */
+.backdrop-demo{position:fixed;inset:0;z-index:0;opacity:.5;overflow:hidden;pointer-events:none}
+.backdrop-demo .fake-card{max-width:900px;margin:80px auto 0;height:120px;border-radius:22px;background:var(--surface);border:1px solid var(--line);margin-top:16px}
+
+.toolbar{position:fixed;top:16px;left:50%;transform:translateX(-50%);z-index:100;display:flex;gap:8px;background:var(--surface);backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:20px;padding:8px 10px;box-shadow:var(--shadow)}
+.toolbar button{border:1px solid var(--line-2);background:var(--surface-2);color:var(--text-2);font:inherit;font-size:12.5px;padding:7px 13px;border-radius:12px;cursor:pointer;transition:.18s}
+.toolbar button:hover{color:var(--text);border-color:var(--line-3)}
+.toolbar button.on{background:var(--accent-soft);border-color:rgba(74,158,102,.4);color:var(--accent-deep);font-weight:600}
+
+/* ===== 弹窗 ===== */
+.sync-modal{
+  position:relative;z-index:10;width:min(540px,100%);
+  background:var(--surface-solid);border:1px solid var(--line-2);border-radius:24px;
+  box-shadow:0 30px 70px -26px rgba(60,45,25,.45),inset 0 1px 0 rgba(255,255,255,.6);
+  overflow:hidden;
+}
+.sync-head{padding:22px 24px 14px;border-bottom:1px solid var(--line-2);display:flex;align-items:flex-start;gap:12px}
+.sync-head .tt{flex:1}
+.sync-head h2{margin:0;font-size:17px;font-weight:700;letter-spacing:-.01em}
+.sync-head p{margin:5px 0 0;font-size:12.5px;color:var(--text-3)}
+.badge-live{
+  display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+  padding:4px 10px;border-radius:100px;background:var(--accent-soft);color:var(--accent-deep);white-space:nowrap;margin-top:2px;
+}
+.badge-live i{width:6px;height:6px;border-radius:50%;background:currentColor;animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.25}}
+
+/* 总进度 */
+.progress-wrap{padding:16px 24px 4px}
+.progress-top{display:flex;align-items:baseline;gap:8px;margin-bottom:8px}
+.progress-top b{font-size:22px;font-weight:800;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.progress-top span{font-size:12.5px;color:var(--text-3)}
+.progress-bar{height:6px;border-radius:100px;background:var(--surface-2);border:1px solid var(--line-2);overflow:hidden}
+.progress-bar .fill{height:100%;width:0;border-radius:100px;background:linear-gradient(90deg,var(--accent),#6fbf88);transition:width .55s var(--ease)}
+
+/* 三个系列 */
+.feed-list{padding:14px 24px 6px;display:flex;flex-direction:column;gap:9px}
+.feed{
+  display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:16px;
+  background:var(--surface-2);border:1px solid var(--line-2);transition:.3s var(--ease);
+}
+.feed.done{background:var(--accent-soft);border-color:rgba(74,158,102,.24)}
+.feed.running{background:var(--warm-soft);border-color:rgba(224,154,102,.3)}
+.feed.ic{width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0;background:var(--surface-solid);border:1px solid var(--line-2)}
+.feed .body{flex:1;min-width:0}
+.feed .name{font-size:13.5px;font-weight:600;color:var(--text);display:flex;align-items:center;gap:6px}
+.feed .sub{font-size:11.5px;color:var(--text-3);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.feed .state{font-size:11.5px;font-weight:600;white-space:nowrap;flex-shrink:0;display:flex;align-items:center;gap:5px}
+.feed .state.wait{color:var(--text-3)}
+.feed .state.running{color:var(--warm)}
+.feed .state.done{color:var(--accent-deep)}
+.spin{width:11px;height:11px;border-radius:50%;border:2px solid var(--warm);border-top-color:transparent;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tick{font-size:12px}
+
+.sync-foot{padding:14px 24px 18px;display:flex;gap:8px;align-items:center}
+.sync-foot .hint{flex:1;font-size:11.5px;color:var(--text-3);line-height:1.6}
+.btn{border:1px solid var(--line-2);background:var(--surface-2);color:var(--text-2);font:inherit;font-size:13px;padding:9px 18px;border-radius:12px;cursor:pointer;transition:.18s}
+.btn:hover{border-color:var(--line-3);color:var(--text)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+.btn.primary:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+.tip{margin-top:18px;text-align:center;font-size:12px;color:var(--text-3);line-height:1.8;position:relative;z-index:10}
+</style>
+</head>
+<body>
+
+<div class="backdrop-demo">
+  <div class="fake-card"></div><div class="fake-card"></div><div class="fake-card"></div>
+</div>
+
+<div class="toolbar">
+  <button data-s="auto" class="on">自动播放</button>
+  <button data-s="running">进行中态</button>
+  <button data-s="done">全部完成态</button>
+  <button data-s="wait">等待产出态</button>
+  <button id="themeBtn">◐</button>
+</div>
+
+<div class="sync-modal" id="modal">
+  <div class="sync-head">
+    <div class="tt">
+      <h2>今日自动更新</h2>
+      <p id="subline">2026年10月23日 · 定时任务产出已同步到知识库</p>
+    </div>
+    <span class="badge-live" id="live"><i></i><span>自动同步中</span></span>
+  </div>
+
+  <div class="progress-wrap">
+    <div class="progress-top">
+      <b id="pct">0</b><span>%</span>
+      <span id="pcount" style="margin-left:auto">0 / 3 已完成</span>
+    </div>
+    <div class="progress-bar"><div class="fill" id="fill"></div></div>
+  </div>
+
+  <div class="feed-list" id="feeds"></div>
+
+  <div class="sync-foot">
+    <span class="hint" id="footHint">正在检查三路定时任务的今日产出…</span>
+    <button class="btn" id="replay">重播</button>
+    <button class="btn primary" id="ok">知道了</button>
+  </div>
+</div>
+
+<p class="tip">原型 · 三条为今天真实入库的内容<br>顶部按钮可切换不同状态看效果</p>
+
+<script>
+const FEEDS = [
+  { key: 'finance', icon: '◈', name: '金融概念', title: '第28期 · 锚定效应', time: '08:58 产出' },
+  { key: 'probability', icon: '◇', name: '概率学概念', title: '第1期 · 随机图与渗流', time: '08:58 产出' },
+  { key: 'news', icon: '◉', name: '实时新闻', title: '第21期 · 美股每日新闻简报', time: '09:21 产出' }
+]
+
+const $ = id => document.getElementById(id)
+const feedsEl = $('feeds')
+let timers = []
+
+function render() {
+  feedsEl.innerHTML = FEEDS.map(f => `
+    <div class="feed" data-k="${f.key}">
+      <span class="ic">${f.icon}</span>
+      <div class="body">
+        <div class="name">${f.name}</div>
+        <div class="sub" data-sub>${f.time}</div>
+      </div>
+      <div class="state wait" data-state>等待产出</div>
+    </div>`).join('')
+}
+
+function setFeed(key, state, text, sub) {
+  const el = feedsEl.querySelector(`[data-k="${key}"]`)
+  if (!el) return
+  el.classList.remove('done', 'running')
+  if (state === 'done') el.classList.add('done')
+  if (state === 'running') el.classList.add('running')
+  const s = el.querySelector('[data-state]')
+  s.className = 'state ' + state
+  s.innerHTML = state === 'running'
+    ? '<span class="spin"></span>' + text
+    : (state === 'done' ? '<span class="tick">✓</span>' + text : text)
+  if (sub) el.querySelector('[data-sub]').textContent = sub
+}
+
+function setProgress(n, total, hint) {
+  const pct = Math.round(n / total * 100)
+  $('pct').textContent = pct
+  $('fill').style.width = pct + '%'
+  $('pcount').textContent = `${n} / ${total} 已完成`
+  if (hint) $('footHint').textContent = hint
+}
+
+function clearTimers() { timers.forEach(t => clearTimeout(t)); timers = [] }
+function later(fn, ms) { timers.push(setTimeout(fn, ms)) }
+
+// 自动播放：等待 → 逐条写入 → 完成
+function playAuto() {
+  clearTimers(); render(); setProgress(0, 3, '正在检查三路定时任务的今日产出…')
+  $('live').querySelector('span').textContent = '自动同步中'
+  const total = 3200, step = total / 3
+  FEEDS.forEach((f, i) => {
+    later(() => setFeed(f.key, 'running', '写入中', f.time + ' · 正在入库'), 400 + i * step)
+    later(() => {
+      setFeed(f.key, 'done', '已更新', f.time + ' · 已同步')
+      setProgress(i + 1, 3, i + 1 === 3 ? '三路全部更新完成，可关窗阅读。' : '继续同步其余系列…')
+    }, 400 + i * step + step * .72)
+  })
+  later(() => { $('live').querySelector('span').textContent = '今日已全部更新' }, 400 + total + 200)
+}
+
+function playRunning() {
+  clearTimers(); render()
+  setFeed('finance', 'done', '已更新', '08:58 产出 · 已同步')
+  setFeed('probability', 'running', '写入中', '08:58 产出 · 正在入库')
+  setFeed('news', 'wait', '等待产出', '预计 09:20 前后')
+  setProgress(1, 3, '新闻任务还有随机延迟，稍后自动补进。')
+  $('live').querySelector('span').textContent = '自动同步中'
+}
+
+function playDone() {
+  clearTimers(); render()
+  FEEDS.forEach(f => setFeed(f.key, 'done', '已更新', f.time + ' · 已同步'))
+  setProgress(3, 3, '三路全部更新完成，可关窗阅读。')
+  $('live').querySelector('span').textContent = '今日已全部更新'
+}
+
+function playWait() {
+  clearTimers(); render()
+  FEEDS.forEach(f => setFeed(f.key, 'wait', '等待产出', '定时任务尚未产出'))
+  setProgress(0, 3, '今天的产出还没到，后台每分钟自动检查一次。')
+  $('live').querySelector('span').textContent = '等待中'
+}
+
+document.querySelector('.toolbar').addEventListener('click', e => {
+  const b = e.target.closest('button[data-s]'); if (!b) return
+  document.querySelectorAll('.toolbar button').forEach(x => x.classList.remove('on'))
+  b.classList.add('on')
+  const m = b.dataset.s
+  if (m === 'auto') playAuto()
+  if (m === 'running') playRunning()
+  if (m === 'done') playDone()
+  if (m === 'wait') playWait()
+})
+$('replay').onclick = playAuto
+$('ok').onclick = () => { $('modal').style.transition = 'opacity .2s, transform .2s'; $('modal').style.opacity = 0; $('modal').style.transform = 'translateY(8px)'; setTimeout(() => { $('modal').style.opacity = 1; $('modal').style.transform = 'none' }, 700) }
+$('themeBtn').onclick = () => { const r = document.documentElement; r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark' }
+
+playAuto()
+</script>
+</body>
+</html>

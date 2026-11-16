@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第08期 · 应付账款 — 门店经营用得上的财务知识</title>
+<style>
+  :root{
+    --green:#2f6b5e;
+    --green-deep:#234f45;
+    --green-soft:#e7f0ed;
+    --gold:#c9a961;
+    --gold-soft:#f7f1e4;
+    --line:#e3e8e5;
+    --ink:#22302b;
+    --ink-2:#54625c;
+    --bg:#f4f7f5;
+    --card:#ffffff;
+    --r:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:28px 20px 48px;}
+
+  /* 头部 */
+  .head{
+    background:linear-gradient(135deg,var(--green) 0%,var(--green-deep) 100%);
+    color:#fff;border-radius:var(--r);padding:30px 30px 26px;
+    box-shadow:0 10px 30px rgba(47,107,94,.22);position:relative;overflow:hidden;
+  }
+  .head::after{
+    content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;
+    background:radial-gradient(circle,rgba(201,169,97,.35),transparent 70%);border-radius:50%;
+  }
+  .issue{font-size:13px;letter-spacing:2px;color:var(--gold);font-weight:600;}
+  .head h1{margin:8px 0 6px;font-size:30px;font-weight:800;letter-spacing:1px;}
+  .sub{font-size:15px;color:#dcebe6;margin:0 0 16px;}
+  .meta{display:flex;flex-wrap:wrap;gap:8px;position:relative;z-index:1;}
+  .tag{
+    background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.22);
+    color:#eef6f2;font-size:12.5px;padding:3px 11px;border-radius:999px;
+  }
+  .date{background:var(--gold);color:var(--green-deep);border-color:var(--gold);font-weight:600;}
+
+  /* 卡片 */
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--r);
+    padding:22px 24px;margin-top:20px;box-shadow:0 4px 16px rgba(34,48,43,.05);
+  }
+  .card h2{
+    margin:0 0 14px;font-size:19px;color:var(--green);font-weight:800;
+    display:flex;align-items:center;gap:10px;
+  }
+  .card h2 .no{
+    background:var(--green-soft);color:var(--green);font-size:13px;font-weight:700;
+    width:26px;height:26px;border-radius:8px;display:inline-flex;align-items:center;justify-content:center;flex:none;
+  }
+  .lead{color:var(--ink-2);font-size:14.5px;margin:0 0 14px;}
+
+  /* 场景 */
+  .scene{
+    background:linear-gradient(180deg,#fbfdfc,#f4f8f6);
+    border-left:4px solid var(--gold);border-radius:12px;padding:16px 18px;
+  }
+  .scene p{margin:0 0 10px;}
+  .scene p:last-child{margin-bottom:0;}
+  .who{font-weight:700;color:var(--green-deep);}
+
+  /* 公式卡 */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .fcard{
+    border:1px solid var(--line);border-radius:12px;padding:14px 16px;background:#fbfcfb;
+  }
+  .fcard .ft{font-size:13px;font-weight:700;color:var(--gold);margin:0 0 6px;letter-spacing:.5px;}
+  .fcard .ff{font-size:15px;font-weight:700;color:var(--ink);margin:0;line-height:1.55;}
+  .fcard .fn{font-size:13px;color:var(--ink-2);margin:6px 0 0;}
+
+  /* 算例 */
+  .calc{border:1px solid var(--line);border-radius:12px;overflow:hidden;margin-top:6px;}
+  .calc .ch{background:var(--green-soft);color:var(--green-deep);font-weight:700;font-size:14px;padding:10px 16px;}
+  .calc .cb{padding:14px 16px;}
+  .calc .cb p{margin:0 0 10px;font-size:14.5px;}
+  .calc .cb p:last-child{margin-bottom:0;}
+  .num{font-variant-numeric:tabular-nums;font-weight:700;color:var(--green-deep);}
+  .step{
+    background:#fbfcfb;border:1px dashed var(--line);border-radius:10px;
+    padding:12px 14px;margin:10px 0;font-size:14.5px;
+  }
+  .step b{color:var(--green-deep);}
+  .res{
+    background:var(--gold-soft);border-radius:10px;padding:12px 14px;
+    font-size:15px;font-weight:700;color:#6b531d;margin-top:10px;
+  }
+  .res span{color:#3d2f10;}
+
+  /* 红线 */
+  .rule{
+    display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid var(--line);
+  }
+  .rule:last-child{border-bottom:none;}
+  .rule .dot{
+    flex:none;width:24px;height:24px;border-radius:50%;background:var(--green);
+    color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin-top:2px;
+  }
+  .rule .rt{font-weight:700;color:var(--ink);font-size:15px;margin:0 0 2px;}
+  .rule .rd{color:var(--ink-2);font-size:14px;margin:0;}
+
+  /* 自测题 */
+  .quiz{
+    border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:12px;
+    transition:border-color .2s,box-shadow .2s,transform .2s;
+  }
+  .quiz:hover{border-color:var(--gold);box-shadow:0 6px 16px rgba(47,107,94,.12);transform:translateY(-2px);}
+  .quiz summary{
+    display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;
+    user-select:none;list-style:none;
+  }
+  .quiz summary::-webkit-details-marker{display:none;}
+  .quiz summary::marker{content:"";}
+  .quiz .q{flex:1 1 auto;font-size:15px;font-weight:600;line-height:1.6;}
+  .quiz .peek{
+    flex:none;background:var(--gold-soft);color:#8a6f2e;font-size:12.5px;border-radius:999px;
+    padding:3px 11px 3px 9px;display:inline-flex;align-items:center;gap:3px;white-space:nowrap;
+  }
+  .quiz details[open] .peek{background:var(--green-soft);color:#2a5b50;}
+  .quiz .arw{display:inline-block;transition:transform .25s;}
+  .quiz details[open] .peek .arw{transform:rotate(180deg);}
+  .quiz .t-off{display:none;}
+  .quiz .t-on{display:inline;}
+  .quiz details[open] .t-on{display:none;}
+  .quiz details[open] .t-off{display:inline;}
+  .quiz .ans{
+    border-top:1px dashed var(--line);padding:12px 16px 14px;background:#fbfcfb;font-size:14.5px;color:var(--ink);
+  }
+  .quiz details[open] .ans{animation:fadeIn .35s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:translateY(0);}}
+  .qhead{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;}
+  .qtip{color:var(--ink-2);font-size:13.5px;margin:6px 0 14px;}
+
+  /* 脚注 */
+  .foot{
+    margin-top:26px;padding:18px 20px;background:#eef3f1;border-radius:12px;
+    color:var(--ink-2);font-size:13px;line-height:1.7;
+  }
+  .foot b{color:var(--green-deep);}
+  .next{margin-top:10px;color:var(--green);font-weight:600;}
+
+  @media (max-width:600px){
+    .wrap{padding:18px 13px 36px;}
+    .head{padding:22px 18px;}
+    .head h1{font-size:23px;}
+    .card{padding:18px 15px;}
+    .grid{grid-template-columns:1fr;}
+    .meta .tag{font-size:11.5px;}
+    .qhead{flex-direction:column;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="head">
+    <div class="issue">门店经营财务日报 · 第 08 期</div>
+    <h1>应付账款</h1>
+    <p class="sub">把"欠供应商的钱"管明白，它既是免费短期融资，也是最容易失控的雷</p>
+    <div class="meta">
+      <span class="tag date">2026-11-07</span>
+      <span class="tag">应付账款</span>
+      <span class="tag">账期管理</span>
+      <span class="tag">现金折扣</span>
+      <span class="tag">周转天数</span>
+      <span class="tag">营运资金</span>
+    </div>
+  </header>
+
+  <!-- 场景 -->
+  <section class="card">
+    <h2><span class="no">1</span>先从一个真实门店场景说起</h2>
+    <div class="scene">
+      <p><span class="who">老王家面馆</span>的老板娘每月向三家进货：蔬菜批发商、冻品供应商、调料行。到了月底对账，她发现自己犯了两个错：</p>
+      <p>第一，<b>账记混了</b>。冻品商给的是 30 天账期，她却把本该 45 天再付的调料行货款在货到当天就付了；而冻品商被她拖到 60 天才付，结果下个月被停货一周，少卖了近八千块。</p>
+      <p>第二，<b>把没付的钱当成了利润</b>。月底算账时，她以为"采购的食材还没付钱，所以这月成本低、赚得多"。其实按规矩，食材一收货，成本就已经发生了，付不付钱只影响现金，不影响利润。她那个月的"虚高利润"，其实只是欠了供应商一屁股债。</p>
+      <p>这两个错，本质上是同一个概念没搞懂——<b>应付账款</b>。</p>
+    </div>
+  </section>
+
+  <!-- 定义与公式 -->
+  <section class="card">
+    <h2><span class="no">2</span>定义与公式卡片</h2>
+    <p class="lead">应付账款（Accounts Payable，简称 AP）是门店因为采购了商品或服务、已经收货但还没付钱，而欠供应商的一笔<b>短期负债</b>。它和上一期讲的"应收账款"（别人欠你的）正好是一对——一个在负债端，一个在资产端。</p>
+    <div class="grid">
+      <div class="fcard">
+        <p class="ft">公式 1 · 期末余额</p>
+        <p class="ff">期末应付账款 = 期初应付账款 + 本期赊购入库 - 本期已付货款</p>
+        <p class="fn">赊购 = 收货未付款；已付 = 实际流出的现金。</p>
+      </div>
+      <div class="fcard">
+        <p class="ft">公式 2 · 周转天数</p>
+        <p class="ff">应付账款周转天数 = 平均应付账款 ÷ 日均采购成本</p>
+        <p class="fn">日均采购成本 = 年采购成本 ÷ 365。天数越短，付款越快。</p>
+      </div>
+      <div class="fcard">
+        <p class="ft">公式 3 · 占成本比</p>
+        <p class="ff">应付账款占成本比 = 应付账款 ÷ 营业成本 × 100%</p>
+        <p class="fn">反映你"用供应商的钱做生意"的比例。</p>
+      </div>
+      <div class="fcard">
+        <p class="ft">公式 4 · 放弃折扣年化成本</p>
+        <p class="ff">年化成本 = 折扣率 ÷ (1-折扣率) × 365 ÷ (信用期-折扣期)</p>
+        <p class="fn">衡量"晚付几天省下的折扣"到底有多贵。</p>
+      </div>
+      <div class="fcard">
+        <p class="ft">公式 5 · 现金循环周期</p>
+        <p class="ff">现金循环周期 = 存货周转天数 + 应收周转天数 - 应付周转天数</p>
+        <p class="fn">应付账款天数越大，你占用供应商资金越久，现金缺口越小。</p>
+      </div>
+      <div class="fcard">
+        <p class="ft">公式 6 · 净营运资金</p>
+        <p class="ff">净营运资金 = 流动资产 - 流动负债（含应付账款）</p>
+        <p class="fn">应付账款越多，净营运资金越被压薄，需关注流动性。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 算例 -->
+  <section class="card">
+    <h2><span class="no">3</span>可直接套用的计算示例</h2>
+    <p class="lead">下面用老王家面馆 11 月的真实流水，带你一步步算。所有数字都对齐，你跟着算一遍就会了。</p>
+    <div class="calc">
+      <div class="ch">算例 A · 期末应付账款余额</div>
+      <div class="cb">
+        <p>已知 11 月数据：<span class="num">期初应付账款 10,000 元</span>；本月赊购食材（收货未付款）合计 <span class="num">48,000 元</span>；本月实际支付货款 <span class="num">44,000 元</span>。</p>
+        <div class="step">
+          <b>套公式 1：</b>期末应付账款 = 10,000 + 48,000 - 44,000 = <b>14,000 元</b>
+        </div>
+        <div class="res">结论：到 11 月底，老王家还欠供应商 <span>14,000 元</span>。这笔钱在资产负债表上记"负债"，不是"省钱"。</div>
+      </div>
+    </div>
+
+    <div class="calc">
+      <div class="ch">算例 B · 应付账款周转天数</div>
+      <div class="cb">
+        <p>该店全年食材采购成本 <span class="num">146,000 元</span>；平均应付账款 =（期初 10,000 + 期末 14,000）÷ 2 = <span class="num">12,000 元</span>。</p>
+        <div class="step">
+          <b>步骤 1：</b>日均采购成本 = 146,000 ÷ 365 ≈ <b>400 元</b><br>
+          <b>步骤 2（套公式 2）：</b>周转天数 = 12,000 ÷ 400 = <b>30 天</b>
+        </div>
+        <div class="res">结论：平均 <span>30 天</span>付一次供应商，正好踩在常见的"月结"账期上，属健康区间。</div>
+      </div>
+    </div>
+
+    <div class="calc">
+      <div class="ch">算例 C · 放弃现金折扣的隐性成本</div>
+      <div class="cb">
+        <p>冻品供应商条款：<b>2/10，n/30</b>（10 天内付款享 2% 折扣，最迟 30 天付清）。一笔冻品采购 <span class="num">30,000 元</span>。</p>
+        <div class="step">
+          <b>早付（第 10 天前）：</b>应付 30,000 × (1 - 2%) = <b>29,400 元</b>，省下 600 元。<br>
+          <b>放弃折扣（第 30 天付）：</b>应付 30,000 元，等于多花了 600 元。
+        </div>
+        <div class="step">
+          <b>套公式 4 算年化成本：</b><br>
+          年化成本 = 2% ÷ (1 - 2%) × 365 ÷ (30 - 10)<br>
+          = 0.020408 × 365 ÷ 20<br>
+          = 7.449 ÷ 20 ≈ <b>0.3725 = 37.25%</b>
+        </div>
+        <div class="res">结论：放弃这 2% 的早付折扣，相当于借了一笔年化约 <span>37%</span> 的"高利贷"。除非你有其他年化收益更高的急用，否则能早付就拿折扣。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 判断标准 / 红线 -->
+  <section class="card">
+    <h2><span class="no">4</span>给经营者的判断标准与红线</h2>
+    <div class="rule">
+      <span class="dot">1</span>
+      <div><p class="rt">应付账款必须逐笔挂账，不能"凭记忆"</p><p class="rd">每笔都要记清：供应商、金额、账期、到期日。做不到这点，利润表和现金流量表都会失真——这是老板"以为赚了其实没赚"的根源。</p></div>
+    </div>
+    <div class="rule">
+      <span class="dot">2</span>
+      <div><p class="rt">账期不是越长越好，超 60 天是危险线</p><p class="rd">占用供应商资金有收益，但拖太久会被停货、取消折扣、拉黑。断供少卖的损失，远大于占用那点资金的收益。</p></div>
+    </div>
+    <div class="rule">
+      <span class="dot">3</span>
+      <div><p class="rt">有现金折扣且年化成本高于你的融资成本，优先早付</p><p class="rd">若放弃折扣年化 37%，而银行贷款利率才 6%，早付拿折扣稳赚。别为了"占用资金"白白亏掉几十个点。</p></div>
+    </div>
+    <div class="rule">
+      <span class="dot">4</span>
+      <div><p class="rt">周转天数突然变慢 = 现金吃紧的预警</p><p class="rd">若周转天数从 30 天拉长到 60 天，说明你在挪用供应商货款补自家现金流。这是资金链要断的前兆，必须警惕。</p></div>
+    </div>
+    <div class="rule">
+      <span class="dot">5</span>
+      <div><p class="rt">多店经营，各店应付账款分开核算、总部合并看总账</p><p class="rd">不要用 A 店的钱付 B 店的供应商却不清内部往来，否则合并报表对不上，你也说不清到底欠谁多少、哪店更吃紧。</p></div>
+    </div>
+  </section>
+
+  <!-- 自测题 -->
+  <section class="card">
+    <div class="qhead">
+      <h2 style="margin:0;"><span class="no">5</span>今日自测题</h2>
+    </div>
+    <p class="qtip">先自己算一遍，再点答案对一下。</p>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q1：某门店期初应付账款 5,000 元，本月赊购 30,000 元，本月付款 28,000 元。求期末应付账款是多少？</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">A1：套公式 1：期末应付账款 = 期初 + 本期赊购 - 本期已付 = 5,000 + 30,000 - 28,000 = <b>7,000 元</b>。所以期末还欠供应商 7,000 元。</div>
+    </details>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q2：供应商条款 1/15，n/45（15 天内付享 1% 折扣，最迟 45 天付）。一笔采购 50,000 元。若第 15 天前付款应付多少？若放弃折扣，放弃折扣的年化成本约为多少？</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">A2：早付金额 = 50,000 × (1 - 1%) = <b>49,500 元</b>，省下 500 元。放弃折扣年化成本 = 1% ÷ (1 - 1%) × 365 ÷ (45 - 15) = 0.010101 × 365 ÷ 30 = 3.687 ÷ 30 ≈ <b>0.1229 = 12.29%</b>。即放弃这 1% 折扣，相当于借了年化约 12.3% 的款。</div>
+    </details>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q3（判断）：门店采购了食材但还没付款，这笔钱在资产负债表上算"负债（应付账款）"，而不是"费用"；利润表上也不会因为没付款就少记成本。对还是错？</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">A3：<b>对。</b>按权责发生制，食材一收货，存货（资产）增加、应付账款（负债）增加；等食材领用出库，成本（费用）才计入利润表。付不付钱只影响现金流，不影响成本确认。所以"没付款 ≠ 没成本"——这正是很多老板误以为赚了、其实只是欠了一堆货款的原因。呼应第 06 期"现金流与利润的区别"：利润看发生，现金看收付。</div>
+    </details>
+  </section>
+
+  <!-- 脚注 -->
+  <div class="foot">
+    <p><b>本期小结：</b>应付账款是门店"用供应商的钱做自己的生意"的免费短期融资，但管不好就会变成停货、虚增利润、资金链断裂的雷。记住三件事——逐笔挂账、别拖过 60 天、有折扣且成本高就早付。</p>
+    <p><b>往期呼应：</b>第 06 期《现金流与利润的区别》讲"利润≠现金"；第 07 期《应收账款》讲"别人欠你的钱"。本期《应付账款》讲"你欠别人的钱"，三者合起来就是理解门店资金周转的完整三角。</p>
+    <p class="next">下期预告：存货周转——你的钱压在仓库里多少天？</p>
+  </div>
+
+</div>
+</body>
+</html>

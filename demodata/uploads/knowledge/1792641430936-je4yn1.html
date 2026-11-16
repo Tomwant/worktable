@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第07期 · 杠杆</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 07 期</span>
+  <h1>今天的概念：<span class="tag">杠杆</span>（Leverage）</h1>
+  <div class="date">2026年9月14日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 小美和阿强的"买房实验"</h2>
+    <p>小美和阿强各有 <strong>50 万</strong> 本金，看中同一套 <strong>200 万</strong> 的公寓。小美选择全款买下一套小的；阿强却用 <strong>50 万首付 + 150 万房贷</strong>，直接拿下了那套 200 万的——他撬动了 4 倍的钱。</p>
+    <p>第一年，房价涨了 <strong>20%</strong>（200 万 → 240 万）。小美乐了：自己的房子值 60 万，净赚 <strong>10 万</strong>，收益率 <strong>+20%</strong>。阿强一算账：房子值 240 万，还欠银行 150 万，属于自己的权益是 <strong>90 万</strong>，净赚 <strong>40 万</strong>，收益率高达 <strong>+80%</strong>！借来的钱，把他的赚头放大了整整 4 倍。</p>
+    <p>可好景不长，第二年楼市转冷，房价又跌回 <strong>20%</strong>（240 万 → 192 万）。小美权益变 192 万，亏 <strong>8 万</strong>，收益 <strong>-16%</strong>，睡得还算安稳。阿强就笑不出了：房子只值 192 万，还欠 150 万，权益只剩 <strong>42 万</strong>，本金亏掉 <strong>8 万</strong> 看似不多——但再看跌幅：他的收益率是 <strong>-64%</strong>，亏损同样被放大了 4 倍。</p>
+    <div class="board">
+      <div class="row head"><span class="k">情景（本金均 50 万）</span><span class="v">小美·全款 vs 阿强·4倍杠杆</span></div>
+      <div class="row"><span class="k">房价 +20%（200→240万）</span><span class="v">小美 +10万(+20%) ｜ 阿强 +40万(+80%)</span></div>
+      <div class="row"><span class="k">房价 -20%（回 192万）</span><span class="v">小美 -8万(-16%) ｜ 阿强 -8万但亏 -64%</span></div>
+      <div class="row"><span class="k">房价 -25%（200→150万）</span><span class="v">小美 -12.5万(-25%) ｜ 阿强 权益归零，本金亏光</span></div>
+      <div class="row"><span class="k">关键差别</span><span class="v">涨时放大收益，跌时同样放大亏损，且可能"爆仓"</span></div>
+    </div>
+    <p>最惊险的一幕：若房价再跌到 <strong>150 万</strong> 以下，阿强的房子连还房贷都不够，银行会要求追加保证金，否则强制拍卖——他的 50 万本金可能一夜归零，甚至还倒欠银行。小美虽然也没赚，但至少房子还在自己手里，睡得着觉。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>杠杆</strong>，就是用<strong>借来的钱（或保证金）</strong>去放大自己的投资规模。它的本质是一把"双面放大镜"：<strong>好时成倍放大收益，坏时成倍放大亏损</strong>，而且亏损可能超过你的本金。</p>
+    <div class="formula">实际收益率 ≈ 资产涨跌幅 × 杠杆倍数（本金越少、借得越多，倍数越大）</div>
+    <p>背后的逻辑是：<strong>风险和收益天生成对</strong>。你用了别人的钱，就要把别人的那份涨跌也扛在自己账上。杠杆率 = 总资产 ÷ 自有资金，阿强 200÷50 = 4 倍，所以房价的每一个百分点波动，都变成他本金的 4 个百分点。更狠的是"下行不设底"——股票账户跌到保证金不足会被<strong>强平</strong>（margin call），房产跌穿贷款余额会<strong>资不抵债</strong>，期货更是可能<strong>倒欠交易所</strong>。普通人最熟悉的杠杆其实是<strong>房贷和车贷</strong>：它让你提前住进好房子，但也在利率上行、收入不稳时变成沉重枷锁。</p>
+    <p>🌰 换到你的钱包：杠杆不是洪水猛兽，关键在<strong>三问</strong>——① 借这笔钱能撬动什么、年化成本多少？② 最坏情况下我扛不扛得住（收入断了还能还月供吗）？③ 这笔钱是不是"输不起"的救命钱？记住：<strong>能放大收益的，必然也能放大恐惧</strong>；只用你亏得起的钱去加杠杆，才是成年人的玩法。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>杠杆是放大镜，不是印钞机</strong>：收益和亏损按同一倍数放大，涨时笑、跌时哭，数学对两边一样公平。</li>
+      <li><strong>亏损可能超过本金</strong>：保证金不足会被强平、房价跌穿贷款会资不抵债——永远先算"最坏情况"再借。</li>
+      <li><strong>只用亏得起的钱加杠杆</strong>：房贷能提前改善生活，但别把救命钱、短期要用的钱拿去撬；先问自己"断了收入还扛得住吗"。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：沉没成本 —— 已经花掉、收不回来的钱，为什么总让人越陷越深？明明该"壮士断腕"，却偏偏"舍不得"，这里头藏着怎样的心理陷阱。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第11期 · 供需关系</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 11 期</span>
+  <h1>今天的概念：<span class="tag">供需关系</span>（Supply &amp; Demand）</h1>
+  <div class="date">2026年9月26日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 寒潮里的荔枝，和丰收的西瓜</h2>
+    <p>阿珍在小镇上卖荔枝。平时风调雨顺，满山都是荔枝，镇上人也不算多——<strong>货多、人少</strong>，一斤只能卖 <strong>5 块钱</strong>，还常常卖不完。这一年，一场倒春寒冻坏了大半果树，全镇荔枝减产八成，可爱吃的人一个没少。瞬间变成<strong>货少、人照旧</strong>，价格一路飙到 <strong>30 块一斤</strong>，还抢不到。同样的荔枝，供给一端塌了，价格就飞天。</p>
+    <p>可故事还有另一半。到了夏天，隔壁村老王的西瓜大丰收，地里堆成山，<strong>供给暴增</strong>；偏偏那年大家胃口没变大，外地的收购商也没多来。<strong>货太多、买的人没跟上</strong>，西瓜从往年的 1.5 元一斤跌到 <strong>3 毛</strong>，老王算上肥料人工反而<strong>亏了本</strong>。这就是有名的"<strong>谷贱伤农</strong>"：你越努力种出更多，价格反而越低，多卖的都填不上跌价的坑。</p>
+    <p>再看需求那一端。某天镇上突然来了个网红打卡点，全城年轻人都涌来拍照，顺手要喝奶茶。<strong>想买的人一夜暴涨</strong>，可奶茶店就那几家，<strong>供给一时半会跟不上</strong>，平时 15 块的奶茶被黄牛加价到 40 还排队。反过来，疫情时大家不敢出门聚餐，火锅食材需求骤降，哪怕供给没变，价格也跟着跌。一句话：<strong>价格不是谁拍脑袋定的，是"想买的人"和"能卖的货"两拨力量拉扯出来的</strong>。</p>
+    <div class="board">
+      <div class="row head"><span class="k">同样是荔枝/西瓜，供需两端一动，价格就变脸</span><span class="v">供 vs 求</span></div>
+      <div class="row"><span class="k">风调雨顺（供＞求）</span><span class="v">荔枝 5 元/斤，卖不完</span></div>
+      <div class="row"><span class="k">倒春寒减产（供＜求）</span><span class="v">荔枝 30 元/斤，抢不到</span></div>
+      <div class="row"><span class="k">西瓜大丰收（供暴增）</span><span class="v">3 毛/斤，谷贱伤农</span></div>
+      <div class="row"><span class="k">网红打卡（求暴增）</span><span class="v">奶茶被炒到 40 元还排队</span></div>
+      <div class="row"><span class="k">疫情不敢聚餐（求骤降）</span><span class="v">火锅食材即便供给不变也跌价</span></div>
+    </div>
+    <p>看明白这张表，你就握住了一把解开无数现象的钥匙：为什么演唱会门票被黄牛炒到天价（求远大于供）、为什么油价一涨就说"产油国减产"、为什么限购的房子反而让人更想买。一切价格的起伏，追到底都是<strong>供给和需求在拔河</strong>。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>供需关系</strong>，说的是市场上"<strong>卖方愿意且能够提供的数量</strong>"（供给）和"<strong>买方愿意且能够买下的数量</strong>"（需求）如何共同决定价格与成交量。当两者相等时，市场达到<strong>均衡点</strong>，此时的价格叫<strong>均衡价格</strong>，谁也别想长期占谁的便宜。</p>
+    <div class="formula">均衡：供给量 Qs = 需求量 Qd　→　成交价 P*　；　供↑或求↓ ⇒ 价格↓，供↓或求↑ ⇒ 价格↑</div>
+    <p>这条规律往下延伸，能串起一整片经济现象：其一，<strong>价格是信号也是调节器</strong>——某种东西涨价，就是在喊"稀缺了，快多生产/少消费"，跌价则在喊"过剩了"，看不见的手由此自动调配资源。其二，<strong>弹性决定波动幅度</strong>：像食盐这种"涨价你也得吃、跌价你也多吃不了多少"的东西，需求缺乏弹性，价格再怎么动销量都稳；而奢侈品弹性大，一点涨价就没人买。其三，<strong>"谷贱伤农"的本质是农产品需求刚性 + 供给集中爆发</strong>，所以各国才要搞最低收购价、储备调节来托底。落到投资上，你判断一只股票或一种商品会不会涨，先别听故事，先看<strong>这东西的供给在收缩还是扩张、需求在被谁点燃</strong>——供不应求的赛道，价格才有向上的底气。</p>
+    <p>🌰 换到你的钱包：剁手前想想，这波抢购是"<strong>真需求</strong>"还是"<strong>稀缺焦虑</strong>"制造的假需求？限量的鞋、抢破头的楼盘，价格里常有被情绪哄抬的水分。反过来，当你发现某个行业"<strong>东西越来越多却越来越便宜</strong>"，别急着抄底——那往往意味着供过于求还没见底。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>价格由供需博弈定，不是谁说了算</strong>：供给和需求两股力量拉扯出均衡价，哪一端的天平倾斜，价格就往哪边跑——所以减产就涨价、丰收反亏钱。</li>
+      <li><strong>看两端，别只看一端</strong>：判断涨跌先拆"供给在扩还是缩、需求被谁点燃"。供不应求的赛道才有向上底气，供过于求的便宜货可能是陷阱。</li>
+      <li><strong>弹性决定疼痛感</strong>：必需品（盐、米）需求刚性强，价格再变你也得买；奢侈品弹性大，一涨价就凉。分清弹性，才能看懂谁在通胀里最受伤。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：锚定效应 —— 为什么商场总把"原价¥1999"划掉写"现价¥599"？为什么你总觉得工资谈少了？第一眼看到的数字，会偷偷锚定你之后所有的判断。</div>
+</div>
+</body>
+</html>

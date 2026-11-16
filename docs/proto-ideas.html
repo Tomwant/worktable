@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>奇思妙想 · 原型</title>
+<style>
+:root{
+  --bg:#f7f3ea; --bg-2:#efe8da;
+  --surface:rgba(255,255,255,.72); --surface-2:rgba(255,255,255,.9);
+  --line:rgba(80,60,30,.12); --line-2:rgba(80,60,30,.2);
+  --text:#3b3529; --text-2:#6b6355; --text-3:#98907f;
+  --accent:#4a9e66; --accent-soft:rgba(74,158,102,.14);
+  --warm:#d08a48; --warm-soft:rgba(208,138,72,.14);
+  --r-input:14px; --r-card:22px; --r-top:26px;
+  --shadow:0 10px 30px -18px rgba(80,60,30,.5);
+}
+[data-theme="dark"]{
+  --bg:#14181a; --bg-2:#1b2124;
+  --surface:rgba(38,46,45,.72); --surface-2:rgba(44,53,51,.9);
+  --line:rgba(255,255,255,.1); --line-2:rgba(255,255,255,.18);
+  --text:#e9ede8; --text-2:#b6c1ba; --text-3:#93a09a;
+  --accent:#6fc18c; --accent-soft:rgba(111,193,140,.16);
+  --warm:#e0a06a; --warm-soft:rgba(224,160,106,.16);
+  --shadow:0 12px 34px -20px rgba(0,0,0,.9);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; min-height:100vh; color:var(--text);
+  font:14px/1.55 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:
+    radial-gradient(900px 520px at 12% -8%, rgba(208,138,72,.13), transparent 60%),
+    radial-gradient(760px 460px at 92% 4%, rgba(74,158,102,.12), transparent 62%),
+    var(--bg);
+  -webkit-font-smoothing:antialiased;
+}
+.app{max-width:1320px;margin:0 auto;padding:26px 28px 60px}
+
+/* ---------- 顶栏 ---------- */
+.top{display:flex;align-items:center;justify-content:space-between;gap:18px;margin-bottom:22px}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{
+  width:42px;height:42px;border-radius:var(--r-top);display:grid;place-items:center;
+  background:linear-gradient(145deg,#5cae76,#3d8a57);color:#fff;font-size:19px;font-weight:700;
+  box-shadow:0 10px 22px -14px rgba(74,158,102,.9);
+}
+.brand h1{margin:0;font-size:19px;letter-spacing:.5px}
+.brand p{margin:1px 0 0;font-size:12px;color:var(--text-3)}
+.tools{display:flex;align-items:center;gap:10px}
+button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+.ghost{
+  border:1px solid var(--line);background:var(--surface);border-radius:var(--r-input);
+  padding:0 14px;height:36px;font-size:13px;color:var(--text-2);
+  backdrop-filter:blur(10px);transition:.18s;
+}
+.ghost:hover{border-color:var(--line-2);color:var(--text)}
+.primary{
+  height:36px;padding:0 18px;border-radius:var(--r-input);font-size:13px;font-weight:600;color:#fff;
+  background:linear-gradient(145deg,#5cae76,#3f8d59);
+  box-shadow:0 10px 22px -14px rgba(74,158,102,.95);transition:.18s;
+}
+.primary:hover{transform:translateY(-1px);box-shadow:0 14px 26px -14px rgba(74,158,102,.95)}
+.icon-btn{width:36px;height:36px;border-radius:var(--r-input);border:1px solid var(--line);background:var(--surface);font-size:14px;color:var(--text-2)}
+.icon-btn:hover{color:var(--text);border-color:var(--line-2)}
+
+/* ---------- 总览 ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:18px}
+.stat{
+  border:1px solid var(--line);background:var(--surface);border-radius:18px;
+  padding:13px 16px;backdrop-filter:blur(12px);
+}
+.stat b{display:block;font-size:22px;font-weight:700;letter-spacing:.5px}
+.stat span{font-size:12px;color:var(--text-3)}
+.stat em{font-style:normal;color:var(--text-2)}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.idea{
+  position:relative;text-align:left;width:100%;border:1px solid var(--line);border-radius:var(--r-card);
+  background:var(--surface);padding:18px 18px 14px;backdrop-filter:blur(14px);
+  transition:transform .2s,box-shadow .2s,border-color .2s;
+}
+.idea:hover{transform:translateY(-3px);border-color:rgba(74,158,102,.35);box-shadow:var(--shadow)}
+.idea .row{display:flex;align-items:flex-start;justify-content:space-between;gap:10px}
+.idea h3{margin:0;font-size:15px;font-weight:650}
+.idea .pitch{margin:5px 0 0;font-size:12.5px;color:var(--text-2);line-height:1.5}
+.badge{
+  flex:0 0 auto;font-size:11.5px;padding:3px 9px;border-radius:999px;background:var(--accent-soft);
+  color:var(--accent);border:1px solid rgba(74,158,102,.25);white-space:nowrap;
+}
+.badge.warm{background:var(--warm-soft);color:var(--warm);border-color:rgba(208,138,72,.28)}
+.badge.mute{background:transparent;color:var(--text-3);border-color:var(--line)}
+
+/* 迷你阶梯 */
+.mini{display:flex;align-items:flex-end;gap:5px;height:40px;margin:14px 0 12px}
+.mini i{
+  display:block;flex:1;border-radius:4px 4px 2px 2px;background:repeating-linear-gradient(45deg,var(--line),var(--line) 3px,transparent 3px,transparent 6px);
+  border:1px dashed var(--line-2);
+}
+.mini i.on{border:none;background:linear-gradient(180deg,#6fbe8a,#3f8d59)}
+[data-theme="dark"] .mini i.on{background:linear-gradient(180deg,#8ed3a5,#4f9d6c)}
+.mini i.now{border:none;background:linear-gradient(180deg,#eab583,#d08a48)}
+
+/* 阶数太多时，列表卡不再画几十根柱子，换成一条进度 */
+.minibar{height:8px;border-radius:99px;background:var(--line);margin:24px 0 18px;overflow:hidden}
+.minibar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#6fbe8a,#3f8d59)}
+
+/* 长阶梯的折叠块：已走过的那一大段压成一个「⋯」 */
+.foldbox{
+  width:100%;min-height:168px;border-radius:18px;border:1px dashed var(--line-2);background:transparent;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;padding:8px 4px;
+  color:var(--text-3);transition:.18s;
+}
+.foldbox:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.foldbox b{font-size:20px;line-height:1;font-weight:500;letter-spacing:2px}
+.foldbox span{font-size:11px;line-height:1.4;text-align:center}
+.stair.fold .face{border-left-style:dashed;border-right-style:dashed;border-color:var(--line)}
+
+.idea .foot{display:flex;align-items:center;justify-content:space-between;font-size:11.5px;color:var(--text-3)}
+
+/* ---------- 详情 ---------- */
+.dhead{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:8px}
+.back{font-size:12.5px;color:var(--text-3);padding:0;margin-bottom:10px}
+.back:hover{color:var(--text)}
+.dhead h2{margin:0;font-size:22px;letter-spacing:.4px}
+.dhead .sub{margin:6px 0 0;color:var(--text-2);font-size:13px;max-width:620px}
+.dhead .actions{display:flex;gap:8px;flex:0 0 auto;padding-top:22px}
+
+.track{display:flex;align-items:center;gap:12px;margin:18px 0 26px}
+.track .bar{flex:1;height:6px;border-radius:99px;background:var(--line);overflow:hidden}
+.track .bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#79c391,#4a9e66);transition:width .5s}
+.track small{font-size:12px;color:var(--text-3);white-space:nowrap}
+.backnow{color:var(--accent);font-weight:600;border-bottom:1px dashed var(--accent);padding-bottom:1px}
+
+/* 台阶容器 */
+.stairs{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;align-items:end;padding-bottom:62px}
+html[data-dense="1"] .stairs{gap:10px}
+
+.stair{position:relative;padding-bottom:calc(var(--i) * 62px);min-width:0}
+/* 台阶立面：从本级踏面（卡片底边）往下延伸一级的高度；左右外扩半个间距，让相邻台阶的侧壁接成一面墙 */
+.stair .face{
+  position:absolute;left:-7px;right:-7px;top:calc(100% - var(--i) * 62px - 1px);height:62px;
+  border-left:1px solid var(--line-2);border-right:1px solid var(--line-2);
+  border-radius:0 0 6px 6px;
+}
+.stair.done .face{background:linear-gradient(180deg,rgba(74,158,102,.13),rgba(74,158,102,.01) 88%);border-color:rgba(74,158,102,.22)}
+.stair.now .face{background:linear-gradient(180deg,rgba(208,138,72,.13),rgba(208,138,72,.01) 88%);border-color:rgba(208,138,72,.24)}
+.stair.todo .face{border-color:var(--line);border-left-style:dashed;border-right-style:dashed}
+[data-theme="dark"] .stair.todo .face{background:rgba(255,255,255,.025)}
+
+.step{
+  position:relative;border-radius:18px;border:1px solid var(--line);background:var(--surface);
+  padding:13px 13px 11px;min-height:168px;display:flex;flex-direction:column;gap:9px;
+  transition:transform .22s,box-shadow .22s,border-color .22s,background .22s;
+}
+.step:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.stair.done .step{border-color:rgba(74,158,102,.34);border-bottom:2px solid rgba(74,158,102,.36);background:var(--surface-2)}
+.stair.now .step{border-color:rgba(208,138,72,.45);border-bottom:2px solid rgba(208,138,72,.42);background:var(--surface-2);box-shadow:0 0 0 3px var(--warm-soft)}
+.stair.todo .step{border-style:dashed;background:transparent;opacity:.72}
+/* 已完成的踏面右上角打勾 */
+.stair.done .step::after{
+  content:"✓";position:absolute;top:9px;right:12px;font-size:11px;font-weight:700;color:var(--accent);opacity:.75;
+}
+
+/* 踏面边 */
+.step::before{
+  content:"";position:absolute;left:14px;right:14px;top:0;height:3px;border-radius:0 0 3px 3px;
+  background:var(--line-2);
+}
+.stair.done .step::before{background:linear-gradient(90deg,#4a9e66,#8ed3a5)}
+.stair.now .step::before{background:linear-gradient(90deg,#d08a48,#eab583)}
+
+.step .no{font-size:11px;letter-spacing:2px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.stair.done .step .no{color:var(--accent)}
+.stair.now .step .no{color:var(--warm)}
+.step h4{margin:-4px 0 0;font-size:14px;font-weight:650;display:flex;align-items:center;gap:6px}
+.step h4 .dot{width:6px;height:6px;border-radius:50%;background:var(--line-2)}
+.stair.done h4 .dot{background:var(--accent)}
+.stair.now h4 .dot{background:var(--warm);box-shadow:0 0 0 4px var(--warm-soft)}
+
+/* 成果小旗 */
+.flags{display:flex;flex-direction:column;gap:6px;margin:2px 0 0;padding:0;list-style:none;flex:1}
+.flag{
+  position:relative;font-size:12px;color:var(--text-2);line-height:1.45;
+  padding:6px 8px 6px 20px;border-radius:10px;background:rgba(255,255,255,.55);border:1px solid var(--line);
+}
+[data-theme="dark"] .flag{background:rgba(255,255,255,.05)}
+.flag::before{
+  content:"";position:absolute;left:8px;top:8px;width:7px;height:7px;
+  background:var(--warm);clip-path:polygon(0 0,100% 22%,0 100%);
+}
+.flag b{font-weight:600;color:var(--text)}
+.flag .tag{
+  display:inline-block;margin-left:5px;font-size:10.5px;padding:0 6px;border-radius:99px;
+  background:var(--accent-soft);color:var(--accent);
+}
+
+.step .add{
+  margin-top:auto;font-size:12px;color:var(--text-3);text-align:left;padding:5px 0 0;
+  border-top:1px dashed var(--line);
+}
+.step .add:hover{color:var(--accent)}
+.stair.todo .step .add{pointer-events:none;opacity:.5}
+
+.flag-input{
+  width:100%;height:30px;border-radius:10px;border:1px solid var(--line-2);background:var(--bg);
+  color:var(--text);padding:0 9px;font-size:12px;font-family:inherit;outline:none;
+}
+.flag-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+
+/* 底部提示 */
+.hintbar{
+  margin-top:26px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--text-3);
+  border-top:1px dashed var(--line);padding-top:14px;
+}
+.hintbar kbd{
+  font-family:inherit;font-size:11px;padding:1px 6px;border-radius:6px;border:1px solid var(--line-2);
+  background:var(--surface);color:var(--text-2);
+}
+.hidden{display:none !important}
+@media(max-width:1100px){
+  .stairs{grid-template-columns:repeat(3,1fr)}
+  .stair{padding-bottom:calc(var(--i) * 40px)}
+  .stair .face{height:40px;top:calc(100% - var(--i) * 40px - 1px)}
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="brand">
+      <div class="logo">奇</div>
+      <div><h1>奇思妙想</h1><p>每个想法都值得一级台阶</p></div>
+    </div>
+    <div class="tools">
+      <button class="icon-btn" id="btnTheme" title="切换主题">◐</button>
+      <button class="primary" id="btnNew">＋ 新想法</button>
+    </div>
+  </header>
+
+  <!-- ============ 总览 ============ -->
+  <section id="viewList">
+    <div class="stats">
+      <div class="stat"><b id="sTotal">3</b><span>想法总数</span></div>
+      <div class="stat"><b id="sGoing">1</b><span>正在推进</span></div>
+      <div class="stat"><b id="sDone">1</b><span>已经落地</span></div>
+      <div class="stat"><b id="sFlags">6</b><span>留下的成果</span></div>
+    </div>
+    <div class="grid" id="cards"></div>
+  </section>
+
+  <!-- ============ 详情 ============ -->
+  <section id="viewDetail" class="hidden">
+    <button class="back" id="btnBack">← 全部想法</button>
+    <div class="dhead">
+      <div>
+        <h2 id="dName">—</h2>
+        <p class="sub" id="dPitch">—</p>
+      </div>
+      <div class="actions">
+        <button class="ghost" id="btnStage">＋ 加一级</button>
+        <button class="ghost" id="btnRename">重写这页</button>
+        <button class="primary" id="btnPush">推进到下一阶 ↑</button>
+      </div>
+    </div>
+    <div class="track">
+      <span class="badge" id="dStage">—</span>
+      <div class="bar"><i id="dBar" style="width:20%"></i></div>
+      <small id="dCount">—</small>
+    </div>
+    <div class="stairs" id="stairs"></div>
+    <div class="hintbar">
+      <kbd>点</kbd> 任意已完成的台阶可以补一条成果
+      <span style="margin-left:auto">未到的台阶是虚的 —— 走上去再记</span>
+    </div>
+  </section>
+</div>
+
+<script>
+const STAGES = ['灵感', '验证', '雏形', '推进', '落地'];
+let uid = 100;
+function mkIdeaRaw(name, pitch, names, doneCount, flags) {
+  const steps = names.map((n, i) => ({
+    name: n,
+    done: i < doneCount,
+    results: (flags[i] || []).map(t => (typeof t === 'string' ? { text: t } : t))
+  }));
+  return { id: ++uid, name, pitch, steps };
+}
+const mkIdea = (name, pitch, doneCount, flags) => mkIdeaRaw(name, pitch, STAGES, doneCount, flags);
+
+// 长周期项目：阶数可以几十个。界面上永远只摊开当前这一段，已走过的用「⋯ N 阶」折叠
+const LONG_STAGES = ['灵感', '找参考', '定形式', '写提纲', '采素材', '访谈家人', '写脚本', '画分镜', '画风测试', '配音试录', '一分钟样片', '内部评审', '算成本', '全片制作', '配乐', '调色剪辑', '试映', '发布'];
+
+let ideas = [
+  mkIdeaRaw('人生长视频动画', '把一个人的一生做成 10–60 分钟的动画长片，而不是 30 秒的体验卡。', LONG_STAGES, 9, {
+    0: ['抖音上的「一日人生体验卡」全是短视频，10 分钟以上的长版本是空档'],
+    1: [{ text: '看了《人生七年》和三部手绘传记，确认这条路有人走通过', tag: '4 部' }],
+    2: [{ text: '形式定了：12 分钟，水墨 + 旁白，不做全流程动画', tag: '12 分钟' }],
+    3: [{ text: '提纲 8 幕：出生 / 上学 / 搬家 / 高考 / 第一份工作 / 结婚 / 低谷 / 现在', tag: '8 幕' }],
+    4: [{ text: '从家里翻出 300 张照片和 4 盘旧磁带', tag: '300 张' }],
+    5: [{ text: '访谈爸妈各 1 小时，录到 12 个没听过的细节', tag: '12 个' }],
+    6: [{ text: '脚本一稿 3200 字，念一遍 11 分半', tag: '3200 字' }],
+    7: [{ text: '分镜 60 格，每格标了镜头时长', tag: '60 格' }],
+    8: [{ text: '试了水墨、剪纸、蜡笔三种，选水墨（成本最低）', tag: '水墨' }]
+  }),
+  mkIdea('工作日早餐自动化', '早上 7 点不用想，20 秒出锅。', 3, {
+    0: ['把「早上没胃口」拆成三种真实场景'],
+    1: [{ text: '参考 12 个菜谱，筛出 5 个 20 分钟内能做的', tag: '5 个' }],
+    2: [{ text: '周末一次备料，够工作日五天', tag: '5 天' }]
+  }),
+  mkIdea('旧照片 AI 修复小站', '把家里 2000 张老照片救回来，别等它自己发黄。', 2, {
+    0: ['先问了 6 个亲戚，都说愿意翻影集'],
+    1: [{ text: '修了 30 张试手，七成能看', tag: '30 张' }]
+  }),
+  mkIdea('通勤播客剪辑流', '地铁 40 分钟，剪完一期就走。', 5, {
+    0: ['通勤时间其实足够剪 20 分钟素材'],
+    1: [{ text: '拿 3 期旧素材试剪，平均 35 分钟', tag: '3 期' }],
+    2: [{ text: '做了一套手机端快捷键，闭眼能按', tag: '快捷键' }],
+    3: [{ text: '连续 4 周周更没断', tag: '4 周' }],
+    4: [{ text: '上了小宇宙，第一月 800 播放', tag: '800' }]
+  })
+];
+
+let cur = ideas[0];
+let winFrom = null;   // 长阶梯的窗口起点，null = 自动跟着当前阶走
+const $ = s => document.querySelector(s);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+/* ---------- 总览 ---------- */
+function renderStats() {
+  const going = ideas.filter(i => i.steps.some(s => s.done) && i.steps.some(s => !s.done)).length;
+  const done = ideas.filter(i => i.steps.every(s => s.done)).length;
+  const flags = ideas.reduce((n, i) => n + i.steps.reduce((m, s) => m + s.results.length, 0), 0);
+  $('#sTotal').textContent = ideas.length;
+  $('#sGoing').textContent = going;
+  $('#sDone').textContent = done;
+  $('#sFlags').textContent = flags;
+}
+
+function renderCards() {
+  $('#cards').innerHTML = ideas.map(i => {
+    const doneN = i.steps.filter(s => s.done).length;
+    const allDone = doneN === i.steps.length;
+    // 阶数多的时候迷你阶梯会糊成一片，降级成一条进度
+    const mini = i.steps.length > 12
+      ? `<div class="minibar"><i style="width:${Math.round(doneN / i.steps.length * 100)}%"></i></div>`
+      : `<div class="mini">${i.steps.map((s, k) => {
+          const h = 10 + k * 7;
+          const cls = s.done ? 'on' : (k === doneN ? 'now' : '');
+          return `<i class="${cls}" style="height:${h}px"></i>`;
+        }).join('')}</div>`;
+    return `<button class="idea" data-id="${i.id}">
+      <div class="row">
+        <div><h3>${esc(i.name)}</h3><p class="pitch">${esc(i.pitch)}</p></div>
+        <span class="badge ${allDone ? '' : 'warm'}">${allDone ? '已落地' : i.steps[doneN]?.name || '灵感'}</span>
+      </div>
+      ${mini}
+      <div class="foot">
+        <span>第 ${doneN} / ${i.steps.length} 阶</span>
+        <span>${i.steps.reduce((n, s) => n + s.results.length, 0)} 条成果</span>
+      </div>
+    </button>`;
+  }).join('');
+}
+
+/* ---------- 详情 ---------- */
+function renderDetail() {
+  const i = cur;
+  const total = i.steps.length;
+  const doneN = i.steps.filter(s => s.done).length;
+  const allDone = doneN === total;
+  const curIdx = allDone ? total - 1 : doneN;
+
+  $('#dName').textContent = i.name;
+  $('#dPitch').textContent = i.pitch;
+  $('#dStage').textContent = allDone ? '已经落地' : `当前 · ${i.steps[curIdx].name}`;
+  $('#dStage').className = 'badge' + (allDone ? '' : ' warm');
+  $('#dStage').title = '点这里回到当前这一阶';
+  $('#dBar').style.width = (doneN / total * 100) + '%';
+  $('#btnPush').style.display = allDone ? 'none' : '';
+
+  // 一屏最多摊开 5 级：≤5 全铺；更多只摊开当前这一段，前后各用「⋯」折叠
+  const WIDE = 5;
+  let from = 0, to = total - 1;
+  if (total > WIDE) {
+    if (winFrom === null) winFrom = Math.max(0, curIdx - 1);
+    winFrom = Math.min(Math.max(0, winFrom), total - WIDE);
+    from = winFrom;
+    to = Math.min(total - 1, from + WIDE - 1);
+  }
+  const foldHead = from;
+  const foldTail = total - 1 - to;
+
+  const cells = [];
+  if (foldHead > 0) cells.push({ fold: 'head', count: foldHead });
+  for (let k = from; k <= to; k++) cells.push({ k });
+  if (foldTail > 0) cells.push({ fold: 'tail', count: foldTail });
+
+  $('#stairs').style.gridTemplateColumns = cells.map(c => c.fold ? '0.52fr' : 'minmax(0,1fr)').join(' ');
+  $('#stairs').dataset.from = from;
+  $('#stairs').dataset.to = to;
+
+  // 翻远了以后给一条「回去」的路，不然用户不知道当前阶在哪
+  const offWindow = total > WIDE && !(from <= curIdx && curIdx <= to);
+  if (offWindow) {
+    $('#dCount').innerHTML = `<span class="backnow">↩ 回到第 ${curIdx + 1} 阶</span>`;
+    $('#dCount').style.cursor = 'pointer';
+    $('#dCount').onclick = () => { winFrom = null; renderDetail(); };
+  } else {
+    $('#dCount').textContent = `${doneN} / ${total} 阶 · ${i.steps.reduce((n, s) => n + s.results.length, 0)} 条成果`;
+    $('#dCount').style.cursor = '';
+    $('#dCount').onclick = null;
+  }
+
+  $('#stairs').innerHTML = cells.map((c, vi) => {
+    // 折叠块只占一窄列，位次也参与台阶高度，视觉上还是一段楼梯
+    if (c.fold) {
+      return `<div class="stair fold" style="--i:${vi}">
+        <div class="face"></div>
+        <button class="foldbox" data-fold="${c.fold}">
+          <b>⋯</b>
+          <span>${c.fold === 'head' ? `前 ${c.count} 阶<br>已走过` : `还有<br>${c.count} 阶`}</span>
+        </button>
+      </div>`;
+    }
+    const k = c.k;
+    const s = i.steps[k];
+    const state = s.done ? 'done' : (k === curIdx ? 'now' : 'todo');
+    const flags = s.results.map(r =>
+      `<li class="flag">${esc(r.text)}${r.tag ? `<span class="tag">${esc(r.tag)}</span>` : ''}</li>`
+    ).join('');
+    const addable = s.done || k === curIdx;
+    return `<div class="stair ${state}" style="--i:${vi}" data-k="${k}">
+      <div class="face"></div>
+      <div class="step">
+        <div class="no">${String(k + 1).padStart(2, '0')}</div>
+        <h4><span class="dot"></span>${esc(s.name)}</h4>
+        <ul class="flags">${flags}</ul>
+        ${addable ? `<button class="add" data-add="${k}">＋ 记一条成果</button>` : `<div class="add">还没到这一阶</div>`}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ---------- 视图切换 ---------- */
+function showList() {
+  $('#viewList').classList.remove('hidden');
+  $('#viewDetail').classList.add('hidden');
+  renderStats(); renderCards();
+}
+function showDetail(idea) {
+  cur = idea;
+  winFrom = null;   // 换项目时窗口回到当前阶
+  $('#viewList').classList.add('hidden');
+  $('#viewDetail').classList.remove('hidden');
+  renderDetail();
+}
+
+/* ---------- 事件 ---------- */
+$('#cards').addEventListener('click', e => {
+  const card = e.target.closest('.idea');
+  if (!card) return;
+  const idea = ideas.find(x => x.id === Number(card.dataset.id));
+  if (idea) showDetail(idea);
+});
+$('#btnBack').onclick = showList;
+$('#dStage').style.cursor = 'pointer';
+$('#dStage').onclick = () => { winFrom = null; renderDetail(); };
+
+$('#btnPush').onclick = () => {
+  const k = cur.steps.findIndex(s => !s.done);
+  if (k < 0) return;
+  cur.steps[k].done = true;
+  winFrom = null;          // 推进后窗口跟着当前阶走
+  renderDetail();
+  // 推进后短暂高亮这一级
+  const el = document.querySelector(`.stair[data-k="${k}"] .step`);
+  if (el) { el.style.transition = 'box-shadow .5s'; el.style.boxShadow = '0 0 0 4px rgba(74,158,102,.25)'; }
+};
+
+// 加成果（行内输入）
+$('#stairs').addEventListener('click', e => {
+  // 「⋯」折叠块：点一次往前/往后翻一段，一屏始终只摊开 7 级
+  const fold = e.target.closest('[data-fold]');
+  if (fold) {
+    const from = Number($('#stairs').dataset.from);
+    winFrom = fold.dataset.fold === 'head' ? Math.max(0, from - 4) : from + 4;
+    renderDetail();
+    return;
+  }
+  const btn = e.target.closest('[data-add]');
+  if (!btn) return;
+  const k = Number(btn.dataset.add);
+  const holder = btn.parentElement;
+  holder.querySelector('.flag-input')?.remove();
+  const input = document.createElement('input');
+  input.className = 'flag-input';
+  input.placeholder = '这一步做成了什么？回车记下';
+  holder.appendChild(input);
+  input.focus();
+  // 回车提交后 DOM 会被重建 → 输入框失焦又会触发一次 blur，用 settled 挡住重复提交
+  let settled = false;
+  const commit = () => {
+    if (settled) return;
+    settled = true;
+    const v = input.value.trim();
+    if (v) { cur.steps[k].results.push({ text: v }); renderDetail(); }
+    else input.remove();
+  };
+  const cancel = () => { if (settled) return; settled = true; input.remove(); };
+  input.addEventListener('keydown', ev => {
+    if (ev.key === 'Enter') commit();
+    if (ev.key === 'Escape') cancel();
+  });
+  input.addEventListener('blur', () => setTimeout(() => { if (input.value.trim()) commit(); else cancel(); }, 120));
+});
+
+$('#btnTheme').onclick = () => {
+  const root = document.documentElement;
+  root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark';
+};
+
+$('#btnNew').onclick = () => {
+  const name = prompt('这个想法叫什么？（例如：周末菜市场比价器）');
+  if (!name) return;
+  const idea = mkIdea(name.trim(), '还没想好一句话 —— 先把它放上第一级台阶。', 1, { 0: ['把它写下来了，别让它跑掉'] });
+  ideas.unshift(idea);
+  showDetail(idea);
+};
+
+$('#btnRename').onclick = () => {
+  const name = prompt('改个名字：', cur.name);
+  if (name && name.trim()) { cur.name = name.trim(); renderDetail(); }
+};
+
+// 一直往上加台阶：新的一级永远放在最后，还没到就是虚的
+$('#btnStage').onclick = () => {
+  const name = prompt('再加一级台阶，叫什么？（例如：出片 / 复盘 / 第二季）');
+  if (!name || !name.trim()) return;
+  cur.steps.push({ name: name.trim(), done: false, results: [] });
+  renderDetail();
+};
+
+showDetail(ideas[0]);
+</script>
+</body>
+</html>

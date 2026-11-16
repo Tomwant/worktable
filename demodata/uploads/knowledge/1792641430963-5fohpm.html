@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第18期 · 机会成本</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #dcb98e;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 18 期</span>
+  <h1>今天的概念：<span class="tag">机会成本</span>（Opportunity Cost）</h1>
+  <div class="date">2026年10月10日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 阿杰的 30 万和每天两小时：看得见的花销，看不见的账单</h2>
+    <p>阿杰，32 岁，刚攒下 <strong>30 万</strong>闲钱，每天下班后还有雷打不动的两小时空闲。他觉得自己挺"省"的，做决定也很谨慎。可一年后他翻账本，发现有些"没花钱"的选择，其实悄悄吞掉了一笔看不见的钱。</p>
+    <p>先看<strong>钱</strong>：那 30 万他有两个去处——</p>
+    <ul class="points" style="box-shadow:none;border:none;padding:4px 28px 4px 28px;margin-bottom:10px;">
+      <li><strong>选项 A</strong>：提前还房贷（利率 4.9%，每年稳稳省下约 <strong>1.5 万</strong>利息，无风险、睡得安稳）。</li>
+      <li><strong>选项 B</strong>：跟朋友合伙开奶茶店（朋友拍胸脯说年分红 <strong>5 万</strong>，但也可能亏）。</li>
+    </ul>
+    <p>阿杰选了 A。周围人笑他："你亏大了，B 能赚 5 万呢！"</p>
+    <p>再看<strong>时间</strong>：每天那两小时，他选了 C——刷短视频、打游戏，"免费又爽"。而另一个选项 D 是学一门数据分析，他说"等以后有空再说"。</p>
+    <p>一年下来，阿杰的"账面"很干净：没亏钱、还省了利息。可机会成本视角一算，账单全出来了——</p>
+    <div class="board">
+      <div class="row head"><span class="k">对比项</span><span class="v">阿杰的选择</span><span class="v">他真正放弃的（次优选项）</span></div>
+      <div class="row"><span class="k">钱的去向</span><span class="v">提前还贷，省 1.5 万利息</span><span class="v">若 B 最优：潜在 5 万分红（净值差约 3.5 万）</span></div>
+      <div class="row"><span class="k">时间的去向</span><span class="v">每天 2 小时刷手机</span><span class="v">本可学技能，长期或换来一次涨薪（如 +¥1,000/月）</span></div>
+      <div class="row"><span class="k">"免费"的代价</span><span class="v">看似 0 成本</span><span class="v">真正的成本写在放弃的东西上，而非标价签</span></div>
+    </div>
+    <p>会计只数你<strong>花出去</strong>的钱；机会成本还数你<strong>"本可以"赚到、却因这个选择错过</strong>的价值。阿杰以为自己省，其实他"花"掉的，是那 5 万潜在分红和未来的涨薪空间——只是这笔账，从来没出现在他的本子上。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>机会成本（Opportunity Cost）</strong>，简单说就是：任何选择的真实代价，不是你花出去的，而是你<strong>为此放弃的其他选项里，价值最高的那一个</strong>。</p>
+    <div class="formula">某选择的真实成本 = 你放弃的选项中，价值最高的那个（次优选项）</div>
+    <p>它和"会计成本"（账面花的钱）是两回事。会计只看你掏了多少；机会成本还看你<strong>少赚了多少、错过了什么</strong>。所以"免费"的东西往往最贵——因为你把本可用在别处的资源（时间、钱、精力）压在了它身上。</p>
+    <p>🌰 换到你的钱包：读三年研究生，学费只是会计成本，机会成本是你这三年本可工作赚的几十万；买一个新款手机"省"下的，是这笔钱拿去理财可能增值的部分；每天通勤刷手机 1 小时，机会成本是你本可用这 1 小时读完的书、学会的技能。每一个"要"的背面，都藏着一个"没要"——而那个"没要"，常常才是真正的价签。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>"免费"几乎从不免费</strong>：真正的账单写在你放弃的东西上，而非标价签。阿杰的刷手机、免费的赠票、公司的纸笔，看似 0 元，代价是别处本可兑现的价值。</li>
+      <li><strong>比较的是"次优"，不是"全部放弃"</strong>：机会成本 = 放弃选项中价值最高的那一个，不是所有放弃项之和。抓住那个"最可惜的"，就够看清这笔账。</li>
+      <li><strong>时间和大决策最容易被忽略</strong>：跳槽、读研、买房这些动辄以年计的选择，机会成本常远超眼前数字；连每天两小时这种"零碎时间"累积几年，也可能价值惊人。凡选择，先问一句：我为此放弃了什么最好的东西？</li>
+    </ul>
+  </div>
+
+  <div class="next">第 19 期将回到序列第三篇，聊聊「通货膨胀」（Inflation）—— 为什么去年 100 块能买的一笼包子，今年要 110 块？一张"钱悄悄变瘦"的账单，和一个关于"包子涨价"的故事。</div>
+</div>
+</body>
+</html>

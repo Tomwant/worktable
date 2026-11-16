@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识_第10期_周转率与周转天数_2026-11-11</title>
+<style>
+  :root{
+    --green:#2f6b5e;
+    --green-d:#244f45;
+    --gold:#c9a961;
+    --gold-l:#f7f1e4;
+    --ink:#243430;
+    --sub:#5f7068;
+    --line:#e3e8e5;
+    --bg:#f5f7f6;
+    --card:#ffffff;
+    --r:16px;
+    --shadow:0 6px 22px rgba(47,107,94,0.08);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:28px 20px 48px;}
+
+  /* 头部 */
+  header{
+    background:linear-gradient(135deg,#2f6b5e 0%,#3c7d6e 60%,#4a8e7c 100%);
+    color:#fff;
+    border-radius:var(--r);
+    padding:30px 28px 26px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";position:absolute;right:-40px;top:-40px;width:160px;height:160px;
+    background:radial-gradient(circle,rgba(201,169,97,0.35),transparent 70%);
+  }
+  .issue{
+    display:inline-block;background:rgba(201,169,97,0.92);color:#3a2f12;
+    font-size:13px;font-weight:700;letter-spacing:1px;padding:4px 12px;border-radius:999px;
+  }
+  header h1{margin:14px 0 6px;font-size:30px;letter-spacing:1px;}
+  header .sub{font-size:15.5px;opacity:0.92;margin:0 0 16px;}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;}
+  .meta span{background:rgba(255,255,255,0.16);padding:4px 11px;border-radius:8px;}
+  .kw{margin-top:14px;font-size:13px;opacity:0.9;}
+  .kw b{color:var(--gold);}
+
+  /* 卡片 */
+  .card{
+    background:var(--card);border-radius:var(--r);padding:22px 24px;margin-top:20px;
+    box-shadow:var(--shadow);border:1px solid #eef2f0;
+  }
+  .card h2{
+    margin:0 0 14px;font-size:20px;color:var(--green-d);
+    display:flex;align-items:center;gap:10px;
+  }
+  .card h2 .bar{width:5px;height:20px;background:var(--gold);border-radius:3px;display:inline-block;}
+  .card p{margin:10px 0;font-size:15px;color:#33403b;}
+  .lead{font-size:15.5px;color:#33403b;}
+
+  /* 场景 */
+  .scene{
+    background:linear-gradient(180deg,#fbfcfb,#f4f8f6);
+    border-left:4px solid var(--gold);
+  }
+  .scene .who{font-weight:700;color:var(--green);}
+
+  /* 公式卡网格 */
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(248px,1fr));gap:14px;margin-top:6px;}
+  .fcard{
+    background:#fbfcfb;border:1px solid var(--line);border-radius:12px;padding:14px 16px;
+  }
+  .fcard .t{font-size:13px;font-weight:700;color:var(--green);margin-bottom:6px;}
+  .fcard .f{font-size:14px;color:#2a3631;font-weight:600;line-height:1.55;}
+  .fcard .n{font-size:12.5px;color:var(--sub);margin-top:6px;}
+
+  /* 算例表 */
+  .tbl{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px;}
+  .tbl th,.tbl td{border:1px solid var(--line);padding:9px 11px;text-align:right;}
+  .tbl th{background:var(--green);color:#fff;font-weight:600;text-align:right;}
+  .tbl th:first-child,.tbl td:first-child{text-align:left;}
+  .tbl tr:nth-child(even) td{background:#fafcfb;}
+  .hl{background:#fdf6e6 !important;font-weight:700;color:#8a6f2e;}
+
+  /* 步骤 */
+  ol.steps{margin:10px 0;padding-left:0;list-style:none;counter-reset:s;}
+  ol.steps li{
+    counter-increment:s;position:relative;padding:12px 14px 12px 48px;margin-bottom:10px;
+    background:#fbfcfb;border:1px solid var(--line);border-radius:12px;font-size:14.5px;
+  }
+  ol.steps li::before{
+    content:counter(s);position:absolute;left:12px;top:12px;width:26px;height:26px;
+    background:var(--green);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:700;
+  }
+  .calc{font-family:"SF Mono",Consolas,Menlo,monospace;background:#f3f6f5;padding:2px 6px;border-radius:6px;font-size:13.5px;color:var(--green-d);}
+
+  /* 红线 */
+  .red{background:#fff;border:1px solid var(--line);}
+  ul.redlist{margin:6px 0 0;padding-left:0;list-style:none;}
+  ul.redlist li{
+    position:relative;padding:12px 14px 12px 42px;margin-bottom:10px;font-size:14.5px;
+    background:#fbfcfb;border-radius:12px;border:1px solid var(--line);
+  }
+  ul.redlist li::before{
+    content:"!";position:absolute;left:13px;top:11px;width:20px;height:20px;border-radius:50%;
+    background:var(--gold);color:#3a2f12;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center;
+  }
+  ul.redlist li b{color:var(--green-d);}
+
+  /* CSS 标尺可视化 */
+  .bars{margin-top:14px;}
+  .bar-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;font-size:13.5px;}
+  .bar-row .lab{width:120px;color:var(--sub);text-align:right;flex:0 0 120px;}
+  .bar-row .track{flex:1;background:#eef2f0;border-radius:8px;height:22px;position:relative;overflow:hidden;}
+  .bar-row .fill{height:100%;border-radius:8px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-size:12px;font-weight:700;}
+  .fill.g{background:linear-gradient(90deg,#2f6b5e,#4a8e7c);}
+  .fill.gd{background:linear-gradient(90deg,#9a7d3a,#c9a961);}
+  .fill.r{background:linear-gradient(90deg,#b06a52,#cf8a6e);}
+
+  /* 自测题 */
+  .quiz-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+  .quiz-tip{font-size:13.5px;color:var(--sub);margin:4px 0 14px;}
+  details.quiz{
+    border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:12px;
+    transition:border-color .15s,box-shadow .15s,transform .15s;
+  }
+  details.quiz:hover{border-color:#c7d6cf;box-shadow:0 4px 14px rgba(47,107,94,0.10);transform:translateY(-1px);}
+  details.quiz summary{
+    display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;
+    user-select:none;list-style:none;
+  }
+  details.quiz summary::-webkit-details-marker{display:none;}
+  details.quiz summary::marker{content:"";}
+  .q{flex:1 1 auto;font-size:15px;font-weight:600;line-height:1.6;}
+  .peek{
+    flex:0 0 auto;background:var(--gold-l);color:#8a6f2e;font-size:12.5px;border-radius:999px;
+    padding:3px 11px 3px 9px;display:inline-flex;align-items:center;gap:4px;white-space:nowrap;
+    transition:background .15s,color .15s;
+  }
+  details[open] .peek{background:#e7f0ed;color:#2a5b50;}
+  .peek .t-on{display:inline;}
+  .peek .t-off{display:none;}
+  details[open] .peek .t-on{display:none;}
+  details[open] .peek .t-off{display:inline;}
+  .peek .arw{display:inline-block;transition:transform .2s;}
+  details[open] .peek .arw{transform:rotate(180deg);}
+  .ans{
+    border-top:1px dashed var(--line);padding:12px 16px 14px;background:#fbfcfb;font-size:14.5px;color:#2a3631;
+  }
+  details[open] .ans{animation:fadeIn .25s ease;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+  .ans .calc{background:#eef4f1;}
+
+  /* 脚注 */
+  footer{margin-top:26px;font-size:12.5px;color:var(--sub);text-align:center;line-height:1.8;}
+  footer b{color:var(--green);}
+
+  @media (max-width:600px){
+    .wrap{padding:18px 12px 36px;}
+    header{padding:22px 18px;}
+    header h1{font-size:24px;}
+    .card{padding:18px 15px;}
+    .grid{grid-template-columns:1fr;}
+    .bar-row .lab{flex-basis:88px;width:88px;font-size:12px;}
+    .tbl{font-size:12px;}
+    .tbl th,.tbl td{padding:7px 7px;}
+    .q{font-size:14px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="issue">第 10 期</span>
+    <h1>周转率与周转天数</h1>
+    <p class="sub">钱转一圈要多少天，决定你一年能赚几遍</p>
+    <div class="meta">
+      <span>日期：2026-11-11</span>
+      <span>面向：多门店经营者（财务小白）</span>
+      <span>讲师：门店财务顾问</span>
+    </div>
+    <div class="kw">关键词：<b>周转率</b> · <b>周转天数</b> · <b>现金周转周期</b> · <b>存货</b> · <b>应收</b> · <b>应付</b></div>
+  </header>
+
+  <!-- 场景 -->
+  <section class="card scene">
+    <h2><span class="bar"></span>一、先从一个真实场景说起</h2>
+    <p class="lead"><span class="who">林姐</span>开了三家服装店，规模差不多。年底对账，她发现一个怪事：</p>
+    <p>三家店去年都卖了约 240 万的货，利润也都赚了 40 万左右。可是一到换季要进货，<b>A 店现金很宽裕，B 店勉强够，C 店却总是四处借钱周转</b>。</p>
+    <p>林姐很纳闷：营收一样、利润一样，为什么钱的"紧巴程度"差这么多？</p>
+    <p>答案就藏在今天的知识点里——<b>同样是 240 万营收，钱在店里"转一圈"用的时间不同，占用的现金就天差地别</b>。这就是「周转率与周转天数」要讲的事。</p>
+  </section>
+
+  <!-- 定义与公式 -->
+  <section class="card">
+    <h2><span class="bar"></span>二、定义与公式卡片</h2>
+    <p class="lead">先看三个互相咬合的概念，再落到门店最常用的四张"天数"表。</p>
+
+    <div class="grid">
+      <div class="fcard">
+        <div class="t">① 周转率（次数）</div>
+        <div class="f">周转率 = 期间周转额 ÷ 平均资产余额</div>
+        <div class="n">含义：这段时间里，这笔资产被"卖掉/用掉"了几遍。次数越大转得越快。</div>
+      </div>
+      <div class="fcard">
+        <div class="t">② 周转天数</div>
+        <div class="f">周转天数 = 计算期天数 ÷ 周转率</div>
+        <div class="n">也等于 平均资产余额 × 计算期天数 ÷ 期间周转额。含义：转完一整圈要多少天。</div>
+      </div>
+      <div class="fcard">
+        <div class="t">③ 现金周转周期（CCC）</div>
+        <div class="f">CCC = 存货周转天数 + 应收周转天数 − 应付周转天数</div>
+        <div class="n">含义：从你付钱进货款，到收回卖货的钱，现金被"套"在经营里多少天。</div>
+      </div>
+      <div class="fcard">
+        <div class="t">④ 存货周转天数</div>
+        <div class="f">存货周转天数 = 平均存货 × 期间天数 ÷ 营业成本</div>
+        <div class="n">货从进店到卖光，平均压了多少天。食品越短越好，服装别超季。</div>
+      </div>
+      <div class="fcard">
+        <div class="t">⑤ 应收账款周转天数</div>
+        <div class="f">应收周转天数 = 平均应收账款 × 期间天数 ÷ 营业收入</div>
+        <div class="n">赊出去的账，平均多少天能收回来。越长越容易变坏账。</div>
+      </div>
+      <div class="fcard">
+        <div class="t">⑥ 应付账款周转天数</div>
+        <div class="f">应付周转天数 = 平均应付账款 × 期间天数 ÷ 营业成本</div>
+        <div class="n">你欠供应商的账，平均多少天付一次。这是"免费占用"的资金。</div>
+      </div>
+    </div>
+    <p style="margin-top:14px;font-size:13.5px;color:var(--sub);">小记：平均资产余额 =（期初余额 + 期末余额）÷ 2；期间天数常用 90（季）、360（年）。</p>
+  </section>
+
+  <!-- 算例 -->
+  <section class="card">
+    <h2><span class="bar"></span>三、可直接套用的计算示例</h2>
+    <p class="lead">把林姐的 <b>A 店</b>一个季度（90 天）的账本摊开，我们一步一步算。</p>
+
+    <table class="tbl">
+      <tr><th>项目</th><th>期初</th><th>期末</th><th>平均</th></tr>
+      <tr><td>存货（进货在库）</td><td>60.0 万</td><td>48.0 万</td><td>54.0 万</td></tr>
+      <tr><td>应收账款（赊账未收）</td><td>8.0 万</td><td>11.0 万</td><td>9.5 万</td></tr>
+      <tr><td>应付账款（欠供应商）</td><td>10.0 万</td><td>13.0 万</td><td>11.5 万</td></tr>
+      <tr><td>季度营业收入</td><td colspan="2">—</td><td>60.0 万</td></tr>
+      <tr><td>季度营业成本</td><td colspan="2">—</td><td>36.0 万</td></tr>
+    </table>
+
+    <ol class="steps">
+      <li>存货周转率 = 营业成本 ÷ 平均存货 = <span class="calc">36 ÷ 54 = 0.667 次/季</span><br>说明：这一季度，整批存货只"卖完"了约 0.67 遍。</li>
+      <li>存货周转天数 = 平均存货 × 90 ÷ 营业成本 = <span class="calc">54 × 90 ÷ 36 = 135 天</span><br>一件衣服从进货到卖光，平均要 135 天——跨了快两个季度。</li>
+      <li>应收账款周转率 = 营业收入 ÷ 平均应收 = <span class="calc">60 ÷ 9.5 = 6.32 次/季</span><br>赊出去的账，一季能收回来约 6 遍。</li>
+      <li>应收账款周转天数 = 平均应收 × 90 ÷ 营业收入 = <span class="calc">9.5 × 90 ÷ 60 = 14.25 天</span><br>团单赊账平均 14 天收回，比较健康。</li>
+      <li>应付账款周转天数 = 平均应付 × 90 ÷ 营业成本 = <span class="calc">11.5 × 90 ÷ 36 = 28.75 天</span><br>林姐平均 29 天才付供应商一次，等于免费占用了近一个月的货款。</li>
+      <li>现金周转周期 CCC = 135 + 14.25 − 28.75 = <span class="calc">120.5 天</span><br>结论：A 店每做一轮生意，现金要被套 <b>120 天</b>。套得越久，同样的本金一年能做的轮数越少。</li>
+    </ol>
+
+    <p style="margin-top:6px;">把"年"算出来更直观：一年 360 天 ÷ 120.5 天 ≈ <b>2.99 轮</b>。也就是说，A 店 100 万本金，一年大约只能靠经营循环赚 <b>3 遍</b>毛利。</p>
+
+    <p style="font-size:13.5px;color:var(--sub);">呼应往期：存货在第 09 期、应收在第 07 期、应付在第 08 期都单讲过；今天把它们收拢成一个"现金周转周期"，就是林姐三家店紧巴程度不同的真正原因——C 店存货周转天数高达 200 天，光这一项就把现金死死压住。</p>
+  </section>
+
+  <!-- 可视化标尺 -->
+  <section class="card">
+    <h2><span class="bar"></span>四、A / B / C 三店现金周转周期对比</h2>
+    <p class="lead">同样 240 万年营收，三家店"套现天数"不同，现金松紧立见。</p>
+    <div class="bars">
+      <div class="bar-row"><span class="lab">A 店（健康）</span><div class="track"><div class="fill g" style="width:48%;">120 天</div></div></div>
+      <div class="bar-row"><span class="lab">B 店（偏紧）</span><div class="track"><div class="fill gd" style="width:64%;">160 天</div></div></div>
+      <div class="bar-row"><span class="lab">C 店（吃紧）</span><div class="track"><div class="fill r" style="width:92%;">230 天</div></div></div>
+    </div>
+    <p style="font-size:13.5px;color:var(--sub);margin-top:8px;">条越长，现金被套越久，越要靠借钱周转。缩短存货与应收天数、适度拉长应付天数，是门店"不靠增资也能变宽裕"的核心杠杆。</p>
+  </section>
+
+  <!-- 判断标准 / 红线 -->
+  <section class="card red">
+    <h2><span class="bar"></span>五、给经营者的判断标准与红线</h2>
+    <ul class="redlist">
+      <li><b>现金周转周期（CCC）以"短"为美。</b>CCC 越短，同样本金一年能转的轮数越多、赚的遍数越多。若 CCC 能压成负数（应付天数 &gt; 存货+应收天数），等于用供应商的钱白做生意——但要守住付款信誉，别因拖欠丢了账期。</li>
+      <li><b>存货周转天数盯行业警戒线。</b>生鲜 1–7 天、食品 7–30 天、服装 90–120 天。一旦超过本行业"一倍半到两倍"，就是积压信号，要立刻促销清仓、砍掉滞销 SKU。</li>
+      <li><b>应收周转天数不能超过你给的账期。</b>你给客户 30 天账期，自己的应收周转却要 45 天，说明有人在超期占用你的钱；超过 60 天要按坏账预警处理。</li>
+      <li><b>别被营收增长骗了。</b>营收涨 30%、存货却涨 80%，是"钱被货吃掉"的危险增长，不是真健康。看增长必须同时看周转天数是否恶化。</li>
+      <li><b>多店对比看"天数"不看"金额"。</b>门店甲存货 50 万周转 90 天，门店乙存货 30 万周转 60 天——乙更轻、更健康。绝对金额大的店不一定差，关键看转得快不快。</li>
+    </ul>
+  </section>
+
+  <!-- 自测题 -->
+  <section class="card">
+    <div class="quiz-title"><h2 style="margin:0;"><span class="bar"></span>今日自测题</h2></div>
+    <p class="quiz-tip">先自己算一遍，再点答案对一下。</p>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q1（计算）：某便利店一个季度（90 天）营业成本 24 万，平均存货 16 万。求它的存货周转天数，并判断这家店压货是否偏重（食品零售警戒线约 30 天）。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">A1：存货周转天数 = 平均存货 × 期间天数 ÷ 营业成本 = <span class="calc">16 × 90 ÷ 24 = 1440 ÷ 24 = 60 天</span>。食品零售警戒线约 30 天，60 天已是警戒线的两倍，说明压货明显偏重，应排查滞销品、减少进货批量、加快促销。</div>
+    </details>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q2（计算+判断）：门店 D 季度营收 50 万，平均应收账款 10 万，给客户的账期是 30 天。求应收周转天数，并判断回款是否健康。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">A2：应收周转天数 = 平均应收账款 × 期间天数 ÷ 营业收入 = <span class="calc">10 × 90 ÷ 50 = 900 ÷ 50 = 18 天</span>。给客户的账期是 30 天，实际 18 天就收回，短于账期，回款健康，没有超期占用。若结果大于 30 天，则需收紧赊销或催收。</div>
+    </details>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q3（判断）："周转率越高一定越好，因为说明东西卖得快。"这句话对吗？请说明理由。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">A3：不对（错误）。周转率高通常是好事，代表资金效率高、钱转得快；但"越高越好"不绝对：① 若为了快周转而大幅降价清仓，会牺牲毛利，赚遍数却亏单价；② 安全库存压得过低，容易断货缺货，反而损失销售；③ 应收周转过快可能是不敢做赊销、放弃大客户。正确表述是：<b>在保持合理毛利、且不频繁断货的前提下，周转越快越好</b>。看指标要连着毛利一起看，不能单追一个数字。</div>
+    </details>
+  </section>
+
+  <footer>
+    本期为《门店经营财务知识日报》第 10 期 · 主题：周转率与周转天数 · 2026-11-11<br>
+    往期回顾：第 05 期 门店盈亏平衡点 · 第 06 期 现金流与利润的区别 · 第 07 期 应收账款 · 第 08 期 应付账款 · 第 09 期 存货周转<br>
+    下期预告：费用率（把"花钱的效率"也管起来）· 本页所有算式均可照抄套用，建议存为门店月度自查模板
+  </footer>
+
+</div>
+</body>
+</html>

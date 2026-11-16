@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第21期 · 分散投资</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 21 期</span>
+  <h1>今天的概念：<span class="tag">分散投资</span>（Diversification）</h1>
+  <div class="date">2026年10月16日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 两个果农的"靠天吃饭"：为什么只种最赚钱的果子，反而最容易饿死</h2>
+    <p>阿强和阿珍是隔壁村的两个果农，各自带着 <strong>100 万</strong>本金想靠种地致富。两人都听说过一句话："要把鸡蛋放在同一个篮子里，然后盯死它。"——可结局天差地别。</p>
+    <p>阿强最看重收益，听说荔枝最值钱，于是把所有的地、所有的钱都押在荔枝上。风调雨顺的丰年，荔枝大卖，一年净赚 <strong>40%</strong>；可紧接着连续两年遇上"荔枝小年"加台风，挂果寥寥，还搭进去肥料人工，两年分别亏掉 <strong>55%</strong> 和 <strong>30%</strong>。最惨那年他为了翻本借了高利贷，结果又遇灾，直接血本无归。</p>
+    <p>阿珍的做法相反：她把地分成四块，种荔枝、龙眼、香蕉，再挖一口塘养鱼。荔枝遇小年，香蕉和鱼照样丰收；台风刮了平地上的荔枝，山坡上的龙眼却躲过一劫。十年里没有哪一年暴富，但也没有哪一年饿肚子——算总账，平均每年稳稳增值，本金一分没少。</p>
+    <div class="board">
+      <div class="row head"><span class="k">年份 · 天气</span><span class="v">阿强 · 只种荔枝</span><span class="v">阿珍 · 四样组合</span></div>
+      <div class="row"><span class="k">第1年 风调雨顺（荔枝大年）</span><span class="v">140 万（+40%）</span><span class="v">118 万（+18%）</span></div>
+      <div class="row"><span class="k">第2年 荔枝小年 + 台风</span><span class="v">63 万（−55%）</span><span class="v">110.9 万（−6%）</span></div>
+      <div class="row"><span class="k">第3年 正常年</span><span class="v">75.6 万（+20%）</span><span class="v">126.4 万（+14%）</span></div>
+      <div class="row"><span class="k">第4年 荔枝跌价</span><span class="v">52.9 万（−30%）</span><span class="v">132.8 万（+5%）</span></div>
+      <div class="row"><span class="k">第5年 通胀年（实物涨）</span><span class="v">58.2 万（+10%）</span><span class="v">154.0 万（+16%）</span></div>
+      <div class="row"><span class="k">五年后</span><span class="v">≈ 58 万（亏 42%）</span><span class="v">≈ 154 万（赚 54%）</span></div>
+    </div>
+    <p>五年下来，阿强把 100 万折腾到只剩 <strong>58 万</strong>，几乎腰斩；阿珍却稳稳滚到了 <strong>154 万</strong>。差别不在谁更聪明，而在于：阿强把所有赌注压在"最甜的那颗果子"上，遇到它的坏天气就毫无缓冲；阿珍让四种作物"东边不亮西边亮"，把大起大落熨平成了小波动。</p>
+    <p>投资完全一样。股票、债券、黄金、现金，就像四种作物——经济好时股票最甜，恐慌时黄金最稳，通胀时实物资产抗跌，平时现金保底。你把所有钱押在"最赚钱的那只股票 / 那套房 / 那个币"上，就等于只种荔枝：遇到它的逆风，没有任何东西能托住你。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>分散投资</strong>，就是把资金分配到<strong>彼此不同步涨跌</strong>的资产上，用"不把所有鸡蛋放一个篮子"来降低整体的波动风险。它的核心不是"买很多"，而是"买不一起倒霉的东西"。</p>
+    <div class="formula">组合风险 &lt; 各资产风险的简单相加（当它们不完全同涨同跌时）</div>
+    <p>关键在于<strong>低相关性</strong>。买 10 只同涨同跌的科技股，看似分散，其实还是"一篮子荔枝"；真正分散是<strong>股票 + 债券 + 黄金 + 现金</strong>这类在不同环境里表现相反的资产。它们不会同时崩，于是组合的总起伏被互相抵消，长期回报未必最高，但<strong>活下来的概率高得多</strong>。</p>
+    <p>🌰 换到你的钱包：分散不是免费的——它也会削掉你"单押暴富"的上限。它是"少赚一点、但别被一把清空"的保险，不是致富捷径。普通人理财的第一原则，是先求<strong>"别出局"</strong>，再求"赢多少"。活得久，才有资格谈复利。所以别听信"全仓一个机会"的诱惑，也别把房子、存款、股票全绑在同一类风险上。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>分散是给"坏天气"买保险</strong>：单押一种资产，遇到它的逆风就毫无缓冲；跨资产组合让"东边不亮西边亮"，把大起大落熨平成小波动。阿强亏 42%、阿珍赚 54%，区别就在这一条。</li>
+      <li><strong>分散看"种类"不看"数量"</strong>：10 只同涨同跌的科技股不是分散，股票 + 债券 + 黄金 + 现金才是。关键是选"不一起倒霉"的资产（低相关性），而不是买得杂。</li>
+      <li><strong>分散要付出"上限税"</strong>：它压低了暴富的可能，换来"不被一把清空"的安全。普通人理财先求别出局、再求赢多少——活下来，复利才轮得到你。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：流动性 —— 为什么有些东西"很值钱"却换不出现金，急着用钱时它可能就是个坑。</div>
+</div>
+</body>
+</html>

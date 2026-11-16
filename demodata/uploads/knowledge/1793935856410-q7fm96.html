@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第11期 · 时序差分与Q学习</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>第 11 期 · 时序差分与 Q 学习（边走边学，自己悟出最优策略）</h1>
+<blockquote><strong>今日概念</strong>：时序差分（Temporal Difference, TD）学习与 Q 学习——一类"无模型、在线、边走边学"的强化学习方法。</blockquote>
+<blockquote><strong>承接</strong>：第 10 期讲了「已知地图和奖励」时怎么算出最优价值 V*（MDP + 贝尔曼方程）；本期讲「没有地图」时，智能体如何只靠走过的经验，自己摸索出最优策略。</blockquote>
+<hr>
+<h2>一、故事引入：取餐机器人不靠"说明书"也能学会找路</h2>
+<p>还记得第 10 期那只取餐机器人吗？它当时卡在墙角，是因为大刘<strong>先给了它一张完整地图</strong>（状态转移概率 P、即时奖励 R），然后用贝尔曼方程算出了"每个格子值多少钱"的最优价值 V*。</p>
+<p>但真实世界哪来的完整地图？阿明这次把机器人直接丢进一座<strong>陌生商场</strong>，只给它每走一步的"小提示"：撞墙 −1、顺利到取餐点 +10。没有路线图，没有概率表，连"终点在哪"都没告诉它。</p>
+<p>怪物一样的变化发生了：机器人前几百趟东撞西撞、傻乎乎地乱走，但<strong>几百趟之后</strong>，它居然把每个格子"值多少钱"估得准准的，还自己摸清了最短路线——它从没看过任何说明书，却"悟"出了最优走法。</p>
+<p>它是怎么做到的？—— 这就是<strong>时序差分（TD）学习</strong>和<strong>Q 学习</strong>。一句话概括：<strong>它每走一步，就用"这一步的奖励 + 对下一步的粗略估计"去修正对当前位置的估值，像滚雪球一样越估越准。</strong></p>
+<hr>
+<h2>二、核心概念</h2>
+<h3>1. 学价值的"三兄弟"：DP、MC、TD</h3>
+<p>强化学习要算的是"某个状态/动作值多少"（价值）。三种经典路子，差别只在<strong>靠什么信息来学</strong>：</p>
+<ul>
+<li><strong>动态规划 DP（第 10 期）</strong>：<strong>知道</strong>环境模型 P、R，直接用贝尔曼期望方程算。要"上帝视角"，现实里往往没有。</li>
+<li><strong>蒙特卡洛 MC</strong>：<strong>不用模型</strong>，但<strong>必须等一整趟跑完</strong>，拿真实总回报 G_t 去做平均。无偏但慢，长任务/连续任务直接崩。</li>
+<li><strong>时序差分 TD</strong>：<strong>不用模型、也不用跑完</strong>。每走一步，拿"这一步奖励 + 下一步的估计价值"反推当前价值 → <strong>在线、增量、边走边学</strong>。</li>
+</ul>
+<blockquote><strong>一句话记忆</strong>：DP 靠"已知模型"，MC 靠"整趟真实回报"，TD 靠"一步样本 + 自举"。</blockquote>
+<h3>2. TD(0) 更新公式（自举 bootstrap）</h3>
+<p>TD 的灵魂是<strong>用估计去更新估计</strong>（自举，bootstrap），不等待真实结局：</p>
+<ul>
+<li><strong>TD 误差</strong>：<code>δ_t = R_{t+1} + γ · V(S_{t+1}) − V(S_t)</code></li>
+<li><strong>TD(0) 更新</strong>：<code>V(S_t) ← V(S_t) + α · δ_t</code></li>
+</ul>
+<p>其中 <strong>α 是学习率</strong>（接第 4 期 SGD 的学习率，控制"改多大步"），<strong>γ 是折扣因子</strong>（接第 10 期 MDP，控制"多远未来的奖励还值钱"）。</p>
+<h3>3. 为什么 TD 又快又稳</h3>
+<ul>
+<li><strong>在线</strong>：每步即可更新。一条 1 万步的长轨迹，MC 要憋到跑完才知道起点价值，TD 走一步就能改一次——长任务里 TD 远胜 MC。</li>
+<li><strong>低方差但有偏</strong>：只采样一步，方差小；用估计值带来偏差（MC 无偏但高方差，接第 19 期重尾分布里"方差爆炸"的讨论）。合理 α 下 TD 通常更快收敛。</li>
+<li><strong>闭环</strong>：它的"老师"正是第 10 期的贝尔曼期望方程 <code>V = R + γV'</code>；第 6 期大数定律保证多次平均后收敛；第 9 期 ε-贪心保证把每个格子都踩遍；第 12 期马尔可夫链保证收敛到不动点。</li>
+</ul>
+<h3>4. Q 学习：直接学"在哪个格子该往哪走"</h3>
+<p>TD 学的是状态价值 <code>V(s)</code>（"这个格子值多少"），还得另配策略才知道怎么走。Q 学习学的是<strong>动作价值</strong> <code>Q(s,a)</code>（"在这个格子选这个动作值多少"），一步到位：</p>
+<ul>
+<li><strong>Q 学习更新（离线策略 off-policy）</strong>：</li>
+</ul>
+<p><code>Q(s,a) ← Q(s,a) + α · [ R + γ · max_{a'} Q(s',a') − Q(s,a) ]</code></p>
+<ul>
+<li>关键魅力：<strong>用 <code>max</code> 逼近最优</strong>，不依赖你实际怎么走，最终收敛到最优动作价值 Q*（正是第 10 期贝尔曼最优方程 <code>Q* = max_a (R + γ·Q*)</code> 的采样版）。也就是说，哪怕你瞎探索，Q 表最终也能告诉你"理论最优该怎么走"。</li>
+</ul>
+<h3>5. SARSA：低调务实的兄弟（在线策略 on-policy）</h3>
+<p>SARSA 把 <code>max</code> 换成"实际下一步动作 a' "的 Q 值：</p>
+<ul>
+<li><code>Q(s,a) ← Q(s,a) + α · [ R + γ · Q(s',a') − Q(s,a) ]</code></li>
+</ul>
+<ul>
+<li><strong>区别</strong>：Q 学习学"理论最优<strong>可能</strong>"（更激进），SARSA 学"在当下探索策略下<strong>实际</strong>能拿到的价值"（更保守，撞墙更少）。同一环境，Q 学习可能为了赌最优而多撞几次墙，SARSA 则稳扎稳打。</li>
+</ul>
+<h3>6. 收敛与"死亡三角"</h3>
+<ul>
+<li><strong>表格 Q 学习</strong>：只要每个 (s,a) 被<strong>无限次访问</strong>，且 α 满足 <strong>Robbins-Monro 条件</strong>（<code>Σα = ∞</code> 且 <code>Σα² &lt; ∞</code>，接第 4 期 SGD 学习率衰减），就<strong>必收敛</strong>到 Q*。</li>
+<li><strong>换成神经网络近似 Q</strong>（DQN 之前）：会<strong>发散</strong>！祸根是被称作<strong>死亡三角</strong>的三件套——<strong>离轨（off-policy 的 max）+ 自举（用估计更新估计）+ 函数逼近（神经网络）</strong>叠在一起，使"更新目标"自己和自己纠缠、越学越飘。</li>
+<li><strong>救法</strong>（DQN 双支柱）：① <strong>经验回放</strong>（把历史转移存进池子随机采样，打散相关性，接第 15 期蒙特卡洛/第 5 期 SGLD 的噪声思想）；② <strong>目标网络</strong>（用一份缓慢同步的副本当固定的"老师"目标，抑制自举抖动，接第 8 期粒子滤波的目标分布）。</li>
+</ul>
+<h3>7. 应用版图</h3>
+<p>游戏 AI（AlphaGo、Atari 打砖块）、机器人控制、推荐系统、自动驾驶决策、电网/物流调度优化。</p>
+<hr>
+<h2>三、代表性题目（含完整解题思路与答案）</h2>
+<blockquote>下面四题覆盖"手算基本功 → Q 学习 vs SARSA → ε-贪心衔接 → 概念辨析与发散"，建议先自己推一遍，再看答案。</blockquote>
+<p><strong>题目 1 · TD(0) 手算基本功</strong></p>
+<blockquote><strong>题目</strong>：机器人走迷宫，轨迹为 <code>路口A → 走廊B → 终点（吸收态）</code>。单步奖励：A→B 得 0，B→终点 得 +10；终点之后的价值 V(终点)=0。初始所有 V=0，学习率 α=0.5，折扣 γ=0.9。按经过顺序<strong>先更新 B、再更新 A</strong>，求最终 V(走廊B) 与 V(路口A)。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>解题思路</strong>：TD(0) 是"从后往前"逐步反推。先算离终点近的 B：B 这一步拿到奖励 10，且到终点后价值 0，所以 <code>δ_B = 10 + 0.9·0 − 0 = 10</code>，<code>V(B) = 0 + 0.5·10 = 5</code>。再用 B 的<strong>新</strong>价值反推 A：A→B 拿 0 奖励，但 B 现在值 5，所以 <code>δ_A = 0 + 0.9·5 − 0 = 4.5</code>，<code>V(A) = 0 + 0.5·4.5 = 2.25</code>。注意 A 用的是<strong>更新后的</strong> V(B)（在线学习），这正是"一边走一边改地图"的精髓。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：V(走廊B) = <strong>5</strong>，V(路口A) = <strong>2.25</strong>。</blockquote>
+<p><strong>题目 2 · Q 学习 vs SARSA，同轨迹差在哪</strong></p>
+<blockquote><strong>题目</strong>：状态 s="路口"，执行动作 a="直行" 得奖励 r=1，落到 s'="路口B"；s' 处各动作价值 <code>Q(s',左转)=2</code>、<code>Q(s',直行)=0.5</code>、<code>Q(s',右转)=1</code>（即 <code>max_{a'}Q(s',a') = 2</code>）。初始 <code>Q(s,直行)=0</code>，α=0.5，γ=0.9。</blockquote>
+<blockquote>（1）若用 <strong>Q 学习</strong> 更新，新 <code>Q(s,直行)</code> = ?</blockquote>
+<blockquote>（2）若实际下一步执行的动作是 <code>a'="直行"</code>（其 <code>Q=0.5</code>），用 <strong>SARSA</strong> 更新，新 <code>Q(s,直行)</code> = ?</blockquote>
+<blockquote>（3）两者之差说明什么？</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>解题思路</strong>：Q 学习用 s' 处的<strong>最大</strong> Q 值（理论最优可能），SARSA 用<strong>实际走的那一步</strong> a' 的 Q 值（真实发生）。</blockquote>
+<blockquote>- Q 学习：目标 = <code>1 + 0.9·2 = 2.8</code>，更新 = <code>0 + 0.5·(2.8 − 0) = 1.4</code>。</blockquote>
+<blockquote>- SARSA：目标 = <code>1 + 0.9·0.5 = 1.45</code>，更新 = <code>0 + 0.5·(1.45 − 0) = 0.725</code>。</blockquote>
+<blockquote>差 = 0.675。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：（1）Q 学习得 <strong>1.4</strong>；（2）SARSA 得 <strong>0.725</strong>；（3）Q 学习更"乐观/激进"——它学的是"如果接下来走最优能拿多少"，所以敢把当前动作估高、愿意冒险；SARSA 学的是"在当下探索策略下实际能拿多少"，更保守、撞墙更少。同一环境两者最终策略可能不同。</blockquote>
+<p><strong>题目 3 · ε-贪心 + Q 学习（接第 9 期）</strong></p>
+<blockquote><strong>题目</strong>：某状态三动作当前 Q 值：<code>Q(A)=2</code>，<code>Q(B)=3</code>，<code>Q(C)=1</code>。采用 ε-贪心（ε=0.1）选动作。</blockquote>
+<blockquote>（1）选中各动作的概率分别是多少？</blockquote>
+<blockquote>（2）若实际选了 B，得即时奖励 r=0.5，落到新状态后该状态最优动作价值 <code>max Q* = 4</code>，α=0.5，γ=0.9，问更新后的 <code>Q(B)</code> = ?</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>解题思路</strong>：（1）ε-贪心：以 <code>1−ε = 0.9</code> 的概率选当前最大 B，以 <code>ε = 0.1</code> <strong>均匀</strong>分给三个动作。故 <code>P(B) = 0.9 + 0.1/3 ≈ 0.9333</code>，<code>P(A) = P(C) = 0.1/3 ≈ 0.0333</code>。</blockquote>
+<blockquote>（2）Q 学习更新：目标 = <code>0.5 + 0.9·4 = 4.1</code>，更新 = <code>3 + 0.5·(4.1 − 3) = 3 + 0.5·1.1 = 3.55</code>。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：（1）<code>P(B) ≈ 0.933</code>，<code>P(A) = P(C) ≈ 0.033</code>；（2）<code>Q(B)</code> 更新后 = <strong>3.55</strong>。</blockquote>
+<p><strong>题目 4 · 概念辨析 + 神经网络为什么会翻车</strong></p>
+<blockquote><strong>题目</strong>：（1）一句话区分 TD、MC、DP 各自"靠什么学价值"？</blockquote>
+<blockquote>（2）一条 1 万步的超长轨迹，用 MC 和用 TD(0) 估计起点价值，体验上差在哪？</blockquote>
+<blockquote>（3）朴素表格 Q 学习能收敛，但把 Q 换成神经网络后就<strong>发散</strong>，为什么？怎么救？</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>解题思路</strong>：</blockquote>
+<blockquote>（1）<strong>DP</strong> 靠"已知环境模型 + 贝尔曼方程"（上帝视角）；<strong>MC</strong> 靠"跑完整趟的真实回报平均"（无模型但要等结局）；<strong>TD</strong> 靠"一步样本 + 下一步的估计价值自举"（无模型、在线、不等结局）。</blockquote>
+<blockquote>（2）MC 必须憋到 1 万步跑完才知道起点值，长任务极慢且中途无法利用；TD 每走一步就能更新一次起点估计，几百步就开始收敛，<strong>在线优势巨大</strong>。</blockquote>
+<blockquote>（3）发散源于<strong>死亡三角</strong>：离轨（off-policy 的 max）+ 自举（用估计更新估计）+ 函数逼近（神经网络）三者叠加，使更新目标自己和自己纠缠、不收敛。救法：① <strong>经验回放</strong>（把历史转移存池子随机采样，打散相关性，接第 15 期蒙特卡洛/第 5 期 SGLD 的噪声思想）；② <strong>目标网络</strong>（用一份缓慢同步的副本当固定"老师"目标，抑制自举抖动，接第 8 期粒子滤波的目标分布）。这两招正是 <strong>DQN</strong> 的核心。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：（1）DP 靠模型、MC 靠整趟真实回报、TD 靠一步采样+自举；（2）MC 要等跑完、TD 每步可更新，长任务 TD 远快；（3）死亡三角导致发散，靠<strong>经验回放 + 目标网络</strong>化解（DQN）。</blockquote>
+<hr>
+<h2>四、今日小结</h2>
+<ul>
+<li><strong>TD</strong> 用"下一步的估计"反推当前价值（自举），<strong>在线、增量、不依赖模型</strong>，是连接 DP（有模型）与 MC（等结局）的桥梁。</li>
+<li><strong>Q 学习</strong>用 <code>max</code> 逼近最优动作价值，离线策略、直接学"怎么走最值"；<strong>SARSA</strong> 用实际动作，更保守务实——两者是强化学习"价值派"的两张脸。</li>
+<li>表格法收敛靠"访遍每个 (s,a) + 合适 α"；一旦上神经网络，必须防<strong>死亡三角</strong>（经验回放 + 目标网络）。</li>
+</ul>
+<hr>
+<h2>五、明日预告（第 12 期）</h2>
+<p><strong>深度 Q 网络 DQN 与经验回放</strong>——把 Q 学习搬进神经网络，用"经验回放池 + 目标网络"稳稳驯服死亡三角，让 AI 从游戏像素直接学会打游戏。我们会亲手算一遍：回放怎么打乱相关性、目标网络怎么当"慢半拍的老师"。</p></div></body></html>

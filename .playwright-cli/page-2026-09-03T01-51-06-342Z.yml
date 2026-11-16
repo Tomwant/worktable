@@ -1,0 +1,136 @@
+- main [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: 春
+      - text: 春日工作台
+    - generic [ref=e7]: 我的空间
+    - navigation [ref=e8]:
+      - button "⌂ 工作台" [ref=e9] [cursor=pointer]:
+        - generic [ref=e10]: ⌂
+        - text: 工作台
+      - button "✓ 计划打卡" [active] [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: ✓
+        - text: 计划打卡
+      - button "¥ 资金管理" [ref=e13] [cursor=pointer]:
+        - generic [ref=e14]: ¥
+        - text: 资金管理
+      - button "✦ 每日发现" [ref=e15] [cursor=pointer]:
+        - generic [ref=e16]: ✦
+        - text: 每日发现
+      - button "⌕ 知识库" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: ⌕
+        - text: 知识库
+      - button "❖ 功能地图" [ref=e19] [cursor=pointer]:
+        - generic [ref=e20]: ❖
+        - text: 功能地图
+    - generic [ref=e21]:
+      - button "🌙 切到深色" [ref=e22] [cursor=pointer]:
+        - generic [ref=e23]: 🌙
+        - text: 切到深色
+      - button "↥ 导出数据" [ref=e24] [cursor=pointer]:
+        - generic [ref=e25]: ↥
+        - text: 导出数据
+      - button "⌫ 清除数据" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: ⌫
+        - text: 清除数据
+  - generic [ref=e100]:
+    - generic [ref=e101]:
+      - generic [ref=e102]:
+        - paragraph [ref=e103]: 计划 · 打卡
+        - heading "计划打卡" [level=1] [ref=e104]
+        - paragraph [ref=e105]: 年计划 → 月计划 → 打卡项，每天对打卡项坚持。
+      - generic [ref=e106]:
+        - button "2026" [ref=e108] [cursor=pointer]
+        - button "9月" [ref=e111] [cursor=pointer]
+    - generic [ref=e113]:
+      - article [ref=e114]:
+        - generic [ref=e116]:
+          - heading "年计划" [level=2] [ref=e117]
+          - text: 2026 年
+        - textbox [ref=e119]:
+          - /placeholder: 年度目标，如：读完 24 本书
+        - generic [ref=e120]:
+          - button "选择分类" [ref=e123] [cursor=pointer]
+          - textbox [ref=e126]:
+            - /placeholder: 写一句目标说明
+        - button "+ 新增年计划" [ref=e127] [cursor=pointer]
+        - paragraph [ref=e128]: 本年还没有年计划。上面填一项开始。
+      - article [ref=e129]:
+        - generic [ref=e131]:
+          - heading "月计划" [level=2] [ref=e132]
+          - text: 9 月
+        - textbox [ref=e134]:
+          - /placeholder: 本月想推进什么？
+        - generic [ref=e135]:
+          - button "独立月计划（不关联年计划）" [ref=e137] [cursor=pointer]
+          - button "选择分类" [ref=e141] [cursor=pointer]
+        - textbox [ref=e144]:
+          - /placeholder: 计划目标描述
+        - button "+ 新增月计划" [ref=e145] [cursor=pointer]
+        - paragraph [ref=e146]: 本月还没有月计划。上面填一项开始。
+    - article [ref=e147]:
+      - generic [ref=e148]:
+        - generic [ref=e149]:
+          - paragraph [ref=e150]: 分类管理
+          - heading "按分类精确统计" [level=2] [ref=e151]
+        - generic [ref=e152]:
+          - textbox "新分类…" [ref=e153]
+          - button "+ 添加" [ref=e154] [cursor=pointer]
+      - generic [ref=e155]:
+        - generic [ref=e156]:
+          - text: 健康
+          - button "×" [ref=e157] [cursor=pointer]
+        - generic [ref=e158]:
+          - text: 学习
+          - button "×" [ref=e159] [cursor=pointer]
+        - generic [ref=e160]:
+          - text: 工作
+          - button "×" [ref=e161] [cursor=pointer]
+        - generic [ref=e162]: 未分类
+        - generic [ref=e163]:
+          - text: 理财
+          - button "×" [ref=e164] [cursor=pointer]
+        - generic [ref=e165]:
+          - text: 生活
+          - button "×" [ref=e166] [cursor=pointer]
+        - generic [ref=e167]:
+          - text: 运动
+          - button "×" [ref=e168] [cursor=pointer]
+        - generic [ref=e169]:
+          - text: 阅读
+          - button "×" [ref=e170] [cursor=pointer]
+      - generic [ref=e171]:
+        - button "本月 9 月" [ref=e172] [cursor=pointer]
+        - button "本年 2026 年" [ref=e173] [cursor=pointer]
+        - button "累计" [ref=e174] [cursor=pointer]
+      - paragraph [ref=e175]: 还没有分类数据。给计划/打卡项设置分类并完成打卡后，这里会精确统计每一类的完成次数。
+    - article [ref=e176]:
+      - generic [ref=e177]:
+        - generic [ref=e178]:
+          - paragraph [ref=e179]: 每日打卡
+          - heading "9月3日周四 · 勾选即保存" [level=2] [ref=e180]
+        - textbox [ref=e181]: 2026-09-03
+      - paragraph [ref=e182]: 这个月还没有打卡项。请在上方月计划下添加。
+      - generic [ref=e183]:
+        - button "全部完成" [ref=e184] [cursor=pointer]
+        - button "全部取消" [ref=e185] [cursor=pointer]
+        - generic [ref=e186]: 勾选与备注都会自动保存 ✓
+  - complementary "快捷操作" [ref=e82]:
+    - button "0%" [ref=e83] [cursor=pointer]
+    - generic [ref=e88]: 今日已完成 0/0 项
+    - generic [ref=e89]:
+      - button "✓ 打卡" [ref=e90] [cursor=pointer]:
+        - text: ✓
+        - generic [ref=e91]: 打卡
+      - button "¥ 资金" [ref=e92] [cursor=pointer]:
+        - text: ¥
+        - generic [ref=e93]: 资金
+      - button "✦ 灵感" [ref=e94] [cursor=pointer]:
+        - text: ✦
+        - generic [ref=e95]: 灵感
+      - button "⌕ 检索" [ref=e96] [cursor=pointer]:
+        - text: ⌕
+        - generic [ref=e97]: 检索
+      - button "❖ 地图" [ref=e98] [cursor=pointer]:
+        - text: ❖
+        - generic [ref=e99]: 地图

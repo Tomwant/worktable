@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第24期 · 沉没成本</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 24 期</span>
+  <h1>今天的概念：<span class="tag">沉没成本</span>（Sunk Cost）</h1>
+  <div class="date">2026年10月19日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 小敏的"两万块英语班"</h2>
+    <p>小敏在一家电商公司做运营，听人说"英语好能升主管"，一咬牙报了价 <strong>2 万</strong> 的"高端外教口语年课"。头四节课上完她就有点懵：老师水平一般、课程节奏不适合自己，更致命的是——她天天加班，<strong>根本没时间复习</strong>。</p>
+    <p>其实前几节还能退一部分钱。朋友劝她："趁早退了，少亏当赚。"小敏却犹豫："<strong>2 万都交了，退了也只退几千，太亏了，接着上吧，好歹把值上回来。</strong>"</p>
+    <p>于是她硬着头皮每周挤时间通勤上课，一上就是大半年。这大半年里，每个夜晚、每个周末的几十个小时都被绑在课上，加班更累、效率更低，连陪家人、运动、学点真正有用的东西都顾不上。一年到头，英语没长进，升职也没因英语突破。</p>
+    <p>一算账才惊觉：<strong>2 万没了，但最贵的其实是那白白流走的几十个小时。</strong> 那 2 万从交费第一天就花掉、<strong>再也回不来了</strong>——这是"沉没成本"。而她后面每个小时，都是为"不让前面白花"而花的；可前面的回不来，新花的时间也回不来了，成了<strong>第二重沉没</strong>。她以为自己在"挽回损失"，其实是把已经收不回的钱，又搭上了更收不回的时间。</p>
+    <div class="board">
+      <div class="row head"><span class="k">两种做法（前4节已上、2万已沉没）</span><span class="v">果断退课 vs 硬撑一年</span></div>
+      <div class="row"><span class="k">第4节后果断退课</span><span class="v">金钱损失 ≈ 已交2万中的大部分；时间止损</span></div>
+      <div class="row"><span class="k">又硬撑大半年</span><span class="v">金钱损失 = 2万全没 + 搭进去几十个小时</span></div>
+      <div class="row"><span class="k">多付出的代价</span><span class="v">几十个小时本可陪家人/运动/学真有用的东西</span></div>
+      <div class="row"><span class="k">关键差别</span><span class="v">时间比钱更隐蔽：钱还能数，时间一秒秒没了你未必察觉</span></div>
+    </div>
+    <p>这戏码到处都是：买了健身年卡去两次就嫌累，却想着"钱都交了"逼自己去，结果人累心也累；追一部越看越烂的剧，想着"都看了十几集了"硬追到结局；一段早该结束的关系，想着"都付出了那么多年"继续耗着。我们总被<strong>"已经投入"绑架</strong>，却忘了——它早就不该决定下一步。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>沉没成本</strong>，就是<strong>已经发生、无论你接下来怎么选都收不回来的支出</strong>——钱、时间、精力都算，而且 <strong>时间是其中最隐蔽的一种</strong>：钱花了你能看见数字，时间一秒秒流走，你往往毫无察觉，等发现时早已沉了一大笔。</p>
+    <div class="formula">理性决策 = 只看未来收益与未来成本，忽略已经花掉的钱和时间</div>
+    <p>核心教训只有一句话：<strong>做决定时，把沉没成本彻底排除，只看未来。</strong> 背后的逻辑是：<strong>已经花掉的部分，不会因为你"再投一点"就回来。</strong> 你继续投入的每一分钱、每一分钟，都是为了"赎回前面"，可前面已经赎不回了，新的投入只会制造新的亏损。行为经济学把这种执念叫 <strong>"损失厌恶 + 承诺升级"</strong>：人越在亏损里陷得深，越想翻本、越不肯认栽，于是越陷越深（小敏就是典型——为了保住那收不回的 2 万，又白白搭进去几十个小时）。</p>
+    <p>反过来，真正理性的人会问一句：<strong>"如果现在从头开始、还没交这 2 万、还没花这些时间，我还会报这个班吗？"</strong> 答案若是"不会"，那就该立刻退——哪怕已经亏了 2 万。企业和投资也一样：<strong>止损不丢人，死扛才最贵</strong>；基金定投亏了要不要补、股票套牢要不要割、项目黄了要不要砍，关键都看"未来值不值得"，而不是"我已经亏了多少、投入了多少年"。</p>
+    <p>🌰 换到你的钱包和日子：下次纠结"钱都花了 / 时间都搭了，要不要继续"时，先在心里把花掉的部分划掉，<strong>尤其别忘了把时间也算进去</strong>。问问自己——<strong>抛开过去，眼前这个选择本身还划算吗？</strong> 不划算就果断抽身。记住：<strong>承认沉没、及时掉头，省下的时间和钱才是真金白银</strong>；为面子或"不甘心"续命，只会把小亏拖成大坑，把小浪费拖成大遗憾。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>沉没成本回不来，别让它替你做决定</strong>：钱、时间、精力只要花出去就收不回，下一步该怎么选，只该看未来，不该看"已经投入多少"。</li>
+      <li><strong>时间是最隐蔽的沉没成本</strong>：钱还能数，时间一秒秒没了你未必察觉；为"不让前面白花"而继续投入，只会让钱和时间双重沉没。</li>
+      <li><strong>用"重来一次"检验法</strong>：问自己"如果现在从头、还没投这笔，我还会做吗？"答案是否，就立刻止损；止损不丢人，死扛才最贵。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：资产配置 —— 为什么"把鸡蛋分开放"还远远不够？股票、债券、现金该怎么搭配，才能既睡得着觉、又让钱稳稳长大，这里头有套被验证过的老智慧。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第05期 · 门店盈亏平衡点</title>
+<style>
+  :root{
+    --green:#2f6b5e;
+    --green-soft:#e8f0ee;
+    --gold:#c9a961;
+    --gold-soft:#f7f1e3;
+    --ink:#2a2f2d;
+    --muted:#6b7773;
+    --line:#e6e9e8;
+    --loss:#c0564b;
+    --loss-soft:#f6eae8;
+    --card:#ffffff;
+    --bg:#f4f6f5;
+    --r:16px;
+    --shadow:0 6px 22px rgba(47,107,94,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.75;
+    padding:28px 18px 56px;
+  }
+  .wrap{max-width:860px;margin:0 auto;}
+
+  /* 头部 */
+  header{
+    background:linear-gradient(135deg,var(--green) 0%,#255a4f 100%);
+    color:#fff;border-radius:var(--r);padding:30px 28px;
+    box-shadow:var(--shadow);position:relative;overflow:hidden;
+  }
+  header::after{
+    content:"";position:absolute;right:-40px;top:-40px;
+    width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle,rgba(201,169,97,0.35),transparent 70%);
+  }
+  .issue{
+    display:inline-block;background:var(--gold);color:#3a2e12;
+    font-weight:700;font-size:13px;letter-spacing:1px;
+    padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  header h1{font-size:28px;font-weight:800;letter-spacing:1px;}
+  header .sub{margin-top:8px;opacity:0.9;font-size:15px;}
+  .meta{
+    margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;font-size:13px;
+  }
+  .meta span{
+    background:rgba(255,255,255,0.14);padding:5px 12px;border-radius:999px;
+  }
+  .keywords{margin-top:12px;font-size:13px;opacity:0.85;}
+  .keywords b{color:var(--gold);}
+
+  /* 卡片 */
+  .card{
+    background:var(--card);border-radius:var(--r);padding:24px 24px;
+    box-shadow:var(--shadow);margin-top:20px;border:1px solid var(--line);
+  }
+  .card h2{
+    font-size:19px;color:var(--green);font-weight:800;
+    display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  }
+  .card h2 .tag{
+    background:var(--gold-soft);color:#8a6d22;border-radius:8px;
+    font-size:12px;font-weight:700;padding:3px 9px;
+  }
+  p{margin:10px 0;color:#3a423f;}
+  .lead{color:var(--muted);font-size:14px;}
+
+  /* 场景 */
+  .scene{
+    background:var(--green-soft);border-left:5px solid var(--green);
+    border-radius:12px;padding:16px 18px;font-size:15px;
+  }
+  .scene .who{font-weight:700;color:var(--green);}
+
+  /* 公式卡 */
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px;}
+  .formula{
+    background:var(--gold-soft);border:1px solid #ecdfc2;border-radius:12px;
+    padding:14px 16px;
+  }
+  .formula .name{font-weight:700;color:#7a5e1c;font-size:14px;margin-bottom:6px;}
+  .formula .eq{
+    font-family:"SFMono-Regular",Consolas,monospace;font-size:14px;
+    color:#3a2e12;background:#fff;border-radius:8px;padding:8px 10px;
+    border:1px solid #ecdfc2;
+  }
+
+  /* 算例 */
+  .steps{margin-top:6px;}
+  .step{
+    display:flex;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);
+  }
+  .step:last-child{border-bottom:none;}
+  .step .n{
+    flex:0 0 26px;height:26px;border-radius:50%;
+    background:var(--green);color:#fff;font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;margin-top:2px;
+  }
+  .step .t{font-size:15px;}
+  .step .t b{color:var(--green);}
+  .calc{
+    background:#fbfaf6;border:1px solid var(--line);border-radius:10px;
+    padding:12px 14px;font-family:"SFMono-Regular",Consolas,monospace;
+    font-size:14px;color:#3a423f;margin-top:4px;
+  }
+
+  /* 图表 */
+  .chart{
+    margin-top:18px;background:#fff;border:1px solid var(--line);
+    border-radius:12px;padding:18px 16px 14px;
+  }
+  .chart .bar{
+    position:relative;height:46px;border-radius:10px;overflow:hidden;
+    display:flex;
+  }
+  .chart .loss-zone{background:var(--loss-soft);}
+  .chart .profit-zone{background:var(--green-soft);}
+  .chart .marker{
+    position:absolute;top:-6px;bottom:-6px;width:3px;background:var(--gold);
+    left:65.5%;
+  }
+  .chart .marker::after{
+    content:"保本点";position:absolute;top:-22px;left:50%;
+    transform:translateX(-50%);font-size:11px;font-weight:700;
+    color:#8a6d22;background:var(--gold-soft);padding:1px 7px;border-radius:6px;
+    white-space:nowrap;
+  }
+  .chart .scale{
+    display:flex;justify-content:space-between;font-size:12px;
+    color:var(--muted);margin-top:8px;
+  }
+  .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:13px;}
+  .legend i{display:inline-block;width:12px;height:12px;border-radius:3px;margin-right:6px;vertical-align:middle;}
+  .legend .l{background:var(--loss-soft);border:1px solid #e8cfca;}
+  .legend .p{background:var(--green-soft);border:1px solid #cfe0db;}
+  .legend .m{background:var(--gold);}
+
+  /* 红线 */
+  .rules{margin-top:4px;}
+  .rule{
+    display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--line);
+  }
+  .rule:last-child{border-bottom:none;}
+  .rule .badge{
+    flex:0 0 auto;background:var(--loss);color:#fff;font-size:12px;font-weight:700;
+    padding:3px 10px;border-radius:8px;height:fit-content;white-space:nowrap;
+  }
+  .rule .rt{font-size:15px;}
+
+  /* 自测题 */
+  .quiz{margin-top:4px;}
+  .q{margin:16px 0;}
+  .q .qt{font-weight:700;color:var(--ink);}
+  .q .ans{
+    margin-top:8px;background:var(--green-soft);border-radius:10px;
+    padding:12px 14px;font-size:14px;color:#284a42;
+  }
+  .q .ans .lab{font-weight:700;color:var(--green);margin-right:6px;}
+  .fill{
+    background:#fff;border:1px dashed var(--gold);border-radius:10px;
+    padding:10px 14px;color:var(--muted);font-size:14px;margin-top:8px;
+  }
+
+  /* 脚注 */
+  footer{
+    margin-top:26px;text-align:center;color:var(--muted);
+    font-size:12px;line-height:1.7;
+  }
+  footer .line{width:60px;height:3px;background:var(--gold);border-radius:3px;margin:0 auto 12px;}
+
+  @media (max-width:600px){
+    body{padding:16px 10px 40px;}
+    header{padding:22px 18px;}
+    header h1{font-size:22px;}
+    .card{padding:18px 16px;}
+    .grid{grid-template-columns:1fr;}
+    .meta span{font-size:12px;}
+    .chart .marker{left:65.5%;}
+  }
+
+  /* 自测题折叠：原生 details，不依赖 JS（沙箱预览里也能点开） */
+  details.qz{border:1px solid #e3e8e5;border-radius:12px;background:#fff;margin:0 0 12px;overflow:hidden;transition:border-color .18s,box-shadow .18s;}
+  details.qz:hover{border-color:#cfdcd6;box-shadow:0 3px 12px rgba(47,107,94,.07);}
+  details.qz[open]{border-color:#cfe0d9;box-shadow:0 3px 14px rgba(47,107,94,.08);}
+  details.qz summary{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;list-style:none;user-select:none;}
+  details.qz summary::-webkit-details-marker{display:none;}
+  details.qz summary::before,details.qz summary::after{content:"" !important;display:none !important;}
+  details.qz summary::marker{content:"";}
+  details.qz .qt{flex:1 1 auto;font-weight:700;font-size:15px;line-height:1.6;color:#1f2a26;}
+  details.qz .peek{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:#8a6f2e;background:#f7f1e4;border-radius:999px;padding:3px 11px 3px 9px;margin-top:1px;transition:background .18s,color .18s;}
+  details.qz:hover .peek{background:#f2e8d2;}
+  details.qz[open] .peek{background:#e7f0ed;color:#2a5b50;}
+  details.qz .peek .arw{font-size:10px;line-height:1;transition:transform .2s;}
+  details.qz[open] .peek .arw{transform:rotate(180deg);}
+  details.qz .peek .t-off{display:none;}
+  details.qz[open] .peek .t-on{display:none;}
+  details.qz[open] .peek .t-off{display:inline;}
+  details.qz .qa{border-top:1px dashed #e3e8e5;padding:12px 16px 14px;background:#fbfcfb;font-size:14.5px;line-height:1.75;color:#1f2a26;animation:qzfade .2s ease-out;}
+  details.qz .qa b{color:#2f6b5e;}
+  details.qz .qa span:not([class]){color:#5f6b66;font-size:13.5px;}
+  details.qz .qa .step{display:block;margin:4px 0;}
+  @keyframes qzfade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .qz-lead{font-size:13.5px;color:#5f6b66;margin:-6px 0 14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="issue">第 05 期</span>
+    <h1>门店盈亏平衡点</h1>
+    <div class="sub">卖到第几碗，你才真正开始赚钱？——把"不亏本"算成一条清晰的底线</div>
+    <div class="meta">
+      <span>日期 2026-11-03</span>
+      <span>面向人群：管多家门店的财务小白</span>
+      <span>阅读时长：约 8 分钟</span>
+    </div>
+    <div class="keywords">
+      关键词：<b>固定成本</b> · <b>变动成本</b> · <b>单位边际贡献</b> · <b>保本销量</b> · <b>安全边际</b>
+    </div>
+  </header>
+
+  <!-- 场景 -->
+  <section class="card">
+    <h2><span class="tag">门店场景</span>老王的困惑</h2>
+    <div class="scene">
+      <p><span class="who">老王</span>在街口开了家面馆，每天忙进忙出，月底一算却经常"没赚没赔"。他搞不懂：明明每天卖出去不少碗，钱都去哪了？</p>
+      <p>他盘了下每月硬支出：<b>房租 8000 元</b>、<b>两个店员工资共 12000 元</b>、<b>水电杂费 2000 元</b>，加起来每月固定要花 <b>22000 元</b>。</p>
+      <p>每碗面<b>卖 25 元</b>，但面粉、肉、调料、包装这些<b>随销量走的变动成本约 11 元</b>。</p>
+      <p class="lead">老王想问：我每个月到底要卖多少碗，才刚好不亏？卖到多少碗，才真正开始落袋为安？</p>
+    </div>
+  </section>
+
+  <!-- 定义与公式 -->
+  <section class="card">
+    <h2><span class="tag">定义与公式</span>五个核心概念</h2>
+    <div class="grid">
+      <div class="formula">
+        <div class="name">1. 单位边际贡献</div>
+        <div class="eq">= 单价 − 单位变动成本</div>
+        <p class="lead" style="margin:8px 0 0;">每多卖一份，先扣掉跟着走的变动成本后，能拿去"填固定成本、再剩利润"的钱。</p>
+      </div>
+      <div class="formula">
+        <div class="name">2. 边际贡献率</div>
+        <div class="eq">= 单位边际贡献 ÷ 单价 × 100%</div>
+        <p class="lead" style="margin:8px 0 0;">每一元收入里，有多少能用来扛固定成本和产生利润。</p>
+      </div>
+      <div class="formula">
+        <div class="name">3. 保本销量（数量）</div>
+        <div class="eq">= 固定成本 ÷ 单位边际贡献</div>
+        <p class="lead" style="margin:8px 0 0;">卖到这个量，收入刚好覆盖全部成本，利润为零。</p>
+      </div>
+      <div class="formula">
+        <div class="name">4. 保本销售额（金额）</div>
+        <div class="eq">= 固定成本 ÷ 边际贡献率</div>
+        <p class="lead" style="margin:8px 0 0;">用"钱"而不是"碗数"表达的保本线，适合按营业额管店。</p>
+      </div>
+      <div class="formula">
+        <div class="name">5. 安全边际率</div>
+        <div class="eq">= (预计销量 − 保本销量) ÷ 预计销量 × 100%</div>
+        <p class="lead" style="margin:8px 0 0;">销量离"亏本线"还有多远，衡量抗风险能力。</p>
+      </div>
+      <div class="formula">
+        <div class="name">两个成本底座</div>
+        <div class="eq">固定成本 + 变动成本</div>
+        <p class="lead" style="margin:8px 0 0;">固定成本不随销量变（房租、底薪）；变动成本随销量正比例变（食材、包装）。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 算例 -->
+  <section class="card">
+    <h2><span class="tag">算例</span>老王面馆的保本点</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="n">1</span>
+        <div class="t">先算<b>单位边际贡献</b>：每碗面卖 25 元，变动成本 11 元。<br>
+          <div class="calc">单位边际贡献 = 25 − 11 = 14 元/碗</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="n">2</span>
+        <div class="t">再算<b>边际贡献率</b>：<br>
+          <div class="calc">边际贡献率 = 14 ÷ 25 = 0.56 = 56%</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="n">3</span>
+        <div class="t">算<b>保本销量</b>：每月固定成本 22000 元，每份贡献 14 元。<br>
+          <div class="calc">保本销量 = 22000 ÷ 14 ≈ 1571.4 → 取 1572 碗/月</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="n">4</span>
+        <div class="t">算<b>保本销售额</b>：<br>
+          <div class="calc">保本销售额 = 22000 ÷ 0.56 ≈ 39286 元/月</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="n">5</span>
+        <div class="t">验证一下：卖 1572 碗，收入 39300 元，变动成本 17292 元，固定 22000 元。<br>
+          <div class="calc">利润 = 39300 − 17292 − 22000 = 8 元（≈ 0，舍入误差，正确）</div>
+        </div>
+      </div>
+      <div class="step">
+        <span class="n">6</span>
+        <div class="t">老王预计每天卖 80 碗，月（30天）2400 碗，算<b>安全边际</b>：<br>
+          <div class="calc">安全边际量 = 2400 − 1572 = 828 碗；安全边际率 = 828 ÷ 2400 ≈ 34.5%</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart">
+      <div class="bar">
+        <div class="loss-zone" style="width:65.5%;"></div>
+        <div class="profit-zone" style="width:34.5%;"></div>
+        <div class="marker"></div>
+      </div>
+      <div class="scale">
+        <span>0 碗</span>
+        <span>保本点 ≈ 1572 碗</span>
+        <span>预计 2400 碗</span>
+      </div>
+      <div class="legend">
+        <span><i class="l"></i>亏损区（卖不到保本点）</span>
+        <span><i class="p"></i>盈利区（越过保本点才开始赚）</span>
+        <span><i class="m"></i>保本点（利润 = 0）</span>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:12px;">看图就明白：保本点左边每卖一碗都在"填坑"，越过那条金线之后，每碗净赚的才是真利润。</p>
+  </section>
+
+  <!-- 判断标准 / 红线 -->
+  <section class="card">
+    <h2><span class="tag">经营者红线</span>五条判断标准</h2>
+    <div class="rules">
+      <div class="rule">
+        <span class="badge">红线一</span>
+        <div class="rt"><b>保本销量必须落在你"稳稳能达到"的区间。</b>若保本销量比历史最高月销量还高，说明成本结构已危险，必须降固定成本（谈租、缩编）或提价，否则永远在为房东打工。</div>
+      </div>
+      <div class="rule">
+        <span class="badge">红线二</span>
+        <div class="rt"><b>安全边际率低于 20% 要警惕。</b>餐饮零售通常要求 20%–30% 才相对安全；低于这个数，客流一掉就转亏，经营很脆弱。</div>
+      </div>
+      <div class="rule">
+        <span class="badge">红线三</span>
+        <div class="rt"><b>多店对比别只看总利润，要算每家的保本点。</b>商场店租金高、固定成本重，保本销量远高于街边店，抗风险能力差，扩张时要单独评估。</div>
+      </div>
+      <div class="rule">
+        <span class="badge">红线四</span>
+        <div class="rt"><b>降价或做促销前，先重算保本销量。</b>单价每降 1 元，单位边际贡献就少 1 元，保本销量随之上升——促销若没带来足够增量，反而让你离保本更远。</div>
+      </div>
+      <div class="rule">
+        <span class="badge">红线五</span>
+        <div class="rt"><b>固定成本一旦签下短期不可逆。</b>租约、扩招都是"先背债后赚钱"，新店开业前必须把保本点算给投资人（或自己）当"最差情况"底线。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 自测题 -->
+  <section class="card">
+    <h2><span class="tag">今日自测</span>三道题，算完就懂</h2>
+    <p class="qz-lead">先自己算一遍，再点答案对一下。</p>
+    <details class="qz">
+      <summary>
+        <span class="qt">1. 某奶茶店单价 18 元，每杯变动成本 7 元，月固定成本 18000 元。求保本销量与保本销售额。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="qa">单位边际贡献 = 18 − 7 = 11 元/杯；保本销量 = 18000 ÷ 11 ≈ 1637 杯；边际贡献率 = 11 ÷ 18 ≈ 61.1%；保本销售额 = 18000 ÷ 0.611 ≈ 29455 元。</div>
+    </details>
+
+    <details class="qz">
+      <summary>
+        <span class="qt">2. 为什么固定成本越高的门店，越怕销量下滑？请用边际贡献解释。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="qa">固定成本要在销量上分摊，固定成本越高，保本销量越高。销量一跌，单位分摊的固定成本快速上升，而单位边际贡献不变，利润会加速转负——所以"重固定成本"的店经不起客流波动。</div>
+    </details>
+
+    <details class="qz">
+      <summary>
+        <span class="qt">3. 判断：保本点越低，说明门店抗风险能力越强。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="qa">对。保本点低，意味着少量销量就能覆盖成本，离亏损线远，安全边际大，抗风险能力自然更强。</div>
+    </details>
+  </section>
+
+  <footer>
+    <div class="line"></div>
+    财务知识日报 · 第05期《门店盈亏平衡点》｜ 2026-11-03<br>
+    本页为自包含微型讲义，可单独保存阅读；往期回顾：毛利与毛利率 / 收入与成本 / 净利率 / 固定成本与变动成本。<br>
+    下期预告：现金流与利润的区别（赚了账面钱，为什么账户还是没钱？）
+  </footer>
+
+</div>
+</body>
+</html>

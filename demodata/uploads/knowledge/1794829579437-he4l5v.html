@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第12期 · 人效与坪效</title>
+<style>
+  :root{
+    --ink:#2f6b5e;          /* 墨绿主色 */
+    --ink-deep:#244f46;
+    --gold:#c9a961;         /* 暖金点缀 */
+    --gold-soft:#f7f1e4;
+    --bg:#f5f7f6;
+    --card:#ffffff;
+    --line:#e3e8e5;
+    --txt:#243430;
+    --txt-soft:#5d6b66;
+    --r:16px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--txt);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.7;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:28px 20px 56px;}
+
+  /* 头部 */
+  .hero{
+    background:linear-gradient(135deg,var(--ink) 0%,var(--ink-deep) 100%);
+    color:#fff;border-radius:var(--r);
+    padding:30px 30px 26px;box-shadow:0 10px 30px rgba(47,107,94,.18);
+    position:relative;overflow:hidden;
+  }
+  .hero::after{
+    content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;
+    background:radial-gradient(circle,rgba(201,169,97,.35),transparent 70%);
+    border-radius:50%;
+  }
+  .issue{
+    display:inline-block;font-size:13px;letter-spacing:1px;
+    background:rgba(201,169,97,.22);color:var(--gold);
+    padding:4px 12px;border-radius:999px;border:1px solid rgba(201,169,97,.4);
+  }
+  .hero h1{margin:14px 0 6px;font-size:30px;font-weight:800;letter-spacing:.5px;}
+  .sub{margin:0;font-size:15px;color:rgba(255,255,255,.82);}
+  .meta{margin-top:16px;display:flex;flex-wrap:wrap;gap:10px;}
+  .chip{
+    font-size:12.5px;background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.2);
+    padding:3px 11px;border-radius:999px;color:#eaf3f0;
+  }
+  .date-chip{background:rgba(201,169,97,.25);border-color:rgba(201,169,97,.5);color:var(--gold);}
+
+  /* 卡片通用 */
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:var(--r);padding:24px 24px;margin-top:20px;
+    box-shadow:0 4px 16px rgba(36,79,70,.05);
+  }
+  .card h2{
+    margin:0 0 4px;font-size:20px;color:var(--ink);font-weight:800;
+    display:flex;align-items:center;gap:10px;
+  }
+  .card h2 .num{
+    width:30px;height:30px;flex:0 0 30px;border-radius:9px;
+    background:var(--gold-soft);color:#8a6f2e;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:800;
+  }
+  .lead{margin:6px 0 16px;color:var(--txt-soft);font-size:14.5px;}
+
+  /* 场景 */
+  .scene{
+    background:linear-gradient(180deg,#fbfdfc,#f4f8f6);
+    border-left:4px solid var(--ink);
+  }
+  .scene p{margin:8px 0;font-size:15px;}
+  .scene .who{color:var(--ink);font-weight:700;}
+
+  /* 公式卡网格 */
+  .formula-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;}
+  .fcard{
+    border:1px solid var(--line);border-radius:12px;padding:16px 16px;
+    background:#fbfcfb;
+  }
+  .fcard .ft{font-size:13.5px;color:var(--ink);font-weight:700;margin-bottom:8px;}
+  .fcard .fx{
+    font-size:14px;color:var(--txt);background:#fff;border:1px dashed var(--line);
+    border-radius:8px;padding:10px 12px;line-height:1.6;
+  }
+  .fcard .fx b{color:#8a6f2e;}
+
+  /* 算例 */
+  .calc{font-size:14.5px;}
+  .calc .step{margin:14px 0;padding-left:14px;border-left:3px solid var(--gold-soft);}
+  .calc .step b{color:var(--ink);}
+  table.tbl{
+    width:100%;border-collapse:collapse;margin:14px 0;font-size:14px;
+    border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  }
+  table.tbl th,table.tbl td{padding:10px 12px;text-align:center;border-bottom:1px solid var(--line);}
+  table.tbl th{background:var(--ink);color:#fff;font-weight:700;}
+  table.tbl tr:nth-child(even) td{background:#f7faf9;}
+  table.tbl td.lbl{text-align:left;font-weight:700;color:var(--ink-deep);}
+
+  /* 标尺 CSS 可视化 */
+  .bars{margin:14px 0;}
+  .bar-row{display:flex;align-items:center;gap:10px;margin:8px 0;}
+  .bar-name{width:42px;font-size:13px;font-weight:700;color:var(--ink-deep);}
+  .bar-track{flex:1;background:#eef3f1;border-radius:8px;height:20px;overflow:hidden;position:relative;}
+  .bar-fill{height:100%;background:linear-gradient(90deg,var(--ink),#3f8576);border-radius:8px;}
+  .bar-fill.g{background:linear-gradient(90deg,var(--gold),#d8bd7c);}
+  .bar-val{width:96px;text-align:right;font-size:12.5px;color:var(--txt-soft);}
+
+  /* 红线 */
+  .rule{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px dashed var(--line);}
+  .rule:last-child{border-bottom:none;}
+  .rule .ic{
+    flex:0 0 26px;width:26px;height:26px;border-radius:50%;
+    background:#fbeaea;color:#c0392b;font-weight:800;font-size:14px;
+    display:flex;align-items:center;justify-content:center;margin-top:1px;
+  }
+  .rule .rx{flex:1;font-size:14.5px;}
+  .rule .rx b{color:var(--ink-deep);}
+
+  /* 自测题 */
+  .quiz{border:1px solid var(--line);border-radius:12px;background:#fff;margin-bottom:12px;overflow:hidden;}
+  .quiz:hover{border-color:var(--ink);box-shadow:0 4px 14px rgba(47,107,94,.12);}
+  .quiz summary{
+    display:flex;align-items:flex-start;gap:12px;padding:14px 16px;
+    cursor:pointer;user-select:none;list-style:none;
+  }
+  .quiz summary::-webkit-details-marker{display:none;}
+  .quiz summary::marker{content:"";}
+  .quiz .q{flex:1 1 auto;font-size:15px;font-weight:600;line-height:1.6;}
+  .quiz .peek{
+    flex:0 0 auto;background:var(--gold-soft);color:#8a6f2e;
+    font-size:12.5px;border-radius:999px;padding:3px 11px 3px 9px;
+    display:inline-flex;align-items:center;gap:4px;white-space:nowrap;
+  }
+  .quiz details[open] .peek{background:#e7f0ed;color:#2a5b50;}
+  .quiz details[open] .peek .arw{transform:rotate(180deg);}
+  .quiz .t-off{display:none;}
+  .quiz details[open] .t-on{display:none;}
+  .quiz details[open] .t-off{display:inline;}
+  .quiz .arw{display:inline-block;transition:transform .2s ease;}
+  .quiz .ans{
+    border-top:1px dashed var(--line);padding:12px 16px 14px;
+    background:#fbfcfb;font-size:14.5px;
+    animation:fade .35s ease;
+  }
+  @keyframes fade{from{opacity:0;transform:translateY(-4px);}to{opacity:1;transform:none;}}
+
+  .quiz-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+  .quiz-tip{font-size:13.5px;color:var(--txt-soft);margin:2px 0 14px;}
+
+  /* 脚注 */
+  .foot{
+    margin-top:26px;padding:18px 22px;background:#eef3f1;border-radius:12px;
+    font-size:13px;color:var(--txt-soft);border:1px solid var(--line);
+  }
+  .foot b{color:var(--ink-deep);}
+
+  @media (max-width:600px){
+    .wrap{padding:18px 13px 40px;}
+    .hero{padding:22px 18px;}
+    .hero h1{font-size:24px;}
+    .card{padding:18px 15px;}
+    .formula-grid{grid-template-columns:1fr;}
+    table.tbl{font-size:12.5px;}
+    table.tbl th,table.tbl td{padding:7px 6px;}
+    .bar-val{width:74px;font-size:11px;}
+    .bar-name{width:34px;font-size:12px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 头部 -->
+  <header class="hero">
+    <span class="issue">第 12 期</span>
+    <h1>人效与坪效</h1>
+    <p class="sub">营收高不等于效率高：用「每人」「每平米」两个尺子，给多店经营重新排名</p>
+    <div class="meta">
+      <span class="chip date-chip">2026-11-14</span>
+      <span class="chip">关键词：人效</span>
+      <span class="chip">关键词：坪效</span>
+      <span class="chip">关键词：人均创收</span>
+      <span class="chip">关键词：单位面积产出</span>
+      <span class="chip">关键词：多店对标</span>
+    </div>
+  </header>
+
+  <!-- 场景 -->
+  <section class="card scene">
+    <h2><span class="num">1</span>先从一个真实场景说起</h2>
+    <p>你同时管着 3 家咖啡小店，月底看营收，排名清清楚楚：</p>
+    <p><span class="who">B 店</span> 营收 15 万、<span class="who">A 店</span> 营收 12 万、<span class="who">C 店</span> 营收 9 万。你本能地觉得「B 店最厉害，该多给资源」。</p>
+    <p>但财务顾问问了你三个问题，你一下愣住了：</p>
+    <p>· B 店是 6 个人干出来的，A 店只用了 4 个人；<br>
+       · B 店面积只有 50㎡，C 店却有 80㎡ 才卖 9 万；<br>
+       · 三家的「人均产出」「每平米产出」其实根本不一样。</p>
+    <p>光看营收总额，你其实是在拿「店的大小」比「店的能力」。要公平评价每家店、要决定资源往哪投、要评估新店能不能开，你得换两把更准的尺子——<b>人效</b>和<b>坪效</b>。</p>
+  </section>
+
+  <!-- 定义与公式 -->
+  <section class="card">
+    <h2><span class="num">2</span>定义与公式卡片</h2>
+    <p class="lead">人效看「人」的产出效率，坪效看「地」的产出效率。两者都能从「收入口径」和「利润口径」各算一次，评价角度不同。</p>
+    <div class="formula-grid">
+      <div class="fcard">
+        <div class="ft">人效（收入口径）</div>
+        <div class="fx">人效 = <b>营业收入</b> ÷ <b>员工人数</b><br>单位：元 / 人 / 月</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">坪效（收入口径）</div>
+        <div class="fx">坪效 = <b>营业收入</b> ÷ <b>营业面积</b><br>单位：元 / ㎡ / 月</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">人效（利润口径）</div>
+        <div class="fx">人效 = <b>经营利润</b> ÷ <b>员工人数</b><br>单位：元 / 人 / 月</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">坪效（利润口径）</div>
+        <div class="fx">坪效 = <b>经营利润</b> ÷ <b>营业面积</b><br>单位：元 / ㎡ / 月</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">人均工时人效（更细）</div>
+        <div class="fx">工时人效 = <b>营业收入</b> ÷ <b>总工时</b><br>看排班有没有把人用在刀刃上</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">人员密度（辅助指标）</div>
+        <div class="fx">人员密度 = <b>员工人数</b> ÷ <b>营业面积</b><br>人 / ㎡，配合坪效判断排班</div>
+      </div>
+    </div>
+    <p class="lead" style="margin-top:14px;">一句话记住：<b>收入口径</b>告诉你「这店能卖多少」；<b>利润口径</b>告诉你「这店真正赚多少」——卖得多不代表留得住。</p>
+  </section>
+
+  <!-- 算例 -->
+  <section class="card">
+    <h2><span class="num">3</span>跟着算一遍：三家店的真实排名</h2>
+    <p class="lead">用上面三家的真实数据，把四把尺子都算出来。假设经营利润分别为：A 店 2.4 万、B 店 3.0 万、C 店 1.8 万。</p>
+
+    <table class="tbl">
+      <tr><th>门店</th><th>月营收</th><th>员工</th><th>面积</th><th>经营利润</th></tr>
+      <tr><td class="lbl">A 店</td><td>120,000</td><td>4 人</td><td>60 ㎡</td><td>24,000</td></tr>
+      <tr><td class="lbl">B 店</td><td>150,000</td><td>6 人</td><td>50 ㎡</td><td>30,000</td></tr>
+      <tr><td class="lbl">C 店</td><td>90,000</td><td>3 人</td><td>80 ㎡</td><td>18,000</td></tr>
+    </table>
+
+    <div class="calc">
+      <div class="step"><b>第一步 · 人效（收入口径）= 营收 ÷ 人数</b><br>
+        A：120,000 ÷ 4 = <b>30,000</b> 元/人/月<br>
+        B：150,000 ÷ 6 = <b>25,000</b> 元/人/月<br>
+        C：90,000 ÷ 3 = <b>30,000</b> 元/人/月</div>
+      <div class="step"><b>第二步 · 坪效（收入口径）= 营收 ÷ 面积</b><br>
+        A：120,000 ÷ 60 = <b>2,000</b> 元/㎡/月<br>
+        B：150,000 ÷ 50 = <b>3,000</b> 元/㎡/月<br>
+        C：90,000 ÷ 80 = <b>1,125</b> 元/㎡/月</div>
+      <div class="step"><b>第三步 · 人效（利润口径）= 利润 ÷ 人数</b><br>
+        A：24,000 ÷ 4 = <b>6,000</b>；B：30,000 ÷ 6 = <b>5,000</b>；C：18,000 ÷ 3 = <b>6,000</b></div>
+      <div class="step"><b>第四步 · 坪效（利润口径）= 利润 ÷ 面积</b><br>
+        A：24,000 ÷ 60 = <b>400</b>；B：30,000 ÷ 50 = <b>600</b>；C：18,000 ÷ 80 = <b>225</b></div>
+    </div>
+
+    <p class="lead" style="margin-top:8px;">把核心两项画成对照条（长度代表数值大小）：</p>
+    <div class="bars">
+      <div class="bar-row"><span class="bar-name">A人效</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-val">30,000</span></div>
+      <div class="bar-row"><span class="bar-name">B人效</span><span class="bar-track"><span class="bar-fill" style="width:83.3%"></span></span><span class="bar-val">25,000</span></div>
+      <div class="bar-row"><span class="bar-name">C人效</span><span class="bar-track"><span class="bar-fill" style="width:100%"></span></span><span class="bar-val">30,000</span></div>
+      <div class="bar-row"><span class="bar-name">A坪效</span><span class="bar-track"><span class="bar-fill g" style="width:66.7%"></span></span><span class="bar-val">2,000</span></div>
+      <div class="bar-row"><span class="bar-name">B坪效</span><span class="bar-track"><span class="bar-fill g" style="width:100%"></span></span><span class="bar-val">3,000</span></div>
+      <div class="bar-row"><span class="bar-name">C坪效</span><span class="bar-track"><span class="bar-fill g" style="width:37.5%"></span></span><span class="bar-val">1,125</span></div>
+    </div>
+
+    <div class="step" style="border-left-color:var(--ink);background:#f3f8f6;padding:14px;border-radius:10px;">
+      <b>结论怎么读？</b><br>
+      · <b>B 店营收最高，但人效最低</b>（25,000）——它靠「堆人 + 小面积高密度」做出来的，是典型的<b>高坪效、低人效</b>。<br>
+      · <b>A 店和 C 店人效一样</b>（30,000），但 A 坪效（2,000）是 C（1,125）的近 2 倍——<b>C 店在浪费面积</b>，要么缩铺面，要么把坪效做起来。<br>
+      · 评价门店效率，绝不能只看营收总额；<b>人效、坪效要同看</b>，才能知道资源该往哪投。
+    </div>
+  </section>
+
+  <!-- 判断标准 / 红线 -->
+  <section class="card">
+    <h2><span class="num">4</span>给经营者的 5 条判断标准与红线</h2>
+    <div class="rule"><span class="ic">!</span><div class="rx"><b>人效红线：</b>若某店人效连续 3 个月低于同区域其他店 15% 以上，先查排班与人岗匹配，<b>别急着加人</b>——加人只会让分母变大、人效更低。</div></div>
+    <div class="rule"><span class="ic">!</span><div class="rx"><b>坪效红线：</b>每月「面积租金 ÷ 营业面积」应明显低于坪效；若租金占营收比过高，说明<b>小店模型更划算</b>，大店未必更赚。</div></div>
+    <div class="rule"><span class="ic">!</span><div class="rx"><b>两个指标要同看：</b>高坪效 + 低人效 = 排班/人效问题（如 B 店）；低坪效 + 高人效 = 空间浪费（如 C 店）。对号入座才能开对药方。</div></div>
+    <div class="rule"><span class="ic">!</span><div class="rx"><b>新店评估：</b>新店模型的人效、坪效目标应 ≥ 老店中位数，否则谨慎扩张；拿「总量营收」当新店亮点，是最容易被忽悠的对比方式。</div></div>
+    <div class="rule"><span class="ic">!</span><div class="rx"><b>联动人工成本：</b>人效涨了，要同步看人工成本占比（见第 11 期「费用率」）。若人效涨 10% 而工资涨 20%，<b>效率改善被成本吃掉</b>，不算真改善。</div></div>
+  </section>
+
+  <!-- 自测题 -->
+  <section class="card">
+    <div class="quiz-title"><h2 style="margin:0;"><span class="num">5</span>今日自测题</h2></div>
+    <p class="quiz-tip">先自己算一遍，再点答案对一下。</p>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q1：某门店月营收 80,000 元，员工 5 人，求收入口径人效（元/人/月）。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">A1：人效（收入口径）= 营业收入 ÷ 员工人数 = 80,000 ÷ 5 = <b>16,000 元/人/月</b>。即平均每位员工每月创造 1.6 万元营收。</div>
+    </details>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q2：门店 A 面积 40㎡、月营收 120,000 元；门店 B 面积 100㎡、月营收 200,000 元。哪家坪效更高？高多少？</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">A2：坪效 = 营业收入 ÷ 营业面积。<br>
+        A 店：120,000 ÷ 40 = <b>3,000 元/㎡/月</b>；<br>
+        B 店：200,000 ÷ 100 = <b>2,000 元/㎡/月</b>。<br>
+        结论：<b>A 店坪效更高</b>，高出 3,000 − 2,000 = <b>1,000 元/㎡/月</b>。B 店营收总量虽大，但靠面积堆出来，单位面积效率反而更低。</div>
+    </details>
+
+    <details class="quiz">
+      <summary>
+        <span class="q">Q3（判断）：「营收最高的门店，人效和坪效一定也是最高的。」这句话对吗？请说明原因。</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="ans">A3：<b>错误。</b>营收是「总量」，人效、坪效是「人均 / 单位面积」的效率。大店营收高，往往是因为人多、面积大，效率反而可能更低。例如本期算例中 B 店营收最高（15 万），但人效（25,000）却是三店最低。评价门店效率必须<b>同看人效与坪效</b>，不能只看营收总额。</div>
+    </details>
+  </section>
+
+  <!-- 脚注 -->
+  <div class="foot">
+    <b>本期小结：</b>人效 = 营收（或利润）÷ 员工人数；坪效 = 营收（或利润）÷ 营业面积。两把尺子同看，才能给多店公平排名、把资源投到真正高效的地方。<br>
+    <b>下期预告：</b>租金占比——把「每平米的租金」和「坪效」摆在一起，看看你的铺面到底租贵了没有。<br>
+    <span style="color:#9aa6a1;">本页为自包含静态报告，折叠答案使用浏览器原生 &lt;details&gt; 实现，无需任何脚本。往期可回看第 01–11 期。</span>
+  </div>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,103 @@
+- main [ref=e3]:
+  - complementary [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]: 春
+      - text: 春日工作台
+    - generic [ref=e7]: 我的空间
+    - navigation [ref=e8]:
+      - button "⌂ 工作台" [ref=e9] [cursor=pointer]:
+        - generic [ref=e10]: ⌂
+        - text: 工作台
+      - button "✓ 计划打卡" [ref=e11] [cursor=pointer]:
+        - generic [ref=e12]: ✓
+        - text: 计划打卡
+      - button "¥ 资金管理" [ref=e13] [cursor=pointer]:
+        - generic [ref=e14]: ¥
+        - text: 资金管理
+      - button "✦ 每日发现" [ref=e15] [cursor=pointer]:
+        - generic [ref=e16]: ✦
+        - text: 每日发现
+      - button "⌕ 知识库" [ref=e17] [cursor=pointer]:
+        - generic [ref=e18]: ⌕
+        - text: 知识库
+      - button "❖ 功能地图" [ref=e19] [cursor=pointer]:
+        - generic [ref=e20]: ❖
+        - text: 功能地图
+    - generic [ref=e21]:
+      - button "🌙 切到深色" [ref=e22] [cursor=pointer]:
+        - generic [ref=e23]: 🌙
+        - text: 切到深色
+      - button "↥ 导出数据" [ref=e24] [cursor=pointer]:
+        - generic [ref=e25]: ↥
+        - text: 导出数据
+      - button "⌫ 清除数据" [ref=e26] [cursor=pointer]:
+        - generic [ref=e27]: ⌫
+        - text: 清除数据
+  - generic [ref=e30]:
+    - article [ref=e31]:
+      - generic [ref=e37]:
+        - text: 0%
+        - generic [ref=e38]: 今日完成
+      - generic [ref=e39]:
+        - paragraph [ref=e40]: 9月3日 周四
+        - heading "夜深了，早些休息" [level=1] [ref=e41]
+        - paragraph [ref=e42]: 先去「计划打卡」给这个月加打卡项吧
+      - paragraph [ref=e44]: 还没有今日打卡项
+    - generic [ref=e45]:
+      - article [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - paragraph [ref=e49]: 趋势
+            - heading "近 7 天打卡趋势" [level=3] [ref=e50]
+          - text: 本周 0%
+        - img [ref=e51]:
+          - generic [ref=e52]: 8/28
+          - generic [ref=e55]: 8/29
+          - generic [ref=e58]: 8/30
+          - generic [ref=e61]: 8/31
+          - generic [ref=e64]: 9/1
+          - generic [ref=e67]: 9/2
+          - generic [ref=e70]: 9/3
+          - generic [ref=e73]: 本周还没有打卡数据
+      - article [ref=e74]:
+        - generic [ref=e75]:
+          - generic [ref=e76]:
+            - paragraph [ref=e77]: 连续
+            - heading "连续打卡" [level=3] [ref=e78]
+          - text: 🔥
+        - paragraph [ref=e79]:
+          - emphasis [ref=e80]: "0"
+          - text: 天
+        - text: 坚持，比强度更重要
+        - paragraph [ref=e81]: 0 天 · 每天一点点
+      - article [ref=e82]:
+        - generic [ref=e83]:
+          - generic [ref=e84]:
+            - paragraph [ref=e85]: 沉淀
+            - heading "知识沉淀" [level=3] [ref=e86]
+          - text: 💎
+        - paragraph [ref=e87]:
+          - emphasis [ref=e88]: "0"
+          - text: 条
+        - text: 打卡与发现的自动结晶
+        - paragraph [ref=e89]: 点「知识库」查看
+  - complementary "快捷操作" [ref=e90]:
+    - button "0%" [ref=e91] [cursor=pointer]
+    - generic [ref=e96]: 今日已完成 0/0 项
+    - generic [ref=e97]:
+      - button "✓ 打卡" [ref=e98] [cursor=pointer]:
+        - text: ✓
+        - generic [ref=e99]: 打卡
+      - button "¥ 资金" [ref=e100] [cursor=pointer]:
+        - text: ¥
+        - generic [ref=e101]: 资金
+      - button "✦ 灵感" [ref=e102] [cursor=pointer]:
+        - text: ✦
+        - generic [ref=e103]: 灵感
+      - button "⌕ 检索" [ref=e104] [cursor=pointer]:
+        - text: ⌕
+        - generic [ref=e105]: 检索
+      - button "❖ 地图" [ref=e106] [cursor=pointer]:
+        - text: ❖
+        - generic [ref=e107]: 地图
+  - generic [ref=e108]: 当前使用本地缓存；启动后端可同步到数据库

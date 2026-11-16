@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美股每日新闻简报 · 2026-10-21</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#ffffff; --line:#e3e6ea; --text:#1a1d21; --sub:#5b6470;
+    --up:#d32029; --down:#0f8a4a; --accent:#1f5fd6; --warn:#b8620a; --chip:#eef2f7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;line-height:1.7;padding:28px 16px}
+  .wrap{max-width:940px;margin:0 auto}
+  header{background:linear-gradient(135deg,#1f2a44,#2f4a8c);color:#fff;border-radius:14px;padding:28px 30px;margin-bottom:22px}
+  header h1{font-size:26px;font-weight:700;letter-spacing:.5px}
+  header .meta{margin-top:8px;font-size:13px;opacity:.85}
+  .tag{display:inline-block;background:rgba(255,255,255,.16);border-radius:20px;padding:2px 12px;font-size:12px;margin-right:6px;margin-top:10px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 26px;margin-bottom:18px}
+  h2{font-size:18px;margin-bottom:14px;padding-left:10px;border-left:4px solid var(--accent);line-height:1.3}
+  h3{font-size:15px;margin:16px 0 8px;color:#2b3440}
+  p{font-size:14px;color:#2b3440;margin-bottom:8px}
+  ul{margin:6px 0 6px 20px}
+  li{font-size:14px;margin-bottom:4px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
+  th{background:#f0f3f7;font-weight:600;color:#3a4451;font-size:13px}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .up{color:var(--up);font-weight:600}
+  .down{color:var(--down);font-weight:600}
+  .flat{color:var(--sub)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px}
+  .kv{background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+  .kv .k{font-size:12px;color:var(--sub)}
+  .kv .v{font-size:19px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+  .kv .c{font-size:12px;margin-top:2px}
+  .note{background:#fff8ec;border-left:3px solid var(--warn);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .alert{background:#fdeeee;border-left:3px solid var(--up);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .good{background:#eefaf3;border-left:3px solid var(--down);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .hl{background:linear-gradient(180deg,transparent 62%,#ffe9a8 62%);font-weight:600}
+  .chip{display:inline-block;background:var(--chip);color:#3a4451;border-radius:6px;padding:2px 9px;font-size:12px;margin:2px 4px 2px 0}
+  .tm{display:inline-block;min-width:74px;color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums}
+  .star{color:var(--up);font-weight:700}
+  footer{text-align:center;color:var(--sub);font-size:12px;padding:16px 0 8px}
+  .lvl{display:inline-block;font-size:11px;border-radius:4px;padding:1px 7px;margin-right:6px;color:#fff}
+  .l1{background:#d32029}.l2{background:#d97b08}.l3{background:#2f7fbf}
+  .src{font-size:12px;color:var(--sub);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>美股每日新闻简报</h1>
+  <div class="meta">2026年10月21日（周三）· 覆盖纳斯达克、标普500、道琼斯 · 数据截至北京时间 09:07（对应美东 10/20 周二收盘；今日周三盘前/亚盘受 SpaceX 财报提振）</div>
+  <div>
+    <span class="tag">道指 +1.02% · 纳指 -0.02% 深V分化</span>
+    <span class="tag">资金轮动：金融/能源/医药撑道指</span>
+    <span class="tag">SpaceX 盘后 +8% · AI收入暴增9倍</span>
+    <span class="tag">布油逼 111 · 霍尔木兹通航骤降</span>
+    <span class="tag">美债 10Y ~5.10%（三周低位）</span>
+    <span class="tag">今日焦点：黄仁勋 GTC + Meta/特斯拉盘后</span>
+  </div>
+</header>
+
+<section>
+  <h2>一、市场速览（10/20 周二收盘 · 最新完整交易日）</h2>
+  <p>周二美股上演<strong>"深V分化"</strong>：早盘受 AI 交易降温与"美伊即将达成协议"传闻被否认拖累，三大指数一度跌近 1%；随后在油价回落、美债收益率下行与强劲蓝筹财报支撑下收复失地。至收盘，<strong>道指大涨 +1.02%</strong> 报 52,495.88（盘中从 -1% 翻红），<strong>标普 500 +0.28%</strong> 报 7,712.57，<strong>纳斯达克 -0.02%</strong> 报 26,424.82（勉强收平）。<span class="hl">盘面结构呈极致轮动</span>——资金从高估值科技股撤出，转向金融、工业、能源与医疗保健等价值/防御方向，道指显著跑赢纳指。纳斯达克100 -0.1%、罗素2000 <strong>+1.7%</strong>（小盘随价值风格走强）；万得美国科技七巨头指数 <strong>-0.52%</strong>。恐慌指数 VIX 约 18，维持近期高位（周一收 18.44）。</p>
+
+  <table>
+    <tr><th>指数 / 标的</th><th class="num">收盘</th><th class="num">日涨跌</th><th class="num">备注</th></tr>
+    <tr><td>道琼斯工业指数</td><td class="num">52,495.88</td><td class="num up">+1.02% / +529.85</td><td class="num flat">盘中从 -1% 翻红，蓝筹轮动领涨</td></tr>
+    <tr><td>标普 500 指数</td><td class="num">7,712.57</td><td class="num up">+0.28% / +21.84</td><td class="num flat">成分股逾 400 只上涨</td></tr>
+    <tr><td>纳斯达克综合指数</td><td class="num">26,424.82</td><td class="num flat">-0.02% / -6.07</td><td class="num flat">盘中跌近 1% 后收复</td></tr>
+    <tr><td>纳斯达克100（NDX）</td><td class="num">29,490.28</td><td class="num flat">-0.1%</td><td class="num flat">七巨头指数 -0.52%</td></tr>
+    <tr><td>罗素 2000（小盘）</td><td class="num">2,773.42</td><td class="num up">+1.7%</td><td class="num flat">价值风格外溢</td></tr>
+    <tr><td>VIX 恐慌指数</td><td class="num">≈18</td><td class="num flat">维持 18 一线（前收 18.44）</td><td class="num flat">隐波回落但仍偏高</td></tr>
+  </table>
+
+  <div class="grid">
+    <div class="kv"><div class="k">10年期美债收益率</div><div class="v">~5.10%</div><div class="c down">回落至三周低位（弱就业+官员放鸽压低；Midgard 10/18 快照 5.10%）</div></div>
+    <div class="kv"><div class="k">30年期美债收益率</div><div class="v">~5.60%</div><div class="c flat">长端高位（10/18 快照 5.60%）</div></div>
+    <div class="kv"><div class="k">2年期美债收益率</div><div class="v">~4.78%</div><div class="c down">回落；曲线正常化</div></div>
+    <div class="kv"><div class="k">美元指数 DXY</div><div class="v">~101.99</div><div class="c flat">维持 102 一线</div></div>
+    <div class="kv"><div class="k">WTI 原油（11月）</div><div class="v">$101.79</div><div class="c down">-1.8%（周二结算）；电子盘/主力 ~$98.4</div></div>
+    <div class="kv"><div class="k">布伦特原油（12月）</div><div class="v">~$109.6</div><div class="c up">盘中逼 111（5月来高位）</div></div>
+    <div class="kv"><div class="k">伦敦金现</div><div class="v">$4,116</div><div class="c down">约 -0.2%（盘后快照）</div></div>
+    <div class="kv"><div class="k">伦敦银现</div><div class="v">$57.82</div><div class="c down">约 -0.3%</div></div>
+    <div class="kv"><div class="k">比特币 BTC</div><div class="v">约 $81,800</div><div class="c flat">基本持平</div></div>
+    <div class="kv"><div class="k">美债 2s10s 利差</div><div class="v">~33bp</div><div class="c flat">10/18 快照 33bp，曲线正常向上</div></div>
+  </div>
+
+  <div class="note"><strong>口径提示（多源并列）：</strong>①收盘主流口径 道指 52,495.88 / 标普 7,712.57 / 纳指 26,424.82（新华社、中国证券网、新浪、证券时报、腾讯、央广、Reuters 转引一致）。②原油跨合约：NYMEX 11 月 WTI 结算 101.79（周二 -1.8%），电子盘/主力约 98.4；Brent 12 月 109.64、盘中逼 111（5 月来高位）。③金价以盘后快照 4,116 计（前收 COMEX 4,142）。④VIX 未获取 10/20 确切收盘值，以近期 18.44 及盘后期货隐含约 18 估算，区间标注。⑤美债以 Midgard Finance 10/18 月度快照（10Y 5.10% / 2Y 4.77% / 30Y 5.60%）为基准，结合本周弱就业与官员鸽派表态"回落至三周低位"定性。</div>
+</section>
+
+<section>
+  <h2>二、六大核心驱动事件</h2>
+
+  <h3><span class="lvl l2">1</span>风格极致切换：防御/价值领涨，科技七巨头普跌——资金"逃离 AI、寻找其他机会"</h3>
+  <p>周二最大特征不是指数涨跌，而是<strong>资金结构的剧烈轮动</strong>。Plante Moran 首席投资官 Jim Baird 直言："投资者仍然对人工智能交易以及其中一些公司能否将其投资变现持怀疑态度，因此你会看到资金正在转向市场的其他领域。" 这一判断在盘面得到印证——<span class="hl">金融、能源、航空、医药全线走强</span>撑起道指，而七巨头中除特斯拉外全部收跌。医疗（尤其减肥药/生物制药）成为资金避风港，礼来盘中创历史新高。市场从"AI 单主线"转向"多点开花"，但纳指收盘仅勉强持平，反弹成色有限。</p>
+
+  <h3><span class="lvl l3">2</span>SpaceX 财报引爆盘后 AI 交易：净利 44 亿、AI 收入暴增 9 倍、马斯克拟与特斯拉合并</h3>
+  <ul>
+    <li><strong>财报大超预期</strong>：SpaceX 盘后公布截至 9/30 第三季度业绩——营收 145.8 亿美元（同比 <strong>+161%</strong>，预期约 128 亿）；净利润 44 亿美元（预期约 18.8 亿，去年同期净亏 11 亿）；AI 收入 75.6 亿美元（<strong>同比暴增逾 9 倍</strong>，首次成为最大收入来源）；资本开支 195.9 亿。</li>
+    <li><strong>马斯克"合并"信号</strong>：SpaceX 与特斯拉已各自成立由独立董事组成的<strong>特别委员会</strong>，探讨潜在合并交易；马斯克称"收购特斯拉是个好主意"，若成行按当前估值简单相加涉资约 <strong>3.5 万亿美元</strong>，或创企业并购规模纪录。特斯拉盘后涨 1.68%。</li>
+    <li><strong>盘后带动 AI 链集体走强</strong>：SpaceX 盘后 <strong>+8.09%</strong>，超微电脑（SMCI）因业绩超预期 <strong>+14%</strong>；英特尔 +4%、CoreWeave +5%、AMD/英伟达/美光 +2.2%、台积电/甲骨文/特斯拉 +1.5%，Credo +8%、Lumentum +5%。Futurum 称"AI 收入成为 SpaceX 最大业务线，正迅速提供运营杠杆"。</li>
+  </ul>
+
+  <h3><span class="lvl l1">3</span>油价高位 + 地缘升级：布油逼 111、霍尔木兹通航骤降、沙特 Aramco 遭袭</h3>
+  <ul>
+    <li><strong>油价再冲高位</strong>：周二 Brent 12 月合约盘中触及 <strong>111 美元</strong>（5 月 20 日以来首次），收约 109.6；WTI 11 月结算 101.79。分析人士称地缘风险溢价支撑下短期具备冲击 <strong>120 美元</strong>动能，但 120 大概率成"天花板"。</li>
+    <li><strong>通航与袭击</strong>：经霍尔木兹海峡原油日通行量上周降至约 <strong>850 万桶</strong>（前周 &gt;2,000 万）；两周内至少 18 艘船只遇袭，一艘超级油轮在霍尔木兹南部<strong>触雷爆炸起火</strong>。胡塞武装宣称袭击沙特延布 Aramco 设施、Shaybah 油田及利雅得/阿巴哈机场。<strong>英国将派遣"台风"战斗机协助沙特抵御胡塞</strong>。</li>
+    <li><strong>库存与缓冲</strong>：美国战略石油储备（SPR）降至 <strong>2.827 亿桶</strong>，为 1982 年 10 月以来最低；IEA 表示若成员国认为时机成熟"准备按下按钮"协调进一步释储（已承诺加快释放 2,000 万桶柴油）。美国能源部长赖特称海湾石油流量已恢复至冲突前 <strong>80%</strong>，但胡塞扩大袭击令担忧"高烧不退"。</li>
+  </ul>
+
+  <h3><span class="lvl l2">4</span>美债收益率回落至三周低位，但高位格局未破；加息预期剧烈分化</h3>
+  <ul>
+    <li>10Y 回落至约 <strong>5.10%（三周低位）</strong>，30Y ~5.60%，2Y ~4.78%——弱于预期的非农（9 月仅 +2.9 万）与美联储官员"等 clarity"的鸽派表态共同压低收益率。</li>
+    <li><strong>加息预期"冰火两重天"</strong>：CME FedWatch 显示 10/27—28 会议加息概率由 9 月加息后一度 77% 骤降至约 <strong>16%—18%</strong>；但 <strong>12 月加息概率仍约 89%</strong>。主要券商（高盛、摩根大通、摩根士丹利、瑞银、巴克莱、德银等）一致看 12 月 +25bp（联邦基金利率至 4.00%—4.25%），仅美银仍看 10 月 + 12 月两次。</li>
+    <li><strong>政治约束</strong>：美联储已进静默期（10/17—29），而 10 月会议投票落在 11/3 中期选举前 6 天，路透称"选前加息政治爆炸"，市场对 10 月按兵不动定价趋同；纽约联储主席威廉姆斯称"年内或再加息一次、2027 年不再"。</li>
+  </ul>
+
+  <h3><span class="lvl l1">5</span>财报季"压力测试"开启：本周超级密集，周三盘后 Meta + 特斯拉为定调之战</h3>
+  <ul>
+    <li>本周是美股三季报最密集阶段，市场关注的已不是"AI 是否增长"，而是"<strong>投资者还愿不愿意为增长付溢价</strong>"（Direxion 的 Behan：超大规模云厂商未来几周财报将是 AI 交易的下一场重大压力测试，Capex/ROI 指引比盈利数据更重要）。</li>
+    <li><strong>时间轴</strong>：周二维 Netflix 打响第一枪、SpaceX 盘后披露（已完成）；<strong>周三盘后 Meta、特斯拉、IBM、AT&amp;T、德州仪器、Lam Research</strong> 为全周焦点；周四盘后 Western Digital；周五盘前美国运通、斯伦贝谢。超微电脑（SMCI）周二盘后亦超预期 +14%。</li>
+    <li>市场预期 Q3 盈利同比激增逾 30%（主要由 AI 相关巨头拉动），但若"巨额 Capex 回报"信号缺失，反弹恐难延续。</li>
+  </ul>
+
+  <h3><span class="lvl l3">6</span>中国资产深夜爆发：金龙 +0.68%，小鹏 +7.6%、理想 +5.7%、小i机器人 +40%</h3>
+  <ul>
+    <li>纳斯达克中国金龙指数收涨 <strong>0.68%</strong>，新能源车领涨：小鹏汽车 <strong>+7.60%</strong>、理想汽车 <strong>+5.67%</strong>、蔚来 +1.18%；禾赛科技 +8%、世纪互联/小马智行 +5%、万国数据/再鼎医药 +4%、金山云 +3%。</li>
+    <li>小i机器人单日 <strong>狂飙 40%</strong>，富时中国 A50 夜盘从一度跌 1% 翻红收 +0.27%——中概情绪回暖但含较强投机成分，注意追高风险。</li>
+    <li>下跌方面：希尔威金属矿业 -5%、好未来 -2%、盛美半导体 -2%、腾讯音乐 -1%。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>三、板块与个股（10/20 周二收盘）</h2>
+  <h3>领涨板块</h3>
+  <ul>
+    <li><span class="up">金融（全线涨）</span>：伯克希尔 +1.20%、摩根士丹利 +1.10%、高盛 +1.05%、花旗 +0.69%、摩根大通 +0.58%、美银 +0.54%、富国 +0.46%（利率回落 + 蓝筹财报提振）。</li>
+    <li><span class="up">能源（全线涨）</span>：斯伦贝谢 +1.83%、雪佛龙 +0.63%、康菲 +0.50%、西方石油 +0.32%（埃克森 -0.22%）。</li>
+    <li><span class="up">航空</span>：美国航空 +3.68%、达美 +2.71%、联合航空 +2.27%、西南 +2.19%（波音 -0.54%）。</li>
+    <li><span class="up">医药生物</span>：Moderna +6%、礼来 +3.49%（创收盘新高）、默克 +3.25%、安进 +3%、强生/辉瑞/阿斯利康 +2%。</li>
+  </ul>
+  <h3>科技 / 半导体</h3>
+  <ul>
+    <li><strong>七巨头（万得指数 -0.52%）</strong>：特斯拉 <strong>+1.54%</strong>（物理 AI/机器人量产预期），亚马逊 +0.07%，微软 -0.31%，英伟达 -0.29%，<span class="down">苹果 -1.00%、谷歌 -1.11%、Meta -1.59%</span>。</li>
+    <li><strong>费城半导体（SOX -0.29%）</strong>：ARM -3.07%、AMD -0.62%、ASML -0.99%、英特尔 -0.37%、博通 -0.07%；安森美/恩智浦 +3%，高通 +1.26%、台积电 +1.21%。</li>
+    <li><strong>存储分化</strong>：西部数据 +3.44%、希捷 +2.17%、闪迪 -0.42%、美光 -0.98%、SK 海力士 -2.16%（盘后随 AI 链反弹 +2%+）。</li>
+    <li><strong>SpaceX</strong>：常规交易 -0.11%，盘后财报后飙 <strong>+8%+</strong>（详见驱动事件 2）。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>四、盘后 / 亚盘最新动态（10/21 周三，美股尚未开盘）</h2>
+  <ul>
+    <li><strong>三大股指期货（盘后速递）</strong>：道指期货 <span class="up">+0.05%—+0.15%</span>、标普 500 期货 <span class="up">+0.27%—+0.36%</span>、纳指 100 期货 <span class="up">+0.76%—+1%</span>——主要受 SpaceX 与超微电脑超预期财报提振，<strong>反映亚盘情绪，不构成开盘预测</strong>。</li>
+    <li><strong>SpaceX 盘后 +8.09%</strong>：Q3 营收 145.8 亿（+161%）、净利 44 亿（预期 18.8 亿）、AI 收入 75.6 亿（+9 倍）、资本开支 195.9 亿；马斯克称与特斯拉合并"是个好主意"、双方成立特别委员会；预计 2027 年底前年度经常性收入达 5,000 亿—1 万亿美元。</li>
+    <li><strong>超微电脑（SMCI）盘后 +14%</strong>：业绩大幅超预期，与 SpaceX 共同"重燃 AI 交易热情"。</li>
+    <li><strong>AI 产业链盘后集体走强</strong>：英特尔 +4%、CoreWeave +5%、AMD/英伟达/美光 +2.2%、台积电/甲骨文/特斯拉 +1.5%；Credo +8%、Lumentum +5%、康宁/迈威尔/闪迪/希捷 +3%；存储盘后 闪迪/SK 海力士/美光/西数/希捷 +2%+。</li>
+    <li><strong>医药盘后普跌</strong>：礼来 -0.27%、安进 -0.95%、默克 -0.5%、辉瑞 -1%（盘中涨幅回吐）。</li>
+    <li><strong>商品（盘后快照）</strong>：WTI 电子盘 +0.55% 报 98.36；伦敦金现 4,116.23（-0.21%）、伦敦银现 57.822（-0.27%）。</li>
+    <li><strong>今日（10/21）关键催化</strong>：黄仁勋 GTC 柏林主题演讲（美东 11:00—13:00 = 北京 17:00—19:00），聚焦欧洲主权 AI、企业 AI 基础设施与机器人；盘后 Meta、特斯拉、IBM、德州仪器、Lam Research 财报；外交面美伊核谈（卡塔尔称仍在继续）、俄乌"能源停火"构想推进。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>五、本周关键日程（美东时间，北京 +12h）</h2>
+  <table>
+    <tr><th>日期（美东）</th><th>事件 / 财报</th><th>北京时刻</th></tr>
+    <tr style="background:#fafbfc"><td>周二 10/20（已收）</td><td>盘前 GE Aerospace、RTX、3M、GM、Halliburton；盘后 <strong>Netflix（NFLX）第一枪</strong>、SpaceX 披露、联合航空、Intuitive Surgical</td><td>已完成</td></tr>
+    <tr><td>周三 10/21（今日）</td><td><strong>本周焦点日</strong>：黄仁勋 GTC 柏林演讲（美东 11:00—13:00）；盘后 <span class="star">Meta、特斯拉(TSLA)、IBM、AT&amp;T、德州仪器(TXN)、Lam Research</span>；盘前 Abbott、Thermo Fisher、NextEra、Philip Morris</td><td>演讲 <span class="tm">17:00</span> / 财报 <span class="tm">04:01+</span></td></tr>
+    <tr><td>周四 10/22</td><td><strong>初请失业金</strong>（8:30）+ Conference Board 9 月领先指标（10:00）；盘前 P&amp;G、Honeywell、Lockheed、Comcast、Union Pacific；盘后 Western Digital、Newmont；SK 海力士（首尔）</td><td>失业金 <span class="tm">20:30</span></td></tr>
+    <tr><td>周五 10/23</td><td><strong>10 月 S&amp;P Global 综合 PMI 初值</strong>（9:45）+ 密歇根消费者信心终值（10:00）；盘前 American Express、SLB；日本 9 月 CPI（早间）；ESMO 2026 马德里开幕</td><td>PMI <span class="tm">21:45</span></td></tr>
+    <tr style="background:#fafbfc"><td>后续 / 政策</td><td><span class="chip">美联储静默期 10/17—29</span>；<span class="chip">FOMC 10/27—28（北京 10/29 02:00）</span>；<strong>Q3 GDP + 9 月 PCE 10/29</strong>；ESMO 癌症疫苗详细数据 10/24（Moderna/默沙东）；11/3 中期选举</td><td>—</td></tr>
+  </table>
+  <div class="good"><strong>本周焦点排序：</strong>①周三盘后 <strong>Meta + 特斯拉</strong> 的 AI 资本开支与交付指引，直接定调科技股情绪、验证"业绩能否对冲融资担忧"，黄仁勋 GTC 演讲是欧洲时段情绪前哨；②超微电脑/SpaceX 盘后已"预热"AI 链；③周五 PMI + 周度初请，检验停摆下的数据成色；④10/27—28 FOMC（10 月大概率按兵不动、12 月加息近九成）。LSEG 平均预期 Q3 盈利同比激增逾 30%，但"为增长付溢价"的意愿将决定反弹能否延续。</div>
+</section>
+
+<section>
+  <h2>六、风险提示</h2>
+  <ul>
+    <li><strong>AI 融资 / 债务尾部风险</strong>：CoreWeave 债券收益率仍约 15%、总债务逾 510 亿；SpaceX/SMCI 财报虽亮眼，但"AI 资本开支可持续、举债能否创造回报"的质疑未消；本周 Meta/特斯拉财报是 AI 叙事的"压力测试"，若巨额 Capex 回报信号缺失或触发回吐。</li>
+    <li><strong>油价与地缘</strong>：Brent 逼 111、霍尔木兹通航骤降至 850 万桶/日、沙特 Aramco 遭胡塞袭、英国派战机协防；美 SPR 44 年最低、IEA 拟再释储；分析称 120 为天花板但风险溢价高，且"美伊协议"传闻屡被否认，情绪反复。</li>
+    <li><strong>高利率环境</strong>：10Y 虽回落至约 5.10%（三周低位）仍处 20 余年高位，30Y ~5.60%；若加息预期回潮或长债标售疲弱，收益率或再冲高，压制高估值成长股。</li>
+    <li><strong>加息路径分裂 + 政治约束</strong>：9 月 CPI（+3.7%）与 PPI（+6.3% 同比）双爆表；CME 10 月概率骤降至 16%—18%、12 月仍约 89%；Fed 静默期 + 11/3 中期选举使 10 月加息"政治爆炸"，但通胀黏性令 12 月几乎成共识。</li>
+    <li><strong>政府停摆"数据黑洞"</strong>：停摆已进入第四周，就业、部分物价口径受影响；本次 9 月非农 +2.9 万仍披露但整体数据完整性存疑，美联储近乎"盲飞"。</li>
+    <li><strong>广度与结构背离</strong>：纳指仅 -0.02% 但七巨头普跌（除特斯拉），反弹由金融/能源/医药等价值方向独撑，VIX 仍处 18 一线；若 Meta/特斯拉财报不及预期或触发回吐。</li>
+    <li><strong>中概单日暴涨的投机风险</strong>：小i机器人 +40%、小鹏 +7.6% 等含较强情绪/投机成分，注意追高与隔夜回撤风险。</li>
+  </ul>
+  <div class="src">主要信源：新华社、CNBC、Reuters（转引）、Yahoo Finance、证券时报、腾讯财经、新浪财经、21 世纪经济报道、中国证券网、央广网、中新经纬、澎湃新闻、富途牛牛、Midgard Finance（美债收益率曲线快照）、彭博（转引）、华尔街见闻等。部分指标（原油跨合约、VIX、金价、BTC、费半/存储涨幅）跨源存在口径差异，本文已并列标注，并弃用明显为旧年份/错月份的低质聚合稿。</div>
+</section>
+
+<footer>本报告由自动化任务生成，仅供市场研究与学习交流，不构成任何投资建议。市场有风险，投资需谨慎。<br>生成时间：2026-10-21 09:07（GMT+8）</footer>
+
+</div>
+</body>
+</html>

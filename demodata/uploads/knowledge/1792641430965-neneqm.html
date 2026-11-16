@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第19期 · 通货膨胀</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #dcb98e;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 19 期</span>
+  <h1>今天的概念：<span class="tag">通货膨胀</span>（Inflation）</h1>
+  <div class="date">2026年10月13日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 老周的包子铺：同样一笼，为什么从 3 块涨到 12 块？</h2>
+    <p>老周在巷口卖了十年包子。他翻出 2016 年的小账本，自己都吓一跳：那年肉包 <strong>1 元一个</strong>，一笼六个卖 <strong>3 元</strong>，店租每月 <strong>800 元</strong>，请的学徒工钱 <strong>1500 元</strong>。顾客阿明每天吃一笼，一个月早餐才花 90 块。</p>
+    <p>今年老周把一笼涨到了 <strong>12 元</strong>——肉包 3 元一个，店租涨到 <strong>3000 元/月</strong>，学徒工资 <strong>5000 元/月</strong>。阿明抱怨："包子越来越贵，钱越来越不经花。"</p>
+    <div class="board">
+      <div class="row head"><span class="k">对比项</span><span class="v">2016 年</span><span class="v">2026 年</span></div>
+      <div class="row"><span class="k">一笼肉包</span><span class="v">¥3（6 个）</span><span class="v">¥12（6 个）</span></div>
+      <div class="row"><span class="k">店面月租</span><span class="v">¥800</span><span class="v">¥3000</span></div>
+      <div class="row"><span class="k">学徒月工资</span><span class="v">¥1500</span><span class="v">¥5000</span></div>
+      <div class="row"><span class="k">阿明月早餐费</span><span class="v">约 ¥90</span><span class="v">约 ¥360</span></div>
+    </div>
+    <p>可老周苦笑："我涨了价，真没多赚。"包子从 3 块涨到 12 块（4 倍），但店租涨了近 <strong>3.75 倍</strong>、人工涨了 <strong>3 倍多</strong>，面粉和肉价也一路爬。成本涨得比售价还凶，他的净利润反而被压薄了。</p>
+    <p>更有意思的是老周的"隐藏账单"：三年前他贷款 <strong>20 万</strong> 装修，当时月供压得他喘不过气；如今用每月赚来的钱还那笔"名义不变"的月供，竟觉得轻松了些——因为他还出去的每一块钱，都比借的时候"轻"了。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>通货膨胀（Inflation）</strong>，就是整体物价持续上涨，单位货币能换到的东西越来越少。老周的包子涨了，但钱也"变瘦"了——同样的 ¥12，买到的幸福感远不如当年的 ¥3。</p>
+    <p>它最容易被忽略的一点是：<strong>通胀是一种"隐形的再分配"</strong>。谁的账单上写的是"固定名义数字"，谁就被它温柔地改写——</p>
+    <div class="board">
+      <div class="row head"><span class="k">同样是 20 万</span><span class="v">2016 拿着它的人</span><span class="v">2026 还/收它的人</span></div>
+      <div class="row"><span class="k">储蓄者老李</span><span class="v">存 20 万定期</span><span class="v">取回还是 20 万+息，但购买力≈当初 18 万 → 吃亏</span></div>
+      <div class="row"><span class="k">负债者老周</span><span class="v">借 20 万装修</span><span class="v">按约还 20 万，用"变轻的钱"还债 → 占便宜</span></div>
+    </div>
+    <p>反过来，小商家老周这种"两头受压"的人也不轻松：卖价涨了，可房租工资涨得更快。所以通胀不是简单的"东西贵了"，而是<strong>钱在不同人手里悄悄转移重量</strong>。</p>
+    <p>判断通胀对你有利还是有害，记住这条线：<strong>实际利率 ≈ 名义利率 − 通货膨胀率</strong>。银行说利率 3%，若通胀也有 3%，你的真实收益约等于 0；若通胀 5%，你其实在"倒贴"持有现金。</p>
+    <div class="formula">实际收益 ≈ 名义利率 − 通胀率</div>
+    <p>🌰 换到你的钱包：工资从 5000 涨到 8000 看着喜人，若同期物价涨了 60%，你的<strong>真实</strong>购买力只多了约 12%；把 10 万现金塞床底三年，名义还是 10 万，实际可能已经"瘦"掉一两万。所以看钱，永远要先减掉通胀这一刀。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>钱"变薄"是不均匀的</strong>：包子、房租、菜价往往涨得比工资快，日常体感最扎心。别只看标价，要看它占你收入的比例变了没有。</li>
+      <li><strong>通胀是隐形的再分配</strong>：现金和固定利息的储蓄者吃亏，欠着房贷、经营贷的人反而"变相占便宜"——同样的名义数字，真实重量天差地别。小商家则常两头受压。</li>
+      <li><strong>看"实际"别看"名义"</strong>：工资涨、利率涨，都要先减去通胀才算数（实际利率≈名义利率−通胀率）。对抗通胀，靠能随物价升值或持续生息的资产，而不是把现金"躺"着。</li>
+    </ul>
+  </div>
+
+  <div class="next">第 20 期聊聊「风险与回报」（Risk &amp; Return）—— 高收益的背后，究竟站着什么；为什么"稳赚"二字，本身往往就是最大的风险信号。</div>
+</div>
+</body>
+</html>

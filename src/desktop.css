@@ -1,0 +1,4 @@
+/* desktop.css —— 桌面端额外润色。
+   现主视觉已收敛到 style.css（v4 玻璃+暖白+侧边栏，含 dock 与深浅色），
+   此文件仅保留历史遗留的桌面氛围点缀，避免重复定义。 */
+.app-bg{pointer-events:none}

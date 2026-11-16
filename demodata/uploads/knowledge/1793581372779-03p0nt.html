@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第8期 · 卡尔曼滤波与粒子滤波</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>第 8 期 · 卡尔曼滤波与粒子滤波（看不见的真相，怎么"猜"得最准）</h1>
+<blockquote>概念序列第 28 项 · 衔接：第 7 期 HMM（隐藏状态 + 观测）、第 12 期马尔可夫链、第 15 期蒙特卡洛、第 9/10 期正态与 CLT。</blockquote>
+<blockquote>一句话：<strong>用"预测 + 观测"两步不断纠偏，把带噪声的乱数据，反推出最可能的真实状态。</strong></blockquote>
+<hr>
+<h2>一、故事引入：阿明的无人机为什么在屏幕上"抽搐"</h2>
+<p>阿明放飞了一架无人机，大刘在地面用屏幕看着它的图标。奇怪的事发生了——图标<strong>乱跳</strong>。</p>
+<p>"GPS 出毛病了？"大刘问。</p>
+<p>阿明摇摇头："GPS 没坏，是它<strong>太吵</strong>了。每一秒的定位都带几米误差，单看一个点，就像醉汉走路——测得准，但抖得离谱。"</p>
+<p>"那怎么办？总不能让它抖一整天。"</p>
+<p>"关键想法是：<strong>别只信 GPS，也别只信猜测。</strong>"阿明说，"我先用'运动规律'猜它下一秒该在哪儿（它刚才往东飞、速度没变，那下一刻大概还在东边一点），这叫<strong>预测</strong>；然后拿 GPS 实际量一下，这叫<strong>观测</strong>。把'我的猜测'和'仪器的读数'按各自的可靠程度揉在一起，新位置就比两边都稳。"</p>
+<p>大刘试了试，轨迹果然顺滑了。阿明得意："这套'先猜后校'的活儿，就叫<strong>卡尔曼滤波</strong>。"</p>
+<p>可没飞多久，无人机飞到了一座<strong>高架桥</strong>上方。GPS 只报了个平面坐标——它到底在<strong>桥面上</strong>还是<strong>桥底下</strong>？这是一个"两可"的局面：真实位置有两个峰，高斯单峰画不住。阿明笑了："单峰描不下的，就<strong>撒一把粒子</strong>——一部分粒子站在桥上、一部分蹲在桥下，等下一个观测进来，站对地方的粒子'活下来'被复制，站错的慢慢死掉。最后活下来的那堆，就是真相。"</p>
+<p>大刘："这把'撒粒子'又是什么？"</p>
+<p>"<strong>粒子滤波</strong>——卡尔曼滤波在非高斯、非线性世界里的万能替身。"</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 核心问题：状态估计（State Estimation）</h3>
+<p>很多系统都有一个<strong>看不见的真状态</strong> $x_t$（无人机真实位置、电池真实电量、股票真实波动率），它随时间演化，但我们<strong>只能</strong>通过带噪声的观测 $z_t$ 间接看到。</p>
+<ul>
+<li><strong>状态演化（动态模型）</strong>：$x_t = A\,x_{t-1} + w_t$，其中 $w_t \sim \mathcal N(0,Q)$ 叫<strong>过程噪声</strong>（模型本身的不确定）。</li>
+<li><strong>观测模型</strong>：$z_t = H\,x_t + v_t$，其中 $v_t \sim \mathcal N(0,R)$ 叫<strong>观测噪声</strong>（仪器误差）。</li>
+<li><strong>目标</strong>：用历史观测 $z_{1:t}$ 估计当前状态 $x_t$。</li>
+</ul>
+<blockquote>注意：这和第 7 期 HMM 简直是孪生兄弟——HMM 里状态是<strong>离散</strong>的、观测也是离散概率；这里状态是<strong>连续</strong>的、噪声是<strong>高斯</strong>的。卡尔曼滤波 ≈ "连续版 HMM 前向递推"。</blockquote>
+<h3>2. 贝叶斯递推：预测 → 更新（闭环第 7 期）</h3>
+<p>后验 $p(x_t\mid z_{1:t})$ 永远靠两步循环得到：</p>
+<ul>
+<li><strong>预测步（时间更新）</strong>：用模型把上一刻的后验往前推一步</li>
+</ul>
+<p>$$p(x_t\mid z_{1:t-1}) = \int p(x_t\mid x_{t-1})\,p(x_{t-1}\mid z_{1:t-1})\,dx_{t-1}$$</p>
+<ul>
+<li><strong>更新步（量测更新）</strong>：来了一个新观测，用贝叶斯反推</li>
+</ul>
+<p>$$p(x_t\mid z_{1:t}) \propto p(z_t\mid x_t)\,p(x_t\mid z_{1:t-1})$$</p>
+<p>难点在于：除了"线性 + 高斯"这种特例，上面那套积分<strong>算不出闭式</strong>。于是有了两条路线。</p>
+<h3>3. 卡尔曼滤波：线性高斯下的"解析闭式"</h3>
+<p>为什么偏偏线性高斯能闭式？因为<strong>高斯分布对线性变换和乘法都封闭</strong>（还记得第 9 期正态、第 10 期 CLT 吗？正态是"运算稳定的幸运儿"）。于是后验还是高斯，只要追踪它的<strong>均值</strong>和<strong>协方差</strong>就够了。</p>
+<p>设上一刻后验为 $\hat x_{t-1\mid t-1}$、$P_{t-1\mid t-1}$：</p>
+<p><strong>① 预测</strong></p>
+<p>$$\hat x_{t\mid t-1} = A\,\hat x_{t-1\mid t-1}$$</p>
+<p>$$P_{t\mid t-1} = A\,P_{t-1\mid t-1}A^\top + Q$$</p>
+<p><strong>② 更新（关键在卡尔曼增益 $K_t$）</strong></p>
+<p>$$K_t = P_{t\mid t-1}H^\top\big(H\,P_{t\mid t-1}H^\top + R\big)^{-1}$$</p>
+<p>$$\hat x_{t\mid t} = \hat x_{t\mid t-1} + K_t\,(z_t - H\hat x_{t\mid t-1})$$</p>
+<p>$$P_{t\mid t} = (I - K_t H)\,P_{t\mid t-1}$$</p>
+<p><strong>卡尔曼增益 $K_t$ 是整杯饮料的"调味比例"</strong>——它自动平衡"该信预测还是该信观测"：</p>
+<ul>
+<li><strong>观测很吵（$R$ 大）→ $K$ 小</strong> → 更信预测（别被仪器带偏）；</li>
+<li><strong>预测很没谱（$P_{t\mid t-1}$ 大）→ $K$ 大</strong> → 更信观测（快校正）。</li>
+<li>数学彩蛋：融合后的方差 $P_{t\mid t}$ <strong>永远比</strong> $P_{t\mid t-1}$ 和 $R$ 各自都小——<strong>两个带噪来源，融合完反而更准</strong>，这就是数据融合的魔力。</li>
+</ul>
+<blockquote><strong>应用版图</strong>：GPS/惯性导航、雷达/声呐跟踪、经济学状态空间模型、机器人 SLAM、温控系统。</blockquote>
+<h3>4. 粒子滤波：解除高斯假设的通行证（闭环第 15 期蒙特卡洛）</h3>
+<p>一旦系统<strong>非线性</strong>（状态转移里出现 $\sin/\cos$）或噪声<strong>非高斯</strong>，贝叶斯递推没闭式。办法：<strong>用一堆带权粒子近似后验</strong>。</p>
+<ul>
+<li><strong>序贯重要性采样（SIS）</strong>：用 $N$ 个粒子 $\{x_t^{(i)}, w_t^{(i)}\}_{i=1}^N$ 近似 $p(x_t\mid z_{1:t})$。每来一个新观测，按"这个粒子和观测多吻合"更新权重。</li>
+<li><strong>退化问题</strong>：几步之后，99% 的权重可能塌到 1 个粒子上，余下上千粒子权重≈0 → 近似失效。</li>
+<li><strong>重采样（SIR 粒子滤波的核心招）</strong>：按权重<strong>有放回</strong>地"繁殖"粒子——高权重粒子被复制多份，低权重粒子被丢弃，然后权重重置为 $1/N$。相当于让"猜对了的粒子开枝散叶"。</li>
+<li><strong>闭环</strong>：第 15 期蒙特卡洛（粒子=样本，靠大数定律收敛）、第 12 期马尔可夫（状态演化=转移核）、第 7 期 HMM（粒子滤波=连续状态版 HMM 前向递推）。</li>
+</ul>
+<blockquote><strong>应用版图</strong>：机器人蒙特卡洛定位（MCL）、目标跟踪、金融非线性滤波、语音/信号处理、故障诊断。</blockquote>
+<h3>5. 两者关系一张图</h3>
+<ul>
+<li><strong>卡尔曼滤波 = 粒子滤波在高斯假设下的极限</strong>：粒子数 $N\to\infty$ + 线性高斯 → 结果就是 KF（而且 KF 是 $O(d^3)$ 的确定解析解，不要采样）。</li>
+<li><strong>粒子滤波 = 解除假设后的通用武器</strong>：代价是计算量随粒子数上升，且需处理退化/多样性损失。</li>
+<li><strong>选武器口诀</strong>：线性高斯 → KF（快又稳）；弱非线性 → EKF/UKF（线性化或确定性采样）；强非线性/多峰/非高斯 → 粒子滤波。</li>
+</ul>
+<hr>
+<h2>三、代表性题目 / 故事（你去总结）</h2>
+<blockquote>下面四题覆盖"增益直觉 / 一步递推 / 重采样为什么必要 / 何时换武器"。建议先自己推一遍，再看第四节答案。</blockquote>
+<p><strong>题 1 · GPS 该信谁？（增益直觉）</strong></p>
+<p>无人机上一刻预测位置标准差 $\sigma_{\text{pred}}=10\,\text{m}$（即预测方差 $P=100$），GPS 观测噪声标准差 $\sigma_{\text{obs}}=5\,\text{m}$（即 $R=25$），观测矩阵 $H=1$（直接测位置）。求卡尔曼增益 $K$，并说明融合后位置怎么算、融合后精度比单独用谁更好。</p>
+<p><strong>题 2 · 一步递推手算（随机游走定位）</strong></p>
+<p>一维位置模型：$x_t = x_{t-1} + w_t$，$w_t\sim\mathcal N(0,4)$（过程噪声方差 $Q=4$）；观测 $z_t = x_t + v_t$，$v_t\sim\mathcal N(0,9)$（观测噪声方差 $R=9$）。已知上一刻后验 $\hat x_{0\mid0}=0$、$P_{0\mid0}=1$，新来观测 $z_1=3$。求 $\hat x_{1\mid1}$ 与 $P_{1\mid1}$，并解释"预测方差(5)小于观测方差(9)，权重该偏向谁"。</p>
+<p><strong>题 3 · 粒子为什么会"集体叛变"？（重采样必要性）</strong></p>
+<p>描述一个场景：SIS 跑了几步后，1000 个粒子里 1 个拿走了 99% 的权重，其余 999 个权重≈0。问：① 这会带来什么后果（用"有效样本数"$N_{\text{eff}}=1/\sum w_i^2$ 解释）？② 重采样怎么解决？③ 重采样自身有什么代价（闭环第 15 期"样本多样性"）？</p>
+<p><strong>题 4 · 何时该换武器（KF vs 粒子辨析）</strong></p>
+<p>判断下列场景该用卡尔曼滤波、扩展/无损卡尔曼（EKF/UKF），还是粒子滤波，并说明理由：</p>
+<ul>
+<li>(a) 轮速里程计预测 + 激光测距观测，模型严格线性高斯；</li>
+<li>(b) 目标做机动转弯，状态转移含 $\sin/\cos$，噪声仍高斯；</li>
+<li>(c) 后验呈"桥上 or 桥下"双峰，单峰高斯描不下；</li>
+<li>(d) 同一任务，既要实时又要精度，谈权衡。</li>
+</ul>
+<hr>
+<h2>四、完整解题思路（含答案）</h2>
+<blockquote>题 1 · GPS 该信谁？</blockquote>
+<blockquote><strong>解</strong>：$H=1$ 时增益 $K = \dfrac{P_{t\mid t-1}}{P_{t\mid t-1}+R} = \dfrac{100}{100+25} = 0.8$。</blockquote>
+<blockquote>融合估计 $\hat x = K\cdot z + (1-K)\cdot \hat x_{\text{pred}} = 0.8\,z + 0.2\,\hat x_{\text{pred}}$，<strong>更偏观测</strong>（因为 GPS 比预测准）。</blockquote>
+<blockquote>更新后方差 $P_{t\mid t}=(1-K)P_{t\mid t-1}=0.2\times100=20$，标准差 $\sigma=\sqrt{20}\approx4.47\,\text{m}$。</blockquote>
+<blockquote><strong>结论</strong>：融合后精度 $4.47\,\text{m}$，比预测($10\,\text{m}$)和观测($5\,\text{m}$)都高——两个带噪源融合后能更准，这正是增益自动调权的结果。</blockquote>
+<blockquote>题 2 · 一步递推手算</blockquote>
+<blockquote><strong>解</strong>：</blockquote>
+<blockquote>预测：$\hat x_{1\mid0}=0$（模型无漂移），$P_{1\mid0}=P_{0\mid0}+Q=1+4=5$。</blockquote>
+<blockquote>增益：$K = \dfrac{P_{1\mid0}}{P_{1\mid0}+R}=\dfrac{5}{5+9}=\dfrac{5}{14}\approx0.357$。</blockquote>
+<blockquote>更新：$\hat x_{1\mid1}=0+0.357\times(3-0)\approx1.071$；$P_{1\mid1}=(1-0.357)\times5\approx3.214$（$\sigma\approx1.79$）。</blockquote>
+<blockquote><strong>偏谁</strong>：预测方差 $5$ &lt; 观测方差 $9$，说明<strong>预测更准</strong>，所以权重偏向预测（$1-K=0.643 &gt; K=0.357$）。直觉与"观测值 3 偏离预测 0"一致——别被单次读数带太远。</blockquote>
+<blockquote>题 3 · 粒子集体叛变</blockquote>
+<blockquote><strong>解</strong>：① <strong>退化</strong>：有效样本数 $N_{\text{eff}}=1/\sum w_i^2$，当 1 个粒子占 99% 权重时，$N_{\text{eff}}\approx 1/0.99^2\approx1.02$——名义 1000 个粒子，实际只有约 1 个在干活。后验近似被单点绑架，方差爆炸、极易发散（闭环第 15 期：蒙特卡洛估计需要"有效样本数"足够，否则样本均值不可靠）。</blockquote>
+<blockquote>② <strong>重采样</strong>：按权重有放回抽 $N$ 个新粒子，权重重置 $1/N$。高权重粒子被复制多份、低权重被丢弃，把"正确信息"铺开。</blockquote>
+<blockquote>③ <strong>代价</strong>：重采样会减少<strong>样本多样性</strong>（复制导致粒子趋同），长期可能粒子贫化。工程上用"系统重采样 / 残差重采样"并在必要时加微小重采样噪声来缓解。</blockquote>
+<blockquote>题 4 · 何时换武器</blockquote>
+<blockquote><strong>解</strong>：</blockquote>
+<blockquote>(a) <strong>卡尔曼滤波</strong>：严格线性高斯，KF 闭式最优且 $O(d^3)$ 快，首选。</blockquote>
+<blockquote>(b) <strong>EKF / UKF</strong>：强非线性但噪声仍高斯。EKF 对模型雅可比线性化（实现简单但有偏）；UKF 用"无损变换"取确定性 sigma 点，非线性下更稳。仍单峰假设。</blockquote>
+<blockquote>(c) <strong>粒子滤波</strong>：后验双峰（桥上/桥下），高斯单峰完全失效；粒子可同时分布在两个峰，靠后续观测让正确峰的粒子存活。</blockquote>
+<blockquote>(d) <strong>权衡</strong>：KF 解析、可证明收敛、实时性好；粒子精度随 $N$ 提升但算力线性上涨，需按实时预算选 $N$，或用"自适应重采样"只在退化严重时重采样省算力。</blockquote>
+<hr>
+<h2>五、核心公式速查</h2>
+<ul>
+<li><strong>卡尔曼预测</strong>：$\hat x_{t\mid t-1}=A\hat x_{t-1\mid t-1}$，$P_{t\mid t-1}=APA^\top+Q$</li>
+<li><strong>卡尔曼增益</strong>：$K=P_{t\mid t-1}H^\top(HPH^\top+R)^{-1}$</li>
+<li><strong>卡尔曼更新</strong>：$\hat x_{t\mid t}=\hat x_{t\mid t-1}+K(z_t-H\hat x_{t\mid t-1})$，$P_{t\mid t}=(I-KH)P_{t\mid t-1}$</li>
+<li><strong>粒子重采样</strong>：按权重有放回抽 $N$ 个，权重重置 $1/N$</li>
+<li><strong>有效样本数</strong>：$N_{\text{eff}}=1/\sum_i w_i^2$（越小越退化）</li>
+</ul>
+<hr>
+<h2>六、明日预告</h2>
+<p>下一期我们聊 <strong>「强化学习中的探索与利用（Bandit 与 ε-贪心）」</strong>：怎么在"试新招"和"用熟招"之间找平衡——这其实是把第 3 期模拟退火的温度、第 4 期 SGD 的学习率、第 20 期最优停止的"何时停手"揉进了一个会学习的智能体里。敬请期待。</p></div></body></html>

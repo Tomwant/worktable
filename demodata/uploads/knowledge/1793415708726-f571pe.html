@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第7期 · 隐马尔可夫模型HMM</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>第 7 期 · 隐马尔可夫模型（HMM）：看不见的状态，藏得住的真相</h1>
+<blockquote><strong>今日一句话</strong>：有些东西你永远无法直接看到——大刘此刻是开心还是烦躁，你只能看到他发的表情包。HMM 就是用来"隔着观测猜隐藏状态"的数学机器。</blockquote>
+<hr>
+<h2>一、故事：阿明读不懂大刘的表情</h2>
+<p>阿明和大刘是同事。大刘最近情绪忽明忽暗，但<strong>从不直说</strong>自己心情好坏，只会在群里发表情包：要么是 😊 微笑，要么是 😠 皱眉。</p>
+<p>阿明发现一个规律：</p>
+<ul>
+<li>大刘今天开心，明天<strong>多半</strong>还开心；今天烦躁，明天<strong>多半</strong>还烦躁（心情有惯性）。</li>
+<li>但心情和表情不是一一对应的：他开心时<strong>大多</strong>发 😊，偶尔也发 😠（比如手滑）；他烦躁时<strong>大多</strong>发 😠，偶尔也发 😊。</li>
+</ul>
+<p>于是阿明手里只有一串<strong>看得见的表情序列</strong>，却想反推出大刘<strong>看不见的心情序列</strong>。</p>
+<p>问题来了：</p>
+<ul>
+<li>给你一段表情（微笑、皱眉、微笑…），大刘最可能经历了一段怎样的心情起伏？</li>
+<li>这段表情序列，在"大刘的脾气模型"下，出现的可能性有多大？</li>
+<li>如果连"脾气模型"的参数都不知道，能不能从一大堆表情记录里<strong>自己学出来</strong>？</li>
+</ul>
+<p>这三个问题，正好是 HMM 的全部核心。<strong>HMM = 带观测的马尔可夫链</strong>（闭环第 12 期：马尔可夫链只管状态，HMM 再叠一层"状态生成观测"）。</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. HMM 的五个零件（五元组 λ = (S, O, A, B, π)）</h3>
+<ul>
+<li><strong>S（隐藏状态集）</strong>：你看不到的真相。例：<code>{开心 H, 烦躁 G}</code>。</li>
+<li><strong>O（观测集）</strong>：你能看到的信号。例：<code>{微笑, 皱眉}</code>。</li>
+<li><strong>A（转移矩阵）</strong>：状态之间的转移概率 <code>Aᵢⱼ = P(q₍t+1₎=j | qₜ=i)</code>。这就是第 12 期的马尔可夫链（每行和为 1）。</li>
+<li><strong>B（发射矩阵 / 观测概率）</strong>：在某一状态下"发出某个观测"的概率 <code>Bᵢ(k) = P(oₜ=k | qₜ=i)</code>。</li>
+<li><strong>π（初始分布）</strong>：第 1 步各隐藏状态的先验概率 <code>πᵢ = P(q₁=i)</code>。</li>
+</ul>
+<p><strong>两条基本假设（HMM 的命脉）：</strong></p>
+<ol>
+<li><strong>马尔可夫性</strong>（接第 12 期）：<code>P(qₜ | qₜ₋₁, …, q₁) = P(qₜ | qₜ₋₁)</code>，未来只取决于"现在"。</li>
+<li><strong>观测独立性</strong>：<code>P(oₜ | qₜ, qₜ₋₁, …, oₜ₋₁) = P(oₜ | qₜ)</code>——给定当前状态，观测<strong>与历史无关</strong>。</li>
+</ol>
+<blockquote>直觉：HMM 像一条"内部心情链"在暗中走，每走一步就<strong>吐出一个表情</strong>给你看。你看到的是表情，猜的是心情。</blockquote>
+<h3>2. HMM 的三大经典问题</h3>
+<p>| 问题 | 名字 | 你要算什么 | 算法 |</p>
+<p>|---|---|---|---|</p>
+<p>| 评估 | <strong>前向概率</strong> | 给定模型 λ，某段观测 O 出现的概率 <code>P(O|λ)</code> | 前向算法 / 后向算法 |</p>
+<p>| 解码 | <strong>最可能状态序列</strong> | 给定 O 与 λ，找最可能的隐藏路径 | <strong>Viterbi（动态规划）</strong> |</p>
+<p>| 学习 | <strong>参数估计</strong> | 只给一大堆 O，反推 A、B、π | Baum-Welch（EM 的 HMM 版，闭环第 26 期变分推断/EM） |</p>
+<h3>3. 前向算法：为什么不用暴力？</h3>
+<p>暴力做法：枚举全部 <code>Nᵀ</code> 条隐藏路径，逐条算概率再求和。当 <code>N=2, T=100</code> 时，路径数 <code>2¹⁰⁰ ≈ 10³⁰</code>——宇宙原子数都不够用。</p>
+<p><strong>前向算法用递推把复杂度砍到 <code>O(T·N²)</code></strong>：</p>
+<p>定义 <code>αₜ(i) = P(o₁, o₂, …, oₜ, qₜ=i | λ)</code>，即"前 t 步观测都对、且第 t 步藏在状态 i"的联合概率。</p>
+<ul>
+<li>初始化：<code>α₁(i) = πᵢ · Bᵢ(o₁)</code></li>
+<li>递推：<code>αₜ₊₁(j) = [ Σᵢ αₜ(i)·Aᵢⱼ ] · Bⱼ(oₜ₊₁)</code></li>
+<li>终点：<code>P(O|λ) = Σᵢ αₜ(i)</code></li>
+</ul>
+<p>每一步把"之前所有路径"压缩成一个数字，绝不重复枚举。</p>
+<h3>4. Viterbi：解码用动态规划</h3>
+<p>前向算法求的是"概率之和"，Viterbi 求的是"概率<strong>最大</strong>的一条路径"。</p>
+<p>定义 <code>δₜ(i)</code>（走到第 t 步停在状态 i 的<strong>最大</strong>路径概率），再配一个指针 <code>ψₜ(i)</code> 记下"上一步从哪个状态来"。</p>
+<ul>
+<li>初始化：<code>δ₁(i) = πᵢ·Bᵢ(o₁)</code>，<code>ψ₁(i)=0</code></li>
+<li>递推：<code>δₜ₊₁(j) = maxᵢ [ δₜ(i)·Aᵢⱼ ] · Bⱼ(oₜ₊₁)</code>，<code>ψₜ₊₁(j)=argmaxᵢ(…)</code></li>
+<li>回溯：从 <code>argmaxᵢ δ_T(i)</code> 沿 <code>ψ</code> 倒着走回起点。</li>
+</ul>
+<h3>5. 应用版图（你会发现处处是 HMM）</h3>
+<ul>
+<li><strong>语音识别</strong>：声学特征=观测，音素/口型=隐藏状态。</li>
+<li><strong>词性标注</strong>：词的词性=隐藏状态，看到的词=观测（见题 3）。</li>
+<li><strong>生物信息</strong>：基因序列里"编码区/非编码区"=隐藏状态，碱基=观测。</li>
+<li><strong>故障诊断</strong>：机器"正常/故障"=隐藏状态，传感器报警=观测。</li>
+<li><strong>量化金融</strong>：市场"牛/熊/震荡"=隐藏状态，收益率=观测。</li>
+<li><strong>闭环</strong>：第 12 期马尔可夫链（HMM 的骨架）、第 2/8 期贝叶斯（后验即解码）、第 15 期蒙特卡洛（粒子滤波用采样做 HMM 推断）、第 26 期变分推断与 EM（Baum-Welch 即 EM）。</li>
+</ul>
+<hr>
+<h2>三、代表性题目（请你先动笔，解题思路附在后面）</h2>
+<blockquote><strong>题 1（手算基本功）</strong></blockquote>
+<blockquote>设大刘的脾气模型如下：</blockquote>
+<blockquote>- 隐藏状态 S={开心 H, 烦躁 G}；观测 O={微笑, 皱眉}</blockquote>
+<blockquote>- 初始分布 π(H)=0.6，π(G)=0.4</blockquote>
+<blockquote>- 转移矩阵：H→H=0.7，H→G=0.3；G→H=0.4，G→G=0.6</blockquote>
+<blockquote>- 发射矩阵：H 时 微笑=0.8/皱眉=0.2；G 时 微笑=0.3/皱眉=0.7</blockquote>
+<blockquote>- 观测序列 O = (微笑, 皱眉)</blockquote>
+<blockquote></blockquote>
+<blockquote>（a）用<strong>前向算法</strong>求 <code>P(O)</code>；</blockquote>
+<blockquote>（b）用 <strong>Viterbi</strong> 求最可能的隐藏状态路径。</blockquote>
+<blockquote><strong>题 2（概念辨析）</strong></blockquote>
+<blockquote>（a）HMM 和第 12 期的"纯马尔可夫链"本质区别在哪？</blockquote>
+<blockquote>（b）判断正误并说明理由："给定隐藏状态序列，观测序列在各时刻之间条件独立。"</blockquote>
+<blockquote>（c）前向算法的复杂度 <code>O(T·N²)</code> 相比暴力枚举 <code>O(T·Nᵀ)</code>，省掉了什么？</blockquote>
+<blockquote><strong>题 3（应用：词性标注）</strong></blockquote>
+<blockquote>给一个迷你中文 HMM 做词性标注：</blockquote>
+<blockquote>- 隐藏状态 S={名词 N, 动词 V}；观测 O={苹果, 吃, 红}</blockquote>
+<blockquote>- π(N)=0.7，π(V)=0.3</blockquote>
+<blockquote>- 转移：N→N=0.4，N→V=0.6；V→N=0.6，V→V=0.4</blockquote>
+<blockquote>- 发射：N 时 苹果=0.6/吃=0.1/红=0.3；V 时 苹果=0.0/吃=0.8/红=0.2</blockquote>
+<blockquote>- 观测序列 = (苹果, 吃)，请 Viterbi 解码出词性序列。</blockquote>
+<blockquote><strong>题 4（进阶：三步解码 + 学习的直觉）</strong></blockquote>
+<blockquote>沿用题 1 的模型，观测序列延长为 O = (微笑, 皱眉, 微笑)：</blockquote>
+<blockquote>（a）用 Viterbi 求最可能的心情路径（三步）。</blockquote>
+<blockquote>（b）简述 Baum-Welch（学习）思想：为什么它能"只给观测、反推参数"？它和第 26 期的 EM / 变分推断是什么关系？</blockquote>
+<blockquote>（c）思考题（不要求算）：<strong>"每一步最可能的状态"拼起来，会不会不等于"最可能的整条路径"？</strong> 为什么？</blockquote>
+<hr>
+<h2>四、完整解题思路与答案</h2>
+<h3>题 1 解答</h3>
+<p><strong>模型复述</strong>（方便对照）：</p>
+<p>π = (0.6, 0.4)；A：H→H 0.7 / H→G 0.3 / G→H 0.4 / G→G 0.6；</p>
+<p>B：H→微笑 0.8 / H→皱眉 0.2；G→微笑 0.3 / G→皱眉 0.7。</p>
+<p>O = (微笑, 皱眉)。</p>
+<p><strong>（a）前向算法</strong></p>
+<ul>
+<li>t=1（观测=微笑）：</li>
+<li><code>α₁(H) = π_H · B_H(微笑) = 0.6 × 0.8 = 0.48</code></li>
+<li><code>α₁(G) = π_G · B_G(微笑) = 0.4 × 0.3 = 0.12</code></li>
+<li>t=2（观测=皱眉）：</li>
+<li><code>α₂(H) = [α₁(H)·A_HH + α₁(G)·A_GH] · B_H(皱眉)</code></li>
+</ul>
+<p><code>= [0.48×0.7 + 0.12×0.4] × 0.2 = [0.336 + 0.048] × 0.2 = 0.384 × 0.2 = 0.0768</code></p>
+<ul>
+<li><code>α₂(G) = [α₁(H)·A_HG + α₁(G)·A_GG] · B_G(皱眉)</code></li>
+</ul>
+<p><code>= [0.48×0.3 + 0.12×0.6] × 0.7 = [0.144 + 0.072] × 0.7 = 0.216 × 0.7 = 0.1512</code></p>
+<ul>
+<li>终点：<code>P(O) = α₂(H) + α₂(G) = 0.0768 + 0.1512 = <strong>0.228</strong></code></li>
+</ul>
+<blockquote>答案：<code>P(O) = 0.228</code>。这一步把"HH、HG、GH、GG"四条两状态路径一次性压缩进两个 α，没有真的枚举。</blockquote>
+<p><strong>（b）Viterbi 解码</strong></p>
+<ul>
+<li>t=1：<code>δ₁(H) = 0.48</code>（ψ=0），<code>δ₁(G) = 0.12</code>（ψ=0）</li>
+<li>t=2（观测=皱眉）：</li>
+<li><code>δ₂(H) = max(δ₁(H)·A_HH, δ₁(G)·A_GH) · B_H(皱眉)</code></li>
+</ul>
+<p><code>= max(0.48×0.7=0.336, 0.12×0.4=0.048) × 0.2 = 0.336 × 0.2 = 0.0672</code>，ψ₂(H)=H</p>
+<ul>
+<li><code>δ₂(G) = max(δ₁(H)·A_HG, δ₁(G)·A_GG) · B_G(皱眉)</code></li>
+</ul>
+<p><code>= max(0.48×0.3=0.144, 0.12×0.6=0.072) × 0.7 = 0.144 × 0.7 = 0.1008</code>，ψ₂(G)=H</p>
+<ul>
+<li>回溯：终步 <code>max(δ₂(H)=0.0672, δ₂(G)=0.1008) = 0.1008</code> → 选 <strong>G</strong>；</li>
+</ul>
+<p>由 ψ₂(G)=H 回到 t=1 → 选 <strong>H</strong>。</p>
+<blockquote>答案：最可能的隐藏路径 = <strong>H → G（开心 → 烦躁）</strong>，路径概率 0.1008。</blockquote>
+<blockquote><strong>关键洞察</strong>：前向算的是"所有路径概率之和 = 0.228"，Viterbi 找的是"概率最大的那一条 = 0.1008"。两者回答不同问题——这正是评估与解码的区别。</blockquote>
+<h3>题 2 解答</h3>
+<blockquote>（a）<strong>区别</strong>：纯马尔可夫链（第 12 期）的"状态本身就是你能看到/关心的量"，只研究状态之间的转移与平稳分布；HMM 的状态是<strong>隐藏</strong>的，你只能看到由状态"发射"出来的观测，多了一层 B（发射矩阵）。可记：<strong>HMM = 马尔可夫链 + 一层观测噪声</strong>。</blockquote>
+<blockquote>（b）<strong>正确</strong>。这就是"观测独立性"假设：给定当前隐藏状态 <code>qₜ</code>，观测 <code>oₜ</code> 与更早的状态、更早的观测都独立，即 <code>P(oₜ | qₜ, qₜ₋₁, …, oₜ₋₁) = P(oₜ | qₜ)</code>。但注意——<strong>不给定状态</strong>时，观测之间一般不独立（它们靠隐藏状态"藕断丝连"，比如大刘连发两个 😊 暗示他连着开心）。</blockquote>
+<blockquote>（c）前向算法省掉的是<strong>指数级的路径枚举</strong>。暴力法要列出全部 <code>Nᵀ</code> 条隐藏路径分别求和；前向递推在每一步把"到状态 i 的所有历史路径"合并成一个 <code>αₜ(i)</code>，复杂度降到 <code>O(T·N²)</code>，从"指数爆炸"变"线性×平方"，100 步也能瞬间算完。</blockquote>
+<h3>题 3 解答（词性标注）</h3>
+<p>O = (苹果, 吃)。</p>
+<ul>
+<li>t=1（观测=苹果）：</li>
+<li><code>δ₁(N) = π_N · B_N(苹果) = 0.7 × 0.6 = 0.42</code></li>
+<li><code>δ₁(V) = π_V · B_V(苹果) = 0.3 × 0.0 = 0.0</code></li>
+<li>t=2（观测=吃）：</li>
+<li><code>δ₂(N) = max(δ₁(N)·A_NN, δ₁(V)·A_VN) · B_N(吃)</code></li>
+</ul>
+<p><code>= max(0.42×0.4=0.168, 0.0×0.6=0) × 0.1 = 0.168 × 0.1 = 0.0168</code>，ψ₂(N)=N</p>
+<ul>
+<li><code>δ₂(V) = max(δ₁(N)·A_NV, δ₁(V)·A_VV) · B_V(吃)</code></li>
+</ul>
+<p><code>= max(0.42×0.6=0.252, 0.0×0.4=0) × 0.8 = 0.252 × 0.8 = 0.2016</code>，ψ₂(V)=N</p>
+<ul>
+<li>回溯：终步 <code>max(0.0168, 0.2016)=0.2016</code> → 选 <strong>V</strong>；ψ₂(V)=N → t=1 选 <strong>N</strong>。</li>
+</ul>
+<blockquote>答案：词性序列 = <strong>N → V（名词 → 动词）</strong>，即"苹果(名词) 吃(动词)"，命中人类直觉。这就是统计词性标注的核心：模型从（词, 词性）语料里学会 A、B，再用 Viterbi 给新句子标词性。</blockquote>
+<h3>题 4 解答</h3>
+<p><strong>（a）三步 Viterbi（O = 微笑, 皱眉, 微笑）</strong></p>
+<p>沿用题 1 的 <code>δ₁</code>、<code>δ₂</code>：<code>δ₁(H)=0.48, δ₁(G)=0.12</code>；<code>δ₂(H)=0.0672(ψ=H), δ₂(G)=0.1008(ψ=H)</code>。</p>
+<ul>
+<li>t=3（观测=微笑；B_H(微笑)=0.8，B_G(微笑)=0.3）：</li>
+<li><code>δ₃(H) = max(δ₂(H)·A_HH, δ₂(G)·A_GH) · B_H(微笑)</code></li>
+</ul>
+<p><code>= max(0.0672×0.7=0.04704, 0.1008×0.4=0.04032) × 0.8 = 0.04704 × 0.8 = 0.037632</code>，ψ₃(H)=H</p>
+<ul>
+<li><code>δ₃(G) = max(δ₂(H)·A_HG, δ₂(G)·A_GG) · B_G(微笑)</code></li>
+</ul>
+<p><code>= max(0.0672×0.3=0.02016, 0.1008×0.6=0.06048) × 0.3 = 0.06048 × 0.3 = 0.018144</code>，ψ₃(G)=G</p>
+<ul>
+<li>回溯：终步 <code>max(δ₃(H)=0.037632, δ₃(G)=0.018144) = 0.037632</code> → 选 <strong>H</strong>；ψ₃(H)=H → t=2 选 <strong>H</strong>；ψ₂(H)=H → t=1 选 <strong>H</strong>。</li>
+</ul>
+<blockquote>答案：最可能的三步心情路径 = <strong>H → H → H（开心 → 开心 → 开心）</strong>，路径概率 0.037632。</blockquote>
+<blockquote>对照题 1：前两步在 "H→G" 与 "H→H" 间，加入第三个 😊 后，整体最稳的解释变成"其实他一直挺开心"，因为开心发 😊 的概率最高。可见 Viterbi 是<strong>全局最优路径</strong>，会"反悔"局部看似合理的选择。</blockquote>
+<p><strong>（b）Baum-Welch（学习）思想</strong></p>
+<p>只有一大堆观测 O⁽¹⁾, O⁽²⁾, …，参数 A、B、π 未知。思路是 <strong>EM 算法</strong>（闭环第 26 期）：</p>
+<ul>
+<li><strong>E 步（期望）</strong>：用当前参数跑前向-后向，算出"在每条观测下，第 t 步处于状态 i、以及第 t 步在 i 且 t+1 步在 j"的<strong>期望次数</strong>（γₜ(i) 与 ξₜ(i,j)）。</li>
+<li><strong>M 步（最大化）</strong>：拿这些期望计数去<strong>重新估计</strong>参数——新的 <code>Aᵢⱼ = Σₜ ξₜ(i,j) / Σₜ γₜ(i)</code>，新的 <code>Bᵢ(k) = Σₜ γₜ(i)·[oₜ=k] / Σₜ γₜ(i)</code>，π 用第一步的 γ₁(i)。</li>
+<li>反复迭代，似然单调上升，直到收敛。</li>
+</ul>
+<blockquote>关系：Baum-Welch 就是 <strong>EM 在 HMM 上的具体化身</strong>；第 26 期的变分推断则是当精确 E 步算不动时，用"下界 + 优化"去近似它——二者同源，一个求精确，一个求可解。</blockquote>
+<p><strong>（c）思考题答案（先想再看）</strong></p>
+<blockquote><strong>会不等于。</strong> "每一步最可能的状态"（滤波/边际最优 <code>argmaxᵢ γₜ(i)</code>）和"最可能的整条路径"（Viterbi 的 <code>argmax 路径</code>）是两件事：前者是<strong>逐时刻边际</strong>最大化，后者是<strong>整条联合路径</strong>最大化。逐点最优拼起来，未必是联合概率最大的那一条（类似"局部贪心 ≠ 全局最优"）。这正是 Viterbi 存在的意义——它保的是全局最优路径，而不是每一步单独看起来最舒服的状态。</blockquote>
+<hr>
+<h2>五、今日小结</h2>
+<ul>
+<li><strong>HMM 是什么</strong>：一条你看不到的马尔可夫链（第 12 期），每步吐一个观测给你。</li>
+<li><strong>五元组</strong>：S、O、A、B、π；两条命根子假设 = 马尔可夫性 + 观测独立性。</li>
+<li><strong>三大问题</strong>：评估（前向，求 <code>P(O)</code>）、解码（Viterbi，求最优路径）、学习（Baum-Welch / EM）。</li>
+<li><strong>为什么强</strong>：前向/后向把 <code>Nᵀ</code> 爆炸砍成 <code>O(T·N²)</code>；Viterbi 用动态规划拿全局最优路径。</li>
+<li><strong>闭环复习</strong>：第 12 期（骨架）、第 2/8 期（贝叶斯后验）、第 15 期（粒子滤波=蒙特卡洛版 HMM 推断）、第 26 期（变分推断与 EM）。</li>
+</ul>
+<h2>六、明日预告（第 8 期）</h2>
+<blockquote><strong>卡尔曼滤波与粒子滤波：用噪声追踪"会动"的隐藏状态。</strong></blockquote>
+<blockquote>HMM 的隐藏状态是离散的；但当大刘的"真实位置/温度/股价"是<strong>连续</strong>量，而且每时每刻都在漂移时，怎么隔着噪声观测去追踪？卡尔曼滤波给出高斯情形下的精确解，粒子滤波（闭环第 15 期蒙特卡洛）则放手用随机抽样对付任意分布——下期见。</blockquote></div></body></html>

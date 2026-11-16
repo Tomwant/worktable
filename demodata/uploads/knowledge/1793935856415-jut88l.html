@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美股每日新闻简报 · 2026-11-06</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#ffffff; --line:#e3e6ea; --text:#1a1d21; --sub:#5b6470;
+    --up:#d32029; --down:#0f8a4a; --accent:#1f5fd6; --warn:#b8620a; --chip:#eef2f7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.7;padding:28px 16px}
+  .wrap{max-width:940px;margin:0 auto}
+  header{background:linear-gradient(135deg,#1f2a44,#2f4a8c);color:#fff;border-radius:14px;padding:28px 30px;margin-bottom:22px}
+  header h1{font-size:26px;font-weight:700;letter-spacing:.5px}
+  header .meta{margin-top:8px;font-size:13px;opacity:.85}
+  .tag{display:inline-block;background:rgba(255,255,255,.16);border-radius:20px;padding:2px 12px;font-size:12px;margin-right:6px;margin-top:10px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 26px;margin-bottom:18px}
+  h2{font-size:18px;margin-bottom:14px;padding-left:10px;border-left:4px solid var(--accent);line-height:1.3}
+  h3{font-size:15px;margin:16px 0 8px;color:#2b3440}
+  p{font-size:14px;color:#2b3440;margin-bottom:8px}
+  ul{margin:6px 0 6px 20px}
+  li{font-size:14px;margin-bottom:4px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
+  th{background:#f0f3f7;font-weight:600;color:#3a4451;font-size:13px}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .up{color:var(--up);font-weight:600}
+  .down{color:var(--down);font-weight:600}
+  .flat{color:var(--sub)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px}
+  .kv{background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+  .kv .k{font-size:12px;color:var(--sub)}
+  .kv .v{font-size:19px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+  .kv .c{font-size:12px;margin-top:2px}
+  .note{background:#fff8ec;border-left:3px solid var(--warn);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .alert{background:#fdeeee;border-left:3px solid var(--up);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .good{background:#eefaf3;border-left:3px solid var(--down);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .hl{background:linear-gradient(180deg,transparent 62%,#ffe9a8 62%);font-weight:600}
+  .chip{display:inline-block;background:var(--chip);color:#3a4451;border-radius:6px;padding:2px 9px;font-size:12px;margin:2px 4px 2px 0}
+  .tm{display:inline-block;min-width:74px;color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums}
+  .star{color:var(--up);font-weight:700}
+  footer{text-align:center;color:var(--sub);font-size:12px;padding:16px 0 8px}
+  .lvl{display:inline-block;font-size:11px;border-radius:4px;padding:1px 7px;margin-right:6px;color:#fff}
+  .l1{background:#d32029}.l2{background:#d97b08}.l3{background:#2f7fbf}
+  .src{font-size:12px;color:var(--sub);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>美股每日新闻简报</h1>
+  <div class="meta">2026年11月6日（周五）· 覆盖纳斯达克、标普500、道琼斯 · 数据截至北京时间 11:05（对应美东 11/5 周四收盘；今日周五美股北京时间 22:30 才开盘，10 月非农今晚 21:30 公布，不虚构当日数据）</div>
+  <div>
+    <span class="tag">道指 −3.44% · 标普 −4.36% · 纳指 −5.52%</span>
+    <span class="tag">费半 −12.25% 创 2020 年 3 月来最大单日跌幅</span>
+    <span class="tag">VIX +69.66% 报 28.18（3 月底来最高）</span>
+    <span class="tag">民主党"蓝潮"大胜 → AI 数据中心暂停担忧引爆抛售</span>
+    <span class="tag">美债 2Y −12bp 至 4.471% · 避险买盘</span>
+    <span class="tag">今晚 21:30 非农（预期 +6.5 万）</span>
+  </div>
+</header>
+
+<section>
+  <h2>一、市场速览（11/5 周四收盘 · 最新完整交易日）</h2>
+  <p>周四美股遭遇"蓝潮"交易第二日剧烈抛售，科技股与芯片股遭遇<span class="hl">大规模抛售</span>，纳指重挫逾 5%、创 2025 年 4 月以来最大单日跌幅，三大指数均创 2025 年 4 月以来最大单日跌幅，并<strong>回吐前一交易日（11/4 蓝潮落地首日）全部涨幅</strong>。市场焦点在今晚（北京时间）非农就业报告出炉前保持谨慎。截至收盘，<strong>道指 −3.44%</strong> 报 51,523.06、<strong>标普 500 −4.36%</strong> 报 7,353.73、<strong>纳指 −5.52%</strong> 报 24,315.00（较 10/6 收盘历史高位回撤近 12%、正式跌入技术性回调区间）。费城半导体指数 <strong>−12.25%</strong>（报约 9,011.14 点，创 2020 年 3 月以来最大单日跌幅）；纳指 100 <strong>−6.36%</strong>（成分公司市值单日缩水约 2.3 万亿美元）；罗素 2000 −4.45%（抛售无差别扩散）；VIX <strong>+69.66% 报 28.18</strong>（3 月底以来最高）；纳指自 4 月以来首次跌破 200 日移动均线。标普十一大板块<strong>全线下跌</strong>，科技 −7.30% 领跌，必需消费 −0.67% 跌幅最小。</p>
+
+  <table>
+    <tr><th>指数 / 标的</th><th class="num">收盘</th><th class="num">日涨跌</th><th>备注</th></tr>
+    <tr><td>道琼斯工业指数</td><td class="num">51,523.06</td><td class="num down">−3.44% / −1,833.06</td><td>蓝筹回吐 11/4 全部涨幅</td></tr>
+    <tr><td>标普 500 指数</td><td class="num">7,353.73</td><td class="num down">−4.36% / −334.89</td><td>十一板块全跌，科技领跌</td></tr>
+    <tr><td>纳斯达克综合指数</td><td class="num">24,315.00</td><td class="num down">−5.52% / −1,421.52</td><td>较 10/6 高点回撤近 12%，进入技术性回调</td></tr>
+    <tr><td>费城半导体指数</td><td class="num">≈9,011.14</td><td class="num down">−12.25%</td><td>创 2020 年 3 月以来最大单日跌幅</td></tr>
+    <tr><td>纳斯达克 100 指数</td><td class="num">—</td><td class="num down">−6.36%</td><td>成分股市值缩水约 2.3 万亿美元</td></tr>
+    <tr><td>罗素 2000 指数</td><td class="num">—</td><td class="num down">−4.45%</td><td>抛售由科技向全市场扩散</td></tr>
+    <tr><td>VIX 恐慌指数</td><td class="num">28.18</td><td class="num up">+69.66%</td><td>3 月底以来最高（收盘 28.18 / 盘中高 28.36）</td></tr>
+  </table>
+
+  <div class="grid">
+    <div class="kv"><div class="k">10年期美债收益率</div><div class="v">≈4.84%</div><div class="c down">−4.5~5.1bp（金十 4.834% / 新华财经 4.843%）；盘中最低 4.847%（9 月来新低）</div></div>
+    <div class="kv"><div class="k">2年期美债收益率</div><div class="v">4.471%</div><div class="c down">−11~12bp；盘中最低 4.454%（9 月来新低）</div></div>
+    <div class="kv"><div class="k">30年期美债收益率</div><div class="v">5.259%</div><div class="c down">−1.7~2.0bp（盘中最低 5.264%）</div></div>
+    <div class="kv"><div class="k">美元指数 DXY</div><div class="v">101.59</div><div class="c flat">+0.02~0.07%（窄幅震荡）</div></div>
+    <div class="kv"><div class="k">美元 / 离岸人民币</div><div class="v">≈6.66</div><div class="c flat">强势美元下相对韧性</div></div>
+    <div class="kv"><div class="k">WTI 原油（12月）</div><div class="v">$90.52</div><div class="c up">+2.72%（+2.40 美元）；另有 +3.50% 报 91.20 口径并列</div></div>
+    <div class="kv"><div class="k">布伦特原油（1月）</div><div class="v">$98.29</div><div class="c up">+3.88%（+3.67 美元）；另有 +4.82% 报 99.18 口径并列</div></div>
+    <div class="kv"><div class="k">COMEX 黄金</div><div class="v">$4,097.90</div><div class="c up">+0.61%（现货 +0.72% 报 4,089.12）</div></div>
+    <div class="kv"><div class="k">COMEX 白银</div><div class="v">$51.83</div><div class="c down">−0.86%（现货 −0.82% 报 51.80；工业金属承压）</div></div>
+    <div class="kv"><div class="k">比特币 BTC</div><div class="v">≈$80,000+</div><div class="c flat">盘中跌超 5% 至 75,859，今晨回升至 8 万上方</div></div>
+    <div class="kv"><div class="k">LME 三月期铜</div><div class="v">$13,844</div><div class="c down">−1.2%（美元走强 + 工业金属承压）</div></div>
+  </div>
+
+  <div class="note"><strong>口径提示（多源并列）：</strong>①收盘主流口径 道指 51,523.06 / 标普 7,353.73 / 纳指 24,315.00（中国新闻网、新华社/中国证券网、新华财经、网易/澎湃、每日经济新闻完全一致）。②<strong>注意 11/4 与 11/5 易混淆</strong>：11/4（周三·蓝潮落地首日）道指 53,356.12(+3.03%) / 标普 7,688.62(+1.58%) / 纳指 25,736.51(+1.44%)；11/5（周四）反转暴跌，本报告取 11/5 为最新完整交易日。部分聚合源将两日混排，已按"美东月日 + 官方指数 feed + 跨源一致性"三重校验剔除。③费半以 −12.25%（多数源）为主，另见 −12.15%（iShares ETF）并列。④原油以 12 月 WTI / 1 月 Brent 结算价为主口径（90.52 / 98.29），金十/ cnfin 另列 +3.50% / +4.82% 盘中反弹口径，已并列。⑤黄金 COMEX 4,097.90 / 现货 4,089.12；美债 10Y 金十 4.834% 与新华财经 4.843% 并存，取区间约 4.84%。坚持弃用 tickerdaily 等虚构行情、usmart66 等旧年份回收稿。</div>
+</section>
+
+<section>
+  <h2>二、六大核心驱动事件</h2>
+
+  <h3><span class="lvl l1">1</span>"蓝潮"大胜引爆 AI 政策恐慌——桑德斯称 43/44 选区支持暂停数据中心，市场重估 AI 基建投资节奏</h3>
+  <p>美国中期选举民主党重掌参众两院（"蓝色浪潮"），市场焦点迅速从"政治不确定性下降"转向"<span class="hl">AI 监管与数据中心建设收紧</span>"。联邦参议员伯尼·桑德斯（Bernie Sanders）11/4 晚发文称，全美 44 个选区中有 43 个在中期选举中投票支持暂停人工智能数据中心建设；得州候任州长亦呼吁立即暂停数据中心开发。瑞银估算，美国 2028 年新增数据中心容量约 30% 或受建设暂停影响。投资者担忧未来政策与监管环境变化将削弱芯片制造商及 AI 产业链企业的订单与增长预期，纳指因此跌入技术性回调区间、自 4 月以来首次跌破 200 日移动均线。彭博称，芯片与 AI 相关股票遭遇的抛售"迅速抹去美股此前涨幅"，市场信心恢复或仍需时日。</p>
+
+  <h3><span class="lvl l2">2</span>费半 −12.25% 创 2020 年 3 月来最大单日跌幅——半导体 / 存储 / 光通信 / 设备全线暴跌</h3>
+  <p>芯片股成为当天抛售重灾区，费城半导体指数 <strong>−12.25%</strong>，为 2020 年 3 月（疫情熔断）以来最大单日跌幅。逻辑链条：民主党大胜→市场担忧其阻挠 AI 数据中心建设→直接动摇为数据中心提供算力芯片、高速网络芯片、光模块公司的需求根基；叠加高通指引偏弱、Arm 财报喜忧参半点燃获利了结。个股：<strong>AMD（超威半导体）−17.26%、闪迪 −22.26%、美光 −17.46%、西部数据 −17.35%、SK 海力士 −13.40%、台积电 −11.05%、英特尔 −10.33%、博通 −10.43%、ARM −13.08%、阿斯麦 −9.33%、高通 −9.49%</strong>；光通信 / 设备方面 <strong>Lumentum −15.52%、Coherent −15.20%、迈威尔（Marvell）−12.92%、应用材料 −10.29%、泛林（Lam）−12.09%、戴尔 −15%、CoreWeave −10%</strong>。野村估算波动率目标基金与杠杆 ETF 尾盘再平衡卖出约 470 亿美元，放大尾段跌幅。</p>
+
+  <h3><span class="lvl l3">3</span>避险推动美债收益率全线下跌，2Y −12bp 至 4.471%——"中期选举后的 AI 退潮中，赢家是国债"</h3>
+  <p>科技股重挫引发避险，资金从股票转向债券，美债收益率全线走低：<strong>2Y −11~12bp 报 4.471%（盘中最低 4.454%）、5Y −7.1bp 报 4.613%、10Y −4.5~5.1bp 报约 4.84%（盘中最低 4.847%）、30Y −1.7~2bp 报 5.259%（盘中最低 5.264%）</strong>，长短端均触及今年 9 月以来新低。South Street Securities 宏观策略主管称"今天就是一次标准的避险操作"，有策略师直言"中期选举后的 AI 退潮中，赢家将是国债——今天我们已经看到了这一点"。Columbia Threadneedle 基金经理提示：若今晚 10 月就业数据疲弱，10Y 收益率有望进一步下行至 4.7% 甚至更低。</p>
+
+  <h3><span class="lvl l1">4</span>油价反弹 + 中东地缘反复——波斯湾多船遇袭，前一日暴跌后部分回补</h3>
+  <p>国际油价在前一日因美伊缓和预期暴跌约 8% 后强劲反弹：<strong>WTI 12 月 +2.72% 收 90.52 美元/桶（另有 +3.50% 报 91.20 口径）、布伦特 1 月 +3.88% 收 98.29 美元/桶（另有 +4.82% 报 99.18 口径）</strong>。驱动为波斯湾至少 5 艘船只报告遇袭——伊朗革命卫队称两艘油轮及一艘拖船在霍尔木兹海峡附近起火，地缘溢价部分回补；霍尔木兹 10 月通行量日均约 1,710 万桶，仅为战前水平的 75%，实物层面尚未复航，价格跑在实物前面。沙特将 12 月销往亚洲的阿拉伯轻质原油官方售价下调至较基准贴水 7 美元/桶。油价反复是通胀与加息预期的持续扰动源。</p>
+
+  <h3><span class="lvl l2">5</span>美联储放鹰 + 英国央行加息——12 月加息定价约七至八成</h3>
+  <p>美联储官员同日放鹰：克利夫兰联储主席哈马克（Hammack）称"货币政策需要转向限制性立场，因为通胀过高且正朝错误方向运行""渐进加息是确保美联储将通胀拉回 2% 的方式"；里士满联储主席巴尔金（Barkin）称"逐步加息仍然合理"。芝商所（CME）FedWatch 显示，市场对 12 月 9 日会议加息 25bp 的定价约 <strong>79%–82%</strong>。英国央行 11/5 宣布加息 25 个基点至 <strong>4.00%</strong>，为 2023 年 8 月以来首次加息，货币政策委员会以 8 票赞成、1 票反对（曼恩主张一次加 50bp）通过，并警告中东冲突推升能源价格、预计英国通胀 2027 年二季度或升至约 5%；墨西哥央行意外降息 25bp 至 6.25%。</p>
+
+  <h3><span class="lvl l3">6</span>非农今晚（11/6 21:30 北京时间）公布——12 月加息路径的关键验证</h3>
+  <p>美国 10 月非农就业报告将于今晚 21:30（北京时间）出炉，市场预期<strong>新增非农 6.5 万（前值 2.9 万）、失业率 4.2%（前值 4.2%）、平均时薪环比 0.3%（前值 0.1%）</strong>，机构预测区间从 5 万到 10 万分歧罕见放大。先行指标偏暖：10 月 ADP 私营就业新增 8.6 万（超预期）、9 月 JOLTS 职位空缺升至 752.3 万、初请失业金降至 18.9 万（低于 19.6 万预期），上行风险略大于下行。一份"温和"的就业报告（5–7 万）最符合"低招聘、低裁员"格局，既不确认经济恶化又不显著推升通胀；若新增超 10 万且薪资加速，将强化加息预期并再度压制全球成长股与贵金属。非农公布前，A 股已于 15:00 收盘、无法调整敞口，周末持仓须计入非农双向风险。</p>
+</section>
+
+<section>
+  <h2>三、板块与个股（11/5 收盘明细）</h2>
+  <p>标普十一大板块<strong>全线下跌</strong>：领跌 <span class="down">科技 −7.30%</span>、工业 −4.12%；相对抗跌 通信 −0.59%、公用事业 −0.71%、必需消费 −0.67%（跌幅最小）。万得美国科技七巨头指数 <span class="down">−4.37%</span>。</p>
+
+  <h3>科技七巨头（常规交易）</h3>
+  <table>
+    <tr><th>标的</th><th class="num">涨跌幅</th><th>备注</th></tr>
+    <tr><td>特斯拉</td><td class="num down">−10.77%</td><td>七巨头中跌幅居前（报 343.69 美元）</td></tr>
+    <tr><td>英伟达</td><td class="num down">−9.26%</td><td>市值单日蒸发约 4,470 亿美元</td></tr>
+    <tr><td>Meta</td><td class="num down">−3.96%</td><td>—</td></tr>
+    <tr><td>微软</td><td class="num down">−3.58%</td><td>—</td></tr>
+    <tr><td>亚马逊</td><td class="num down">−2.19%</td><td>—</td></tr>
+    <tr><td>谷歌 A</td><td class="num down">−2.20%</td><td>—</td></tr>
+    <tr><td>苹果</td><td class="num down">−1.53%</td><td>相对抗跌</td></tr>
+  </table>
+
+  <h3>半导体 / 存储 / 光通信（全线暴跌）</h3>
+  <table>
+    <tr><th>标的</th><th class="num">涨跌幅</th><th>备注</th></tr>
+    <tr><td>闪迪（SanDisk）</td><td class="num down">−22.26%</td><td>存储链领跌</td></tr>
+    <tr><td>美光科技</td><td class="num down">−17.46%</td><td>存储</td></tr>
+    <tr><td>西部数据</td><td class="num down">−17.35%</td><td>存储</td></tr>
+    <tr><td>AMD（超威半导体）</td><td class="num down">−17.26%</td><td>—</td></tr>
+    <tr><td>SK 海力士</td><td class="num down">−13.40%</td><td>存储 / HBM</td></tr>
+    <tr><td>希捷科技</td><td class="num down">−16.25%</td><td>存储</td></tr>
+    <tr><td>ARM</td><td class="num down">−13.08%</td><td>—</td></tr>
+    <tr><td>博通</td><td class="num down">−10.43%</td><td>—</td></tr>
+    <tr><td>英特尔</td><td class="num down">−10.33%</td><td>—</td></tr>
+    <tr><td>台积电</td><td class="num down">−11.05%</td><td>—</td></tr>
+    <tr><td>阿斯麦（ASML）</td><td class="num down">−9.33%</td><td>设备</td></tr>
+    <tr><td>高通</td><td class="num down">−9.49%</td><td>指引偏弱</td></tr>
+    <tr><td>迈威尔（Marvell）</td><td class="num down">−12.92%</td><td>光通信 / 设备</td></tr>
+    <tr><td>Lumentum</td><td class="num down">−15.52%</td><td>光通信</td></tr>
+    <tr><td>Coherent</td><td class="num down">−15.20%</td><td>光通信</td></tr>
+    <tr><td>应用材料</td><td class="num down">−10.29%</td><td>设备</td></tr>
+    <tr><td>泛林（Lam Research）</td><td class="num down">−12.09%</td><td>设备</td></tr>
+    <tr><td>戴尔</td><td class="num down">−15%</td><td>数据中心电力设备与承包商同步抛售</td></tr>
+    <tr><td>CoreWeave</td><td class="num down">−10%</td><td>AI 算力租赁</td></tr>
+  </table>
+
+  <h3>大型银行 / 能源（同步走弱）</h3>
+  <table>
+    <tr><th>板块</th><th>标的</th><th class="num">涨跌幅</th></tr>
+    <tr><td>银行</td><td>高盛 / 摩根士丹利 / 花旗 / 摩根大通 / 美银 / 富国</td><td class="num down">−6.44% / −5.93% / −5.02% / −4.24% / −3.58% / −3.03%</td></tr>
+    <tr><td>能源</td><td>埃克森美孚 / 雪佛龙 / 西方石油</td><td class="num down">−2.38% / −1.83% / −1.73%</td></tr>
+  </table>
+  <p class="src">注：尽管国际油价走高，能源股仍未能同步走强，六大银行悉数收跌，显示避险情绪已蔓延至金融与周期板块。</p>
+
+  <h3>中概股（逆势收涨）</h3>
+  <table>
+    <tr><th>标的</th><th class="num">涨跌幅</th><th>备注</th></tr>
+    <tr><td>纳斯达克金龙中国指数</td><td class="num up">+0.43%</td><td>报 5,747.08，与美股主链背离</td></tr>
+    <tr><td>网易 / 新东方 / 京东</td><td class="num up">+4.37% / +3.71% / +3.28%</td><td>领涨</td></tr>
+    <tr><td>理想汽车 / 好未来 / 阿里巴巴 / 哔哩哔哩</td><td class="num up">+2.94% / +2.88% / +2.67% / +2.67%</td><td>—</td></tr>
+    <tr><td>携程 / 百济神州 / 拼多多</td><td class="num up">+2.62% / +2.51% / +2.19%</td><td>—</td></tr>
+  </table>
+
+  <div class="good"><strong>盘后 / 周末动态要点：</strong>①OpenAI 推出 GPT-6 Cyber 网络安全模型，漏洞检测能力超越 GPT-6 Astra。②伊朗官员称已通过卡塔尔向美国发送一份核问题提案，只有在满足其七项要求后才会讨论；普京在克里姆林宫与伊朗高官会晤。③特朗普称"愿意跟民主党合作、在民主党内部有朋友"；鲁比奥否认将辞职竞选总统；赫格塞思称弹劾"不起作用"。④英国央行加息 25bp 至 4.00%（2023 年 8 月来首次）。⑤沙特下调 12 月亚洲原油官价至贴水 7 美元/桶。⑥高盛将 2026 年底金价预测下调至 4,150 美元、2027 年底至 4,800 美元。⑦世界黄金协会：10 月全球黄金 ETF 净流入 27 亿美元，波兰央行 10 月增持 28 吨黄金储备。</div>
+</section>
+
+<section>
+  <h2>四、其他市场（全球）</h2>
+  <h3>欧美股市</h3>
+  <table>
+    <tr><th>市场 / 指数</th><th class="num">涨跌幅</th><th>备注</th></tr>
+    <tr><td>德国 DAX</td><td class="num down">−0.43%</td><td>欧股收盘早于美股崩盘最猛时段，跌幅有限</td></tr>
+    <tr><td>英国 FTSE 100</td><td class="num down">−0.43%</td><td>英国央行当日加息，8-1 票型偏鹰</td></tr>
+    <tr><td>欧洲斯托克 50</td><td class="num down">−0.55%</td><td>—</td></tr>
+    <tr><td>法国 CAC40</td><td class="num up">+0.34%</td><td>逆势微涨</td></tr>
+  </table>
+
+  <h3>亚太早盘（11/6 周五盘前 · 熔断式抛售）</h3>
+  <table>
+    <tr><th>市场 / 指数</th><th class="num">涨跌幅</th><th>备注</th></tr>
+    <tr><td>韩国 KOSPI</td><td class="num down">−8.55%（触发熔断）</td><td>开盘跌 2.24% 后扩大，9:25 报 4,923.47；三星电子 −10%、SK 海力士 −11.6%；韩元报 1,357.4/美元，财政部紧急表态</td></tr>
+    <tr><td>日经 225</td><td class="num down">−6%（进入技术性熊市）</td><td>较 6 月高点回撤 20%；软银 −14%、东京电子 −13%</td></tr>
+    <tr><td>恒生指数（11/5 收盘）</td><td class="num up">+3.67%</td><td>报 24,796.98，与美股主链背离，成交 3,566.67 亿港元</td></tr>
+    <tr><td>恒生科技（11/5 收盘）</td><td class="num up">+5.55%</td><td>报 4,154.29；阿里 +8.45%、理想 +8.94%、中国生物制药 +9.22%</td></tr>
+  </table>
+
+  <h3>A 股（11/5 周三白天，北京时间，先于美股夜间崩盘）</h3>
+  <p>上证指数 <span class="up">+0.10%</span> 报 3,689.91、深证成指 <span class="up">+1.19%</span>、创业板指 <span class="up">+0.87%</span>、科创 50 <span class="up">+1.68%</span>，沪深两市成交 2.14 万亿元、全市场 4,869 家上涨（"大奇迹日"延续，低开高走）。结构上指数涨幅随市值下行单调上升，资金集中于小盘成长；半导体设备板块涨停潮（科创半导体 ETF 华夏单日净流入 42.74 亿元居全市场第一、成交 147 亿元创历史新高）。<strong>风险提示</strong>：这批昨日（11/5）进场的算力链资金，今日（11/6）开盘即直面费半 −12.25% 的正面对冲，昨日强势品种今日的承接成色是全天最关键变量。国内政策托底：国务院报告明确"支持中央汇金发挥类平准基金作用，巩固完善资本市场稳市机制"；股票回购增持再贷款利率 11/4 起下调至 1%；DR007 报 1.3179% 创 5 月以来新低，国内资金面独立于外盘。</p>
+
+  <h3>债券 / 商品 / 加密</h3>
+  <ul>
+    <li><strong>美债</strong>：见第一节速览——收益率全线下跌（10Y ≈4.84% / 2Y 4.471% / 30Y 5.259%），避险买盘主导，长短端均触及 9 月来新低；2s10s 利差走阔。</li>
+    <li><strong>原油</strong>：WTI 12 月 90.52（+2.72%）、Brent 1 月 98.29（+3.88%）——波斯湾多船遇袭、霍尔木兹通行量仅战前 75%，前一日暴跌后部分回补；沙特下调亚洲官价至贴水 7 美元/桶。</li>
+    <li><strong>贵金属</strong>：COMEX 金 4,097.90（+0.61%）、现货金 4,089.12（+0.72%，盘中最高 4,139.42、一度逼近 +2%）；COMEX 银 51.83（−0.86%，受工业金属承压拖累）。避险与美债收益率下行共同支撑金价，但美元回升限制上方空间；10 月全球黄金 ETF 净流入 27 亿美元。</li>
+    <li><strong>基本金属</strong>：LME 三月期铜 13,844（−1.2%），美元走强 + 工业需求担忧主导。</li>
+    <li><strong>加密</strong>：比特币盘中跌超 5% 至 75,859 美元，今晨回升至 8 万上方——与美股科技共振走弱，但跌幅小于权益。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>五、本周关键日程（冬令时 · 北京时间；美东整体延后 1 小时）</h2>
+  <ul>
+    <li><span class="tm">周三(11/4)</span><strong>已过</strong>：美国中期选举民主党"蓝潮"大胜（重掌参众两院）；美股当日大涨（道指 +3.03% / 标普 +1.58% / 纳指 +1.44%）；21:15 ADP 小非农（8.6 万超预期）；23:00 ISM 非制造业 PMI；美财政部季度再融资公告（为削减最长期债券发行铺路）。</li>
+    <li><span class="tm">周四(11/5)</span><strong>已过</strong>：美股暴跌（道指 −3.44% / 标普 −4.36% / 纳指 −5.52%）；20:00 英国央行加息 25bp 至 4.00%；21:50 哈马克、22:10 巴尔金讲话；初请失业金 18.9 万（低于预期）。</li>
+    <li><span class="tm">周五(11/6)</span><strong>今日（核心）</strong>：<span class="star">21:30 美国 10 月非农（预期新增 6.5 万 / 失业率 4.2% / 时薪环比 0.3%）</span>——本周全球最重要数据，直接定调 12 月加息路径；加拿大就业同场；23:00 密歇根消费者信心初值（预期 48）与一年期通胀预期（前值 4.7%）；08:00 洛根讲话、17:30 威廉姆斯（ECB 会议）、22:10 穆萨莱姆讲话；次日 00:00 植田和男（IMF 演讲）、次日 01:15 鲍曼讲话。盘前：Moderna、Oklo、Vistra、HUM、TeraWulf 财报；港股港交所（00388）财报。</li>
+    <li><span class="tm">周六(11/7)</span>中国 10 月外汇储备（9 月末 34,002.5 亿美元，央行连续 23 个月增持黄金）。</li>
+    <li><span class="tm">后续</span>11/18 FOMC 会议纪要；11/10 美国 10 月 CPI（12 月 FOMC 前最后关键通胀读数）；11/17 英伟达财报；11/26 感恩节休市（次日提前 3 小时收市）。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>六、风险提示</h2>
+  <div class="alert"><strong>1. 蓝潮后的 AI 政策风险——最大结构性变量。</strong>桑德斯"43/44 选区支持暂停数据中心"、州层面审批收紧，瑞银估算 2028 年新增数据中心容量约 30% 或受暂停影响；费半 −12.25% 为 2020 年 3 月来最大单日跌幅，AI 估值重定价或延续。纳指已跌入技术性回调、自 4 月来首破 200 日线，技术面脆弱。</div>
+  <div class="alert"><strong>2. 非农与加息路径——今晚 21:30 揭晓。</strong>CME 对 12 月加息定价约七至八成；若新增就业超 10 万且时薪加速，将强化紧缩逻辑、再度压制全球成长股与贵金属；若低于 4 万则触发滞胀叙事、利多美债与黄金。A 股 15:00 已收盘，周末持仓须计入非农双向风险。</div>
+  <div class="alert"><strong>3. 美债与美元。</strong>避险买盘压低收益率（2Y 4.471%、10Y ≈4.84%，均触 9 月来新低），但若非农强则反弹；DXY 101.59 窄幅震荡。12 月全球央行或集体加息（英国已先行），金价仍将震荡。</div>
+  <div class="alert"><strong>4. 中东与油价。</strong>霍尔木兹通行量仅战前 75%，波斯湾多船遇袭，地缘溢价反复；油价在 90（反弹价）与 120（真开打价）之间随时重画，单日 ±4% 波动将继续放大通胀与加息预期摆动。</div>
+  <div class="alert"><strong>5. 亚太熔断传导。</strong>韩 KOSPI −8.55% 触发熔断、日经 −6% 进入技术性熊市，A 股算力链（昨日半导体设备涨停潮）今日补跌风险高，需警惕两融与 ETF 套利盘的兑现连锁。</div>
+  <div class="note"><strong>数据纪律：</strong>坚持"美东月日 + 官方指数 feed + 跨源一致性"三重校验，弃用 tickerdaily 等虚构行情、usmart66 等旧年份回收稿；11/4（蓝潮首日涨）与 11/5（反转暴跌）两日数据已严格区分，本报告取 11/5 为最新完整交易日。原油（结算价与盘中反弹读数）、黄金（COMEX 与现货）、美债（金十 4.834% 与新华财经 4.843%）、费半（−12.25% 与 iShares −12.15%）跨源口径已在文中并列标注，不作单一取值。</div>
+</section>
+
+<footer>
+  本报告由「美股每日新闻简报」自动化任务生成 · 数据来源：中国新闻网、新华社/中国证券网、新华财经、网易/澎湃新闻、每日经济新闻、金十数据、华尔街见闻、汇通网、腾讯新闻、财联社、新浪财经等公开信息整理 · 生成时间 2026-11-06 11:05 GMT+8 · 仅供信息参考，不构成投资建议。
+</footer>
+
+</div>
+</body>
+</html>

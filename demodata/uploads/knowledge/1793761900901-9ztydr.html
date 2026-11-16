@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第10期 · 马尔可夫决策过程MDP与贝尔曼方程</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>第 10 期 · 马尔可夫决策过程（MDP）与贝尔曼方程</h1>
+<blockquote>今日概念：<strong>马尔可夫决策过程（Markov Decision Process, MDP）</strong> 与 <strong>贝尔曼方程（Bellman Equation）</strong></blockquote>
+<blockquote>一句话：当"未来只取决于现在"、而且"你每一步能选动作、有奖有罚"时，怎么算出一条<strong>长期最优</strong>的玩法？</blockquote>
+<hr>
+<h2>一、故事：阿明的取餐机器人为什么总撞墙</h2>
+<p>阿明给餐厅做了个送餐机器人，要把餐从厨房送到客房。规则很简单：</p>
+<ul>
+<li>机器人每动一步，<strong>耗 1 度电</strong> → 奖励 <strong>−1</strong>；</li>
+<li>顺利送达 → 奖励 <strong>+100</strong>；</li>
+<li>撞到墙 → 奖励 <strong>−10</strong>，弹回原地。</li>
+</ul>
+<p>但机器人有点"笨"：阿明下命令"向右"，它只有 <strong>0.8</strong> 概率真向右，<strong>0.2</strong> 概率滑向别处——这正是第 12 期讲过的<strong>马尔可夫链的随机转移</strong>。</p>
+<p>阿明一开始贪心：每一格都选"离目标最近"的方向。结果机器人卡在墙角，反复撞墙、反复 −10，电耗光也没送到。</p>
+<p>大刘点破他：<strong>"你只算了眼前一步，没算'从这一步出发，一路走下去总共能拿多少'。"</strong></p>
+<p>阿明恍然大悟：真正该算的是——<strong>从当前格子出发，按某个策略一路走下去，能拿到的"折扣总回报"的期望</strong>。这个"算总账"的框架，就是 <strong>MDP</strong>；而"总账 = 眼前一手 + 折扣后的未来最优"这条递归公式，就是 <strong>贝尔曼方程</strong>。</p>
+<hr>
+<h2>二、概念：MDP 的五个零件</h2>
+<p>一个 MDP 由五元组 <strong>(S, A, P, R, γ)</strong> 描述：</p>
+<ul>
+<li><strong>S（状态 State）</strong>：机器人在哪格、剩多少电。比如 <code>客厅</code>、<code>走廊</code>、<code>客房</code>、<code>充电桩</code>。</li>
+<li><strong>A（动作 Action）</strong>：上 / 下 / 左 / 右 / 充电。</li>
+<li><strong>P(s'|s,a)（转移概率）</strong>：在状态 s 选动作 a，落到 s' 的概率。这就是第 12 期的随机转移（带滑步）。</li>
+<li><strong>R(s,a)（即时奖励）</strong>：这一步拿到的分（电费 −1、送达 +100、撞墙 −10）。</li>
+<li><strong>γ ∈ [0,1)（折扣因子）</strong>：明天的 1 分不如今天的 1 分值钱。γ 越接近 1，越看重长远；γ=0 只看眼前。</li>
+</ul>
+<p>围绕它有两个核心函数：</p>
+<ul>
+<li><strong>策略 π(a|s)</strong>：在状态 s 选什么动作（可确定，也可随机）。</li>
+<li><strong>价值函数 V^π(s)</strong>：从 s 出发、一直按 π 走，能拿到的<strong>折扣总回报期望</strong>。</li>
+<li><strong>动作价值 Q^π(s,a)</strong>：在 s 先执行 a，之后按 π 走的总回报。</li>
+</ul>
+<h3>贝尔曼期望方程（给定策略 π 时）</h3>
+<p>$$</p>
+<p>V^\pi(s)=\sum_a \pi(a|s)\sum_{s'}P(s'|s,a)\big[R(s,a)+\gamma\,V^\pi(s')\big]</p>
+<p>$$</p>
+<h3>贝尔曼最优方程（求全局最优）</h3>
+<p>$$</p>
+<p>V^*(s)=\max_a \sum_{s'}P(s'|s,a)\big[R(s,a)+\gamma\,V^*(s')\big]</p>
+<p>$$</p>
+<p>最优策略就是每步都取让括号最大的动作：</p>
+<p><strong>π\*(s) = argmaxₐ Σ P(s'|s,a)[R + γ V\*(s')]</strong></p>
+<blockquote><strong>核心思想——最优的子结构</strong>：一个状态的最优价值 = "这一手的最佳即时奖励" + "折扣后的后续最优价值"。把大难题拆成"眼前一步 + 未来最优"的递归，跟第 5 期"用期望值做决策基准"一脉相承，只是这里<strong>未来也要求最优</strong>。</blockquote>
+<h3>怎么解？两个经典算法</h3>
+<ul>
+<li><strong>价值迭代（Value Iteration）</strong>：反复对所有状态做"Bellman 最优备份" <code>V(s) ← maxₐ[...]</code>，直到数值不再变。</li>
+<li><strong>策略迭代（Policy Iteration）</strong>：先固定一个策略，解线性方程组算出 V；再把每个状态换成"贪心最优动作"改进策略；交替到稳定。</li>
+</ul>
+<h3>它和第 12 期、第 5 期、第 9 期的关系</h3>
+<ul>
+<li><strong>第 12 期 马尔可夫链</strong>：MDP 就是"<strong>带奖励、且你能选动作来改变转移</strong>"的马尔可夫链。</li>
+<li><strong>第 5 期 期望值决策</strong>：贝尔曼方程是期望值的<strong>递归版</strong>（只不过未来也要最优）。</li>
+<li><strong>第 9 期 强化学习探索与利用</strong>：当 P、R <strong>未知</strong>，agent 用 ε-贪心 / UCB 去"试"出最优策略——那就是 RL；本期是"<strong>P、R 已知，求最优</strong>"，是 RL 的理论底座。</li>
+<li><strong>第 6 / 10 期</strong>：RL 学出来的价值估计，靠大数定律收敛、用中心极限定理估误差。</li>
+</ul>
+<hr>
+<h2>三、代表性题目（你来总结思路，答案在第四节）</h2>
+<blockquote><strong>题 1（Bellman 最优方程手算）</strong></blockquote>
+<blockquote>阿明的"精力"有两个状态：<strong>S（清醒）</strong>、<strong>R（累瘫）</strong>，折扣 γ=0.9。</blockquote>
+<blockquote>- 在 S：动作"工作" → 0.8 留在 S（奖 +2），0.2 掉到 R（奖 +2）；动作"摸鱼" → 必留 S（奖 +1）。</blockquote>
+<blockquote>- 在 R：动作"硬扛" → 0.6 回 S（奖 0），0.4 留 R（奖 −3）；动作"睡觉" → 必回 S（奖 0）。</blockquote>
+<blockquote>求最优价值 V\*(S)、V\*(R)，并写出最优策略（每个状态选哪个动作）。</blockquote>
+<blockquote><strong>题 2（价值迭代收敛演示）</strong></blockquote>
+<blockquote>沿用题 1 的 MDP，从初始 V₀(S)=V₀(R)=0 开始做价值迭代，手算第 1、2、3 步的 V₁、V₂、V₃，观察它是否在逼近题 1 的答案。</blockquote>
+<blockquote><strong>题 3（概念辨析：MDP vs 马尔可夫链）</strong></blockquote>
+<blockquote>用第 12 期的知识，说出 MDP 与"纯马尔可夫链"的<strong>三点区别与一点联系</strong>。提示：从"有没有动作""有没有奖励""状态怎么变"三个角度想。</blockquote>
+<blockquote><strong>题 4（真实世界映射 + 与第 9 期闭环）</strong></blockquote>
+<blockquote>举出 3 个 MDP 框架的实际应用，并一句话说明：第 9 期的 ε-贪心是在 MDP 的什么前提下"学"策略？本期又是在什么前提下"算"策略？</blockquote>
+<hr>
+<h2>四、完整解题思路与答案</h2>
+<h3>题 1 解答</h3>
+<p>设最优时：在 S 选"工作"，在 R 选"睡觉"（先假设，最后验证一致性）。</p>
+<p>两个最优方程：</p>
+<p>$$</p>
+<p>V(S)=2+0.9\big(0.8\,V(S)+0.2\,V(R)\big)</p>
+<p>$$</p>
+<p>$$</p>
+<p>V(R)=0+0.9\big(1.0\,V(S)\big)=0.9\,V(S)</p>
+<p>$$</p>
+<p>把 V(R)=0.9V(S) 代入第一式：</p>
+<p>$$</p>
+<p>V(S)=2+0.9(0.8V(S)+0.2\cdot0.9V(S))=2+0.72V(S)+0.162V(S)=2+0.882V(S)</p>
+<p>$$</p>
+<p>$$</p>
+<p>V(S)(1-0.882)=2 \;\Rightarrow\; 0.118\,V(S)=2 \;\Rightarrow\; \mathbf{V(S)\approx 16.95}</p>
+<p>$$</p>
+<p>$$</p>
+<p>\mathbf{V(R)=0.9\times16.95\approx 15.25}</p>
+<p>$$</p>
+<p><strong>验证最优动作确实成立</strong>：</p>
+<ul>
+<li>S 处："工作"= 2+0.72·16.95+0.18·15.25 ≈ <strong>16.95</strong>；"摸鱼"= 1+0.9·16.95 ≈ 16.25。工作胜出 ✓</li>
+<li>R 处："睡觉"= 0.9·16.95 ≈ <strong>15.25</strong>；"硬扛"= −3+0.9(0.6·16.95+0.4·15.25) ≈ 11.64。睡觉胜出 ✓</li>
+</ul>
+<blockquote><strong>答案</strong>：V\*(S) ≈ <strong>16.95</strong>，V\*(R) ≈ <strong>15.25</strong>；最优策略：<strong>清醒时"工作"，累瘫时"睡觉"</strong>。</blockquote>
+<h3>题 2 解答（价值迭代，每一步都取 max）</h3>
+<p>初始 V₀(S)=V₀(R)=0。</p>
+<p><strong>第 1 步</strong>：</p>
+<ul>
+<li>V₁(S)=max(工作, 摸鱼)=max(2+0.9·0, 1+0.9·0)=max(2,1)=<strong>2</strong></li>
+<li>V₁(R)=max(硬扛, 睡觉)=max(−3+0, 0)=max(−3,0)=<strong>0</strong></li>
+</ul>
+<p><strong>第 2 步</strong>：</p>
+<ul>
+<li>V₂(S)=max(2+0.72·2+0.18·0, 1+0.9·2)=max(3.44, 2.80)=<strong>3.44</strong></li>
+<li>V₂(R)=max(−3+0.9(0.6·2+0), 0.9·2)=max(−1.92, 1.80)=<strong>1.80</strong></li>
+</ul>
+<p><strong>第 3 步</strong>：</p>
+<ul>
+<li>V₃(S)=max(2+0.72·3.44+0.18·1.8, 1+0.9·3.44)=max(4.80, 4.10)=<strong>4.80</strong></li>
+<li>V₃(R)=max(−3+0.9(0.6·3.44+0.4·1.8), 0.9·3.44)=max(−0.31, 3.10)=<strong>3.10</strong></li>
+</ul>
+<blockquote><strong>答案</strong>：V₁=(2, 0)，V₂=(3.44, 1.80)，V₃=(4.80, 3.10)，持续迭代会单调逼近 <strong>(16.95, 15.25)</strong>。这正是 Bellman 最优算子的<strong>压缩映射</strong>性质——每次备份都让估值更靠近真值。</blockquote>
+<h3>题 3 解答</h3>
+<p><strong>联系</strong>：MDP 的状态转移 P(s'|s,a) 满足<strong>马尔可夫性</strong>——下一步只取决于当前状态与动作，与更早的历史无关（和第 12 期一样"无记忆"）。</p>
+<p><strong>区别</strong>：</p>
+<ol>
+<li><strong>有没有"动作"</strong>：纯马尔可夫链转移是固定的 P(s'|s)；MDP 多了一个<strong>动作 a</strong>，转移变成 P(s'|s,a)，agent 能<strong>主动选择</strong>来改变命运。</li>
+<li><strong>有没有"奖励"</strong>：马尔可夫链只描述"状态怎么变"；MDP 每一步还附带 R(s,a)，用来评价好坏。</li>
+<li><strong>目标不同</strong>：马尔可夫链关心"长期分布 / 平稳态"；MDP 关心"选哪套动作能让折扣总回报最大"，即求最优策略 π\*。</li>
+</ol>
+<h3>题 4 解答</h3>
+<p><strong>三个应用</strong>：</p>
+<ul>
+<li><strong>棋类 AI（AlphaGo / 围棋）</strong>：状态=棋盘，动作=落子，奖励=胜负，γ≈1，用 MDP + 价值网络求最优落子。</li>
+<li><strong>自动驾驶</strong>：状态=周围路况，动作=油门/刹车/转向，奖励=安全到达+舒适，转移含传感器噪声。</li>
+<li><strong>动态定价 / 库存补货</strong>：状态=库存与需求，动作=定价/补货量，奖励=利润，是典型的"序贯决策"。</li>
+</ul>
+<p><strong>与第 9 期闭环</strong>：</p>
+<ul>
+<li>第 9 期 ε-贪心 / UCB 的前提是——<strong>转移 P 和奖励 R 未知</strong>，agent 只能靠试（探索）和用（利用）去"学"出最优策略，这叫<strong>强化学习（RL）</strong>。</li>
+<li>本期的前提是——<strong>P、R 已知</strong>，直接用 Bellman 方程"算"出 V\* 和 π\*，这是 RL 的<strong>理论地基</strong>：RL 本质上就是"在未知 MDP 上，用采样去逼近本期这套 Bellman 解"。</li>
+</ul>
+<hr>
+<h2>五、明日预告</h2>
+<p>下一期（第 11 期）我们顺着 MDP 往前走一步：<strong>时序差分学习 TD 与 Q-Learning（不靠模型，边走边学价值）</strong>——把本期"已知模型求最优"变成"连模型都没有，也能从经验里学出 Q 表"。它会把第 9 期（探索利用）、第 6 期（大数定律）、本期（Bellman）串成一条完整的 RL 主线。</p>
+<blockquote>你可以先想想：如果阿明<strong>根本不知道</strong>机器人滑步概率，只靠一次次送餐的成败记录，要怎么"无模型"地估出每个格子的价值？这就是下期要解决的问题。</blockquote></div></body></html>

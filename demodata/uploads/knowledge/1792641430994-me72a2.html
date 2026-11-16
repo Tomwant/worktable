@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第3期 · 独立事件与互斥事件</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>每日概率学 · 第 3 期</h1>
+<ul>
+<li><strong>日期</strong>：2026-09-15（周二）</li>
+<li><strong>今日概念</strong>：独立事件与互斥事件（Independent vs. Mutually Exclusive）——"互不影响"和"不可能同时发生"，别再傻傻分不清</li>
+<li><strong>一句话心智模型</strong>：互斥看"<strong>能不能同时发生</strong>"，独立看"<strong>一个发生会不会改变另一个的概率</strong>"。这俩几乎相反，不是一回事。</li>
+</ul>
+<hr>
+<h2>一、故事引入：年会抽奖的两张券</h2>
+<p>阿珍在年会上抽到了两张抽奖券：一张<strong>红券</strong>（左边口袋），一张<strong>蓝券</strong>（右边口袋）。</p>
+<p>主持人宣布规则：</p>
+<blockquote>"红券中奖概率 <strong>1/10</strong>，蓝券中奖概率 <strong>1/10</strong>。两张券由两台独立的抽奖机分别摇号，互不影响。"</blockquote>
+<p>所以——红券中不中，完全不改变蓝券中奖的几率。这就是<strong>独立</strong>：两件事各过各的，谁也不"传染"谁。</p>
+<p>但主持人又补了一句：</p>
+<blockquote>"不过今年公司只设了<strong>一个</strong>一等奖，红蓝两券共用这唯一名额——<strong>两张不可能同时中一等奖</strong>。"</blockquote>
+<p>这就出现了<strong>互斥</strong>（对"中一等奖"而言）：红券中了一等奖，蓝券就铁定没中。</p>
+<p>同事大刘嘀咕："既然红蓝独立、各 1/10，那两张都中的概率就是 1/100 呗？"</p>
+<p>主持人笑了："错。一等奖就一个坑，两张根本不可能同时中。你说的'独立'在'中一等奖'这件事上根本不成立——除非把红蓝当成两个<strong>不同奖项</strong>的抽奖。"</p>
+<p>这时阿珍抛出那个最反直觉的问题：</p>
+<blockquote>"那……互斥的事件，是不是就独立呢？"</blockquote>
+<p>主持人摇摇头，写下关键结论：</p>
+<p><strong>如果两个事件互斥，且各自都有发生的可能（概率 &gt; 0），那它们一定不独立。</strong></p>
+<p>因为——一旦其中一个发生了，另一个就<strong>绝对不可能发生</strong>，它的概率直接从 P(B) 掉到了 0。一个事件的发生"狠狠改变了"另一个的概率，这正是"不独立"的极端表现。</p>
+<p><strong>所以互斥和独立，非但不是一回事，往往还恰恰相反。</strong></p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 互斥事件（Mutually Exclusive / Disjoint）</h3>
+<ul>
+<li><strong>定义</strong>：A 和 B <strong>不能同时发生</strong>，即 A∩B = ∅，等价于 P(A∩B) = 0。</li>
+<li><strong>直觉</strong>：一个发生，另一个必不发生。</li>
+<li><strong>例子</strong>：掷一颗骰子，"出 1 点"和"出 6 点"互斥。</li>
+</ul>
+<h3>2. 独立事件（Independent）</h3>
+<ul>
+<li><strong>定义</strong>：一个发生<strong>不影响</strong>另一个发生的概率，即 P(A∩B) = P(A)·P(B)；等价地，当 P(A)&gt;0 时 P(B|A) = P(B)。</li>
+<li><strong>直觉</strong>：知道 A 发生了，B 的概率纹丝不动。</li>
+<li><strong>例子</strong>：抛硬币两次，第一次正面朝上不影响第二次。</li>
+</ul>
+<h3>3. 最容易踩的坑（本期重中之重）</h3>
+<p>| 误区 | 真相 |</p>
+<p>| --- | --- |</p>
+<p>| "互斥 = 独立" | ❌ 互斥（概率都&gt;0）必然<strong>不独立</strong>，二者几乎相反 |</p>
+<p>| "独立 = 互斥" | ❌ 独立（概率都&gt;0）必然<strong>不互斥</strong>，因为 P(A∩B)=P(A)P(B)&gt;0，能同时发生 |</p>
+<p>| 既互斥又独立 | 只有一种情况：其中<strong>至少一个事件概率为 0</strong> |</p>
+<p>还有一个计算上的实用区分：</p>
+<ul>
+<li>求"至少一个发生" P(A∪B)：</li>
+<li><strong>互斥</strong>时直接相加：P(A∪B) = P(A) + P(B)</li>
+<li><strong>独立</strong>时用容斥：P(A∪B) = P(A) + P(B) − P(A)P(B)</li>
+</ul>
+<p>💡 一句话心法：<strong>互斥是"空间不重叠"，独立是"信息不相关"。拿"能不能同时发生"问一句，就分清了互斥；再问"知道了会不会变"，就分清了独立。</strong></p>
+<hr>
+<h2>三、代表性题目 / 故事（请你来总结 ✍️）</h2>
+<p>请试着对每道题写出：① 是互斥吗？② 是独立吗？③ 你的关键判断依据；④ P(A∩B) 或 P(A∪B) 的值。</p>
+<h3>题目 1 · 硬币与骰子</h3>
+<p>抛一枚公平硬币，同时掷一颗公平六面骰。</p>
+<ul>
+<li>事件 A：硬币<strong>正面</strong>朝上。</li>
+<li>事件 B：骰子点数为<strong>偶数</strong>（2 / 4 / 6）。</li>
+</ul>
+<blockquote>A 和 B 独立吗？互斥吗？P(A∩B) 是多少？</blockquote>
+<h3>题目 2 · 一班里的两个代表</h3>
+<p>某班 30 人：12 名女生、18 名男生。随机抽签选一人当"今日值日"。</p>
+<ul>
+<li>事件 A：抽到的人是<strong>女生</strong>。</li>
+<li>事件 B：抽到的人是<strong>男生</strong>。</li>
+</ul>
+<blockquote>A 和 B 互斥吗？独立吗？从中体会"为什么互斥的事件反而不独立"。</blockquote>
+<h3>题目 3 · 手机的双故障（综合）</h3>
+<p>某型号手机：屏幕损坏概率 0.05，电池故障概率 0.04，且两故障<strong>相互独立</strong>。</p>
+<ul>
+<li><strong>（甲）</strong> 求"屏幕和电池<strong>同时</strong>出故障"的概率。</li>
+<li><strong>（乙）</strong> 求"<strong>至少一处</strong>出故障"的概率。</li>
+<li><strong>（丙）</strong> 把事件改为"屏幕损坏"(A) 与"整机完全正常"(即屏幕和电池都好，¬A∩¬B)。问：A 与"整机正常"互斥吗？独立吗？</li>
+</ul>
+<hr>
+<h2>四、提示（如需逐题完整推导，回复"揭晓答案"）</h2>
+<ul>
+<li><strong>题目 1</strong>：硬币与骰子来自<strong>不同随机源</strong>，互不影响 → <strong>独立</strong>。能否同时发生？能（正面且偶数点）→ <strong>不互斥</strong>。P(A∩B) = P(A)P(B) = 1/2 × 1/2 = <strong>1/4</strong>。</li>
+<li>心法：独立不代表"分开发生"，恰恰可以"一起发生"。</li>
+</ul>
+<ul>
+<li><strong>题目 2</strong>：抽到的人不可能既是女又是男 → <strong>互斥</strong>（P(A∩B)=0）。但独立要求 P(A∩B)=P(A)P(B)=12/30×18/30≠0，矛盾 → <strong>不独立</strong>。</li>
+<li>心法：互斥的事件其实是"强相关"——一个发生，另一个<strong>必定</strong>不发生。</li>
+</ul>
+<ul>
+<li><strong>题目 3</strong>：</li>
+<li>甲 = 0.05 × 0.04 = <strong>0.002</strong>（独立直接相乘）；</li>
+<li>乙 = 1 − (1−0.05)(1−0.04) = 1 − 0.95×0.96 = 1 − 0.912 = <strong>0.088</strong>；</li>
+<li>丙：A（屏幕坏）与"整机正常"（屏幕电池都好）不能同时发生 → <strong>互斥</strong>；且两者概率都 &gt;0 → <strong>不独立</strong>。</li>
+</ul>
+<hr>
+<blockquote>📌 明日预告：第 4 期 <strong>全概率公式</strong>——当一件事有多个"前置分支"时，如何把各路概率汇总成总概率（贝叶斯定理的"前半段"）。</blockquote></div></body></html>

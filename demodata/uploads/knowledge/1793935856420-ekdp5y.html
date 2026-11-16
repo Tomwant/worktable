@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第07期 · 应收账款</title>
+<style>
+  :root{
+    --green:#2f6b5e;
+    --green-soft:#eef4f1;
+    --gold:#c9a961;
+    --gold-soft:#faf6ec;
+    --ink:#1f2d29;
+    --muted:#5d6b66;
+    --line:#e3e9e6;
+    --bg:#f6f8f7;
+    --card:#ffffff;
+    --red:#b4543b;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.7;
+    padding:28px 16px 48px;
+  }
+  .wrap{max-width:820px;margin:0 auto;}
+
+  /* 头部 */
+  header{
+    background:linear-gradient(135deg, var(--green) 0%, #26564b 100%);
+    color:#fff;
+    border-radius:16px;
+    padding:30px 28px;
+    box-shadow:0 8px 24px rgba(47,107,94,0.22);
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";
+    position:absolute;
+    right:-40px;top:-40px;
+    width:160px;height:160px;
+    background:radial-gradient(circle, rgba(201,169,97,0.35) 0%, rgba(201,169,97,0) 70%);
+    border-radius:50%;
+  }
+  .issue{
+    display:inline-block;
+    background:var(--gold);
+    color:#3a2f12;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:1px;
+    padding:4px 12px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+  header h1{font-size:27px;font-weight:800;letter-spacing:1px;}
+  header .sub{margin-top:8px;font-size:15px;opacity:0.92;}
+  .meta{
+    margin-top:18px;
+    display:flex;flex-wrap:wrap;gap:10px;
+    font-size:13px;
+  }
+  .meta span{
+    background:rgba(255,255,255,0.14);
+    padding:4px 12px;border-radius:999px;
+  }
+  .tags{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;}
+  .tags b{
+    font-size:12px;font-weight:600;
+    background:rgba(201,169,97,0.2);
+    color:#f3e6c4;
+    padding:3px 10px;border-radius:6px;
+  }
+
+  /* 区块标题 */
+  .sec-title{
+    display:flex;align-items:center;gap:10px;
+    margin:30px 0 14px;
+    font-size:18px;font-weight:800;color:var(--green);
+  }
+  .sec-title .num{
+    width:26px;height:26px;flex:0 0 26px;
+    background:var(--green);
+    color:#fff;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;font-weight:700;
+  }
+
+  /* 卡片 */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:22px 22px;
+    box-shadow:0 4px 16px rgba(31,45,41,0.06);
+    margin-bottom:16px;
+  }
+  .card .lead{font-size:15px;color:var(--muted);margin-bottom:12px;}
+
+  /* 场景 */
+  .scene{
+    background:linear-gradient(180deg, #fff 0%, var(--green-soft) 100%);
+    border-left:5px solid var(--gold);
+  }
+  .scene .who{font-weight:700;color:var(--green);margin-bottom:6px;}
+  .scene p{margin:6px 0;font-size:15px;}
+  .hl{color:var(--red);font-weight:700;}
+
+  /* 公式卡网格 */
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(2, 1fr);
+    gap:14px;
+  }
+  .fcard{
+    background:var(--green-soft);
+    border:1px solid #d8e6e0;
+    border-radius:14px;
+    padding:16px 16px;
+  }
+  .fcard .ft{font-size:13px;font-weight:700;color:var(--green);margin-bottom:8px;}
+  .fcard .fx{
+    font-size:14.5px;
+    background:#fff;
+    border:1px dashed #cfe0d9;
+    border-radius:10px;
+    padding:10px 12px;
+    color:var(--ink);
+  }
+  .fcard .fn{font-size:13px;color:var(--muted);margin-top:8px;line-height:1.5;}
+
+  /* 算例 */
+  .step{
+    display:flex;gap:12px;margin:12px 0;
+    align-items:flex-start;
+  }
+  .step .k{
+    flex:0 0 28px;width:28px;height:28px;
+    background:var(--gold);color:#3a2f12;
+    border-radius:8px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;font-size:14px;
+  }
+  .step .v{font-size:15px;flex:1;}
+  .step .v b{color:var(--green);}
+  .calc-box{
+    background:var(--gold-soft);
+    border:1px solid #ecdfc2;
+    border-radius:12px;
+    padding:14px 16px;
+    margin-top:10px;
+    font-size:15px;
+  }
+  .calc-box .row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px dotted #e3d4b3;}
+  .calc-box .row:last-child{border-bottom:none;font-weight:700;color:var(--green);}
+  .verdict{
+    margin-top:14px;
+    background:#fbeee9;border-left:5px solid var(--red);
+    border-radius:10px;padding:12px 14px;font-size:14.5px;
+  }
+  .verdict b{color:var(--red);}
+
+  /* 红线 */
+  .rule{
+    display:flex;gap:12px;align-items:flex-start;
+    padding:12px 0;border-bottom:1px solid var(--line);
+  }
+  .rule:last-child{border-bottom:none;}
+  .rule .dot{
+    flex:0 0 10px;width:10px;height:10px;border-radius:50%;
+    background:var(--red);margin-top:8px;
+  }
+  .rule .rt{font-size:15px;}
+  .rule .rt b{color:var(--ink);}
+  .rule .rt span{color:var(--muted);font-size:13.5px;}
+
+  /* 自测 */
+  .quiz{border-left:5px solid var(--green);}
+  .q{font-weight:700;color:var(--green);margin-bottom:8px;font-size:15px;}
+  .a{
+    background:var(--green-soft);
+    border-radius:10px;padding:12px 14px;
+    font-size:14.5px;margin-bottom:14px;color:var(--ink);
+  }
+  .a .label{color:var(--gold);font-weight:700;margin-right:6px;}
+
+  footer{
+    margin-top:30px;
+    text-align:center;
+    font-size:12.5px;color:var(--muted);
+    border-top:1px solid var(--line);
+    padding-top:16px;
+  }
+  footer .next{color:var(--green);font-weight:600;margin-top:6px;}
+
+  @media (max-width:600px){
+    body{padding:18px 10px 36px;}
+    header{padding:22px 18px;}
+    header h1{font-size:22px;}
+    .card{padding:18px 16px;}
+    .grid{grid-template-columns:1fr;}
+    .sec-title{font-size:16px;}
+    .calc-box .row{flex-direction:column;gap:2px;}
+    .calc-box .row span:last-child{font-weight:700;}
+  }
+
+  /* 自测题折叠：原生 details，不依赖 JS（沙箱预览里也能点开） */
+  details.qz{border:1px solid #e3e8e5;border-radius:12px;background:#fff;margin:0 0 12px;overflow:hidden;transition:border-color .18s,box-shadow .18s;}
+  details.qz:hover{border-color:#cfdcd6;box-shadow:0 3px 12px rgba(47,107,94,.07);}
+  details.qz[open]{border-color:#cfe0d9;box-shadow:0 3px 14px rgba(47,107,94,.08);}
+  details.qz summary{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;list-style:none;user-select:none;}
+  details.qz summary::-webkit-details-marker{display:none;}
+  details.qz summary::before,details.qz summary::after{content:"" !important;display:none !important;}
+  details.qz summary::marker{content:"";}
+  details.qz .qt{flex:1 1 auto;font-weight:700;font-size:15px;line-height:1.6;color:#1f2a26;}
+  details.qz .peek{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:#8a6f2e;background:#f7f1e4;border-radius:999px;padding:3px 11px 3px 9px;margin-top:1px;transition:background .18s,color .18s;}
+  details.qz:hover .peek{background:#f2e8d2;}
+  details.qz[open] .peek{background:#e7f0ed;color:#2a5b50;}
+  details.qz .peek .arw{font-size:10px;line-height:1;transition:transform .2s;}
+  details.qz[open] .peek .arw{transform:rotate(180deg);}
+  details.qz .peek .t-off{display:none;}
+  details.qz[open] .peek .t-on{display:none;}
+  details.qz[open] .peek .t-off{display:inline;}
+  details.qz .qa{border-top:1px dashed #e3e8e5;padding:12px 16px 14px;background:#fbfcfb;font-size:14.5px;line-height:1.75;color:#1f2a26;animation:qzfade .2s ease-out;}
+  details.qz .qa b{color:#2f6b5e;}
+  details.qz .qa span:not([class]){color:#5f6b66;font-size:13.5px;}
+  details.qz .qa .step{display:block;margin:4px 0;}
+  @keyframes qzfade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .qz-lead{font-size:13.5px;color:#5f6b66;margin:-6px 0 14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="issue">第 07 期</div>
+    <h1>应收账款：账面赚的钱，为什么到不了账上</h1>
+    <div class="sub">门店经营用得上的财务知识 · 从"利润"到"真金白银"的关键一步</div>
+    <div class="meta">
+      <span>日期：2026-11-06</span>
+      <span>适用：多店经营者 / 财务小白</span>
+      <span>难度：★★☆☆☆</span>
+    </div>
+    <div class="tags">
+      <b>应收账款</b><b>周转天数 DSO</b><b>逾期率</b><b>坏账</b><b>现金流</b>
+    </div>
+  </header>
+
+  <div class="sec-title"><span class="num">1</span>先从一个真实门店场景说起</div>
+  <div class="card scene">
+    <div class="who">人物：张姐，同时管 3 家社区面馆</div>
+    <p>张姐月底看利润表，三店合计净赚了 <span class="hl">8 万元</span>，心里挺美。结果发工资那天一查对公账户，只剩 <span class="hl">2 万元</span>，差 6 万发不出工资，急得团团转。</p>
+    <p>钱去哪了？原来这 8 万利润里，有不少是"账面上"的：附近公司团餐月结 30 天还没打款、抖音团购平台 15 天才结算、一家老客户挂了员工餐账。这些钱都算进了收入、算出了利润，但<span class="hl">一分还没进银行卡</span>。</p>
+    <p>这就是"应收账款"——货和服务已经给了客户，账记了、税交了，但<strong>钱还没收到</strong>。它让利润好看，却让现金紧张。</p>
+  </div>
+
+  <div class="sec-title"><span class="num">2</span>定义与公式卡片</div>
+  <div class="card">
+    <div class="grid">
+      <div class="fcard">
+        <div class="ft">① 什么是应收账款</div>
+        <div class="fx">企业已交付商品/服务，但客户尚未付款而形成的债权（别人欠你的钱）。</div>
+        <div class="fn">门店常见来源：对公团餐月结、团购平台结算账期、熟客员工餐挂账、总部预付款项。</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">② 应收账款余额</div>
+        <div class="fx">期末应收 = 期初应收 + 本期新增赊销 − 本期已收回</div>
+        <div class="fn">这是时点数字，看的是"此刻还有多少没收回"。</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">③ 应收账款周转天数（DSO）</div>
+        <div class="fx">周转天数 = 应收平均余额 ÷ 营业收入 × 天数</div>
+        <div class="fn">天数常用 30（月）或 365（年）。DSO 越长，回款越慢、越占现金。</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">④ 应收账款周转率</div>
+        <div class="fx">周转率 = 营业收入 ÷ 应收平均余额</div>
+        <div class="fn">周转率越高，回款越快。与周转天数互为倒数关系。</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">⑤ 逾期率</div>
+        <div class="fx">逾期率 = 超过约定账期未收回的金额 ÷ 应收账款总额 × 100%</div>
+        <div class="fn">衡量"该回没回"的比例，是催收的警报器。</div>
+      </div>
+      <div class="fcard">
+        <div class="ft">⑥ 坏账准备</div>
+        <div class="fx">坏账 = 确定（或极可能）收不回来的应收，需计提损失</div>
+        <div class="fn">超过账期很久、客户失联的，要从利润里"减掉"，别让虚盈掩盖风险。</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-title"><span class="num">3</span>可直接套用的计算示例</div>
+  <div class="card">
+    <div class="lead">以"鲜煮面馆"单店 2026 年 11 月为例，数字跟着算一遍。</div>
+
+    <div class="step"><div class="k">1</div><div class="v">本月<b>营业收入 300,000 元</b>，其中：<br>· 现金/即时到账 180,000 元<br>· 赊销挂账 120,000 元（对公团餐 80,000，月结 30 天；团购平台 40,000，T+15）</div></div>
+    <div class="step"><div class="k">2</div><div class="v">期初应收账款 <b>0 元</b>（上月无挂账），本月收回赊销 <b>0 元</b>（都还在账期内）。</div></div>
+    <div class="step"><div class="k">3</div><div class="v">算期末应收余额：<b>0 + 120,000 − 0 = 120,000 元</b>。</div></div>
+
+    <div class="calc-box">
+      <div class="row"><span>本月净利润</span><span>收入30万 − 食材9万 − 人工7万 − 租金3万 − 其他3万 = <b>8万</b></span></div>
+      <div class="row"><span>本月现金流入</span><span>即时到账18万 + 收回赊销0 = <b>18万</b></span></div>
+      <div class="row"><span>本月现金流出</span><span>食材9万 + 人工7万 + 租金3万 + 其他3万 = <b>22万</b></span></div>
+      <div class="row"><span>经营性现金净流量</span><span>18万 − 22万 = <b>−4万</b></span></div>
+    </div>
+
+    <div class="verdict">账面净利润 <b>+8 万</b>，但现金却净流出 <b>−4 万</b>。差出来的 12 万，正是"已计入收入、却还没收回"的应收账款。这就是第06期说的——<b>利润不等于现金</b>，而应收账款正是二者之间最大的"时差"。</div>
+
+    <div class="step" style="margin-top:14px"><div class="k">4</div><div class="v">算周转天数 DSO（按月 30 天）：<br>应收平均余额 =（期初0 + 期末12万）÷ 2 = <b>6万</b><br>DSO = 6万 ÷ 30万 × 30 = <b>6 天</b>（说明大部分是现金生意，回款健康）。</div></div>
+    <div class="step"><div class="k">5</div><div class="v">算应收占营收比：12万 ÷ 30万 = <b>40%</b>。若全是赊销型客户，这个比例就偏高，现金压力会很大——这正是张姐遇到的问题。</div></div>
+  </div>
+
+  <div class="sec-title"><span class="num">4</span>给经营者的判断标准与红线</div>
+  <div class="card">
+    <div class="rule"><div class="dot"></div><div class="rt"><b>红线一 · 周转天数（DSO）</b><br><span>单店 DSO 超过 30 天要警惕，超过 60 天说明回款机制失灵。现金生意尽量压在 15 天内。</span></div></div>
+    <div class="rule"><div class="dot"></div><div class="rt"><b>红线二 · 应收占营收比</b><br><span>月末应收余额 ÷ 当月营收，超过 20% 说明太依赖赊销，现金会被持续抽干，需收紧授信。</span></div></div>
+    <div class="rule"><div class="dot"></div><div class="rt"><b>红线三 · 逾期率</b><br><span>超账期未收回部分占应收总额超过 10% 立即催收；超过 30% 暂停对该客户赊销。</span></div></div>
+    <div class="rule"><div class="dot"></div><div class="rt"><b>红线四 · 坏账计提</b><br><span>连续超过 90 天未收回的应收，应从利润中计提坏账，别让"虚盈"掩盖真实亏损。</span></div></div>
+    <div class="rule"><div class="dot"></div><div class="rt"><b>红线五 · 授信必须书面化</b><br><span>对公/团购客户一律签结算协议、约定账期，禁止"口头挂账"；多店统一授信额度，避免各店乱放账。</span></div></div>
+  </div>
+
+  <div class="sec-title"><span class="num">5</span>今日自测题</div>
+  <p class="qz-lead">先自己算一遍，再点答案对一下。</p>
+  <details class="qz">
+    <summary>
+      <span class="qt">第 1 题：门店本月营收 50 万，其中赊销 20 万、现金 30 万；期初应收 5 万，本月收回赊销 15 万。求月末应收账款余额。</span>
+      <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+    </summary>
+    <div class="qa">期末应收 = 期初 5 万 + 新增赊销 20 万 − 收回 15 万 = <b>10 万元</b>。</div>
+  </details>
+
+  <details class="qz">
+    <summary>
+      <span class="qt">第 2 题：接上题，按 30 天计算应收账款周转天数（平均余额法）。</span>
+      <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+    </summary>
+    <div class="qa">平均余额 =（期初 5 万 + 期末 10 万）÷ 2 = 7.5 万；DSO = 7.5 ÷ 50 × 30 = <b>4.5 天</b>。</div>
+  </details>
+
+  <details class="qz">
+    <summary>
+      <span class="qt">第 3 题：为什么说"利润高但现金少"在门店很常见？请结合应收账款说明。</span>
+      <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+    </summary>
+    <div class="qa">赊销在发货/服务当期就确认了收入、计入利润，但钱要等账期才到账；而食材、人工、租金等现金支出却要先垫付。于是账面赚钱、现金却紧——二者的"时差"就体现在应收账款上。</div>
+  </details>
+
+  <footer>
+    本期为「门店经营财务知识日报」第 07 期 · 应收账款 · 2026-11-06<br>
+    内容自包含，可独立阅读；往期回顾：毛利与毛利率 / 收入与成本 / 净利率 / 固定成本与变动成本 / 门店盈亏平衡点 / 现金流与利润的区别。
+    <div class="next">下期预告：应付账款——反过来，怎么管"你欠别人的钱"</div>
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第27期 · 供需关系</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 27 期</span>
+  <h1>今天的概念：<span class="tag">供需关系</span>（Supply &amp; Demand）</h1>
+  <div class="date">2026年10月22日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 老周的锂矿，一场三年过山车</h2>
+    <p>老周在西部开了家小锂矿。2020 年之前，锂不过是个"<strong>冷门金属</strong>"——一吨碳酸锂才卖 <strong>4 万多</strong>，矿老板们愁的不是卖不卖得掉，是连成本都收不回。那会儿大家眼里只有石油和铁，没人惦记地底下的这点"白粉末"。供给充足、需求冷淡，价格就趴在地板上一动不动。</p>
+    <p>转机来得毫无征兆。2021 年新能源车突然爆发，每辆车要装几十公斤电池，全社会开始<strong>疯抢锂</strong>。需求像被按了开关一样一夜暴涨——可锂矿不是想挖就挖的：从勘探、建厂到投产，起码要 <strong>3 到 5 年</strong>。供给这一端根本追不上。<strong>想要的人暴增，能产出的货死活跟不上</strong>，价格从 5 万一路飙到 <strong>60 万/吨</strong>（2022 年底）。老周那点矿，躺着就赚翻了，连矿渣都有人抢着收。</p>
+    <p>但价格本身是个<strong>求救信号</strong>。60 万的天价把所有资本都召来了：新矿遍地开花、盐湖提锂技术突破、连非洲的矿都被翻出来；同时车企也没闲着——搞电池回收、换用少锂的磷酸铁锂。<strong>供给暴增</strong>的同时，新能源增速又放缓，<strong>需求没那么猛了</strong>。结果 2023 年价格从 60 万腰斩再腰斩，一路跌回 <strong>10 万以下</strong>。老周一个朋友是高利贷开的矿，刚投产就赶上崩盘，矿机想卖都没人接。同一座山，三年里从"金矿"变成了"烫手山芋"。</p>
+    <div class="board">
+      <div class="row head"><span class="k">同一吨碳酸锂，供需两端一动，价格就翻了十倍又跌回</span><span class="v">供 vs 求</span></div>
+      <div class="row"><span class="k">2020 前（供＞求）</span><span class="v">4~5 万/吨，矿老板愁卖不掉</span></div>
+      <div class="row"><span class="k">2022 需求暴涨·供给滞后</span><span class="v">飙到 60 万/吨，躺着赚钱</span></div>
+      <div class="row"><span class="k">2023 供给暴增·需求放缓</span><span class="v">跌回 10 万以下，高利贷矿亏崩</span></div>
+      <div class="row"><span class="k">关键变量</span><span class="v">矿投产要 3~5 年 → 供给永远"慢半拍"</span></div>
+    </div>
+    <p>看明白这场过山车，你就握住了一把解开无数现象的钥匙：为什么演唱会门票被黄牛炒到天价（求远大于供）、为什么某样东西越限购大家越抢（人为压供给）、为什么看似"便宜"的过剩行业反而是陷阱。<strong>一切价格的起伏，追到底都是供给和需求在拔河</strong>——而老周的故事最妙的一笔是：<strong>高价本身就是召唤更多供给的号角</strong>，看不见的手最终会把价格拉回平衡。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>供需关系</strong>，说的是市场上"<strong>卖方愿意且能够提供的数量</strong>"（供给）和"<strong>买方愿意且能够买下的数量</strong>"（需求）如何共同决定价格与成交量。当两者相等时，市场达到<strong>均衡点</strong>，此时的价格叫<strong>均衡价格</strong>——这时的成交量买卖双方都满意，谁也别想长期占谁的便宜。</p>
+    <div class="formula">均衡：供给量 Qs = 需求量 Qd　→　成交价 P*　；　供↑或求↓ ⇒ 价格↓，供↓或求↑ ⇒ 价格↑</div>
+    <p>老周的锂矿把这条规律讲透了三层：其一，<strong>价格是信号也是调节器</strong>——某种东西涨价，就是在喊"稀缺了，快多生产/少消费"；跌价则在喊"过剩了"。看不见的手靠这个信号自动调配资源，所以 60 万的天价迟早召来新供给把它压下去。其二，<strong>供给有"时滞"</strong>：锂矿投产要 3~5 年，这半拍的延迟正是暴涨暴跌的放大器——需求冲上来时供给还在睡觉，等供给醒来需求可能已退热。其三，落到投资上，你判断一只股票或一种商品会不会涨，先别听故事，先看<strong>这东西的供给在收缩还是扩张、需求被谁点燃</strong>——供不应求的赛道才有向上的底气，而"<strong>越来越便宜的东西，往往供过于求还没见底</strong>"。</p>
+    <p>🌰 换到你的钱包：抢购前先问，这波抢是"<strong>真需求</strong>"还是"<strong>稀缺焦虑</strong>"制造的假需求？限量的鞋、抢破头的楼盘，价格里常有被情绪哄抬的水分。反过来，当你发现某个行业"东西越来越多却越来越便宜"，别急着抄底——那通常是供给还在汹涌涌出。真正值得盯的，是那些<strong>需求在悄悄点燃、供给却一时补不上来</strong>的缝隙。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>价格由供需博弈定，不是成本或谁拍板</strong>：供给和需求两股力量拉扯出均衡价，哪一端的天平倾斜，价格就往哪边跑——所以锂能从 5 万飙到 60 万，又能跌回 10 万。</li>
+      <li><strong>高价会召唤供给，这是看不见的手</strong>：涨得越凶，资本越涌进来扩产，最终把价格拉回。别迷信"这次不一样"，稀缺溢价迟早被新产能抹平。</li>
+      <li><strong>看两端，别只看一端</strong>：判断涨跌先拆"供给在扩还是缩、需求被谁点燃"。供不应求才有向上底气，供过于求的便宜货，可能是还没到底的陷阱。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：锚定效应 —— 为什么商场总把"原价¥1999"划掉写"现价¥599"？为什么你总觉得工资谈少了？第一眼看到的数字，会偷偷锚定你之后所有的判断。</div>
+</div>
+</body>
+</html>

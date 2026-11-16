@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第2期 · 贝叶斯定理</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>每日概率学 · 第 2 期</h1>
+<ul>
+<li><strong>日期</strong>：2026-09-13（周日）</li>
+<li><strong>今日概念</strong>：贝叶斯定理（Bayes' Theorem）——"新证据如何更新你的旧信念"</li>
+<li><strong>一句话心智模型</strong>：后验 = 先验 × 似然 ÷ 证据。用新信息对旧判断做<strong>加权修正</strong>，而不是推倒重来。</li>
+</ul>
+<hr>
+<h2>一、故事引入：深夜那通逃逸报警</h2>
+<p>凌晨两点，城南发生一起出租车肇事逃逸。案发地没有路灯，但有一名路人目击。</p>
+<p>这座城市只有两家出租车公司：</p>
+<ul>
+<li><strong>蓝鲸公司</strong>——占全市出租车 <strong>85%</strong>，车都是蓝色；</li>
+<li><strong>青藤公司</strong>——占全市出租车 <strong>15%</strong>，车都是绿色。</li>
+</ul>
+<p>警方找到唯一目击者。他信誓旦旦："我看得清清楚楚，那辆车是<strong>绿色</strong>的！"</p>
+<p>可当晚太黑，事后测出这位目击者在夜间辨色的正确率只有 <strong>80%</strong>（即真绿车有 80% 概率被认对，真蓝车也有 20% 概率被误看成绿）。</p>
+<p>交警队小赵立刻下结论："绿色车，那肯定是青藤公司的，抓它！"</p>
+<p>老刑警却摇摇头，在纸上算了起来：</p>
+<p>```</p>
+<p>假设全城有 100 辆车：</p>
+<ul>
+<li>蓝车 85 辆，绿车 15 辆。</li>
+</ul>
+<p>目击者说"绿色"时：</p>
+<ul>
+<li>真绿车被认成绿：15 × 80% = 12 辆</li>
+<li>真蓝车被误认成绿：85 × 20% = 17 辆</li>
+</ul>
+<p>⇒ "说绿色"的总数 = 12 + 17 = 29 辆</p>
+<p>其中真正是绿车的，只有 12 辆。</p>
+<p>所以那辆车真的是绿色的概率 = 12 / 29 ≈ 41%</p>
+<p>```</p>
+<p>小赵愣了："可他明明指认了绿色啊？"</p>
+<p>老刑警说："<strong>证据很关键，但你得先问：绿色车本来就少。目击者认错的概率，足以把一堆蓝车'说'成绿车，数量甚至超过真绿车。</strong>"</p>
+<p><strong>这就是贝叶斯定理的灵魂：新证据会改变信念，但改变多少，取决于你最初的信念（先验）有多强。</strong></p>
+<hr>
+<h2>二、概念讲解</h2>
+<p>贝叶斯定理把"看到证据 E 之后，假设 H 成立的概率"写成了公式：</p>
+<p>```</p>
+<p>P(H|E) = P(E|H) × P(H) / P(E)</p>
+<p>```</p>
+<p>各部分的名字与直觉：</p>
+<p>| 术语 | 符号 | 直觉 |</p>
+<p>| --- | --- | --- |</p>
+<p>| <strong>先验</strong> | P(H) | 看到证据前，你对 H 有多相信 |</p>
+<p>| <strong>似然</strong> | P(E\|H) | 若 H 为真，看到这份证据的可能性 |</p>
+<p>| <strong>证据（边际）</strong> | P(E) | 这份证据本身出现的"总概率"，用于归一化 |</p>
+<p>| <strong>后验</strong> | P(H\|E) | 看完证据后，你对 H 的新信念 |</p>
+<p>对二元假设（H 与 ¬H），分母可展开为：</p>
+<p>```</p>
+<p>P(E) = P(E|H)·P(H) + P(E|¬H)·P(¬H)</p>
+<p>```</p>
+<p>⚠️ 两个最容易踩的坑：</p>
+<ul>
+<li><strong>把似然当后验</strong>：P(E|H) 高 ≠ P(H|E) 高。故事里"绿车被认对的概率 80%"是 P(说绿|绿车)，但我们要的是 P(绿车|说绿)。</li>
+<li><strong>无视先验</strong>：再有力的证据，撞上极低的先验，后验仍可能不高。这正是第 1 期"基础概率谬误"的系统化版本。</li>
+</ul>
+<p>💡 一句话心法：<strong>贝叶斯不是让你"相信证据"，而是让你"按证据的重量，挪动原来那杆秤的指针"。</strong></p>
+<hr>
+<h2>三、代表性题目 / 故事（请你来总结 ✍️）</h2>
+<p>请试着对每道题写出：① 先验是什么；② 似然是什么；③ 你的后验答案；④ 一句话心法。</p>
+<h3>题目 1 · 三盒硬币的诡计</h3>
+<p>有三个盒子，你闭眼随机选一个，再从中随机摸出一枚硬币：</p>
+<ul>
+<li>盒甲：两枚都是<strong>金币</strong></li>
+<li>盒乙：两枚都是<strong>银币</strong></li>
+<li>盒丙：一枚金币、一枚银币</li>
+</ul>
+<p>你摸出一枚，是<strong>金币</strong>。问：盒里<strong>另一枚也是金币</strong>的概率是多少？</p>
+<blockquote>提示思考：那枚被摸到的金币，最可能来自哪个盒子？</blockquote>
+<h3>题目 2 · 两厂的次品疑云</h3>
+<p>工厂 A 供货占 <strong>60%</strong>，次品率 <strong>1%</strong>；工厂 B 供货占 <strong>40%</strong>，次品率 <strong>3%</strong>。</p>
+<p>质检员抽检一件，发现是<strong>次品</strong>。问：这件次品来自工厂 A 的概率是多少？</p>
+<blockquote>直觉上 A 供货更多，次品更可能来自 A 吗？</blockquote>
+<h3>题目 3 · 两个目击者的叠加</h3>
+<p>回到逃逸案：这次有<strong>两名互不相识</strong>的目击者，各自夜间辨色正确率都是 80%，且独立判断。</p>
+<p>两人<strong>都</strong>指认"车是绿色的"。问：车真的是绿色的概率变为多少？</p>
+<blockquote>和故事里"只有一个目击者"相比，后验上升了还是下降了？说明什么？</blockquote>
+<hr>
+<h2>四、提示（如需逐题完整推导，回复"揭晓答案"）</h2>
+<ul>
+<li><strong>题目 1</strong>：三盒共 6 枚硬币，其中 3 枚金（甲盒 2 枚、丙盒 1 枚）。摸到金币时，它来自甲盒的概率 = 2/3。所以另一枚也是金币的概率为 <strong>2/3</strong>。</li>
+<li>心法：<strong>数"硬币"而不是数"盒子"</strong>——先验在"金币"这个样本上被重新分配了。</li>
+</ul>
+<ul>
+<li><strong>题目 2</strong>：P(A|次品) = (0.01×0.60) ÷ (0.01×0.60 + 0.03×0.40) = 0.006 ÷ 0.018 = <strong>1/3 ≈ 33.3%</strong>。</li>
+<li>心法：抽到次品这个证据，反而把嫌疑<strong>推向次品率更高的 B 厂</strong>——A 虽供货多，但"干净"得多。</li>
+</ul>
+<ul>
+<li><strong>题目 3</strong>：P(绿|两人都说绿) = (0.8²×0.15) ÷ (0.8²×0.15 + 0.2²×0.85) = 0.096 ÷ 0.130 ≈ <strong>73.8%</strong>。</li>
+<li>心法：<strong>独立证据叠加会显著推高后验</strong>（从 41% 升到 74%），但低先验仍把它压在"多半"而非"几乎肯定"。</li>
+</ul>
+<hr>
+<blockquote>📌 明日预告：第 3 期 <strong>独立事件与互斥事件</strong>——"两件事互不影响"和"两件事不可能同时发生"，别再傻傻分不清。</blockquote></div></body></html>

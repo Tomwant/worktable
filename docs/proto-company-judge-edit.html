@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>好公司 · 我的判断 可编辑原型</title>
+<style>
+:root{
+  --bg1:#f4efe4;--bg2:#eaf1e7;
+  --surface-solid:#fffdf7;--surface-2:rgba(255,255,255,.55);
+  --text:#33302a;--text-2:#7a746a;--text-3:#a8a094;
+  --line-2:rgba(80,60,30,.12);--line-3:rgba(80,60,30,.24);
+  --accent:#4a9e66;--accent-deep:#398a54;--accent-soft:rgba(74,158,102,.13);
+  --danger:#cf6a57;--danger-soft:rgba(207,106,87,.14);
+  --r-input:14px;--r-card:22px;
+  --shadow:0 1px 2px rgba(80,60,30,.05),0 12px 36px -14px rgba(80,60,30,.22),inset 0 1px 0 rgba(255,255,255,.6);
+  --ring:0 0 0 3px rgba(74,158,102,.16);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;padding:26px 20px 60px;min-height:100vh;
+  font-family:'Noto Sans SC',-apple-system,'PingFang SC','Microsoft YaHei',sans-serif;
+  color:var(--text);background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:900px;margin:0 auto}
+.prototype-bar{
+  display:flex;align-items:center;gap:10px;margin-bottom:16px;padding:10px 14px;
+  border-radius:14px;background:rgba(255,255,255,.6);border:1px dashed rgba(80,60,30,.24);
+  font-size:12px;color:var(--text-2);flex-wrap:wrap;
+}
+.prototype-bar b{color:var(--text)}
+.seg{display:flex;gap:4px;padding:3px;border-radius:11px;background:rgba(80,60,30,.07)}
+.seg button{
+  font:inherit;font-size:12px;padding:5px 12px;border-radius:9px;border:0;background:none;
+  color:var(--text-2);cursor:pointer;transition:.16s;
+}
+.seg button.on{background:#fff;color:var(--text);font-weight:650;box-shadow:0 1px 3px rgba(80,60,30,.12)}
+
+.block-head{display:flex;align-items:baseline;gap:11px;margin-bottom:9px;flex-wrap:wrap}
+.block-head h2{margin:0;font-size:14.5px;font-weight:750;display:flex;align-items:center;gap:7px}
+.block-head h2::before{content:"";width:3px;height:13px;border-radius:2px;background:var(--accent)}
+.block-head span{font-size:11.5px;color:var(--text-3)}
+.block-head .right{margin-left:auto;display:flex;gap:6px;align-items:center}
+.panel{border:1px solid var(--line-2);border-radius:var(--r-card);background:var(--surface-solid);box-shadow:var(--shadow);padding:16px 18px}
+
+.mini-btn{
+  font-size:11.5px;padding:5px 12px;border-radius:999px;border:1px solid var(--line-2);
+  background:var(--surface-2);color:var(--text-2);cursor:pointer;transition:.16s;
+}
+.mini-btn:hover{color:var(--text);border-color:var(--accent);background:var(--accent-soft)}
+.mini-btn.primary{background:linear-gradient(140deg,#4a9e66,#3d8a56);color:#fff;border-color:transparent;font-weight:650}
+.mini-btn.primary:hover{background:linear-gradient(140deg,#4a9e66,#3d8a56);color:#fff}
+.mini-btn.ghost{background:none}
+
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+.check{position:relative;border:1px solid var(--line-2);border-radius:13px;background:var(--surface-2);padding:11px 13px;transition:.16s}
+.check label{display:block;font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:3px}
+.check .q{font-size:10.5px;color:var(--text-3);margin-bottom:7px;line-height:1.55}
+.check .saved{font-size:12px;line-height:1.7;color:var(--text-2);white-space:pre-wrap;min-height:20px;word-break:break-word}
+.check .saved.blank{color:var(--text-3)}
+.check textarea{
+  width:100%;min-height:66px;padding:8px 10px;font:inherit;font-size:12px;line-height:1.7;
+  border-radius:11px;border:1px solid var(--line-2);background:#fff;color:var(--text);
+  resize:vertical;outline:none;transition:.16s;
+}
+.check textarea:focus{border-color:var(--accent);box-shadow:var(--ring)}
+
+/* 方案 A：整格可点 */
+.mode-a .check{cursor:text}
+.mode-a .check:hover{border-color:var(--line-3);background:rgba(255,255,255,.72)}
+.mode-a .check .hint{
+  position:absolute;top:9px;right:10px;font-size:10px;color:var(--text-3);opacity:0;transition:.16s;
+}
+.mode-a .check:hover .hint{opacity:1}
+.mode-a .check.editing{border-color:var(--accent);background:#fff;box-shadow:var(--ring)}
+
+.save-flag{
+  position:absolute;top:8px;right:10px;font-size:10px;color:var(--accent);font-weight:650;
+  opacity:0;transition:.2s;
+}
+.save-flag.show{opacity:1}
+
+.verdict{display:flex;align-items:center;gap:9px;padding:12px 14px;border-radius:13px;background:var(--surface-2);border:1px solid var(--line-2);margin-top:12px;flex-wrap:wrap}
+.verdict .lb{font-size:11.5px;font-weight:700;color:var(--text-2)}
+.verdict .opts{display:flex;gap:6px;flex-wrap:wrap}
+.verdict .opts button{
+  font-size:11.5px;padding:4px 12px;border-radius:999px;border:1px solid var(--line-2);
+  color:var(--text-2);background:var(--surface-solid);cursor:pointer;transition:.15s;
+}
+.verdict .opts button:hover{color:var(--text);border-color:var(--line-3)}
+.verdict .opts button.on{background:var(--text);color:var(--surface-solid);border-color:transparent;font-weight:650}
+
+.note-line{margin-top:14px;font-size:11.5px;color:var(--text-3);line-height:1.75}
+.note-line b{color:var(--text-2)}
+@media (max-width:640px){.checks{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="prototype-bar">
+    <b>原型</b>只改「我的判断」这一块，其他地方保持只读
+    <div class="seg" style="margin-left:auto">
+      <button id="btnA" class="on" onclick="setMode('a')">方案 A · 点格子就写</button>
+      <button id="btnB" onclick="setMode('b')">方案 B · 区块独立编辑按钮</button>
+    </div>
+  </div>
+
+  <div class="block" id="block">
+    <div class="block-head">
+      <h2>我的判断</h2>
+      <span id="headTip">点任意一格就能写，失焦自动保存</span>
+      <div class="right" id="headOps" style="display:none">
+        <button class="mini-btn" id="btnCancel" onclick="cancelEdit()">取消</button>
+        <button class="mini-btn primary" onclick="saveAll()">保存判断</button>
+      </div>
+    </div>
+    <div class="panel">
+      <div class="checks" id="checks"></div>
+      <div class="verdict">
+        <span class="lb">我的结论</span>
+        <div class="opts" id="verdicts"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-line">
+    <b>方案 A</b>：格子本身可点，点进去变输入框，点别处自动存（不出现任何按钮，跟「研究笔记」一样随手写）。<br />
+    <b>方案 B</b>：区块右上角多一个「编辑判断」，点开 6 格一起变输入框，改完点保存。整页「编辑档案」不再管这一块。
+  </div>
+</div>
+
+<script>
+const ITEMS = [
+  { k:'moat',    t:'护城河',    q:'客户为什么换不掉它？换个供应商的代价有多大？' },
+  { k:'mgmt',    t:'管理层',    q:'过去 5 年说过的话兑现了多少？有没有乱花钱（高价并购、乱扩产）？' },
+  { k:'space',   t:'行业空间',  q:'这个生意的天花板在哪里？它是分蛋糕的还是在做新的蛋糕？' },
+  { k:'quality', t:'钱的质量',  q:'净利润有多少真的变成了现金？会不会是应收账款堆出来的利润？' },
+  { k:'risk',    t:'最大风险',  q:'什么情况下这笔投资会永久性亏钱？' },
+  { k:'price',   t:'买入价与理由', q:'什么价位你会买？买了之后什么情况会让你改变主意？' }
+]
+const VERDICTS = ['待研究','好公司','观察中','已否决']
+// 初始值：模拟已经写过两条
+let notes = { moat:'还没写', mgmt:'还没写', space:'还没写', quality:'还没写', risk:'还没写', price:'还没写' }
+notes = {}
+notes.moat = '换车成本高：超充网络 + OTA 生态锁定，但价格战下品牌溢价在掉。'
+notes.verdict = '待研究'
+
+let mode = 'a'
+let editingKey = null     // 方案 A 当前编辑的格子
+let editMode = false      // 方案 B 整体编辑态
+let snapshot = null
+const state = {}          // 方案 A 每格的临时值
+
+function esc(s){ return String(s==null?'':s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])) }
+
+function render(){
+  const box = document.getElementById('checks')
+  box.className = 'checks mode-' + mode
+  box.innerHTML = ITEMS.map(it => {
+    const val = notes[it.k] || ''
+    const isEditing = mode === 'a' ? editingKey === it.k : editMode
+    if (isEditing) {
+      return `<div class="check editing" data-k="${it.k}">
+        <label>${it.t}</label>
+        <div class="q">${it.q}</div>
+        <textarea data-ta="${it.k}" placeholder="写你自己的判断…">${esc(val)}</textarea>
+      </div>`
+    }
+    return `<div class="check" data-k="${it.k}">
+      <label>${it.t}</label>
+      <div class="q">${it.q}</div>
+      <div class="saved ${val ? '' : 'blank'}">${val ? esc(val) : '还没写'}</div>
+      ${mode === 'a' ? '<span class="hint">点一下就能写</span>' : ''}
+      <span class="save-flag" data-flag="${it.k}">已保存</span>
+    </div>`
+  }).join('')
+
+  // 结论按钮
+  document.getElementById('verdicts').innerHTML = VERDICTS.map(v =>
+    `<button class="${notes.verdict === v ? 'on' : ''}" onclick="setVerdict('${v}')">${v}</button>`
+  ).join('')
+
+  // 顶部按钮与提示
+  const a = mode === 'a'
+  document.getElementById('headOps').style.display = a ? 'none' : (editMode ? 'flex' : 'none')
+  document.getElementById('headTip').textContent = a
+    ? '点任意一格就能写，失焦自动保存'
+    : (editMode ? '改完点右上角保存' : '点右上角「编辑判断」开始写')
+
+  // 方案 A：绑定点击进编辑
+  if (a) {
+    box.querySelectorAll('.check').forEach(el => {
+      el.addEventListener('click', e => {
+        if (e.target.tagName === 'TEXTAREA') return
+        startInline(el.dataset.k)
+      })
+    })
+  }
+
+  // 绑定 textarea 事件
+  box.querySelectorAll('textarea').forEach(ta => {
+    ta.addEventListener('input', () => { state[ta.dataset.ta] = ta.value })
+    ta.addEventListener('blur', () => {
+      if (mode === 'a') commitInline(ta.dataset.ta, ta.value)
+    })
+    ta.addEventListener('keydown', e => {
+      if (e.key === 'Escape') {
+        if (mode === 'a') { notes[ta.dataset.ta] = state[ta.dataset.ta] ?? notes[ta.dataset.ta]; editingKey = null; render() }
+        else cancelEdit()
+      }
+      if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+        if (mode === 'a') commitInline(ta.dataset.ta, ta.value)
+        else saveAll()
+      }
+    })
+  })
+
+  // 方案 B 编辑态：自动聚焦第一个空
+  if (!a && editMode) {
+    const first = box.querySelector('textarea')
+    if (first && !box.dataset.focused) { first.focus(); box.dataset.focused = '1' }
+  }
+  if (a) box.dataset.focused = ''
+}
+
+function startInline(k){
+  if (editingKey && editingKey !== k) {
+    // 先把上一格存了
+    const prev = document.querySelector(`textarea[data-ta="${editingKey}"]`)
+    commitInline(editingKey, prev ? prev.value : (notes[editingKey] || ''))
+  }
+  state[k] = notes[k] || ''
+  editingKey = k
+  render()
+  const ta = document.querySelector(`textarea[data-ta="${k}"]`)
+  if (ta) { ta.focus(); ta.setSelectionRange(ta.value.length, ta.value.length) }
+}
+
+function commitInline(k, val){
+  notes[k] = String(val || '').trim()
+  editingKey = null
+  render()
+  // 模拟异步保存后的「已保存」小标
+  const flag = document.querySelector(`[data-flag="${k}"]`)
+  if (flag) { flag.classList.add('show'); setTimeout(() => flag.classList.remove('show'), 1400) }
+}
+
+function setMode(m){
+  if (m === mode) return
+  if (mode === 'a' && editingKey) commitInline(editingKey, document.querySelector('textarea')?.value || '')
+  editMode = false
+  editingKey = null
+  mode = m
+  document.getElementById('btnA').classList.toggle('on', m === 'a')
+  document.getElementById('btnB').classList.toggle('on', m === 'b')
+  if (m === 'b') document.getElementById('headOps').style.display = 'none'
+  render()
+}
+
+function startEditAll(){ editMode = true; snapshot = { ...notes }; document.getElementById('headOps').style.display = 'flex'; render() }
+function cancelEdit(){
+  if (snapshot) notes = { ...snapshot }
+  editMode = false; render()
+}
+function saveAll(){
+  document.querySelectorAll('#checks textarea').forEach(ta => { notes[ta.dataset.ta] = String(ta.value || '').trim() })
+  editMode = false
+  render()
+}
+function setVerdict(v){ notes.verdict = v; render() }
+
+// 方案 B 的「编辑判断」按钮挂在 block-head 的 right 区（默认隐藏，切到 B 才出现）
+const opsB = document.createElement('button')
+opsB.className = 'mini-btn'
+opsB.textContent = '编辑判断'
+opsB.id = 'btnEditAll'
+opsB.onclick = startEditAll
+document.getElementById('headOps').after(opsB)
+
+const _render = render
+render = function(){
+  _render()
+  const b = document.getElementById('btnEditAll')
+  b.style.display = (mode === 'b' && !editMode) ? 'inline-block' : 'none'
+}
+
+render()
+</script>
+</body>
+</html>

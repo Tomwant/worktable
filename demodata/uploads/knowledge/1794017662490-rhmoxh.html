@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融概念 第39期 · 通货膨胀</title>
+<style>
+  :root{
+    --c-primary:#3a4cc0;
+    --c-accent:#8a5cf6;
+    --c-bg:#f5f6fb;
+    --c-card:#ffffff;
+    --c-ink:#1f2336;
+    --c-sub:#6b7090;
+    --c-line:#e7e9f3;
+    --c-soft:#eef0fa;
+    --r-card:16px;
+    --r-sm:10px;
+    --gap:22px;
+    --shadow:0 8px 28px rgba(58,76,192,.10);
+    --warn:#c0392b;
+    --ok:#2e8b57;
+    --gold:#c79a3a;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--c-bg);
+    color:var(--c-ink);
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 18px 56px;}
+
+  /* 头部 */
+  .hero{
+    margin:0 -18px 28px;
+    padding:46px 28px 38px;
+    background:linear-gradient(135deg,var(--c-primary) 0%,var(--c-accent) 100%);
+    color:#fff;
+    border-radius:0 0 26px 26px;
+    box-shadow:var(--shadow);
+  }
+  .hero .issue{
+    display:inline-block;
+    font-size:13px;letter-spacing:2px;
+    padding:5px 14px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35);
+    border-radius:999px;
+    margin-bottom:16px;
+  }
+  .hero h1{font-size:38px;margin:4px 0 8px;font-weight:800;letter-spacing:1px;}
+  .hero .sub{font-size:17px;opacity:.92;margin:0 0 18px;}
+  .hero .meta{display:flex;flex-wrap:wrap;gap:10px 18px;font-size:13.5px;opacity:.95;}
+  .hero .meta b{font-weight:600;opacity:.85;margin-right:6px;}
+  .tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;}
+  .tag{
+    font-size:12.5px;padding:4px 12px;border-radius:999px;
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+  }
+
+  /* 卡片 */
+  .card{
+    background:var(--c-card);
+    border:1px solid var(--c-line);
+    border-radius:var(--r-card);
+    padding:26px 26px;
+    margin-bottom:var(--gap);
+    box-shadow:var(--shadow);
+  }
+  .card h2{
+    margin:0 0 14px;font-size:21px;font-weight:700;
+    display:flex;align-items:center;gap:10px;
+  }
+  .card h2 .dot{
+    width:10px;height:10px;border-radius:50%;
+    background:linear-gradient(135deg,var(--c-primary),var(--c-accent));
+    flex:0 0 auto;
+  }
+  .card p{margin:10px 0;color:#2c3050;}
+  .card .lead{color:var(--c-sub);font-size:14.5px;}
+
+  /* 概念卡片 */
+  .def{
+    background:linear-gradient(135deg,#f3f1ff 0%,#eef2ff 100%);
+    border:1px solid #e3e0fb;border-radius:var(--r-sm);
+    padding:20px 22px;margin:14px 0;
+  }
+  .def .term{font-size:18px;font-weight:700;color:var(--c-primary);margin-bottom:6px;}
+  .def .eq{
+    font-family:"SF Mono",Consolas,monospace;font-size:14px;
+    background:#fff;border:1px solid var(--c-line);border-radius:8px;
+    padding:8px 12px;display:inline-block;margin:8px 0;color:#33385c;
+  }
+  .def ul{margin:8px 0 0;padding-left:20px;}
+  .def li{margin:4px 0;}
+
+  /* 故事块 */
+  .story{
+    border-left:4px solid var(--c-accent);
+    background:linear-gradient(90deg,#faf8ff 0%,#ffffff 60%);
+    padding:4px 22px;
+    border-radius:0 var(--r-sm) var(--r-sm) 0;
+  }
+  .story p{margin:12px 0;}
+  .quote{
+    font-style:italic;color:var(--c-sub);
+    border-left:3px solid var(--c-line);padding-left:14px;margin:14px 0;
+  }
+
+  /* 案例 */
+  .case{
+    border:1px solid var(--c-line);border-radius:var(--r-sm);
+    padding:16px 18px;margin:14px 0;background:var(--c-soft);
+  }
+  .case .ttl{font-weight:700;color:var(--c-ink);margin-bottom:4px;font-size:16px;}
+  .case .yr{font-size:12.5px;color:var(--c-sub);margin-bottom:8px;}
+
+  /* 条形图 */
+  .chart{margin:18px 0 6px;}
+  .bar-row{display:flex;align-items:center;gap:12px;margin:9px 0;}
+  .bar-row .lbl{width:92px;flex:0 0 auto;font-size:13.5px;color:var(--c-sub);text-align:right;}
+  .bar-track{flex:1;background:#eef0fa;border-radius:8px;height:26px;position:relative;overflow:hidden;}
+  .bar-fill{
+    height:100%;border-radius:8px;
+    background:linear-gradient(90deg,var(--c-primary),var(--c-accent));
+    display:flex;align-items:center;justify-content:flex-end;
+    padding-right:10px;color:#fff;font-size:12.5px;font-weight:600;
+  }
+  .chart .cap{font-size:12.5px;color:var(--c-sub);margin-top:8px;}
+
+  /* 关联 */
+  .rel-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-top:10px;}
+  .rel{
+    border:1px solid var(--c-line);border-radius:var(--r-sm);
+    padding:12px 14px;background:#fbfcff;
+  }
+  .rel .name{font-weight:700;color:var(--c-primary);font-size:14.5px;margin-bottom:3px;}
+  .rel .desc{font-size:13px;color:var(--c-sub);}
+
+  /* 启示 */
+  .tips{list-style:none;padding:0;margin:10px 0 0;counter-reset:t;}
+  .tips li{
+    position:relative;padding:11px 14px 11px 46px;margin:9px 0;
+    background:var(--c-soft);border-radius:var(--r-sm);font-size:14.5px;
+  }
+  .tips li::before{
+    counter-increment:t;content:counter(t);
+    position:absolute;left:12px;top:11px;
+    width:24px;height:24px;border-radius:50%;
+    background:linear-gradient(135deg,var(--c-primary),var(--c-accent));
+    color:#fff;font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+
+  /* 思考题 */
+  .ask{
+    background:linear-gradient(135deg,#fff7e8 0%,#fff 70%);
+    border:1px solid #f0e0b8;border-radius:var(--r-sm);
+    padding:18px 20px;font-size:15px;
+  }
+  .ask .q{font-weight:700;color:var(--gold);margin-bottom:6px;}
+  .ask .hint{font-size:13.5px;color:var(--c-sub);}
+
+  footer{
+    text-align:center;color:var(--c-sub);font-size:12.5px;
+    margin-top:30px;line-height:1.7;
+  }
+  footer .line{height:1px;background:var(--c-line);margin:0 auto 16px;max-width:200px;}
+
+  @media (max-width:600px){
+    .hero{padding:34px 18px 28px;border-radius:0 0 18px 18px;}
+    .hero h1{font-size:28px;}
+    .hero .sub{font-size:15px;}
+    .card{padding:20px 16px;}
+    .bar-row{flex-direction:column;align-items:stretch;gap:4px;}
+    .bar-row .lbl{width:auto;text-align:left;}
+    .rel-grid{grid-template-columns:1fr;}
+    .wrap{padding:0 12px 40px;}
+    .hero{margin:0 -12px 22px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="issue">第 39 期</span>
+    <h1>通货膨胀</h1>
+    <p class="sub">钱为什么越来越"轻"——一个面包师、一车钞票与时间的故事</p>
+    <div class="meta">
+      <span><b>日期</b>2026-11-07</span>
+      <span><b>分类</b>宏观 / 货币</span>
+      <span><b>难度</b>入门</span>
+    </div>
+    <div class="tags">
+      <span class="tag">购买力</span>
+      <span class="tag">物价水平</span>
+      <span class="tag">货币供给</span>
+      <span class="tag">实际利率</span>
+      <span class="tag">CPI</span>
+    </div>
+  </header>
+
+  <!-- 故事 -->
+  <section class="card">
+    <h2><span class="dot"></span>故事：推着一车钱去买面包</h2>
+    <div class="story">
+      <p>1923 年的柏林，面包师汉斯每天天不亮就开门。他不是怕客人来早，而是怕自己手里的钱"过午就贬值"。事情是这样的：早上他带着一篮子纸币去批发市场，能换回够做一百个面包的面粉；到了中午，同样一篮子纸币只能换回五十个面包的面粉——仅仅半天，价格就翻了一倍。</p>
+      <p>更荒诞的一幕发生在街头：有人把整捆整捆的钞票当柴火烧。不是因为他富有，而是因为买一捆木柴要花的钱，比烧掉同等重量的钞票还贵。还有一个人推着独轮车装满了钱去报摊买报纸，转身之间小偷把车偷走了，却把车上的钱原封不动留在原地——在小偷眼里，那个铁轮子比一车纸值钱得多。</p>
+      <p class="quote">"那年头，钱不是财富，钱是负担。真正值钱的是面包、是煤炭、是任何能立刻吃进肚子里或烧进炉膛里的东西。"</p>
+      <p>这种"钱越来越不值钱"的现象，就是我们要讲的概念。它不是 1923 年德国的专利。把它换成你熟悉的场景：三十年前，一碗阳春面几分钱，今天要十几块；二十年前，一笔万元存款是"巨款"，今天在城里可能只够半个月房租。钱的数字没变少，能买到的东西却悄悄缩水了——这，就是通货膨胀在时间里做的事。</p>
+    </div>
+  </section>
+
+  <!-- 概念卡片 -->
+  <section class="card">
+    <h2><span class="dot"></span>概念卡片</h2>
+    <p class="lead">先把故事翻译成一句准确定义。</p>
+    <div class="def">
+      <div class="term">通货膨胀（Inflation）</div>
+      <p style="margin:6px 0;">指一段时期内，经济社会中<strong>一般物价水平持续、普遍地上涨</strong>，导致<strong>单位货币购买力下降</strong>的现象。注意三个关键词：<em>一般</em>（不是某一种商品涨价）、<em>持续</em>（不是一天波动）、<em>购买力下降</em>（钱变"轻"了）。</p>
+      <div class="eq">实际利率 ≈ 名义利率 − 通货膨胀率</div>
+      <ul>
+        <li><strong>怎么衡量：</strong>常用 CPI（居民消费价格指数）同比涨幅代表通胀水平。CPI 涨 3%，意味着一篮子日常商品比去年贵了约 3%。</li>
+        <li><strong>怎么来的：</strong>三种常见成因——需求拉动（大家抢着买，价被抬高）、成本推动（原材料/工资涨，商家转嫁）、货币超发（钱印得比商品增长快，钱自然"毛"了）。</li>
+        <li><strong>多少算正常：</strong>温和通胀（2%–3%）多数央行视为健康信号；恶性通胀（月涨幅超 50%）则会摧毁货币与信任，如 1923 年德国、2008 年津巴布韦。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 案例 -->
+  <section class="card">
+    <h2><span class="dot"></span>真实案例</h2>
+
+    <div class="case">
+      <div class="ttl">案例一：魏玛共和国的恶性通胀（1921–1923）</div>
+      <div class="yr">德国 · 一战赔款后的货币崩溃</div>
+      <p>一战战败后，德国背负巨额赔款，政府选择开动印钞机。结果马克一路崩塌：1923 年 11 月，1 美元可兑换约 <strong>4.2 万亿</strong>马克，纸面额一度印到 100 万亿。物价以"小时"为单位跳动，工人领到工资后必须立刻跑去买面包，因为晚一小时就不够。这场通胀彻底洗劫了中产阶级的储蓄，也成为后来极端政治土壤的一部分。</p>
+    </div>
+
+    <div class="case">
+      <div class="ttl">案例二：津巴布韦的"万亿钞票"（2008）</div>
+      <div class="yr">非洲 · 现代版的货币失灵</div>
+      <p>2008 年津巴布韦通胀失控，官方发行了面值 <strong>100 万亿</strong>津元的钞票——注意，是"100 万亿"一张。物价每天翻番，民众弃用本币，转而用美元、南非兰特甚至以物易物。它说明一个道理：当货币的供给失去纪律，数字再大也只是一张纸。</p>
+    </div>
+
+    <div class="case">
+      <div class="ttl">案例三：你身边的"温和通胀"（一直在进行）</div>
+      <div class="yr">日常 · 看不见的购买力流逝</div>
+      <p>即便没有恶性通胀，温和通胀也在悄悄工作。假设年均通胀 3%，今天口袋里实实在在的 100 元，十年后购买力只相当于约 <strong>74 元</strong>，二十年后再缩到约 <strong>55 元</strong>。这解释了为什么"把钱全存银行活期"长期看是在亏——你的数字没动，能买的东西却少了。下面这张图，就是 100 元购买力随时间被"吹薄"的样子。</p>
+
+      <div class="chart">
+        <div class="bar-row"><span class="lbl">今天</span><div class="bar-track"><div class="bar-fill" style="width:100%">100</div></div></div>
+        <div class="bar-row"><span class="lbl">5 年后</span><div class="bar-track"><div class="bar-fill" style="width:86%">86</div></div></div>
+        <div class="bar-row"><span class="lbl">10 年后</span><div class="bar-track"><div class="bar-fill" style="width:74%">74</div></div></div>
+        <div class="bar-row"><span class="lbl">15 年后</span><div class="bar-track"><div class="bar-fill" style="width:64%">64</div></div></div>
+        <div class="bar-row"><span class="lbl">20 年后</span><div class="bar-track"><div class="bar-fill" style="width:55%">55</div></div></div>
+        <div class="cap">注：按年均通胀 3% 折算（购买力 = 100 ÷ 1.03ⁿ，取整数）。数字越小，说明同样一张钞票越"轻"。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 关联 -->
+  <section class="card">
+    <h2><span class="dot"></span>与已学概念的关联</h2>
+    <p class="lead">通货膨胀不是孤立的，它是很多概念的"镜像"或"背景板"。</p>
+    <div class="rel-grid">
+      <div class="rel"><div class="name">复利（第37期）</div><div class="desc">两者是镜像：复利让财富按 +r 增长，通胀让购买力按 −i 缩水。真实收益 = 名义收益 − 通胀，忽视通胀会高估自己的"钱生钱"。</div></div>
+      <div class="rel"><div class="name">机会成本（第38期）</div><div class="desc">通胀期持有现金的机会成本更高——钱躺在活期里，亏的是它本可跑赢通胀的那部分收益。</div></div>
+      <div class="rel"><div class="name">信用与利率（第31期）</div><div class="desc">央行常用加息对抗通胀（费雪效应：名义利率≈实际利率+通胀）。看懂 CPI，就看懂了利率走向的一半逻辑。</div></div>
+      <div class="rel"><div class="name">资产配置（待续）</div><div class="desc">通胀期现金最受伤，股票、实物资产相对抗通胀。配置里有没有"对冲通胀"的一块，决定你睡得香不香。</div></div>
+      <div class="rel"><div class="name">杠杆 / 负债</div><div class="desc">适度负债在通胀期被"稀释"——你借的 100 万，用未来更"轻"的钱还，借款人反而得利，这是通胀的隐藏面。</div></div>
+      <div class="rel"><div class="name">风险与回报</div><div class="desc">"无风险"的存款也有通胀风险。真正的无风险不存在，只有风险被换了个名字。</div></div>
+    </div>
+  </section>
+
+  <!-- 启示 -->
+  <section class="card">
+    <h2><span class="dot"></span>给普通投资者的启示清单</h2>
+    <ul class="tips">
+      <li><strong>区分"名义"与"真实"。</strong>银行说利息 3%，若通胀也是 3%，你的真实购买力其实没增长。看实际利率，别被表面数字迷惑。</li>
+      <li><strong>现金不等于安全。</strong>长期持现会被通胀悄悄侵蚀。安全是"购买力不缩水"，不是"数字不动"。</li>
+      <li><strong>让资产跑赢通胀。</strong>股票、指数基金、房产等长期更能对抗通胀；全仓活期或长期定存，往往是隐性亏损。</li>
+      <li><strong>通胀期借款人占优。</strong>低息长期负债在温和通胀下被稀释，合理运用杠杆（不透支）是一种对冲。</li>
+      <li><strong>关注 CPI 与自己行业物价。</strong>CPI 是国家的体温计；你常买的那些东西涨得比 CPI 快，说明你的"个人通胀"更高。</li>
+      <li><strong>警惕货币超发信号。</strong>恶性通胀罕见但毁灭性。当"钱印得比东西多"成为常态，就要考虑把部分财富换成硬资产。</li>
+      <li><strong>别被短期波动吓到。</strong>个别商品涨价是噪音，持续普遍的物价上行才是趋势。看方向，看长度。</li>
+      <li><strong>把通胀写进计划。</strong>做养老、教育金等长期规划时，务必把年均 2%–3% 的通胀算进去，否则目标会"缩水"。</li>
+    </ul>
+  </section>
+
+  <!-- 思考题 -->
+  <section class="card">
+    <h2><span class="dot"></span>今日思考题</h2>
+    <div class="ask">
+      <div class="q">如果未来 20 年年均通胀为 3%，今天能买一样东西的 100 元，20 年后大约需要多少钱才买得到同样的它？</div>
+      <p style="margin:8px 0 0;">提示：100 × 1.03²⁰ ≈ 181 元。换句话说，你的钱要在 20 年里"长大"到 1.8 倍，才勉强没变穷。那么——你现在的储蓄与投资配置，预期年化能稳定超过 3% 吗？如果不能，缺口在哪里？</p>
+      <p class="hint">延伸：若把通胀换成 5%（一些新兴市场的常态），同样的 100 元 20 年后需要多少？算一算，你会更懂"长期持有现金"的代价。</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="line"></div>
+    金融概念日报 · 第 39 期《通货膨胀》· 2026-11-07<br>
+    本页为自包含离线报告，所有样式与图示均由 CSS 实现，无外部依赖。<br>
+    内容仅供学习科普，不构成任何投资建议。
+  </footer>
+
+</div>
+</body>
+</html>

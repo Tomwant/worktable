@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第28期 · 锚定效应</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 28 期</span>
+  <h1>今天的概念：<span class="tag">锚定效应</span>（Anchoring）</h1>
+  <div class="date">2026年10月23日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 阿May的大衣，和舅舅老黄的"回本执念"</h2>
+    <p>阿May是个普通白领，冬天想添一件羊毛大衣。先去商场专柜，看中一件，吊牌赫然写着"<strong>专柜价 ¥2999</strong>"，她摸了摸钱包，嫌贵，空手走了。一周后品牌搞"年末清仓"，同款大衣挂出醒目海报：<strong>"原价 ¥2999，直降 ¥2000，现价只要 ¥999"</strong>。阿May 一眼看到"立省 2000"，心跳猛地加速——这不等于白捡一件大衣吗？她当场下单，还开心地发朋友圈炫耀"捡到大便宜"。</p>
+    <p>可她不知道的是：这件大衣的出厂成本不过 <strong>¥400</strong>，所谓的"专柜价 ¥2999"，全渠道<strong>从没真正按这个价卖过</strong>。它存在的唯一意义，就是提前被钉进你脑子里的那个"参照点"。一旦 ¥2999 这个数字落地，¥999 就显得"简直像白送"。阿May 省下的不是 2000 块，是<strong>一头扎进了别人设好的锚里</strong>。</p>
+    <p>无独有偶，阿May 的舅舅老黄，在投资上也中了同一种招，只是锚长成了另一个样子。2021 年初，老黄以 <strong>¥80/股</strong> 满仓某"核心资产"龙头股，随后一路阴跌到 ¥35。每次家人劝他止损，老黄都摇头："<strong>等我涨回 ¥80 再卖，不然这辈子亏的钱怎么算？</strong>" 可 ¥80 是他自己的买入价，跟这家公司现在值多少钱、未来能赚多少现金流，<strong>半毛钱关系都没有</strong>——市场从来不认任何人的成本线。那个 ¥80 就是根钉子，把他死死钉在"不回本不罢休"的执念上。结果两年里，这笔钱既趴在账上亏着，又让他错过了别的上涨机会（那也是一笔隐形的机会成本）。最后他在 ¥33 含泪割肉，算总账，比"当初在 ¥35 就走"还多亏了一截。</p>
+    <div class="board">
+      <div class="row head"><span class="k">同一个"锚"的逻辑：先入为主的数字，悄悄改写你的判断</span><span class="v">锚 → 偏差</span></div>
+      <div class="row"><span class="k">大衣：先看到 ¥2999</span><span class="v">¥999 显得"白送"，其实出厂才 ¥400</span></div>
+      <div class="row"><span class="k">大衣真实价值</span><span class="v">约 ¥400~600，¥999 仍是溢价</span></div>
+      <div class="row"><span class="k">股票：先买入 ¥80</span><span class="v">¥80 成"该值多少"的锚，不肯在 ¥35 卖</span></div>
+      <div class="row"><span class="k">股票真实定价</span><span class="v">只取决于当下与未来，与成本无关</span></div>
+    </div>
+    <p>看明白这两件事，你就握住了钥匙：无论是商场海报还是自己的账户，<strong>第一个跳进你眼里的数字，都会变成之后所有判断的"地基"</strong>——而这块地基，常常根本没打在实地上。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>锚定效应</strong>（Anchoring），是行为金融学里最顽固的认知偏差之一：人在做估计和决策时，会不自觉地、过度地依赖"<strong>最先接触到的那个信息</strong>"（这个"锚"），之后所有的调整都围绕它上下浮动，却很难真正摆脱它的牵引。<strong>第一个数字合不合理不重要，它一旦落地，就像船抛了锚，整艘船都被它定住。</strong></p>
+    <p>在金融世界里，锚几乎无处不在，而且常常是被"故意"放出来的：</p>
+    <p>🔹 <strong>商家的"划线价 / 原价 / 首发价"</strong>——这是最经典的消费锚。它根本不需要真实成交过，只要那个虚高的数字先入眼，后面的"现价"就显得无比划算。你以为自己在比价，其实是被锚带着走。</p>
+    <p>🔹 <strong>你的买入成本价</strong>——这是最隐蔽的投资锚。很多人卖股票不是看"未来值不值"，而是看"回没回本"。成本价和资产真实价值毫无关系，却成了心里的"该值多少钱"。结果就是：该止损时死扛，该止盈时又因为"才赚一点，离我的目标价还远"而放跑。</p>
+    <p>🔹 <strong>房东的高挂牌价、卖家的开口要价</strong>——你砍到"便宜价"成交，沾沾自喜，其实只是被对方先抛的高锚拽下来一点点，真实底价可能还更低。</p>
+    <p>🔹 <strong>谈判里的"先开价者"</strong>——谁先报数，谁往往就悄悄定了整场谈判的参照系。一个合理的先手锚，能大幅左右最终落点。</p>
+    <p>🌰 怎么反制？记住三件事：第一，凡看到"原价 / 划线价 / 首发价"，先问一句"<strong>这价真的成交过吗？</strong>"——没成交过的，它只是钩子，不是基准。第二，投资里把"<strong>我的成本</strong>"和"<strong>它的价值</strong>"彻底分开：该不该卖，只看"现在卖 vs 拿着，未来哪个更划算"，别让成本价那只锚把你钉死。第三，<strong>主动抛锚</strong>：谈薪水、谈报价，先给出一个合理且略高的数字，你能悄悄影响对方的对标点；同时永远警惕——别人先抛给你的那个数，可能正是他想让你看见的锚。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>第一个数字会绑架之后的所有判断</strong>：锚定效应说的是，人依赖最先接触的信息做基准，合不合理不重要，它落地就很难被甩掉——所以 ¥2999 让 ¥999 显得"白送"。</li>
+      <li><strong>成本价不是资产的价值，别被它钉死</strong>：投资里该卖不该卖，只看未来谁更划算，不看来没回本。把"我的成本"和"它的价值"切成两件事，才能在该止损时止损、该止盈时止盈。</li>
+      <li><strong>识锚、反锚、也能主动抛锚</strong>：看到"原价/划线价"先质疑它是否真成交过；谈判时主动先给合理锚影响对方参照系，同时警惕别人先抛来的那个数。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：羊群效应 —— 当所有人都在抢、都在买，你还能冷静独立思考吗？为什么牛市里最危险的话是"这次不一样"，又为什么"别人都上车了"恰恰是最该警惕的信号。</div>
+</div>
+</body>
+</html>

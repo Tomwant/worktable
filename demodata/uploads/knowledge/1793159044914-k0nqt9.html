@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第32期 · 对冲</title>
+<style>
+  :root{
+    --bg:#f7fcfd; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#2f7a8c; --accent-soft:#dceff3; --line:#d4e8ec;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(47,122,140,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #b9dde3;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #9bcdd6;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 32 期</span>
+  <h1>今天的概念：<span class="tag">对冲</span>（Hedging）</h1>
+  <div class="date">2026年10月28日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 小雪的"汇率被偷"：跨境电商怎么让美元涨跌都伤不到自己</h2>
+    <p>小雪在深圳做跨境电商，在亚马逊上卖国产小家电，货款主要收<strong>美元</strong>。她每月大概进账 <strong>5 万美元</strong>，要换回人民币去发工资、付供应商、交房租。2025 年她习惯了"随到随换"，那时美元兑人民币约 <strong>7.2</strong>，5 万美元稳稳能换 <strong>¥36 万</strong>，日子过得挺滋润。</p>
+    <p>到了 2026 年上半年，人民币走强，美元兑人民币一路从 7.2 往下掉，某个月跌到了 <strong>6.9</strong>。小雪还是老习惯随到随换——同样 5 万美元，这一下只能换 <strong>¥34.5 万</strong>。每月悄无声息少了 <strong>1.5 万</strong>，一年下来，利润被汇率"偷走"近 <strong>18 万</strong>。她后怕地发现：自己赚的是"美元价 × 美元数量"，可花的却是人民币，只要汇率动一动，利润就像被人从背后抽成。</p>
+    <div class="board">
+      <div class="row head"><span class="k">小雪每月结汇 5 万美元，对比"随到随换"</span><span class="v">签远期结汇锁 7.05</span></div>
+      <div class="row"><span class="k">市场跌到 6.9（人民币走强）</span><span class="v">仍按 7.05 换，每月多换 (7.05−6.9)×5万 = ¥7,500</span></div>
+      <div class="row"><span class="k">市场涨回 7.3（美元走强）</span><span class="v">仍按 7.05 换，"少换" (7.3−7.05)×5万 = ¥12,500/月</span></div>
+      <div class="row"><span class="k">两种结果</span><span class="v">跌了赚 protection，涨了认栽，但利润永远可预测</span></div>
+      <div class="row"><span class="k">本质</span><span class="v">不赌汇率往哪走，先给利润买个"封顶"</span></div>
+    </div>
+    <p>她学乖了：跟银行签一份<strong>"远期结汇"</strong>合约，约定 3 个月后不管市场价多少，都按 <strong>7.05</strong> 把美元换成人民币，只付一点点手续费（点差）。这样，无论汇率是 6.9 还是 7.3，她的落袋价都钉在 7.05。涨了，合约替她挡下暴击；跌了，她"白付"了锁价成本，但她不心疼——因为<strong>利润可预测了</strong>，她敢安心接大单、敢囤货、敢招人，不再被汇率吓得不敢扩张。</p>
+    <p>还有一种对冲，<strong>不靠任何合约，靠"把风险两边各放一半"</strong>。比如老刘，既是小麦种植户，又开了家面粉厂：麦价涨，地里多赚、厂里多花，一正一负抵消；麦价跌，地里少赚、厂里省钱，又抵消。他没签一张单子，却天生比谁都稳——这叫<strong>"自然对冲"（经营对冲）</strong>。你看，对冲不只是期货那一套，它是一整套"让风险自己打架、别打我"的防守哲学。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>对冲（Hedging）</strong>，就是用<strong>一笔确定的小成本，去抵消一种不确定的大风险</strong>。它的目的从来不是"多赚"，而是<strong>"别被一波带走"</strong>。核心逻辑只有一句话：<strong>你没法预测未来，但你可以先给最坏的情况买个"封顶"</strong>。</p>
+    <div class="formula">对冲 = 锁定一个可接受的结果，牺牲"可能多赚"，换取"不会大亏"</div>
+    <p>往下拆，能看清三件事。其一，<strong>对冲有三种常见姿势</strong>：①<strong>合约锁价</strong>（远期、期权等，小雪远期结汇、航空公司锁油价、农民买看跌期权）——付点差/权利金买确定性；②<strong>自然对冲</strong>（把风险敞口一正一负配对，老刘的麦田+面粉厂、你同时有美元收入又有美元负债）——不签合约也稳；③<strong>资产对冲</strong>（组合里配低相关资产，股票跌时黄金、债券或现金来托底）。别一提到对冲就只想到期货，生活里到处是它的影子。其二，<strong>代价叫"权利金 / 点差 / 保费"，是对冲的门票</strong>——坏情况没发生，这笔钱就"白花"了（像车险一年没出险）。但比起一次汇率暴跌吃光利润、甚至资金链断裂，这点"白花"便宜得离谱。其三，<strong>谁最需要对冲？是那些"输不起"的人</strong>。跨境卖家、航空公司、重资产工厂、你我的重疾险，共同点都是：一次黑天鹅就可能致命，所以宁愿日常花小钱，把致命风险先买断。</p>
+    <p>🌰 换到你的钱包：不用碰外汇和期货也能用对冲思维——<strong>固定利率房贷</strong>对冲"加息风险"，<strong>车险/医疗险</strong>对冲"意外风险"，<strong>股票之外留点黄金或债券</strong>对冲"股市大跌"，<strong>定投+应急金</strong>对冲"失业/急用钱风险"。关键是先想清楚：<strong>我输不起的是什么？</strong>再决定花多少"保费"去买这份安心。记住，对冲不是怂，是成熟的防守。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>对冲的本质：用确定的小代价换不确定的大风险被封顶</strong>：目的不是多赚，是"别被一波带走"。小雪锁汇率、小林锁豆价、车险保意外，全是同一个逻辑——宁可放弃"可能多赚"，也要保住"不会大亏"。你没法预测未来，但能先给最坏情况买个封顶。</li>
+      <li><strong>对冲不只有期货，有三种常见姿势</strong>：①合约锁价（远期/期权，付点差买确定性）；②自然对冲（把风险敞口一正一负配对，如麦田+面粉厂，不签合约也稳）；③资产对冲（组合里配低相关资产，股跌时黄金/债券托底）。先看清自己属于哪一类，再选工具。</li>
+      <li><strong>先问"我输不起的是什么"，再决定花多少"保费"</strong>：对冲有成本，坏情况没发生钱就白花（像没出险的车险）。所以重点不是"要不要对冲"，而是"对冲掉哪条会要命的风险、花多大代价"。凡"先花小钱、保住大本金/大利润"的动作，都是成熟防守，不是怂。</li>
+    </ul>
+  </div>
+
+  <div class="next">第 33 期将回到序列开头，重温「复利」（Compound Interest）—— 为什么"时间 + 复利"是普通人最靠谱的财富引擎？同样每月 2000 块，25 岁开始和 35 岁开始，到 60 岁差出的不止一倍？一份会自己长大、还能利滚利的钱，到底有多慢启动、多晚爆发。</div>
+</div>
+</body>
+</html>

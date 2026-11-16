@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融概念 第34期 · 期权</title>
+<style>
+  :root{
+    --indigo:#3a4cc0;
+    --purple:#8a5cf6;
+    --ink:#1f2433;
+    --ink-soft:#4a5167;
+    --line:#e8ebf5;
+    --bg:#f5f7fc;
+    --card:#ffffff;
+    --accent:#3a4cc0;
+    --shadow:0 8px 24px rgba(58,76,192,0.08);
+    --r:16px;
+    --gap:22px;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px;margin:0 auto;padding:0 18px 56px;}
+  header{
+    background:linear-gradient(135deg,var(--indigo),var(--purple));
+    color:#fff;
+    border-radius:0 0 var(--r) var(--r);
+    padding:38px 30px 30px;
+    margin-bottom:var(--gap);
+    box-shadow:var(--shadow);
+  }
+  .issue{
+    display:inline-block;
+    font-size:13px;
+    letter-spacing:2px;
+    background:rgba(255,255,255,0.18);
+    padding:5px 14px;
+    border-radius:999px;
+    margin-bottom:14px;
+  }
+  header h1{
+    margin:0 0 8px;
+    font-size:32px;
+    font-weight:800;
+    letter-spacing:1px;
+  }
+  header .sub{
+    margin:0 0 18px;
+    font-size:15px;
+    opacity:0.92;
+  }
+  .meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    font-size:13px;
+  }
+  .meta span{
+    background:rgba(255,255,255,0.16);
+    padding:4px 12px;
+    border-radius:8px;
+  }
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    padding:26px 26px;
+    margin-bottom:var(--gap);
+    box-shadow:var(--shadow);
+  }
+  .card h2{
+    margin:0 0 14px;
+    font-size:20px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .card h2::before{
+    content:"";
+    width:6px;height:22px;
+    border-radius:3px;
+    background:linear-gradient(var(--indigo),var(--purple));
+  }
+  .card p{margin:0 0 12px;color:var(--ink-soft);}
+  .card p:last-child{margin-bottom:0;}
+  .def{
+    background:linear-gradient(135deg,#eef1ff,#f6effe);
+    border-left:4px solid var(--purple);
+    padding:18px 20px;
+    border-radius:12px;
+    margin:0 0 12px;
+  }
+  .def .term{font-weight:800;color:var(--accent);font-size:17px;margin-bottom:6px;}
+  .tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px;}
+  .tag{
+    font-size:12px;color:var(--accent);
+    background:#eef1ff;border:1px solid #d9def9;
+    padding:3px 10px;border-radius:999px;
+  }
+  .quote{
+    border-left:4px solid var(--indigo);
+    background:#f7f9ff;
+    padding:14px 18px;
+    border-radius:0 12px 12px 0;
+    color:var(--ink-soft);
+    font-style:normal;
+  }
+  ul.notes{margin:0;padding-left:20px;color:var(--ink-soft);}
+  ul.notes li{margin-bottom:10px;}
+  .case-box{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:6px;
+  }
+  .case-item{
+    background:#f7f9ff;
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 16px;
+  }
+  .case-item b{color:var(--accent);}
+  .think{
+    background:linear-gradient(135deg,#fff8ec,#fdf1ff);
+    border:1px dashed var(--purple);
+    border-radius:12px;
+    padding:18px 20px;
+    color:var(--ink);
+    font-weight:600;
+  }
+  footer{
+    text-align:center;
+    color:#9aa0b4;
+    font-size:12px;
+    margin-top:8px;
+  }
+  @media (max-width:600px){
+    header{padding:28px 20px 24px;}
+    header h1{font-size:25px;}
+    .card{padding:20px 18px;}
+    .case-box{grid-template-columns:1fr;}
+    .wrap{padding:0 14px 40px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="issue">FINANCE CONCEPT · 第34期</div>
+    <h1>期权：用一小笔钱，买一个"未来的选择权"</h1>
+    <p class="sub">一个关于古希腊哲学家、橄榄榨油坊，以及"可以不买"的智慧故事</p>
+    <div class="meta">
+      <span>日期：2026-10-31</span>
+      <span>主题：期权</span>
+      <span>关键词：选择权 · 杠杆 · 对冲 · 有限风险</span>
+    </div>
+  </header>
+
+  <section class="card">
+    <h2>一、故事：泰勒斯为什么能"空手套白狼"</h2>
+    <p>公元前六世纪，古希腊哲学家泰勒斯（Thales of Miletus）以贫穷又爱抬头看星星出名。同乡们嘲笑他：研究天文有什么用？连钱都赚不到。泰勒斯不服气，决定证明"哲学家只要想赚钱，也能赚到"。</p>
+    <p>他观察到，根据天象，来年橄榄大概率大丰收。于是，在榨油坊还空着的冬天，他拿着不多的积蓄，挨家挨户去找榨油坊的主人，付了一笔很小的"定金"，拿到了来年春天优先使用这些榨油坊的<strong>权利</strong>——注意，只是权利，不是义务。</p>
+    <p>到了春天，橄榄果然大丰收，所有人都要榨油，榨油坊一坊难求。泰勒斯这时把当初锁定的"优先使用权"转手租给急红了眼的人，赚得盆满钵满。而那些当初笑话他的人，只能眼看着他用一点点钱撬动了整季的生意。</p>
+    <p>泰勒斯用的，正是"期权"最古老的雏形：<strong>花一笔有限的钱，买一个未来可以按约定价格做某件事的权利，做不做，自己说了算。</strong></p>
+  </section>
+
+  <section class="card">
+    <h2>二、概念卡片：期权到底是什么</h2>
+    <div class="def">
+      <div class="term">期权（Option）</div>
+      <div>期权是一种合约，它赋予买方在约定时间（到期日）之前，以约定价格（行权价）买入或卖出某项资产的权利，但<strong>没有必须执行的义务</strong>。买方为获得这个权利，需提前支付一笔费用，称为"权利金"（Premium）。</div>
+    </div>
+    <p>关键角色与术语：</p>
+    <ul class="notes">
+      <li><strong>看涨期权（Call）</strong>：你拥有"未来以某价买入"的权利。你觉得资产会涨，就买 Call，涨了能低价买、高价卖。</li>
+      <li><strong>看跌期权（Put）</strong>：你拥有"未来以某价卖出"的权利。你觉得资产会跌，就买 Put，相当于给手里资产买了一份"跌价保险"。</li>
+      <li><strong>权利金</strong>：买方向卖方支付的"门票费"，无论最终是否行权，这笔钱都不退。</li>
+      <li><strong>最大亏损有限</strong>：买方最坏情况就是权利金全部亏掉，不会像期货或杠杆交易那样爆仓。</li>
+    </ul>
+    <div class="tag-row">
+      <span class="tag">权利而非义务</span>
+      <span class="tag">权利金 = 门票费</span>
+      <span class="tag">买方风险有限</span>
+      <span class="tag">卖方风险无限</span>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>三、真实案例：期权不只是赌涨跌</h2>
+    <div class="case-box">
+      <div class="case-item">
+        <b>案例 A：散户的"保险思维"</b><br>
+        假设你持有价值 10 万元的某只股票，担心短期下跌。你可以花 2000 元买一份看跌期权。若股价真跌，期权帮你锁定卖出价，亏损被控制；若股价涨了，你最多损失 2000 元权利金，股票照常赚钱。这正是第32期讲过的"对冲"思想——期权是对冲最精巧的工具之一。
+      </div>
+      <div class="case-item">
+        <b>案例 B：长期资本管理（LTCM）的教训</b><br>
+        1990年代，一群诺奖得主用复杂的期权与衍生品策略套利，一度年化收益惊人。但他们卖了大量"看似极小概率出事"的期权，等于收权利金却承担无限风险。1998年俄罗斯债务危机爆发，小概率事件成真，基金巨亏濒临破产，最终由美联储牵头救助。期权能放大收益，也能放大傲慢。
+      </div>
+    </div>
+    <div class="quote">启示：期权对买方是"风险有限、收益可期"的工具，但卖方卖出的，往往正是别人不愿承担的尾部风险。</div>
+  </section>
+
+  <section class="card">
+    <h2>四、与已学概念的关联</h2>
+    <ul class="notes">
+      <li><strong>与"对冲"（第32期）</strong>：看跌期权是散户也能用得起的对冲工具，用一小笔权利金，把持仓的下跌风险"封顶"。</li>
+      <li><strong>与"杠杆"（之前概念）</strong>：期权用少量权利金控制大量标的，天然带杠杆；但它的杠杆是"单向"的——买方损失封顶，不像保证金交易会倒欠。</li>
+      <li><strong>与"黑天鹅事件"（第33期）</strong>：黑天鹅是不可预测的极端事件。期权（尤其虚值 Put）恰是普通人为黑天鹅买"保险"的方式，平时小亏，灾难时救命。</li>
+      <li><strong>与"风险与回报"</strong>：期权把"风险"拆解成可定价的模块——你付多少权利金，就买到多少保护或多少博弈空间。</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>五、给普通投资者的启示清单</h2>
+    <ul class="notes">
+      <li><strong>先懂再碰</strong>：期权不是"更刺激的股票"，它是另一种资产。规则、时间价值、波动率都要先学，盲买等于送钱。</li>
+      <li><strong>优先当买方</strong>：新手用期权做买方（买 Call / 买 Put），亏损上限就是权利金，睡得着觉；卖期权收权利金看似稳，却可能亏到远超本金。</li>
+      <li><strong>用它保护，别只用它赌博</strong>：最稳妥的用法是给已有持仓"买保险"（保护性 Put），而不是纯押方向。</li>
+      <li><strong>时间是你的敌人</strong>：期权有到期日，每过一天，时间价值就流失一点。持有一张不行的期权，到期可能归零。</li>
+      <li><strong>小资金试水</strong>：用亏得起的钱练习，把每一次小亏损当成学费，而不是指望一张合约翻身。</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>六、今日思考题</h2>
+    <div class="think">泰勒斯付的"定金"相当于今天的"权利金"。如果来年橄榄歉收、榨油坊无人问津，泰勒斯的最坏结果是什么？而榨油坊主人（相当于期权卖方）在这笔交易里真正"卖"掉了什么？试着用"权利 vs 义务"的视角，重新审视你生活中任何一笔"预付款"——其中哪些其实藏着期权的影子？</div>
+  </section>
+
+  <footer>
+    金融概念日报 · 第34期 · 期权 · 2026-10-31 · 本文为独立科普，不构成任何投资建议
+  </footer>
+
+</div>
+</body>
+</html>

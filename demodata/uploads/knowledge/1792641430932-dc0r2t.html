@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第05期 · 分散投资</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 05 期</span>
+  <h1>今天的概念：<span class="tag">分散投资</span>（Diversification）</h1>
+  <div class="date">2026年9月12日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 小敏和小杨的"全仓赌局"</h2>
+    <p>小敏和小杨是同事，各自攒了 <strong>50 万</strong> 准备投资。周末喝茶时，两人聊起了各自的打法。</p>
+    <p>小敏听消息说某新能源龙头"要涨十倍"，一咬牙把 50 万全仓买入这一只股票："把鸡蛋放一个篮子里，盯紧了就行，集中才有大收益。"</p>
+    <p>小杨没那么笃定，把钱分成了几份：<strong>20 万</strong> 买稳健债券、<strong>15 万</strong> 买宽基指数基金、<strong>10 万</strong> 买蓝筹股、剩下 <strong>5 万</strong> 留作现金应急——"东边不亮西边亮，不把命押在一件事上"。</p>
+    <div class="board">
+      <div class="row head"><span class="k">方案</span><span class="v">半年后结果</span></div>
+      <div class="row"><span class="k">小敏 · 全仓一只股</span><span class="v">公司曝财务造假 → ¥18 万（-64%）</span></div>
+      <div class="row"><span class="k">小杨 · 分散组合</span><span class="v">有跌有稳 → ¥46 万（-8%）</span></div>
+      <div class="row"><span class="k">关键差别</span><span class="v">小杨用"少赚一点"换来了"不会被一锅端"</span></div>
+    </div>
+    <p>半年后，小敏重仓的那家公司曝出财务造假，股价腰斩再腰斩，账户只剩 18 万；小杨的组合里股票虽然也跌了，但债券吃着利息、现金稳稳在手，整体只小亏到 46 万。小敏叹气："我这是把赌注当成了投资。"</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>分散投资</strong>，核心就一句话：<strong>把资金分散到相关性低的不同资产上，让某一项的暴跌不至于拖垮整体</strong>。它不保证你赚最多，但能保你不被一次性清零。</p>
+    <div class="formula">组合风险 &lt; 各资产风险简单相加　（当资产间不完全正相关时）</div>
+    <p>背后的原理是：<strong>不同的资产很少"同涨同跌"</strong>。股票大跌时，债券往往上涨；A 行业崩了，B 行业或许没事。把彼此"不同步"的资产凑在一起，整体波动就被熨平了——这就是那句老话"别把鸡蛋放在同一个篮子里"的数学解释。</p>
+    <p>🌰 换到你的钱包：定投指数基金、股债搭配、不同行业都买一点，本质都是分散。注意——买 10 只同行业股票 <strong>不等于</strong> 分散，因为行业一遇到利空会一起跌。真正有效的分散，是跨资产、跨行业、跨市场。它的代价是放弃"全仓押中一只十倍股"的暴富幻想，换回的是"睡得着觉"和活到下一轮牛市的资格。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>别押单一</strong>：再看好的标的，也别把身家全压上去；一次黑天鹅，就可能让本金归零。</li>
+      <li><strong>分散要"不相关"</strong>：10 只同行业股票不是分散，跨资产、跨行业、跨市场的组合才真正抗风险。</li>
+      <li><strong>用"少赚"换"少亏"</strong>：分散会牺牲暴富的可能，但换来的是稳健和长久——投资先求"活得久"，再求"赚得多"。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：流动性 —— 为什么"纸面富贵"不如"手头现金"，有些资产想卖却卖不掉、急用钱时偏偏套牢。</div>
+</div>
+</body>
+</html>

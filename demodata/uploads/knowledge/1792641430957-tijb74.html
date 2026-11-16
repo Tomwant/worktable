@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第16期 · 对冲</title>
+<style>
+  :root{
+    --bg:#f7fcfd; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#2f7a8c; --accent-soft:#dceff3; --line:#d4e8ec;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(47,122,140,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #b9dde3;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #9bcdd6;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 16 期</span>
+  <h1>今天的概念：<span class="tag">对冲</span>（Hedging）</h1>
+  <div class="date">2026年10月6日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 一杯咖啡的"价格保险"：小林怎么让豆子涨价也伤不到自己</h2>
+    <p>小林在城里开了 3 家咖啡店，每个月雷打不动要进 <strong>1 吨咖啡豆</strong>。去年国际产区减产，咖啡豆半年里从 <strong>30 元/公斤</strong>一路飙到 <strong>50 元/公斤</strong>。小林的成本凭空每个月多了近 <strong>2 万块</strong>，可店里的咖啡价不能跟着涨——客人会跑。那半年他眼睁睁看着利润被豆价"吃掉"一大块，差点关掉一家店。</p>
+    <p>今年他学乖了。年初他就跟咖啡豆贸易商签了份 <strong>"远期合约"</strong>：不管市场上豆子涨到天上去，未来半年他都按 <strong>32 元/公斤</strong>的固定价进货。相当于先付一点点定金，把成本"钉死"在 32。</p>
+    <div class="board">
+      <div class="row head"><span class="k">小林锁价 32 元/公斤，每月进 1 吨</span><span class="v">涨价 vs 跌价</span></div>
+      <div class="row"><span class="k">豆子真涨到 50</span><span class="v">仍按 32 进，省 (50−32)×1000 = ¥18,000/月</span></div>
+      <div class="row"><span class="k">豆子意外跌到 25</span><span class="v">还得按 32 进，"多花" (32−25)×1000 = ¥7,000/月</span></div>
+      <div class="row"><span class="k">两种结果</span><span class="v">涨了赚 protection，跌了认栽，但成本永远可控</span></div>
+      <div class="row"><span class="k">本质</span><span class="v">不赌价格，先给最坏情况买个"封顶"</span></div>
+    </div>
+    <p>你看，这就是<strong>对冲</strong>：<em>不押注价格往哪走，而是先买一份"保护"，让无论涨跌，自己的生意都落在一个能接受的范围内</em>。涨了，那份合约替他挡下暴击；跌了，他"白付"了锁价成本，但他不心疼——因为稳定成本让他敢安心开店、敢定长期价、能睡安稳觉。</p>
+    <p>这招到处都在用：<strong>航空公司</strong>怕油价涨，提前在期货市场"锁油"（燃料套期保值），油价翻倍也不慌；<strong>农民</strong>怕麦子跌，买"看跌期权"——价格真跌了，期权赔给他差价；<strong>工厂</strong>怕原料涨，也用远期锁价。甚至你买的<strong>车险</strong>本质也是对冲：平时交保费（小钱），真出事了保险公司赔大钱，把"倾家荡产"的风险先转移掉。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>对冲（Hedging）</strong>，就是用<strong>一笔确定的小成本，去抵消一种不确定的大风险</strong>。它的目的从来不是"多赚"，而是<strong>"别被一波带走"</strong>。核心逻辑只有一句话：<strong>你没法预测未来，但你可以先给最坏的情况买个"封顶"</strong>。</p>
+    <div class="formula">对冲 = 锁定一个可接受的价格/结果，牺牲"可能多赚"，换取"不会大亏"</div>
+    <p>往下拆，能看清三件事。其一，<strong>代价叫"权利金 / 保费 / 锁价成本"</strong>——对冲不是免费午餐。坏情况没发生，你付的保护费就"白花"了（像车险一年没出险）。但比起一次价格暴涨把利润吃光、甚至资金链断裂，这点"白花"便宜得离谱。其二，<strong>对冲是"放弃上不封顶，换下不破底"</strong>。小林锁了 32，豆子涨到 100 他也只省到 32 为止，赚不到更多；但他同时也把成本死死摁在 32，再也亏不到底。这是笔"主动放弃暴利、换生存权"的买卖。其三，<strong>谁最需要对冲？是那些"输不起"的人</strong>。航空公司、面包厂、你我的重疾险，共同点都是：一次黑天鹅就可能致命，所以宁愿日常花小钱，把致命风险先买断。</p>
+    <p>🌰 换到你的钱包：不用碰期货也能用对冲思维——<strong>固定利率房贷</strong>是对冲"加息风险"，<strong>车险/医疗险</strong>是对冲"意外风险"，<strong>定投+留应急金</strong>是对冲"失业/急用钱风险"。关键是先想清楚：<strong>我输不起的是什么？</strong>再决定花多少"保费"去买这份安心。记住，对冲不是怂，是成熟的防守。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>对冲的本质：用确定的小成本抵消不确定的大风险</strong>：目的不是多赚，是"别被一波带走"。小林付定金锁豆价，涨了省、跌了认栽，但成本永远在可控区间。航空公司锁油价、农民买看跌期权、你买车险，全是一个逻辑。</li>
+      <li><strong>代价叫"权利金/保费"，是对冲的门票</strong>：坏情况没发生，保护费就白花（像没出险的车险）。但比起一次价格暴涨吃光利润甚至破产，这点"白花"极划算。别因为心疼保费就裸奔在风险里。</li>
+      <li><strong>生活里到处是对冲，先想清"输不起什么"</strong>：固定利率房贷对冲加息、保险对冲意外、应急金对冲失业。凡"先花小钱、保住大本金/大利润"的动作都是对冲思维。认清政府/你能承受的风险上限，再决定要不要、花多少去买这份"安心"。</li>
+    </ul>
+  </div>
+
+  <div class="next">第 17 期将回到序列开头，重温「复利」（Compound Interest）—— 为什么爱因斯坦说它是"世界第八大奇迹"？同样每月存 1000 块，早开始 10 年和晚开始 10 年，退休时差出一套房？一份会自己长大、还能"利滚利"的钱，到底有多可怕。</div>
+</div>
+</body>
+</html>

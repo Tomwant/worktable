@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>原型 · 知识库打卡</title>
+<style>
+:root{
+  --bg1:#f4efe4; --bg2:#eaf1e7;
+  --surface:rgba(255,255,255,.58); --surface-2:rgba(255,255,255,.36); --surface-solid:#fffdf7;
+  --text:#33302a; --text-2:#7a746a; --text-3:#a8a094;
+  --line:rgba(255,255,255,.66); --line-2:rgba(80,60,30,.12); --line-3:rgba(80,60,30,.24);
+  --accent:#4a9e66; --accent-deep:#398a54; --accent-soft:rgba(74,158,102,.13);
+  --warm:#e09a66; --warm-soft:rgba(224,154,102,.16);
+  --danger:#cf6a57; --danger-soft:rgba(207,106,87,.14);
+  --r-input:14px; --r-card:22px;
+  --shadow:0 1px 2px rgba(80,60,30,.05),0 12px 36px -14px rgba(80,60,30,.22),inset 0 1px 0 rgba(255,255,255,.6);
+  --ease:cubic-bezier(.22,.9,.34,1);
+}
+[data-theme="dark"]{
+  --bg1:#151b17; --bg2:#101a1e;
+  --surface:rgba(255,255,255,.06); --surface-2:rgba(255,255,255,.05); --surface-solid:#1c2420;
+  --text:#e9ede8; --text-2:#b6c1ba; --text-3:#a9b5ae;
+  --line:rgba(255,255,255,.12); --line-2:rgba(255,255,255,.12); --line-3:rgba(255,255,255,.22);
+  --accent:#66d18d; --accent-deep:#4fc37c; --accent-soft:rgba(102,209,141,.15);
+  --warm:#efaa7c; --warm-soft:rgba(239,170,124,.18);
+  --danger:#f09595; --danger-soft:rgba(240,149,149,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 16px 44px -16px rgba(0,0,0,.6);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;min-height:100vh;padding:78px 26px 60px;
+  font-family:'Noto Sans SC',-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  -webkit-font-smoothing:antialiased;color:var(--text);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  transition:background .4s,color .4s;
+}
+.wrap{max-width:1080px;margin:0 auto}
+
+/* 顶部控制条 */
+.topbar{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:80;display:flex;gap:6px;align-items:center;
+  background:var(--surface);backdrop-filter:blur(18px);border:1px solid var(--line);border-radius:20px;padding:7px 9px;box-shadow:var(--shadow)}
+.topbar button{border:1px solid var(--line-2);background:var(--surface-2);color:var(--text-2);font:inherit;font-size:12.5px;padding:7px 13px;border-radius:12px;cursor:pointer;transition:.18s;white-space:nowrap}
+.topbar button:hover{color:var(--text);border-color:var(--line-3)}
+.topbar button.on{background:var(--accent-soft);border-color:rgba(74,158,102,.4);color:var(--accent-deep);font-weight:700}
+.topbar .sep{width:1px;height:18px;background:var(--line-2);margin:0 4px}
+.topbar .lbl{font-size:11px;color:var(--text-3);margin-left:2px;white-space:nowrap}
+
+/* 页头 */
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:20px;gap:16px}
+.eyebrow{margin:0 0 6px;font-size:11px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-deep)}
+.page-head h1{margin:0;font-size:25px;font-weight:800;letter-spacing:-.02em}
+.page-head p.sub{margin:7px 0 0;font-size:13px;color:var(--text-2)}
+.selectors{display:flex;align-items:center;gap:10px}
+.count{font-size:11.5px;color:var(--text-3)}
+.primary{border:1px solid var(--accent);background:var(--accent);color:#fff;font:inherit;font-size:12.5px;font-weight:600;padding:8px 15px;border-radius:12px;cursor:pointer;transition:.18s}
+.primary:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+
+/* 卡片基类 */
+.card{background:var(--surface);border:1px solid var(--line-2);border-radius:var(--r-card);box-shadow:var(--shadow);padding:20px}
+.k-list{display:flex;flex-direction:column;gap:14px}
+.k-card{background:rgba(255,253,247,.9);position:relative;transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease)}
+[data-theme="dark"] .k-card{background:rgba(28,36,32,.9)}
+.k-card:hover{transform:translateY(-2px)}
+.k-card.cked{border-color:rgba(74,158,102,.42);box-shadow:0 1px 2px rgba(74,158,102,.12),0 14px 34px -16px rgba(74,158,102,.45)}
+[data-theme="dark"] .k-card.cked{border-color:rgba(102,209,141,.4)}
+.k-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:6px}
+.k-head h3{margin:0;font-size:15px;font-weight:700;color:var(--text)}
+.k-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.k-actions .date{font-size:11px;color:var(--text-3)}
+.k-card .content{color:var(--text-2);font-size:13.5px;line-height:1.65;margin:8px 0 0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.meta-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;font-size:11.5px;color:var(--text-3)}
+.tags{display:inline-flex;gap:5px;flex-wrap:wrap}
+.chip{font-style:normal;font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:100px;background:var(--surface-2);border:1px solid var(--line-2);color:var(--text-2);line-height:1.5;white-space:nowrap}
+
+.ghost{border:1px solid var(--line-2);background:var(--surface-2);color:var(--text-2);font:inherit;font-size:12.5px;padding:8px 15px;border-radius:12px;cursor:pointer;transition:.18s}
+.ghost:hover{background:var(--accent-soft);color:var(--accent);border-color:rgba(74,158,102,.3)}
+.ghost.sm{padding:5px 10px;font-size:11.5px;border-radius:8px}
+.ghost.danger{color:var(--danger)}
+.ghost.danger:hover{background:var(--danger-soft);color:var(--danger);border-color:rgba(207,106,87,.3)}
+
+/* 打卡按钮 */
+.ck{border:1px solid rgba(74,158,102,.34);background:var(--accent-soft);color:var(--accent-deep);font:inherit;font-size:11.5px;font-weight:700;
+  padding:5px 11px;border-radius:8px;cursor:pointer;transition:.18s var(--ease);display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.ck:hover{background:rgba(74,158,102,.22);border-color:rgba(74,158,102,.55)}
+.ck.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ck.on:hover{background:var(--accent-deep);border-color:var(--accent-deep)}
+.ck.wide{width:100%;justify-content:center;padding:9px 12px;font-size:12.5px;border-radius:11px;margin-top:12px}
+[data-theme="dark"] .ck{color:var(--accent-deep)}
+
+/* ===== 工作台 ===== */
+.focus{display:grid;grid-template-columns:auto 1fr auto;gap:26px;align-items:center;padding:28px 32px;border-radius:var(--r-card);
+  background:var(--surface);border:1px solid var(--line-2);box-shadow:var(--shadow)}
+.ring{width:116px;height:116px;position:relative;flex-shrink:0}
+.ring svg{transform:rotate(-90deg)}
+.ring circle{fill:none}
+.ring .track{stroke:rgba(150,140,120,.16);stroke-width:11}
+[data-theme="dark"] .ring .track{stroke:rgba(255,255,255,.09)}
+.ring .value{stroke:var(--accent);stroke-width:11;stroke-linecap:round;stroke-dasharray:314.16;transition:stroke-dashoffset .8s var(--ease)}
+.ring .center{position:absolute;inset:0;display:grid;place-items:center;text-align:center}
+.ring .center b{font-size:27px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1}
+.ring .center span{font-size:10px;color:var(--text-3);display:block;margin-top:3px}
+.mid h1{font-size:22px;font-weight:800;margin:8px 0 6px}
+.mid .sub{color:var(--text-2);font-size:13.5px;margin:0}
+.mid .sub em{font-style:normal;color:var(--accent);font-weight:600}
+.todos{display:flex;flex-direction:column;gap:4px;min-width:250px}
+.todo{display:flex;align-items:center;gap:11px;padding:7px 9px;border-radius:11px;cursor:pointer;transition:background .18s}
+.todo:hover{background:var(--surface-2)}
+.todo .check{width:19px;height:19px;border-radius:6px;border:2px solid var(--text-3);display:grid;place-items:center;flex-shrink:0;font-size:10px;color:#fff;transition:all .25s var(--ease)}
+.todo .check.ok{background:var(--accent);border-color:var(--accent)}
+.todo .nm{display:flex;flex-direction:column;line-height:1.2;min-width:0;flex:1}
+.todo .nm b{font-size:13.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.todo .nm b.done{color:var(--text-3);text-decoration:line-through}
+.todo .nm small{font-size:10.5px;color:var(--text-3);margin-top:2px}
+.todo .tag{font-size:10px;color:var(--accent-deep);background:var(--accent-soft);padding:2px 7px;border-radius:6px;margin-left:auto;font-weight:600;flex-shrink:0}
+
+/* 今日已读 横栏 */
+.readbar{margin-top:16px;padding:14px 18px;border-radius:var(--r-card);background:var(--surface);border:1px solid var(--line-2);box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.readbar .lb{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.readbar .lb .ic{width:26px;height:26px;border-radius:9px;display:grid;place-items:center;font-size:13px;background:var(--accent-soft);border:1px solid rgba(74,158,102,.28);color:var(--accent-deep)}
+.readbar .lb b{font-size:13px;font-weight:700}
+.readbar .lb .n{font-size:11.5px;color:var(--text-3);font-weight:600}
+.read-list{display:flex;gap:8px;flex-wrap:wrap;flex:1;min-width:0}
+.rd{display:inline-flex;align-items:center;gap:7px;font-size:12px;padding:6px 8px 6px 10px;border-radius:10px;
+  background:var(--accent-soft);border:1px solid rgba(74,158,102,.26);color:var(--text);max-width:320px;transition:.18s var(--ease)}
+.rd .t{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600}
+.rd .t:hover{color:var(--accent-deep);text-decoration:underline;cursor:pointer}
+.rd .x{border:0;background:transparent;color:var(--text-3);font-size:12px;cursor:pointer;padding:0 2px;line-height:1;border-radius:4px}
+.rd .x:hover{color:var(--danger)}
+.rd-empty{font-size:12px;color:var(--text-3);flex:1}
+.readbar .go{font-size:11.5px;font-weight:600;color:var(--accent-deep);background:var(--accent-soft);border:1px solid rgba(74,158,102,.28);
+  padding:6px 12px;border-radius:10px;cursor:pointer;font-family:inherit;white-space:nowrap;flex-shrink:0}
+.readbar .go:hover{background:rgba(74,158,102,.2)}
+
+/* toast */
+.toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,14px);z-index:200;background:var(--accent);color:#fff;
+  font-size:13px;font-weight:600;padding:10px 20px;border-radius:100px;box-shadow:0 12px 30px -10px rgba(74,158,102,.6);
+  opacity:0;pointer-events:none;transition:opacity .22s,transform .22s var(--ease)}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+
+.note{margin-top:22px;padding:13px 16px;border-radius:14px;background:var(--surface-2);border:1px dashed var(--line-3);font-size:12px;line-height:1.85;color:var(--text-2)}
+.note b{color:var(--text)}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <button data-tab="kb" class="on">知识库</button>
+  <button data-tab="home">工作台</button>
+  <span class="sep"></span>
+  <span class="lbl">打卡按钮位置</span>
+  <button data-style="a" class="on">标题栏小按钮</button>
+  <button data-style="b">卡片底部整条</button>
+  <span class="sep"></span>
+  <button id="themeBtn">◐</button>
+</div>
+
+<!-- ================= 知识库 ================= -->
+<section id="page-kb" class="wrap">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">知识库</p>
+      <h1>个人知识库</h1>
+      <p class="sub">每一次思考，都不会白白飘过。</p>
+    </div>
+    <div class="selectors">
+      <small class="count">5 条内容</small>
+      <button class="primary">+ 导入 HTML</button>
+    </div>
+  </div>
+
+  <div class="k-list" id="kbList"></div>
+
+  <p class="note">
+    <b>说明</b>：点「打卡」→ 这篇知识记进当天的每日打卡记录 → 工作台出现「今日已读」。再点一次就取消。<br>
+    打卡<u>不改变</u>今日完成 %（分母仍是你本月计划里的打卡项），但当天有阅读记录时，连续打卡天数算你今天打过卡。
+  </p>
+</section>
+
+<!-- ================= 工作台 ================= -->
+<section id="page-home" class="wrap hidden">
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">2026年10月23日 星期五</p>
+      <h1>早上好</h1>
+      <p class="sub">今天也在稳稳地往前走。</p>
+    </div>
+  </div>
+
+  <div class="focus">
+    <div class="ring">
+      <svg viewBox="0 0 116 116">
+        <circle class="track" cx="58" cy="58" r="50"></circle>
+        <circle class="value" cx="58" cy="58" r="50" id="ringVal"></circle>
+      </svg>
+      <div class="center"><div><b id="pctTxt">50%</b><span>今日完成</span></div></div>
+    </div>
+    <div class="mid">
+      <h1>早上好</h1>
+      <p class="sub">已完成 <em>2</em>/4 项 · 连续打卡 <em id="streakTxt">6</em> 天</p>
+    </div>
+    <div class="todos">
+      <div class="todo"><span class="check ok">✓</span><span class="nm"><b class="done">读 30 分钟书</b><small>10月计划 · 学习</small></span><span class="tag">学习</span></div>
+      <div class="todo"><span class="check ok">✓</span><span class="nm"><b class="done">复盘昨日交易</b><small>10月计划 · 投资</small></span><span class="tag">投资</span></div>
+      <div class="todo"><span class="check"></span><span class="nm"><b>跑步 3 公里</b><small>10月计划 · 健康</small></span><span class="tag">健康</span></div>
+      <div class="todo"><span class="check"></span><span class="nm"><b>背 20 个单词</b><small>10月计划 · 学习</small></span><span class="tag">学习</span></div>
+    </div>
+  </div>
+
+  <div class="readbar">
+    <span class="lb"><span class="ic">◉</span><b>今日已读</b><span class="n" id="readN">0 篇</span></span>
+    <div class="read-list" id="readList"></div>
+    <button class="go" onclick="go('kb')">去知识库挑一篇</button>
+  </div>
+
+  <p class="note">
+    这是「焦点卡下方加一栏」的形态：不撑高焦点卡，横向一条就能扫完今天读了什么；点标题能直接开全文，点 ✕ 取消打卡。
+  </p>
+</section>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const DATA = [
+  { id:'k1', title:'第28期 · 锚定效应', date:'2026-10-23', src:'定时任务 · 金融概念',
+    content:'锚定效应指人在决策时过度依赖最先接触到的信息。商家标价 999 再打折到 599，那个 999 就是锚。投资里最典型的表现是死守买入成本价，把「我买在多少」当成判断依据，而不是「它现在值多少」。破解办法是主动换锚：问自己如果今天空仓，还会不会买。',
+    tags:['金融概念','每日','第28期'] },
+  { id:'k2', title:'第1期 · 随机图与渗流', date:'2026-10-23', src:'定时任务 · 概率学概念',
+    content:'在无限方格点上，每条边以概率 p 打开。存在一个临界值 p_c ≈ 0.5927，p 低于它时连通块都是有限小岛；一旦越过，会突然出现一个无限大连通块。这就是相变：系统在临界点附近行为发生质变，而不是渐进变化。',
+    tags:['概率学概念','每日','第1期'] },
+  { id:'k3', title:'第21期 · 美股每日新闻简报', date:'2026-10-23', src:'定时任务 · 实时新闻',
+    content:'三大指数涨跌互现，纳指在半导体板块带动下小幅收高。市场关注点集中在下周的通胀数据与两家权重股的财报。资金面看，成交量较前一交易日萎缩约 8%，观望情绪明显。',
+    tags:['实时新闻','每日','第21期'] },
+  { id:'k4', title:'第27期 · 沉没成本谬误', date:'2026-10-22', src:'定时任务 · 金融概念',
+    content:'已经付出且收不回的成本不该影响当下决策。看了一半的电影不好看，该走还是该看完？理性答案是走——剩下的时间价值由接下来的体验决定，跟已花的票钱无关。',
+    tags:['金融概念','每日','第27期'] },
+  { id:'k5', title:'第20期 · 美股每日新闻简报', date:'2026-10-22', src:'定时任务 · 实时新闻',
+    content:'美联储官员讲话偏鹰，市场对年内降息预期小幅降温。十年期美债收益率上行 4 个基点，成长股承压。',
+    tags:['实时新闻','每日','第20期'] }
+]
+
+const checked = new Set(['k1','k2'])   // 预置两条已打卡，方便看两种状态
+let layout = 'a'
+let tab = 'kb'
+
+const $ = s => document.querySelector(s)
+const toastEl = $('#toast')
+let toastTimer
+function toast(msg){
+  toastEl.textContent = msg
+  toastEl.classList.add('show')
+  clearTimeout(toastTimer)
+  toastTimer = setTimeout(() => toastEl.classList.remove('show'), 1700)
+}
+
+function ckBtn(k, wide){
+  const on = checked.has(k.id)
+  return `<button class="ck ${on?'on':''} ${wide?'wide':''}" data-ck="${k.id}">${on ? '✓ 已打卡' : '＋ 打卡'}</button>`
+}
+
+function renderKb(){
+  $('#kbList').innerHTML = DATA.map(k => {
+    const on = checked.has(k.id)
+    const act = `<small class="date">${k.date}</small>
+      ${layout === 'a' ? ckBtn(k, false) : ''}
+      <button class="ghost sm">阅读全文</button>
+      <button class="ghost sm">查看原报告</button>
+      <button class="ghost sm danger">删除</button>`
+    return `<article class="card k-card ${on?'cked':''}" data-id="${k.id}">
+      <div class="k-head"><h3>${k.title}</h3><div class="k-actions">${act}</div></div>
+      <p class="content">${k.content}</p>
+      <div class="meta-row">
+        <span>来源：${k.src}</span>
+        <span class="tags">${k.tags.map(t=>`<span class="chip">#${t}</span>`).join('')}</span>
+      </div>
+      ${layout === 'b' ? ckBtn(k, true) : ''}
+    </article>`
+  }).join('')
+}
+
+function renderRead(){
+  const list = DATA.filter(k => checked.has(k.id))
+  $('#readN').textContent = `${list.length} 篇`
+  $('#readList').innerHTML = list.length
+    ? list.map(k => `<span class="rd"><span class="t">✓ ${k.title}</span><button class="x" data-un="${k.id}" title="取消打卡">✕</button></span>`).join('')
+    : `<span class="rd-empty">今天还没有打卡任何知识，去知识库挑一篇。</span>`
+}
+
+function renderRing(){
+  const vals = { '0':314.16, '50':157.08, '100':0 }
+  // 进度环固定 2/4 = 50%，阅读不改变百分比
+  $('#ringVal').style.strokeDashoffset = '157.08'
+  $('#pctTxt').textContent = '50%'
+  $('#streakTxt').textContent = checked.size ? '6' : '5'
+}
+
+function renderAll(){ renderKb(); renderRead(); renderRing() }
+
+document.addEventListener('click', e => {
+  const ck = e.target.closest('[data-ck]')
+  if (ck){
+    const id = ck.dataset.ck
+    if (checked.has(id)) { checked.delete(id); toast('已取消打卡') }
+    else { checked.add(id); toast('已打卡，记入今天的每日打卡') }
+    renderAll()
+    return
+  }
+  const un = e.target.closest('[data-un]')
+  if (un){ checked.delete(un.dataset.un); toast('已取消打卡'); renderAll(); return }
+
+  const tb = e.target.closest('.topbar button[data-tab]')
+  if (tb){ go(tb.dataset.tab); return }
+
+  const st = e.target.closest('.topbar button[data-style]')
+  if (st){
+    document.querySelectorAll('.topbar button[data-style]').forEach(b => b.classList.remove('on'))
+    st.classList.add('on'); layout = st.dataset.style; renderKb(); return
+  }
+})
+
+function go(t){
+  tab = t
+  document.querySelectorAll('.topbar button[data-tab]').forEach(b => b.classList.toggle('on', b.dataset.tab === t))
+  $('#page-kb').classList.toggle('hidden', t !== 'kb')
+  $('#page-home').classList.toggle('hidden', t !== 'home')
+  window.scrollTo({ top: 0, behavior: 'smooth' })
+}
+
+$('#themeBtn').onclick = () => {
+  const r = document.documentElement
+  r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark'
+}
+
+renderAll()
+</script>
+</body>
+</html>

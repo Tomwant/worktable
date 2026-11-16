@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第14期 · 信赖域与PPO</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+details.qz{margin:12px 0;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+details.qz summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;font-weight:700;color:var(--ink);transition:background .16s}
+details.qz summary:hover{background:#fdf8f0}
+details.qz summary::-webkit-details-marker{display:none}
+details.qz summary::marker{content:""}
+details.qz summary::after{content:"看答案 ▾";margin-left:auto;flex:0 0 auto;font-size:12px;font-weight:600;color:#8a5a1e;background:#faf0e2;border-radius:999px;padding:2px 10px;white-space:nowrap}
+details.qz[open] summary{background:#fdfaf4;border-bottom:1px dashed var(--line)}
+details.qz[open] summary::after{content:"收起 ▴";background:#f2e6d4}
+details.qz > *:not(summary){padding-left:14px;padding-right:14px}
+details.qz > *:not(summary):last-child{padding-bottom:12px}
+details.qz blockquote:empty{display:none}
+</style></head><body><div class="wrap"><h1>第 14 期 · 信赖域与 PPO（既大步前进，又不翻车）</h1>
+<blockquote><strong>一句话</strong>：策略梯度（第 13 期）学会了"往好处爬"，但步子太猛会把策略推下悬崖。信赖域（Trust Region）说——别看参数挪了多少，要看<strong>策略本身变了多少</strong>（用 KL 散度衡量）。PPO 是它最省事的实现：一个 <code>clip</code> 把概率比卡在 <code>1±ε</code>，既敢迈大步、又自动踩刹车。</blockquote>
+<h2>一、故事：取餐机器人又"疯"了</h2>
+<p>第 13 期里，大刘给取餐机器人装上了<strong>策略梯度 + Actor-Critic</strong>，机器人终于不再撞墙，学会自己爬坡优化送餐路线了。可没过几天，阿明发现一个怪病：</p>
+<blockquote>机器人有时候学着学着<strong>突然疯了</strong>——策略全乱套，一会儿满场绕圈，一会儿直冲墙角。一看训练曲线，某一步回报暴跌，之后怎么也救不回来。</blockquote>
+<p>大刘盯着曲线说："这叫 <strong>performance collapse（性能崩塌）</strong>。问题出在你那'步长'上。"</p>
+<p>阿明不服："我用的就是 SGD 的学习率 η 啊，跟第 4、5 期一样，学了那么久也没事。"</p>
+<p>"错。第 3 期模拟退火里我跟你说过，<strong>温度就是步长开关</strong>——温度太高就乱跳、太低就冻住。你这里也一样。但还有一个你没想到的事：<strong>神经网络的策略是非线性的</strong>。"</p>
+<p>大刘在白板上画了两行：</p>
+<ul>
+<li>参数 θ 只挪了一点点（比如把一个 logit 从 0 改成 10）；</li>
+<li>可经过 softmax 之后，<strong>策略却从"均匀随机"变成了"几乎 100% 选某动作"</strong>。</li>
+</ul>
+<p>"你看，参数的 L2 距离很小，策略的 KL 散度却翻天覆地。<strong>用'参数步长'当刹车，会严重误判。</strong> 真正该约束的，是'策略变了多少'——也就是 KL 散度（第 16、26 期）。这，就是<strong>信赖域</strong>的思想。"</p>
+<p>"那我总不能每步都手算 KL 再解带约束的优化吧？"阿明问。</p>
+<p>"聪明人早想好了。<strong>PPO（Proximal Policy Optimization）</strong> 用一个 <code>clip</code> 把新旧策略的概率比卡在 <code>1±ε</code> 内，不用显式解约束，效果却等价于'在信赖域里迈最大的一步'。走，我教你。"</p>
+<h2>二、概念讲解</h2>
+<h3>1. 策略梯度的老毛病：步长难调</h3>
+<p>策略梯度（第 13 期）的更新方向是对的，但<strong>步长</strong>是两难：</p>
+<ul>
+<li><strong>步子太大</strong> → 策略一下跨出信赖域 → 性能崩塌、难以恢复；</li>
+<li><strong>步子太小</strong> → 学得太慢、样本浪费。</li>
+</ul>
+<p>核心张力：<strong>如何既大步前进，又保证不翻车？</strong></p>
+<h3>2. 信赖域（Trust Region）：约束"策略位移"而非"参数位移"</h3>
+<p>关键洞察：两个参数向量 θ₁、θ₂ 很接近（‖θ₁−θ₂‖ 小），<strong>不等于</strong>两个策略很接近。因为策略是参数经过非线性变换（如 softmax）得到的。</p>
+<p>所以信赖域方法约束的是<strong>新旧策略的 KL 散度</strong>：</p>
+<blockquote><strong>KL(π_old ‖ π_new) ≤ δ</strong></blockquote>
+<p>而不是参数的 L2 范数 ‖θ_new − θ_old‖ ≤ Δ。δ 就是"信赖域半径"——允许策略最多变这么多。</p>
+<p><strong>TRPO（Trust Region Policy Optimization）</strong> 把目标写成：在 KL 约束下，最大化<strong>替代目标（surrogate objective）</strong> <code>E[ r_t(θ) · Â_t ]</code>，其中 <code>r_t(θ) = π_θ(a|s) / π_θ_old(a|s)</code>（这就是第 13 期的似然比）。</p>
+<h3>3. PPO-Clip：把约束变成一行裁剪</h3>
+<p>PPO 最常用、最省事的版本叫 <strong>PPO-Clip</strong>。它不显式解 KL 约束，而是直接把概率比裁剪：</p>
+<blockquote><strong>L^CLIP(θ) = E[ min( r_t(θ)·Â_t , clip(r_t(θ), 1−ε, 1+ε)·Â_t ) ]</strong></blockquote>
+<p>直觉（这就是"刹车"的精髓）：</p>
+<ul>
+<li><strong>优势 Â_t &gt; 0（好动作，想提高它的概率）</strong>：如果 <code>r_t</code> 涨过 <code>1+ε</code>，裁剪把增益<strong>封顶</strong>在 <code>(1+ε)·Â_t</code>，防止你贪心对高优势动作过度加码。</li>
+<li><strong>优势 Â_t &lt; 0（坏动作，想降低它的概率）</strong>：如果 <code>r_t</code> 跌过 <code>1−ε</code>，裁剪把惩罚<strong>兜底</strong>在 <code>(1−ε)·Â_t</code>，防止你一步把动作彻底砍死。</li>
+</ul>
+<p>两边都被卡住 → 无论好坏，策略一步最多移动 ε 比例 → 等价于待在信赖域里。ε 常用 0.1~0.3。</p>
+<blockquote><strong>为什么 PPO 这么火？</strong> 它实现简单（几行代码 + 普通 SGD/Adam）、稳定、样本效率不差。ChatGPT / InstructGPT 的对齐训练（RLHF）用的核心算法就是 <strong>PPO</strong>。</blockquote>
+<h3>4. 闭环地图（回顾你走过的路）</h3>
+<ul>
+<li><strong>第 13 期</strong> 策略梯度 / Actor-Critic：似然比 <code>r_t=π/π_old</code>、优势 <code>Â_t</code> ← 本期的积木。</li>
+<li><strong>第 3 期</strong> 模拟退火：温度 = 步长开关；<strong>信赖域半径 δ 就是"策略世界的温度"</strong>。</li>
+<li><strong>第 4、5 期</strong> SGD / 学习率 η：PPO 的更新底层仍是 SGD（第 5 期讲的学习率衰减在这里同样关键）。</li>
+<li><strong>第 12 期</strong> 目标网络：稳定更新、别让目标乱动 ← 与"别让策略乱动"同构。</li>
+<li><strong>第 16、26 期</strong> KL 散度 / 变分推断：<code>KL(π_old‖π_new)</code> 正是这里信赖域的尺子。</li>
+</ul>
+<h3>5. 一个最小直觉公式表</h3>
+<p>| 符号 | 含义 |</p>
+<p>|---|---|</p>
+<p>| <code>r_t(θ)</code> | 新旧策略概率比 = <code>π_θ(a|s) / π_θ_old(a|s)</code> |</p>
+<p>| <code>Â_t</code> | 优势估计（第 13 期），&gt;0 好、&lt;0 坏 |</p>
+<p>| <code>ε</code> | 裁剪系数（信赖域半径的代理），常 0.1~0.3 |</p>
+<p>| <code>clip(x, 1−ε, 1+ε)</code> | 把 x 限制在 <code>[1−ε, 1+ε]</code> 内 |</p>
+<p>| <code>L^CLIP</code> | 取 min(未裁剪, 已裁剪) 的保守下界 |</p>
+<h2>三、四道代表性题目（你来总结，折叠块里有完整思路与答案）</h2>
+<details class="qz">
+<summary>题目 1 · PPO-Clip 概率比与裁剪基本功</summary>
+<p>某状态 s 下动作 a 的旧策略概率 <code>π_old = 0.4</code>，新策略 <code>π_θ = 0.5</code>，优势估计 <code>Â = +1.0</code>，裁剪系数 <code>ε = 0.2</code>。请手算 <code>L^CLIP</code> 的值，并说明裁剪是否生效。</p>
+<blockquote><strong>解题思路</strong>：按定义一步步来。</blockquote>
+<blockquote>1. 先算概率比 <code>r_t = π_θ / π_old = 0.5 / 0.4 = 1.25</code>。</blockquote>
+<blockquote>2. 未裁剪项 = <code>r_t · Â = 1.25 × 1.0 = 1.25</code>。</blockquote>
+<blockquote>3. 裁剪项：把 <code>r_t</code> 夹进 <code>[1−ε, 1+ε] = [0.8, 1.2]</code>。因为 <code>1.25 &gt; 1.2</code>，所以 <code>clip(1.25, 0.8, 1.2) = 1.2</code>；再乘优势得 <code>1.2 × 1.0 = 1.2</code>。</blockquote>
+<blockquote>4. 取两者较小值：<code>L^CLIP = min(1.25, 1.2) = 1.2</code>。</blockquote>
+<blockquote>这是正向优势（Â&gt;0）且概率比冲过了上界 <code>1+ε</code> 的典型情形——裁剪把"贪心推高"封顶，正是信赖域在踩刹车。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：<code>L^CLIP = 1.2</code>，<strong>裁剪生效</strong>（把正向增益封顶在 1.2，防止对高优势动作过度加码）。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 2 · 负优势的反向裁剪</summary>
+<p>同一公式下，旧策略 <code>π_old = 0.4</code>，新策略 <code>π_θ = 0.2</code>（概率被砍低），优势 <code>Â = −0.5</code>，<code>ε = 0.2</code>。手算 <code>L^CLIP</code>，并解释裁剪此时在保护什么。</p>
+<blockquote><strong>解题思路</strong>：</blockquote>
+<blockquote>1. <code>r_t = 0.2 / 0.4 = 0.5</code>。</blockquote>
+<blockquote>2. 未裁剪项 = <code>0.5 × (−0.5) = −0.25</code>。</blockquote>
+<blockquote>3. 裁剪项：<code>clip(0.5, 0.8, 1.2) = 0.8</code>（因为 0.5 &lt; 0.8，被托到 0.8）；再乘优势得 <code>0.8 × (−0.5) = −0.4</code>。</blockquote>
+<blockquote>4. 取较小值：<code>min(−0.25, −0.4) = −0.4</code>。</blockquote>
+<blockquote>这里优势为负（想降低该动作概率），而 <code>r_t</code> 跌破了下界 <code>1−ε</code>。裁剪把惩罚<strong>兜底</strong>在 <code>0.8·Â = −0.4</code>，而不是让未裁剪的 <code>−0.25</code>（更轻）。等等——min 取的是更小的 <code>−0.4</code>，即<strong>裁剪后的更重惩罚</strong>？注意：PPO 的 min 提供的是"保守下界"。当概率被砍太狠时，裁剪项给出了"最多只能砍到 1−ε 比例"的约束信号，避免一步把动作彻底砍死（否则后续想恢复都难）。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：<code>L^CLIP = −0.4</code>，<strong>裁剪生效</strong>——当优势为负且概率被砍太多时，PPO 把位移封顶在 <code>1−ε</code> 比例，防止策略一步把动作彻底剔除（保留"翻盘"余地）。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 3 · 为什么信赖域看 KL 而不是参数距离</summary>
+<p>考虑一个二动作策略，logits 经 softmax 输出概率。参数 θ_a 给出 <code>logits = [0, 0]</code>（均匀策略 <code>π_a = [0.5, 0.5]</code>）；参数 θ_b 只把第一个 logit 从 0 改成 10（其余不变），得到 <code>π_b ≈ [0.99995, 0.00005]</code>。请近似计算 <code>KL(π_a ‖ π_b)</code>，并说明：为什么不能用 <code>‖θ_a − θ_b‖</code> 作为更新约束？</p>
+<blockquote><strong>解题思路</strong>：</blockquote>
+<blockquote>1. 参数距离：我们只改了一个 logit，幅度 10，所以 <code>‖θ_a − θ_b‖</code>（单参数情形）≈ 10，看起来"不大"。</blockquote>
+<blockquote>2. 但策略已几乎从"均匀"变成"确定选动作 1"。算 KL（以自然对数 nats 为单位）：</blockquote>
+<blockquote>   - <code>KL(π_a‖π_b) = 0.5·ln(0.5 / 0.99995) + 0.5·ln(0.5 / 0.00005)</code></blockquote>
+<blockquote>   - 第一项 ≈ <code>0.5 × (−0.6931) = −0.3466</code></blockquote>
+<blockquote>   - 第二项 ≈ <code>0.5 × ln(11013) ≈ 0.5 × 9.307 = 4.653</code></blockquote>
+<blockquote>   - 合计 ≈ <strong>4.31 nats ≈ 6.2 bits</strong>。</blockquote>
+<blockquote>3. 结论：参数只挪了"距离 10"，策略 KL 却高达约 4.3 nats（几乎把全部概率压到一个动作）。反过来，两个参数向量 L2 差很大时，策略也可能几乎没变。<strong>参数距离≠策略距离</strong>，所以信赖域必须用 KL（衡量策略本身的位移），不能用 <code>‖Δθ‖</code>（只衡量参数位移）。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：<code>KL(π_a‖π_b) ≈ 4.31 nats（约 6.2 bits）</code>。因为神经网络非线性，参数小改动可能引策略剧变、大改动也可能无影响；用 <code>‖Δθ‖</code> 当约束会严重误判策略位移，故信赖域约束的是 KL 散度。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 4 · 自适应信赖域与 PPO 的 KL 早停</summary>
+<p>TRPO 用硬约束 <code>KL ≤ δ</code>。实践中有一套<strong>自适应调节</strong>：若某次更新后实测 KL 远小于 δ（步子还能迈更大却没迈），下一轮把 δ 调大；若实测 KL 超过 δ（越界），下一轮把 δ 调小。PPO 没有显式 δ，但常用"KL 早停"：当滚动平均 KL 超过<strong>目标 KL 的 1.5 倍</strong>时，提前结束本轮 epoch。</p>
+<p>若目标 KL = 0.01，当前实测滚动 KL = 0.018，问：应不应该触发早停？并简要说明：为什么 KL 早停比"固定 epoch 数"更稳？</p>
+<blockquote><strong>解题思路</strong>：</blockquote>
+<blockquote>1. 早停阈值 = <code>1.5 × 目标KL = 1.5 × 0.01 = 0.015</code>。</blockquote>
+<blockquote>2. 实测 <code>0.018 &gt; 0.015</code> → <strong>超过阈值，应触发早停</strong>（停止本轮剩余 minibatch 更新）。</blockquote>
+<blockquote>3. 为什么比固定 epoch 数稳：固定 epoch 数意味着"无论策略已经漂多远，都再更新 N 步"，后期 minibatch 完全可能把策略推出资讯域、造成崩塌；而 KL 早停用"真实策略位移"当刹车，一旦策略已经移出信赖域就立刻停手，相当于给每轮更新装了自适应保险丝。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：<code>0.018 &gt; 0.015</code>，<strong>应触发早停</strong>。KL 早停用真实策略位移（KL）作刹车，比固定 epoch 数更能防止策略越界崩塌；这与 TRPO 自适应调 δ 是同一思想的两种实现。</blockquote>
+</details>
+<h2>四、核心要点回顾（你总结完题后可对照）</h2>
+<ul>
+<li><strong>痛点</strong>：策略梯度步长难调——太大崩塌、太小太慢。</li>
+<li><strong>关键转向</strong>：约束"策略位移"（KL 散度），而非"参数位移"（L2）。</li>
+<li><strong>PPO-Clip 一句话</strong>：<code>L^CLIP = min(r·Â, clip(r,1−ε,1+ε)·Â)</code>，两边裁剪 = 自动刹车。</li>
+<li><strong>闭环</strong>：第 13 期（积木）+ 第 3 期（温度=步长）+ 第 4/5 期（SGD）+ 第 12 期（稳定更新）+ 第 16/26 期（KL）。</li>
+<li><strong>现实落点</strong>：ChatGPT / InstructGPT 的 RLHF 对齐训练，核心算法就是 PPO。</li>
+</ul>
+<h2>五、明日预告（第 15 期）</h2>
+<p><strong>RLHF 与奖励模型（PPO 怎么把语言模型对齐成"听话的助手"）</strong>——顺着本期 PPO，讲讲它如何给 ChatGPT 这类大模型做对齐：先训一个"奖励模型"当裁判，再用 PPO 让语言模型在对齐与能力之间找平衡。建议先回想本期的 <code>r_t</code> 与 <code>clip</code>，下期它们会直接出现在"让模型更讨喜又不退化"的目标里。</p></div></body></html>

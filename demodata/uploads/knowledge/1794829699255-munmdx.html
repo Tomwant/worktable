@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第17期 · 迭代DPO与自我博弈</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+details.qz{margin:12px 0;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+details.qz summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;font-weight:700;color:var(--ink);transition:background .16s}
+details.qz summary:hover{background:#fdf8f0}
+details.qz summary::-webkit-details-marker{display:none}
+details.qz summary::marker{content:""}
+details.qz summary::after{content:"看答案 ▾";margin-left:auto;flex:0 0 auto;font-size:12px;font-weight:600;color:#8a5a1e;background:#faf0e2;border-radius:999px;padding:2px 10px;white-space:nowrap}
+details.qz[open] summary{background:#fdfaf4;border-bottom:1px dashed var(--line)}
+details.qz[open] summary::after{content:"收起 ▴";background:#f2e6d4}
+details.qz > *:not(summary){padding-left:14px;padding-right:14px}
+details.qz > *:not(summary):last-child{padding-bottom:12px}
+details.qz blockquote:empty{display:none}
+</style></head><body><div class="wrap"><h1>第 17 期 · 迭代 DPO 与自我博弈：让模型自己教自己</h1>
+<blockquote><strong>一句话</strong>：离线 DPO（第 16 期）只吃一次人工标注的偏好对，训完就冻结；可一旦模型变强，它新冒出来的回答就跑出了老数据的覆盖范围。迭代 DPO 把「生成 → 配对 → DPO」做成循环，而自我博弈（SPIN）更狠——连人工标注都省了，直接拿「真实回答 vs 模型自己编的回答」当偏好对，让模型左右互搏、自己教自己。</blockquote>
+<hr>
+<h2>一、故事：阿明的「一次性偏好数据，用完了」</h2>
+<p>阿明上周刚用第 16 期的 <strong>DPO</strong> 把模型对齐跑通，离线一次性喂进几千条人工偏好对 <code>(y_w ≻ y_l)</code>，模型果然说话像人了。他得意了没两天，问题就来了。</p>
+<p>他把新模型拿给同事试用，收集反馈，发现一个新现象：</p>
+<blockquote>同事：「你这模型现在回答太『水』了——每次都是那种四平八稳的正确废话。我想要的那种有洞见的答案，它反而不给了。」</blockquote>
+<p>阿明回到大刘这儿：「奇怪，我明明照着偏好对训的呀，怎么越训越平庸？」</p>
+<p>大刘看了一眼，笑了：「你把 DPO 当成一锤子买卖了。你想想——<strong>你那几千条偏好对，是谁、在什么时候标出来的？</strong>」</p>
+<p>阿明：「是旧模型时代的产物啊……」</p>
+<p>大刘：「对。旧模型生成的回答，长什么样？你标的是『旧回答 A 比旧回答 B 好』。可现在模型已经升级了，它吐出来的是<strong>全新的 C、D、E</strong>，这些回答你从来没标过、DPO 也从没见过。你拿老地图在导航新大陆——能不跑偏吗？」</p>
+<p>阿明若有所思：「那我只好再找人标一批新数据？」</p>
+<p>大刘：「两条路。一条是<strong>_iterative DPO_</strong>：每轮让当前模型生成新回答、重新收集偏好、再训一次，滚动前进。另一条更省事——<strong>自我博弈 SPIN</strong>：你连人都别找了，就让『真实_DATA 里的回答』当赢家、『模型自己编的回答』当输家，配对喂回 DPO。模型自己跟自己打，打着打着就逼近真实分布了。」</p>
+<p>阿明：「自己教自己？这不就成了『左脚踩右脚上天』吗？」</p>
+<p>大刘：「问得好。这里头有个精妙的平衡——打过头会塌陷，打不够没长进。来，我给你拆开看。」</p>
+<hr>
+<h2>二、概念：把 DPO 从「一次性」变成「循环」</h2>
+<h3>1. 静态 DPO 的天花板：分布漂移（distribution shift）</h3>
+<p>第 16 期的 DPO 损失是：</p>
+<blockquote><strong>L_DPO(θ) = − E_(x, y_w, y_l)~D [ log σ( β·log(π_θ(y_w|x)/π_ref(y_w|x)) − β·log(π_θ(y_l|x)/π_ref(y_l|x)) ) ]</strong></blockquote>
+<p>关键在那个期望是对<strong>固定数据集 D</strong> 取的。问题在于：</p>
+<ul>
+<li>D 里的偏好对，是<strong>旧策略 π_old 生成的回答</strong>被人标出来的；</li>
+<li>DPO 训完得到新策略 π_new ≠ π_old；</li>
+<li>π_new 会生成 D 里从没出现过的新回答，而<strong>这些回答没有任何偏好信号约束它们</strong>。</li>
+</ul>
+<p>于是模型能在这片「没人管」的新区域里自由漂移——可能越训越水、越训越模板化，甚至把标注噪声放大成奖励黑客（闭环第 15、16 期）。<strong>静态数据 + 动态策略 = 分布漂移，这是迭代的根本动机。</strong></p>
+<h3>2. 迭代 DPO：把 DPO 套进循环</h3>
+<p>迭代 DPO 的思路很朴素——既然策略变了数据就过期，那就<strong>每轮换一批新鲜数据</strong>：</p>
+<blockquote><strong>第 t 轮</strong>：① 用当前策略 π_t 对一批 prompt 生成回答 → ② 收集新偏好对 D_t（人工标注，或 AI 裁判）→ ③ 以 π_ref 为锚、在 D_t 上跑一次 DPO 得到 π_{t+1} → 回到 ①。</blockquote>
+<p>两个关键设计：</p>
+<ul>
+<li><strong>参考模型 π_ref 通常固定为最初的 SFT 模型</strong>（也可每轮滑动更新）。它像一根桩，防止模型在滚动中把锚点也一起漂移走。</li>
+<li><strong>每轮的 β 仍扮演 KL 安全阀</strong>（闭环第 16 期）：β 小则每轮步子大、漂移快；β 大则稳但进步慢。</li>
+</ul>
+<p>这就是「离线版的在线学习」——用一轮轮离线 DPO，逼近原本 PPO 在线采样才能持续获得的信号。</p>
+<h3>3. 自我博弈 SPIN：连人工标注都省了</h3>
+<p><strong>SPIN（Self-Play Fine-Tuning）</strong> 是迭代 DPO 的一个极致变体，核心是重新定义「谁赢谁输」：</p>
+<ul>
+<li><strong>赢家 y_w</strong>：真实数据集（目标分布 p_data）里的回答；</li>
+<li><strong>输家 y_l</strong>：<strong>当前模型自己生成的回答</strong> ŷ ~ π_t(·|x)；</li>
+<li>偏好对 <code>(y_w ≻ y_l)</code> 不需要任何人来标——「真实的比自己编的好」这个假设直接给出标签。</li>
+</ul>
+<p>于是得到 SPIN 损失（形式与 DPO 一致，只是输家来源换了）：</p>
+<blockquote><strong>L_SPIN(π_t) = − E_[ log σ( β·log(π_t(y|x)/π_ref(y|x)) − β·log(π_t(ŷ|x)/π_ref(ŷ|x)) ) ]</strong></blockquote>
+<blockquote>其中 y ~ p_data（真实回答），ŷ ~ π_t（模型自生成）。</blockquote>
+<p>intuition：模型每轮都在做一件事——<strong>压低「自己编的」、抬高「真实的」</strong>。当模型生成得越来越像真实数据，这两者在 DPO 眼里越来越难区分，提升动力就自然衰减。</p>
+<h3>4. 为什么它会收敛？——博弈论视角（接第 20 期最优停止）</h3>
+<p>把 SPIN 看成一个两人博弈：</p>
+<ul>
+<li><strong>生成器（Generator）</strong>：策略 π_t，努力生成「看起来像真的」回答；</li>
+<li><strong>判别器（Discriminator）</strong>：由 DPO 的偏好目标隐式充当，努力把「真实的 y」和「生成的 ŷ」分开。</li>
+</ul>
+<p>这跟 <strong>GAN 的生成器-判别器</strong>如出一辙，但判别器不用单独训练——DPO 目标本身就是裁判。</p>
+<p><strong>不动点</strong>在哪儿？当 π_t 的分布<strong>恰好等于真实分布 p_data</strong> 时，真实回答和自生成回答统计上无法区分，DPO 的对数比差 Δ→0，σ(0)=0.5，损失降到常数 −ln 0.5 = ln2 ≈ 0.693，梯度归零——<strong>模型再也分不出真假，博弈达到均衡</strong>（纳什均衡的味道，闭环第 20 期「何时停」：收敛即该停）。这就是「自己教自己」能成立的数学理由：目标分布就是这场自我博弈的均衡点。</p>
+<h3>5. 新坑：反馈循环、自我强化与塌陷</h3>
+<p>左脚踩右脚毕竟不是免费上天，自我博弈有三个著名的坑：</p>
+<ul>
+<li><strong>模式塌缩（mode collapse）</strong>：模型发现某类回答「最容易骗过裁判」，就反复生成它，多样性越来越差。第 19 期讲的重尾「单点主导」在这里换个马甲重现。</li>
+<li><strong>确认偏误会放大偏差</strong>：如果模型本身有某种偏见，自我裁判会把偏见当信号继续强化——<strong>自说自话只会让自己更相信自己</strong>（回音室效应）。</li>
+<li><strong>分布漂移不会自动消失</strong>：迭代本身会持续把策略推向新区域，若没有外部锚（真实数据、人类抽检、强模型裁判）定期校正，偏差会滚雪球。</li>
+</ul>
+<p>对策：① <strong>保留外部锚</strong>——每轮混入真实高质量数据，或定期用人类/更强模型抽检；② <strong>调 β 控步长</strong>（闭环第 14、16 期）；③ <strong>设停止准则</strong>——验证集偏好准确率/多样性不再涨就停（闭环第 20 期最优停止）；④ <strong>监控多样性</strong>而非只盯损失下降（闭环第 16 期题目 4）。</p>
+<h3>6. 闭环地图</h3>
+<ul>
+<li><strong>第 16 期 DPO</strong>：迭代 DPO / SPIN 的直接地基，损失形式原样沿用，只是每轮换数据。</li>
+<li><strong>第 15 期 RLHF / BT 模型</strong>：偏好对概念同源；SPIN 用「真实 vs 生成」自动构造 BT 偏好对，省掉人工标注。</li>
+<li><strong>第 14 期 信赖域与 PPO</strong>：β 即 KL 安全阀；迭代 DPO = 用多轮离线 DPO 逼近 PPO 的在线滚动信号。</li>
+<li><strong>第 20 期 最优停止</strong>：收敛点即停止点；反馈循环里「何时该停手」正是最优停止的现成应用。</li>
+<li><strong>第 19 期 重尾 / 第 5 期 期望值</strong>：模式塌缩、单点主导、奖励黑客——自我强化的老毛病，β 与外部锚是兜底。</li>
+<li><strong>第 12 期 马尔可夫链 / 第 13 期 策略梯度</strong>：π_t → π_{t+1} 的滚动本质是策略迭代，链的状态就是「当前策略」。</li>
+</ul>
+<hr>
+<h2>三、四道代表题（你先总结，再点开对答案）</h2>
+<details class="qz">
+<summary>题目 1 · SPIN 一轮损失手算</summary>
+<blockquote><strong>解题思路</strong>：设 β=0.5，参考模型 π_ref、当前策略 π_t 对同一 prompt 下的回答概率如下：</blockquote>
+<blockquote>- 真实回答 y_w：π_t(y_w|x)=0.5，π_ref(y_w|x)=0.25 → log 比 = ln(0.5/0.25) = ln2 ≈ 0.6931</blockquote>
+<blockquote>- 自生成回答 y_l：π_t(y_l|x)=0.1，π_ref(y_l|x)=0.2 → log 比 = ln(0.1/0.2) = ln0.5 ≈ −0.6931</blockquote>
+<blockquote>- 对数比差 Δ = 0.6931 − (−0.6931) = 1.3863</blockquote>
+<blockquote>- 乘 β：βΔ = 0.5 × 1.3863 = 0.6931</blockquote>
+<blockquote>- σ(0.6931) = 1/(1+e^{−0.6931})，e^{−0.6931}≈0.5 → σ≈0.6667</blockquote>
+<blockquote>- 损失 = −ln(0.6667) ≈ 0.4055</blockquote>
+<blockquote></blockquote>
+<blockquote>观察：当模型自生成的回答越来越接近真实（π_t(y_l|x) 上升、对数比差缩小），βΔ→0，损失趋于 ln2≈0.693，梯度趋零——这就是博弈收敛到均衡点的信号。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：Δ≈<strong>1.3863</strong>，βΔ≈<strong>0.6931</strong>，该样本 SPIN 损失 ≈ <strong>0.406</strong>。数值越小说明当前策略越能把「真实」排在「自编」之前；损失向 ln2 回升、梯度趋零，则意味着博弈接近均衡、该考虑停手。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 2 · 为什么要迭代：分布漂移与覆盖率</summary>
+<blockquote><strong>解题思路</strong>：设初始 SFT 策略 π_0 跑一次静态 DPO 得到 π_1，KL(π_1 ‖ π_0) = 0.1。经验上「策略每偏离参考一步，新生成回答落在旧偏好数据分布内的比例就下降」。假设覆盖率 C(t) ≈ e^{−k·KL(π_t‖π_0)}，取 k=5：</blockquote>
+<blockquote>- t=1：KL=0.1 → C≈e^{−0.5}≈60.7%，即约四成新回答没有偏好信号管束。</blockquote>
+<blockquote>- 若继续用旧数据训到 KL=0.3 → C≈e^{−1.5}≈22.3%，近八成回答「没人管」，漂移与奖励黑客风险陡增。</blockquote>
+<blockquote>- 迭代 DPO 的做法：每轮用当前 π_t 重新生成、重新配对，让<strong>数据集跟着策略走</strong>，覆盖率恢复到高位。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：静态 DPO 的覆盖率会随 KL 偏离指数下降（本题 t=1 时约 60.7%、KL=0.3 时约 22.3%），大量新回答失去约束 → 越训越偏；迭代 DPO 通过「每轮换新数据」把覆盖率拉回来，这是必须滚动的根本原因。（闭环第 16 期分布偏移、第 19 期尾部风险）</blockquote>
+</details>
+<details class="qz">
+<summary>题目 3 · SPIN vs DPO vs GAN：谁在教谁</summary>
+<blockquote><strong>解题思路</strong>：从「偏好对从哪来」和「裁判是谁」两个维度辨析：</blockquote>
+<blockquote>- <strong>DPO（第 16 期）</strong>：偏好对 <code>(y_w ≻ y_l)</code> 由<strong>人工标注</strong>，裁判隐含在数据里；一次性离线训练。</blockquote>
+<blockquote>- <strong>迭代 DPO</strong>：每轮用 π_t 生成新回答、重新收集偏好（人工或 AI 裁判），滚动多轮。</blockquote>
+<blockquote>- <strong>SPIN</strong>：偏好对自动构造——<strong>赢家=真实数据回答、输家=模型自生成回答</strong>，无需人工标注；裁判是 DPO 目标本身。</blockquote>
+<blockquote>- <strong>GAN</strong>：也有生成器+判别器，但判别器是<strong>单独训练的网络</strong>，且目标是对抗式的 min-max；SPIN 的「判别」由固定形式的 DPO 损失隐式充当，更稳、不易对抗失衡。</blockquote>
+<blockquote>- <strong>收敛解释</strong>：SPIN 的不动点 = 生成分布等于真实分布 p_data，此时 Δ→0、损失→ln2、梯度→0（博弈均衡）。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：DPO 吃人工偏好对；迭代 DPO 每轮换新偏好；SPIN 用「真实 vs 自编」自动配对、无需人工标注，裁判即 DPO 目标；GAN 的判别器是独立网络且对抗训练。SPIN 收敛于「生成分布=真实分布」的均衡点。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 4 · 自我博弈塌陷：反馈循环会放大什么</summary>
+<blockquote><strong>解题思路</strong>：设模型自生成回答中「模板化回答 B」的初始占比 p₀=0.1。因自我裁判偏爱熟悉、工整的套路，每轮迭代把 B 的相对采样优势放大 1.3 倍。用未归一权重比跟踪：</blockquote>
+<blockquote>- 非模板权重固定为 0.9；模板权重第 t 轮 = 0.1 × 1.3ᵗ。</blockquote>
+<blockquote>- 5 轮后：0.1×1.3⁵ = 0.1×3.713 ≈ 0.371 → 占比 0.371/(0.371+0.9) ≈ <strong>29.2%</strong>。</blockquote>
+<blockquote>- 10 轮后：0.1×1.3¹⁰ = 0.1×13.79 ≈ 1.379 → 占比 1.379/(1.379+0.9) ≈ <strong>60.5%</strong>。</blockquote>
+<blockquote>- 可见仅 10 轮，模板回答就从小众变成主流——这就是<strong>模式塌缩 + 确认偏误</strong>的指数放大，自我博弈「自说自话」把自己越说越窄。</blockquote>
+<blockquote>- 破解：① 每轮混入真实高质量数据当外部锚；② 调大 β 缩短每轮步长（闭环第 14、16 期）；③ 用更强模型/人类定期抽检纠偏；④ 设验证集停止准则——多样性/准确率不再提升就停（闭环第 20 期）；⑤ 监控生成熵，别只盯损失。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：模板占比 5 轮≈29.2%、10 轮≈60.5%，自我偏好会指数级放大套路回答导致塌缩；须用外部锚 + β 控步长 + 停止准则 + 多样性监控兜底（闭环第 19 期单点主导、第 16 期过优化、第 20 期最优停止）。</blockquote>
+</details>
+<hr>
+<h2>四、明日预告</h2>
+<p><strong>第 18 期（概念序列第 38 项）：自奖励模型与 AI 反馈（Self-Rewarding / RLAIF）——当裁判也是模型自己</strong></p>
+<p>这期我们让模型「自己生成回答」跟自己打（SPIN）。下一期更进一步：如果连裁判都让模型自己当——用 LLM-as-a-Judge 给回答打分、再拿分数做强化学习（RLAIF / 自奖励模型），会发生什么？这条链把「被教」彻底变成「自学」，我们下期拆它怎么转起来、又会在哪儿翻车。</p></div></body></html>

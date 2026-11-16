@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第25期 · 资产配置</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 25 期</span>
+  <h1>今天的概念：<span class="tag">资产配置</span>（Asset Allocation）</h1>
+  <div class="date">2026年10月20日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 小区三家的"十年过山车"</h2>
+    <p>2014 年底，同住一栋楼的三个邻居，各自拿出 <strong>100 万</strong> 闲钱开始投资，出发点都一样："让钱别闲着。"可十年后，三家人的存折天差地别——差别不在谁更聪明，而在 <strong>钱是怎么摆的</strong>。</p>
+    <p><strong>阿强</strong> 性子猛："钱生钱就得狠。"他把 100 万 <strong>全仓股票型基金</strong>。2015 年那波牛市，账户一度冲到 <strong>180 万</strong>，他逢人便吹。可年中股灾一来，基金腰斩，账户掉到 <strong>85 万</strong>；他吓破了胆，在最低点 <strong>割肉只剩 70 万</strong>，从此再不敢碰股票，钱塞回存款。到 2024 年，那 70 万慢慢滚到 <strong>约 85 万</strong>。</p>
+    <p><strong>老张</strong> 最保守："我只信银行。"100 万 <strong>全存定期</strong>。十年里利率一路下行，他睡得最香，可到 2024 年本息加起来 <strong>约 130 万</strong>——看着涨了，实际购买力被通胀啃掉一大块。</p>
+    <p><strong>老赵</strong> 做了件"不起眼"的事：把 100 万分成了 <strong>60 万股票基金 + 40 万债券和存款</strong>，并且<strong>每年年底看一次，把比例调回 60/40</strong>。2015 牛市他峰值到 <strong>148 万</strong>（没阿强猛）；股灾时因为有 40 万债基托底，只跌到 <strong>118 万</strong>，更妙的是——再平衡逼他在低位把债券赚的钱 <strong>挪去补股票</strong>（等于自动"低买"）。此后十年，这个组合年化约 8%，到 2024 年涨到 <strong>约 255 万</strong>，而且他<strong>从头到尾睡得着觉</strong>。</p>
+    <div class="board">
+      <div class="row head"><span class="k">三家同样起点 100 万，十年后（2024）</span><span class="v">结局大不同</span></div>
+      <div class="row"><span class="k">阿强：满仓股基，恐慌割肉</span><span class="v">峰值 180万 → 谷底 70万 → 约 85万</span></div>
+      <div class="row"><span class="k">老张：全存定期</span><span class="v">约 130万（跑输通胀，购买力缩水）</span></div>
+      <div class="row"><span class="k">老赵：60/40 + 年再平衡</span><span class="v">约 255万，且全程安稳持有</span></div>
+      <div class="row"><span class="k">关键差别</span><span class="v">不是谁看得准，而是谁能"扛住+坚持+不靠神预测"</span></div>
+    </div>
+    <p>这戏码在每一轮牛熊里重演：满仓的人不是输在收益低，是输在 <strong>"涨时贪婪、跌时恐惧"</strong>，最后在最低点离场；全存款的人躲过了跌，也躲过了增长。真正笑到最后的，是那个 <strong>不必靠猜涨跌、靠纪律就能留在牌桌上</strong> 的组合。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>资产配置</strong>，就是<strong>按你的目标、期限和风险承受力，把资产分到不同类别（股票 / 债券 / 现金 / 另类），让每一类各司其职</strong>。它比我们第05期讲的"分散投资"又进了一步：分散是"别把鸡蛋放一个篮子"，而配置是"<strong>每个篮子该放几个、放什么蛋</strong>"——核心是按你的 <strong>目标和脾性</strong> 定出比例。老赵的 60/40，就是把"进攻"（股）和"后卫"（债）按比例排好阵型。</p>
+    <div class="formula">资产配置 = 按风险承受力定出 股 / 债 / 现 大类比例，再靠"再平衡"纪律执行</div>
+    <p>故事里最值钱的不是 60/40 这个数字，而是老赵的 <strong>再平衡（Rebalance）</strong>：每年把漂移的比例调回原定。这等于一套 <strong>纪律化的"高抛低吸"</strong>——某类涨多了就卖一点、补一点跌的，<strong>不靠预测、到点就操作</strong>。它最大的魔力是 <strong>治住人性</strong>：涨时逼你卖（防贪婪），跌时逼你买（防恐惧），让你在最低点反而加仓，而不是像阿强那样割肉。研究反复证明：长期收益里，<strong>大类配置的决定作用远大于具体挑哪只产品</strong>；而比配置更重要的，是 <strong>"能坚持到底的组合，才是好组合"</strong>——阿强收益最差，恰恰是因为他的组合他 <strong>扛不住</strong>。</p>
+    <p>🌰 换到你的钱包：先按"我能接受多大波动"定个比例（保守可 40/60、进取可 70/30 股债），<strong>半年或一年看一次，漂移了就调回</strong>；别在暴涨时全冲进去、暴跌时全割出来。记住：<strong>资产配置不保证你赚最多，但它保证你不必靠"神预测"也能留在场上</strong>——而留在场上，本身就是绝大多数人赢不了市场时，最稳的赢法。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>先排阵型，再上战场</strong>：按风险承受力定出股/债/现的大类比例，让"进攻"和"后卫"各司其职；产品只是落在配置骨架上的肉。</li>
+      <li><strong>再平衡是纪律化的高抛低吸</strong>：比例漂移后卖涨多的、补涨少的，不用猜涨跌，到点就操作，还能在低点自动加仓、治住贪婪与恐惧。</li>
+      <li><strong>能坚持的组合才是好组合</strong>：配置不保证赚最多，但保证你不必靠神预测也能留在牌桌上——留在场上，就是大多数人最稳的赢法。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：边际效用 —— 为什么第二杯奶茶没第一杯好喝？多赚的 1 万块，对穷人比富人更"值钱"？欲望被满足的规律，藏着定价、消费与幸福的全部秘密。</div>
+</div>
+</body>
+</html>

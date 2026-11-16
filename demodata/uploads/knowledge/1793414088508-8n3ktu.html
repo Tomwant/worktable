@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第03期 · 净利率</title>
+<style>
+  :root{
+    --green:#2f6b5e;
+    --green-soft:#e8f1ee;
+    --gold:#c9a961;
+    --gold-soft:#f7f0e2;
+    --ink:#23332e;
+    --muted:#6a7b75;
+    --line:#e3ebe7;
+    --card:#ffffff;
+    --bg:#f6f8f7;
+    --warn:#b5642f;
+    --warn-soft:#f6ece2;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.75;
+    padding:32px 16px;
+  }
+  .wrap{max-width:820px;margin:0 auto;}
+
+  /* 头部 */
+  header{
+    background:linear-gradient(135deg,var(--green) 0%,#3a7d6e 100%);
+    color:#fff;
+    border-radius:16px;
+    padding:30px 28px;
+    box-shadow:0 12px 30px rgba(47,107,94,.18);
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";position:absolute;right:-40px;top:-40px;
+    width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle,var(--gold) 0%,rgba(201,169,97,0) 70%);
+    opacity:.35;
+  }
+  .issue{
+    display:inline-block;background:var(--gold);color:#3a2f12;
+    font-size:13px;font-weight:700;letter-spacing:1px;
+    padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  header h1{font-size:28px;font-weight:800;letter-spacing:.5px;margin-bottom:8px;}
+  header .sub{font-size:15px;opacity:.92;max-width:640px;}
+  .meta{margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;}
+  .meta .date{font-size:13px;opacity:.85;}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;}
+  .chip{
+    background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.3);
+    color:#fff;font-size:12px;padding:3px 10px;border-radius:999px;
+  }
+
+  /* 卡片 */
+  .card{
+    background:var(--card);border:1px solid var(--line);
+    border-radius:16px;padding:24px 24px;margin-top:20px;
+    box-shadow:0 6px 18px rgba(40,60,55,.06);
+  }
+  .card h2{
+    font-size:18px;color:var(--green);font-weight:800;
+    display:flex;align-items:center;gap:10px;margin-bottom:14px;
+  }
+  .card h2 .tag{
+    background:var(--green-soft);color:var(--green);
+    font-size:12px;font-weight:700;padding:3px 10px;border-radius:8px;
+  }
+  .card p{margin:10px 0;color:#33433d;}
+  .lead{color:var(--muted);font-size:14px;}
+
+  /* 场景 */
+  .scene{
+    background:linear-gradient(180deg,var(--gold-soft),#fff);
+    border-left:4px solid var(--gold);
+  }
+
+  /* 公式卡 */
+  .formula{
+    background:var(--green-soft);border-radius:12px;
+    padding:14px 16px;margin:12px 0;
+    border:1px solid #d4e6e0;
+  }
+  .formula .name{font-weight:700;color:var(--green);font-size:14px;margin-bottom:4px;}
+  .formula .expr{font-size:14px;color:var(--ink);font-family:"Courier New",monospace;}
+  .formula .note{font-size:13px;color:var(--muted);margin-top:4px;}
+
+  /* 漏斗可视化 */
+  .funnel{margin:18px 0 6px;}
+  .bar-row{display:flex;align-items:center;margin:8px 0;gap:12px;}
+  .bar-label{width:96px;font-size:13px;color:var(--muted);text-align:right;flex-shrink:0;}
+  .bar-track{flex:1;background:#eef3f1;border-radius:8px;overflow:hidden;height:34px;position:relative;}
+  .bar-fill{height:100%;border-radius:8px;display:flex;align-items:center;padding-left:12px;color:#fff;font-size:13px;font-weight:700;white-space:nowrap;}
+  .b1{background:linear-gradient(90deg,#2f6b5e,#3f8a78);}
+  .b2{background:linear-gradient(90deg,#3a7d6e,#5aa48f);}
+  .b3{background:linear-gradient(90deg,#8a7d3a,#b0a05a);}
+  .b4{background:linear-gradient(90deg,var(--gold),#d9bd7d);color:#3a2f12;}
+
+  /* 算例步骤 */
+  .step{
+    background:#fbfcfb;border:1px dashed var(--line);border-radius:12px;
+    padding:12px 16px;margin:10px 0;font-size:14.5px;
+  }
+  .step b{color:var(--green);}
+  .step .res{color:var(--warn);font-weight:700;}
+
+  /* 红线清单 */
+  ul.rules{list-style:none;margin-top:8px;}
+  ul.rules li{
+    padding:12px 14px 12px 44px;position:relative;
+    border-bottom:1px solid var(--line);font-size:14.5px;
+  }
+  ul.rules li:last-child{border-bottom:none;}
+  ul.rules li .num{
+    position:absolute;left:12px;top:12px;width:22px;height:22px;border-radius:50%;
+    background:var(--gold);color:#3a2f12;font-size:12px;font-weight:800;
+    display:flex;align-items:center;justify-content:center;
+  }
+  ul.rules li b{color:var(--green);}
+
+  /* 自测题 */
+  .quiz{background:var(--warn-soft);border-radius:12px;padding:16px 18px;margin-top:6px;}
+  .quiz .q{font-weight:700;color:#7a3f14;margin-bottom:10px;}
+  .ans{margin-top:14px;background:#fff;border:1px solid var(--line);border-radius:10px;padding:14px 16px;}
+  .ans .at{font-weight:700;color:var(--green);font-size:13px;margin-bottom:8px;}
+
+  footer{
+    text-align:center;color:var(--muted);font-size:12.5px;
+    margin-top:26px;line-height:1.8;
+  }
+  footer .line{width:60px;height:3px;background:var(--gold);border-radius:2px;margin:0 auto 12px;}
+
+  @media (max-width:600px){
+    body{padding:18px 10px;}
+    header{padding:22px 18px;}
+    header h1{font-size:22px;}
+    .card{padding:18px 16px;}
+    .bar-label{width:72px;font-size:12px;}
+    .bar-fill{font-size:11px;padding-left:8px;}
+    ul.rules li{padding-left:38px;font-size:14px;}
+  }
+
+  /* 自测题折叠：原生 details，不依赖 JS（沙箱预览里也能点开） */
+  details.qz{border:1px solid #e3e8e5;border-radius:12px;background:#fff;margin:0 0 12px;overflow:hidden;transition:border-color .18s,box-shadow .18s;}
+  details.qz:hover{border-color:#cfdcd6;box-shadow:0 3px 12px rgba(47,107,94,.07);}
+  details.qz[open]{border-color:#cfe0d9;box-shadow:0 3px 14px rgba(47,107,94,.08);}
+  details.qz summary{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;list-style:none;user-select:none;}
+  details.qz summary::-webkit-details-marker{display:none;}
+  details.qz summary::before,details.qz summary::after{content:"" !important;display:none !important;}
+  details.qz summary::marker{content:"";}
+  details.qz .qt{flex:1 1 auto;font-weight:700;font-size:15px;line-height:1.6;color:#1f2a26;}
+  details.qz .peek{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:#8a6f2e;background:#f7f1e4;border-radius:999px;padding:3px 11px 3px 9px;margin-top:1px;transition:background .18s,color .18s;}
+  details.qz:hover .peek{background:#f2e8d2;}
+  details.qz[open] .peek{background:#e7f0ed;color:#2a5b50;}
+  details.qz .peek .arw{font-size:10px;line-height:1;transition:transform .2s;}
+  details.qz[open] .peek .arw{transform:rotate(180deg);}
+  details.qz .peek .t-off{display:none;}
+  details.qz[open] .peek .t-on{display:none;}
+  details.qz[open] .peek .t-off{display:inline;}
+  details.qz .qa{border-top:1px dashed #e3e8e5;padding:12px 16px 14px;background:#fbfcfb;font-size:14.5px;line-height:1.75;color:#1f2a26;animation:qzfade .2s ease-out;}
+  details.qz .qa b{color:#2f6b5e;}
+  details.qz .qa span:not([class]){color:#5f6b66;font-size:13.5px;}
+  details.qz .qa .step{display:block;margin:4px 0;}
+  @keyframes qzfade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .qz-lead{font-size:13.5px;color:#5f6b66;margin:-6px 0 14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <span class="issue">第 03 期</span>
+    <h1>净利率：门店"看起来赚钱"和"真赚到钱"的差距</h1>
+    <div class="sub">毛利再高，扣掉房租、人工、水电、税，最后落进口袋的才叫净利。本期教你用一个指标看清门店的真实赚钱能力。</div>
+    <div class="meta">
+      <span class="date">2026-10-31</span>
+      <div class="chips">
+        <span class="chip">净利率</span>
+        <span class="chip">净利润</span>
+        <span class="chip">费用率</span>
+        <span class="chip">毛利漏斗</span>
+        <span class="chip">经营红线</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- 场景 -->
+  <section class="card scene">
+    <h2><span class="tag">真实场景</span>老张的奶茶店怎么"越忙越穷"</h2>
+    <p>老张在商圈开了家奶茶店，月营业额能做到 <b>20 万元</b>。他算过毛利：一杯奶茶原料成本 4 元、卖 10 元，毛利率 60%，"这生意挺赚啊"。</p>
+    <p>可月底一算账，钱没剩下多少，有时还得从家里拿钱贴补。他纳闷：<b>毛利率明明有 60%，钱都去哪儿了？</b></p>
+    <p class="lead">答案就藏在"净利率"里——毛利只是起点，房租、人工、水电、营销、折旧、税，每一关都要从毛利里"切一刀"。净利率，才是门店真正留在口袋里的钱占收入的比例。</p>
+  </section>
+
+  <!-- 定义与公式 -->
+  <section class="card">
+    <h2><span class="tag">定义与公式</span>三个概念一次说清</h2>
+    <p>从收入到净利，中间要过三道"减法关"。我们用同一套数字串起来看：</p>
+
+    <div class="formula">
+      <div class="name">1. 毛利</div>
+      <div class="expr">毛利 = 营业收入 - 营业成本（食材/原料等直接成本）</div>
+      <div class="note">毛利率 = 毛利 ÷ 营业收入 × 100%。它只看"东西买进卖出"的价差。</div>
+    </div>
+
+    <div class="formula">
+      <div class="name">2. 营业利润</div>
+      <div class="expr">营业利润 = 毛利 - 经营费用（租金+人工+水电+营销+折旧+杂费）</div>
+      <div class="note">费用率 = 经营费用 ÷ 营业收入 × 100%。这是毛利到净利之间的"漏斗"。</div>
+    </div>
+
+    <div class="formula">
+      <div class="name">3. 净利润（本期主角）</div>
+      <div class="expr">净利润 = 营业利润 - 利息支出 - 所得税费用</div>
+      <div class="note">净利率 = 净利润 ÷ 营业收入 × 100%。它是门店真实盈利能力的"成绩单"。</div>
+    </div>
+
+    <p class="lead">一句话记忆：<b>净利率 = 毛利率 - 费用率 - 利息与税负占比</b>。毛利率高不等于净利率高，中间的"费用率"才是分水岭。</p>
+  </section>
+
+  <!-- 算例 -->
+  <section class="card">
+    <h2><span class="tag">算例</span>跟着老张的账本算一遍</h2>
+    <p>下面是一份可直接套用的月报算例，所有数字前后一致，请跟着算：</p>
+
+    <div class="step"><b>营业收入：</b>200,000 元</div>
+    <div class="step"><b>营业成本（食材/原料）：</b>80,000 元</div>
+    <div class="step"><b>毛利：</b>200,000 - 80,000 = <span class="res">120,000 元</span>（毛利率 = 120,000 ÷ 200,000 = 60%）</div>
+
+    <p style="margin-top:16px;font-weight:700;color:var(--green);">经营费用拆解（合计 100,000 元）：</p>
+    <div class="step">租金 30,000 ＋ 人工 45,000 ＋ 水电燃气 8,000 ＋ 营销及平台佣金 7,000 ＋ 折旧摊销 5,000 ＋ 其他杂费 5,000</div>
+
+    <div class="step"><b>营业利润：</b>120,000 - 100,000 = <span class="res">20,000 元</span></div>
+    <div class="step"><b>减：利息支出：</b>2,000 元 → 利润总额 = 18,000 元</div>
+    <div class="step"><b>减：所得税费用（按优惠税率 5% 简化）：</b>18,000 × 5% = 900 元</div>
+    <div class="step"><b>净利润：</b>18,000 - 900 = <span class="res">17,100 元</span></div>
+    <div class="step" style="background:var(--gold-soft);border-color:var(--gold);"><b>净利率：</b>17,100 ÷ 200,000 × 100% = <span class="res">8.55%</span></div>
+
+    <p class="lead">看明白了吗？毛利率 60% 的店，净利率只有 8.55%——中间 51.45% 全被费用和税吃掉了。老张的"越忙越穷"，就是这个漏斗漏得太狠。</p>
+
+    <div class="funnel">
+      <div class="bar-row">
+        <div class="bar-label">营业收入</div>
+        <div class="bar-track"><div class="bar-fill b1" style="width:100%">200,000</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">毛利</div>
+        <div class="bar-track"><div class="bar-fill b2" style="width:60%">120,000（60%）</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">营业利润</div>
+        <div class="bar-track"><div class="bar-fill b3" style="width:10%">20,000</div></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label">净利润</div>
+        <div class="bar-track"><div class="bar-fill b4" style="width:8.55%">17,100（8.55%）</div></div>
+      </div>
+    </div>
+    <p class="lead">这张"利润漏斗"图就是门店的钱去哪儿了：越往下越窄，最后能留下来的只是尖尖一小块。</p>
+  </section>
+
+  <!-- 判断标准 / 红线 -->
+  <section class="card">
+    <h2><span class="tag">经营红线</span>给门店老板的 5 条判断标准</h2>
+    <ul class="rules">
+      <li><span class="num">1</span><b>净利率健康线：</b>餐饮零售类门店净利率建议 ≥ 8%–10%（视业态）。长期低于 5% 要警惕，持续低于 3% 基本是在给房东和员工打工，自己白忙。</li>
+      <li><span class="num">2</span><b>费用率总闸：</b>经营费用占收入比（费用率）一般不宜超过 55%–60%。其中<b>租金占比 ≤ 15%</b>、<b>人工占比 ≤ 20%–25%</b> 是两个最关键的子红线，超了先从这两项动刀。</li>
+      <li><span class="num">3</span><b>盯住"毛利→净利"的差额：</b>差额就是费用率。如果毛利率 60% 但净利率只有 5%，说明近 55% 被费用吞掉，费用管控一定出了问题，优先查人工和租金。</li>
+      <li><span class="num">4</span><b>分清"账面净利"和"到手现金"：</b>净利含折旧（不是真花钱）和应收账款（还没回款）。实际能调动的现金可能比净利少，呼应往期"现金流与利润的区别"，别被账面利润骗了。</li>
+      <li><span class="num">5</span><b>看滚动 3 个月，别看单月：</b>新店爬坡期净利率为负正常；但若连续 3 个月低于红线，必须砍费用、调品类或谈降租，不能再拖。</li>
+    </ul>
+  </section>
+
+  <!-- 自测题 -->
+  <section class="card">
+    <h2><span class="tag">今日自测</span>动手算一算</h2>
+    <p class="qz-lead">先自己算一遍，再点答案对一下。</p>
+    <details class="qz">
+      <summary>
+        <span class="qt">某社区面馆月营业收入 120,000 元，食材成本 48,000 元，经营费用合计 56,000 元，利息支出 1,000 元，所得税按利润总额 15,000 元的 5% 计。请问这家店的净利率是多少？</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="qa">
+        <div class="step">毛利 = 120,000 - 48,000 = <b>72,000 元</b></div>
+        <div class="step">营业利润 = 72,000 - 56,000 = <b>16,000 元</b></div>
+        <div class="step">利润总额 = 16,000 - 1,000 = <b>15,000 元</b></div>
+        <div class="step">所得税 = 15,000 × 5% = <b>750 元</b></div>
+        <div class="step">净利润 = 15,000 - 750 = <b>14,250 元</b></div>
+        <div class="step" style="background:var(--gold-soft);border-color:var(--gold);">净利率 = 14,250 ÷ 120,000 × 100% = <b>11.875% ≈ 11.88%</b></div>
+        <p class="lead" style="margin-top:10px;">结论：这家面馆净利率约 11.88%，高于 8%–10% 健康线，盈利能力不错——但记得它的人工和租金占比是否也守住了子红线，才算真正健康。</p>
+      </div>
+    </details>
+  </section>
+
+  <footer>
+    <div class="line"></div>
+    财务知识日报 · 第 03 期 · 净利率<br>
+    本内容为门店经营通识讲义，不构成税务或投资顾问意见。数字均为教学示例，实际经营请以真实账目与专业会计为准。
+  </footer>
+
+</div>
+</body>
+</html>

@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融概念 第42期 · 风险与回报</title>
+<style>
+  :root{
+    --accent:#3a4cc0;
+    --accent2:#8a5cf6;
+    --bg:#f5f6fb;
+    --card:#ffffff;
+    --text:#1f2440;
+    --muted:#6b7290;
+    --line:#e8eaf2;
+    --r:16px;
+    --shadow:0 6px 24px rgba(58,76,192,0.08);
+    --gap:20px;
+    --warn:#e0533d;
+    --ok:#2f9e6b;
+    --soft:#eef0fb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--text);
+    line-height:1.75;
+    padding:28px 16px 56px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:820px;margin:0 auto;}
+
+  /* 头部 */
+  header{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;
+    border-radius:calc(var(--r) + 6px);
+    padding:34px 30px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  header::after{
+    content:"";position:absolute;right:-40px;top:-40px;
+    width:200px;height:200px;border-radius:50%;
+    background:rgba(255,255,255,0.10);
+  }
+  header::before{
+    content:"";position:absolute;right:40px;bottom:-60px;
+    width:140px;height:140px;border-radius:50%;
+    background:rgba(255,255,255,0.07);
+  }
+  .issue{
+    font-size:14px;letter-spacing:2px;opacity:.9;
+    display:inline-block;padding:4px 12px;border:1px solid rgba(255,255,255,.5);
+    border-radius:999px;margin-bottom:14px;
+  }
+  header h1{font-size:34px;font-weight:800;letter-spacing:1px;margin-bottom:8px;}
+  header .sub{font-size:16px;opacity:.95;font-weight:400;margin-bottom:18px;max-width:620px;}
+  .meta{display:flex;flex-wrap:wrap;gap:10px;font-size:13px;opacity:.95;}
+  .meta span{background:rgba(255,255,255,.16);padding:5px 12px;border-radius:999px;}
+  .tags{margin-top:16px;display:flex;flex-wrap:wrap;gap:8px;}
+  .tags b{font-weight:600;font-size:13px;opacity:.9;align-self:center;}
+  .tags span{
+    background:rgba(255,255,255,.16);padding:4px 11px;border-radius:8px;font-size:12.5px;
+  }
+
+  /* 卡片 */
+  .card{
+    background:var(--card);border-radius:var(--r);
+    padding:26px 26px;margin-top:var(--gap);
+    box-shadow:var(--shadow);border:1px solid var(--line);
+  }
+  .card h2{
+    font-size:20px;font-weight:700;margin-bottom:14px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .card h2 .num{
+    width:30px;height:30px;border-radius:9px;flex:0 0 30px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;font-size:15px;display:flex;align-items:center;justify-content:center;font-weight:700;
+  }
+  .card p{margin-bottom:12px;color:#33395c;}
+  .card p:last-child{margin-bottom:0;}
+  .hl{color:var(--accent);font-weight:600;}
+  .hl2{color:var(--accent2);font-weight:600;}
+
+  /* 故事段首字 */
+  .story p:first-of-type::first-letter{
+    font-size:46px;font-weight:800;float:left;line-height:1;
+    margin:6px 12px 0 0;color:var(--accent);
+  }
+
+  /* 概念卡片 */
+  .def{
+    background:var(--soft);border-left:5px solid var(--accent);
+    border-radius:12px;padding:18px 20px;margin:6px 0 14px;
+  }
+  .def .t{font-weight:700;color:var(--accent);font-size:15px;margin-bottom:6px;}
+  .formula{
+    font-family:"Courier New",monospace;background:#1f2440;color:#e8ecff;
+    padding:14px 16px;border-radius:10px;font-size:14.5px;margin:10px 0;
+    overflow-x:auto;line-height:1.6;
+  }
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:6px;}
+  .mini{
+    background:var(--soft);border-radius:12px;padding:14px 16px;font-size:14.5px;
+  }
+  .mini b{color:var(--accent);}
+
+  /* 风险回报光谱 */
+  .spectrum{
+    margin:18px 0 6px;border-radius:14px;padding:20px;
+    background:linear-gradient(90deg,#2f9e6b,#7bc043,#e6b800,#e8833d,#e0533d);
+    position:relative;color:#fff;
+  }
+  .spectrum .row{display:flex;justify-content:space-between;font-size:12.5px;font-weight:600;margin-bottom:10px;}
+  .spectrum .ends{display:flex;justify-content:space-between;font-size:12px;opacity:.95;}
+  .pts{display:flex;justify-content:space-between;margin-top:14px;}
+  .pt{text-align:center;font-size:12px;max-width:90px;}
+  .pt .dot{width:11px;height:11px;border-radius:50%;background:#fff;margin:0 auto 6px;box-shadow:0 0 0 3px rgba(255,255,255,.35);}
+  .pt b{display:block;font-weight:700;margin-bottom:2px;}
+
+  /* 案例 */
+  .case{
+    border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:14px;
+    position:relative;
+  }
+  .case:last-child{margin-bottom:0;}
+  .case .ct{font-weight:700;color:var(--accent2);margin-bottom:6px;font-size:15.5px;}
+  .case .tag{
+    position:absolute;right:14px;top:14px;font-size:11.5px;color:var(--muted);
+    background:var(--soft);padding:3px 9px;border-radius:6px;
+  }
+
+  /* 关联 */
+  .rel{display:flex;flex-wrap:wrap;gap:10px;margin-top:6px;}
+  .rel span{
+    background:var(--soft);color:var(--accent);border:1px solid var(--line);
+    padding:6px 13px;border-radius:999px;font-size:13.5px;font-weight:600;
+  }
+  .rel-note{font-size:14px;color:#33395c;margin-top:14px;}
+
+  /* 启示清单 */
+  .tips{list-style:none;counter-reset:t;}
+  .tips li{
+    counter-increment:t;position:relative;padding:12px 14px 12px 50px;
+    border-bottom:1px dashed var(--line);font-size:14.5px;color:#33395c;
+  }
+  .tips li:last-child{border-bottom:none;}
+  .tips li::before{
+    content:counter(t);position:absolute;left:12px;top:12px;
+    width:26px;height:26px;border-radius:8px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  }
+  .tips li b{color:var(--accent);}
+
+  /* 思考题 */
+  .think{
+    background:linear-gradient(135deg,#f1f3fe,#fbf0ff);
+    border:1px solid var(--line);border-radius:14px;padding:22px 24px;
+  }
+  .think .q{font-weight:700;color:var(--accent);margin-bottom:10px;font-size:16px;}
+  .think p{color:#33395c;font-size:14.5px;}
+
+  /* 脚注 */
+  footer{
+    text-align:center;color:var(--muted);font-size:12.5px;
+    margin-top:30px;line-height:1.9;
+  }
+  footer .line{width:60px;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));margin:0 auto 14px;border-radius:3px;}
+
+  @media (max-width:600px){
+    body{padding:18px 12px 40px;}
+    header{padding:26px 20px;}
+    header h1{font-size:26px;}
+    header .sub{font-size:14.5px;}
+    .card{padding:20px 18px;}
+    .grid2{grid-template-columns:1fr;}
+    .story p:first-of-type::first-letter{font-size:38px;}
+    .pt{max-width:64px;font-size:10.5px;}
+    .pts{flex-wrap:wrap;gap:10px;justify-content:flex-start;}
+    .pt{flex:1 1 30%;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header>
+    <div class="issue">第 42 期</div>
+    <h1>风险与回报</h1>
+    <div class="sub">金融世界里最古老的一条铁律：没有"高收益、零风险"的好事。想要更高的回报，就必须准备好承接更高的不确定。</div>
+    <div class="meta">
+      <span>日期 2026-11-13</span>
+      <span>主题 风险收益权衡</span>
+      <span>难度 入门</span>
+    </div>
+    <div class="tags">
+      <b>关键词：</b>
+      <span>风险溢价</span>
+      <span>收益曲线</span>
+      <span>资产配置</span>
+      <span>永久损失</span>
+      <span>时间熨平波动</span>
+    </div>
+  </header>
+
+  <!-- 故事 -->
+  <section class="card story">
+    <h2><span class="num">1</span>先听个故事：老陈的两难</h2>
+    <p>武夷山脚下，老陈经营着一家开了十二年的茶庄。这一年生意稳当，账上攒下了十万元闲钱。他犯了难，因为摆在面前的是两条路。</p>
+    <p>邻居老王劝他："存银行呗，一年利息两个点，稳稳当当落袋两千块。咱庄稼人图个安心。"老陈点点头，这确实睡得着觉。</p>
+    <p>可侄子小陈从深圳打来电话："叔，我电商做得正起劲，就差十万周转，您借我，一年准还您十三万，三成的回报！"三成，是银行利息的十五倍。老陈心动，却又发慌——他听过太多"年轻人创业，钱打水漂"的事。</p>
+    <p>他把两难说给镇上的老会计听。老会计笑了："你不是在两个项目之间选，你是在'安心'和'野心'之间选。银行那两千块，是用'不亏'换来的；侄子那三万，是用'可能血本无归'换来的。你要的回报越高，就得把越多睡不着的夜，提前算进成本里。"</p>
+    <p>这，就是风险与回报最朴素的样子。</p>
+  </section>
+
+  <!-- 概念卡片 -->
+  <section class="card">
+    <h2><span class="num">2</span>概念卡片：什么是风险与回报</h2>
+    <div class="def">
+      <div class="t">一句话定义</div>
+      <p style="margin:0;color:#33395c;"><b>风险</b>是"实际结果偏离预期的可能"，<b>回报</b>是"投资带来的收益"。在有效市场中，两者<b>正相关</b>——想拿到更高的潜在回报，就必须承担更高的不确定性。这条关系被称为<span class="hl">风险收益权衡（Risk-Return Tradeoff）</span>。</p>
+    </div>
+    <p>金融学用一条简洁的逻辑把它说清：投资者是厌恶风险的。要让一个人愿意承担额外一分风险，市场就必须用额外一分回报来补偿他。这份"补偿"，叫作<span class="hl2">风险溢价（Risk Premium）</span>。</p>
+    <div class="formula">预期回报 ＝ 无风险利率 ＋ 风险溢价<br>风险溢价 ＝ f(波动幅度、亏损概率、流动性、期限……)</div>
+    <p>举个例子：把钱借给国家（买国债）几乎不会违约，所以它的回报只比"无风险利率"高一点点；把钱投进一家初创公司，它随时可能关门，于是市场要求它许诺数倍回报，才有人愿意下注。</p>
+    <div class="grid2">
+      <div class="mini"><b>风险≠波动</b><br>短期涨跌叫波动，它可以被时间熨平；真正的"风险"是本金的<b>永久损失</b>——再也回不来的那种。</div>
+      <div class="mini"><b>风险可被管理</b><br>它不能被消除，但能通过<b>分散</b>、<b>对冲</b>、<b>匹配期限</b>来降到自己能承受的区间内。</div>
+    </div>
+  </section>
+
+  <!-- 光谱可视化 -->
+  <section class="card">
+    <h2><span class="num">3</span>一张光谱：从"安心"到"野心"</h2>
+    <p>把常见资产按"风险—回报"排成一条线，你会看到它们严丝合缝地从左到右递进。每向右一步，潜在回报更高，踩空的概率也更大。</p>
+    <div class="spectrum">
+      <div class="row"><span>低风险 · 低回报</span><span>高风险 · 高回报</span></div>
+      <div class="ends"><span>安稳区</span><span>激进区</span></div>
+    </div>
+    <div class="pts">
+      <div class="pt"><div class="dot"></div><b>活期/国债</b>≈2% 几乎不亏</div>
+      <div class="pt"><div class="dot"></div><b>债券基金</b>≈4% 偶有回撤</div>
+      <div class="pt"><div class="dot"></div><b>蓝筹股</b>≈8% 年波动大</div>
+      <div class="pt"><div class="dot"></div><b>成长股</b>≈12% 起落剧烈</div>
+      <div class="pt"><div class="dot"></div><b>期权/币</b>高波动 可归零</div>
+    </div>
+    <p style="margin-top:16px;font-size:14px;color:var(--muted);">注意：这条光谱不是"越右越好"。它只说明——<b style="color:var(--accent)">每一档回报，都标好了对应的价码</b>。关键不在于选哪档，而在于这一档是否与你承受得起的风险相匹配。</p>
+  </section>
+
+  <!-- 真实案例 -->
+  <section class="card">
+    <h2><span class="num">4</span>真实案例：定律如何在现实中显形</h2>
+    <div class="case">
+      <div class="tag">长期视角</div>
+      <div class="ct">案例一：美股百年的"风险补偿"</div>
+      <p>过去约一百年，美国大盘股的年化回报接近 10%，远高于长期国债的 5% 左右。但"10%"不是每年都给你的：1929 年跌约 25%，1933 年却涨超 50%。高回报，是用一次次"吓得人睡不着"的波动换来的。忍受了波动的人，才最终拿到那份溢价。</p>
+    </div>
+    <div class="case">
+      <div class="tag">低估风险</div>
+      <div class="ct">案例二：长期资本管理公司（LTCM）的崩塌</div>
+      <p>这家由诺奖得主坐镇的对冲基金，用复杂模型押注"低风险高回报"，一度年收益惊人，吸引了全世界的钱。可模型假设"极端情况极难发生"，1998 年俄罗斯债务违约的黑天鹅一来，几天内亏光数十亿、险些拖垮全球金融。它要的回报很高，却没为对应的尾部风险留足价码。</p>
+    </div>
+    <div class="case">
+      <div class="tag">伪装的风险</div>
+      <div class="ct">案例三：2008 年"AAA 级"的次贷债券</div>
+      <p>次贷危机前，大量被评级机构评为最高安全级（AAA）的债券，承诺着高于国债的回报，看起来"风险低、收益高"。真相是风险被层层包装藏了起来。当房价下跌，这些"安全资产"一夜变废纸。这提醒我们：<b>看不见的风险，不等于没有风险</b>。</p>
+    </div>
+  </section>
+
+  <!-- 关联往期 -->
+  <section class="card">
+    <h2><span class="num">5</span>与已学概念的呼应</h2>
+    <div class="rel">
+      <span>杠杆</span><span>分散投资</span><span>对冲</span><span>黑天鹅事件</span><span>复利</span><span>机会成本</span><span>庞氏骗局</span>
+    </div>
+    <div class="rel-note">
+      <p style="margin-bottom:10px;"><b style="color:var(--accent)">杠杆</b>是把双刃剑：它同时放大回报与风险，把光谱上的"稳健"瞬间推到"激进"。<b style="color:var(--accent)">分散投资</b>与<b style="color:var(--accent)">对冲</b>则是在"不降低预期回报"的前提下压低风险——相当于在光谱上向左挪一点，却没少赚钱。</p>
+      <p style="margin-bottom:10px;"><b style="color:var(--accent)">黑天鹅事件</b>提醒我们，尾部风险虽罕见却致命，风险溢价里必须给"万一"留份额。<b style="color:var(--accent)">复利</b>说明：长期持有能让时间熨平短期波动，把"波动风险"转化为"回报积累"。</p>
+      <p style="margin-bottom:0;"><b style="color:var(--accent)">机会成本</b>是另一面：你选了低风险，就放弃了高回报的可能；<b style="color:var(--accent)">庞氏骗局</b>之所以害人，正是它谎称"高回报＋零风险"，直接撕掉了风险与回报必须同行的铁律。</p>
+    </div>
+  </section>
+
+  <!-- 启示 -->
+  <section class="card">
+    <h2><span class="num">6</span>给普通投资者的启示清单</h2>
+    <ol class="tips">
+      <li><b>警惕"高收益、零风险"话术。</b>它违背金融最基本的定律，最可能的归宿是庞氏骗局或本金归零。</li>
+      <li><b>让风险与人生阶段匹配。</b>年轻、收入稳定、时间长，可承受更高风险；临近退休或短期要用的钱，应往光谱左边挪。</li>
+      <li><b>用分散投资"降险不降收"。</b>在同等预期回报下，多资产组合能把波动摊薄（见第40期）。</li>
+      <li><b>分清波动与永久损失。</b>账户短期浮亏是波动，长期持有往往自愈；真正该怕的，是标的本身灭失。</li>
+      <li><b>理解风险溢价。</b>任何"额外收益"都该对应"额外风险"，拿不到合理解释的高收益，大概率是陷阱。</li>
+      <li><b>先算自己的承受力。</b>问问自己：这笔钱若腰斩，会影响生活、睡眠、家庭吗？会，就别碰高波动资产。</li>
+      <li><b>别用借来的钱博高回报。</b>杠杆叠加高风险，一次失误便是不可逆的灾难（见第41期）。</li>
+      <li><b>用时间换空间。</b>长期持有让复利发挥作用，把短期风险"熨"成长期回报（见第37期）。</li>
+    </ol>
+  </section>
+
+  <!-- 思考题 -->
+  <section class="card">
+    <div class="think">
+      <div class="q">今日思考题</div>
+      <p>如果有人向你推荐一款"每年稳赚 15%、绝不会亏损"的理财产品，从"风险与回报"这条铁律看，它最可能是哪几种情况？你会问对方哪三个问题，来验证它到底是真机会，还是旧把戏？（提示：回想第36期庞氏骗局里的"红旗信号"。）</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="line"></div>
+    金融概念日报 · 第42期《风险与回报》 · 2026-11-13<br>
+    本页为自包含离线报告，无任何外部引用。故事用于解释概念，不构成任何投资建议。
+  </footer>
+
+</div>
+</body>
+</html>

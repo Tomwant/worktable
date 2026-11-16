@@ -1,0 +1,686 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>网页测评 · 原型</title>
+<style>
+:root{
+  --bg1:#f6f4fa; --bg2:#efeaf7;
+  --surface:rgba(255,255,255,.72); --surface-2:rgba(125,91,166,.055); --surface-solid:#fdfcff;
+  --text:#2a2338; --text-2:#5d5473; --text-3:#8f87a3;
+  --line:rgba(255,255,255,.62);
+  --line-2:rgba(90,70,130,.14);
+  --line-3:rgba(90,70,130,.24);
+  --accent:#7d5ba6; --accent-deep:#63478a; --accent-soft:rgba(125,91,166,.14);
+  --warm:#c9a961; --warm-soft:rgba(201,169,97,.16);
+  --danger:#b8434f; --danger-soft:rgba(184,67,79,.12);
+  --ok:#2f7a5b; --ok-soft:rgba(47,122,91,.13);
+  --r-input:14px; --r-card:22px; --r-top:26px;
+  --shadow:0 1px 2px rgba(72,50,110,.05),0 12px 36px -14px rgba(72,50,110,.20),inset 0 1px 0 rgba(255,255,255,.62);
+  --ring:0 0 0 3px rgba(125,91,166,.16);
+  --ease:cubic-bezier(.22,.9,.34,1);
+}
+[data-theme="dark"]{
+  --bg1:#171322; --bg2:#1e1830;
+  --surface:rgba(38,31,56,.72); --surface-2:rgba(196,167,231,.07); --surface-solid:#241d36;
+  --text:#e9ede8; --text-2:#b6c1ba; --text-3:#a9b5ae;
+  --line:rgba(196,167,231,.16);
+  --line-2:rgba(196,167,231,.20);
+  --line-3:rgba(196,167,231,.34);
+  --accent:#c4a7e7; --accent-deep:#7d5ba6; --accent-soft:rgba(196,167,231,.16);
+  --warm:#e0c483; --warm-soft:rgba(224,196,131,.16);
+  --danger:#e0838d; --danger-soft:rgba(224,131,141,.14);
+  --ok:#7dd3a8; --ok-soft:rgba(125,211,168,.14);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 14px 40px -16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);
+  --ring:0 0 0 3px rgba(196,167,231,.22);
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{
+  font:13px/1.6 "Microsoft YaHei","PingFang SC",system-ui,sans-serif;
+  color:var(--text);
+  background:
+    radial-gradient(closest-side at 12% 4%,rgba(125,91,166,.13),transparent 100%) fixed,
+    radial-gradient(closest-side at 88% 10%,rgba(201,169,97,.11),transparent 100%) fixed,
+    linear-gradient(160deg,var(--bg1),var(--bg2));
+  min-height:100vh; padding:16px 18px 40px;
+}
+.wrap{max-width:1180px;margin:0 auto}
+
+/* ---------- 顶栏 ---------- */
+.topbar{
+  display:flex;align-items:center;gap:12px;padding:8px 10px 8px 14px;
+  border-radius:var(--r-top);background:var(--surface);border:1px solid var(--line);
+  box-shadow:var(--shadow);margin-bottom:14px;
+}
+.logo{
+  width:26px;height:26px;border-radius:9px;flex:0 0 auto;display:grid;place-items:center;
+  font-weight:750;font-size:12px;color:#fff;
+  background:linear-gradient(140deg,var(--accent),var(--accent-deep));
+}
+.brand{font-size:13px;font-weight:700;letter-spacing:-.2px;margin-right:6px;flex:0 0 auto;white-space:nowrap}
+.pills{display:flex;gap:2px;overflow:auto;scrollbar-width:none;min-width:0}
+.pills::-webkit-scrollbar{display:none}
+.pills button{
+  border:0;background:transparent;font:inherit;font-size:12px;color:var(--text-2);
+  padding:6px 11px;border-radius:10px;cursor:pointer;white-space:nowrap;transition:.15s var(--ease);
+}
+.pills button:hover{background:var(--surface-2);color:var(--text)}
+.pills button.on{background:var(--accent-soft);color:var(--accent-deep);font-weight:650}
+[data-theme="dark"] .pills button.on{color:var(--accent)}
+.icons{margin-left:auto;display:flex;gap:6px}
+.icons i{
+  width:26px;height:26px;border-radius:9px;display:grid;place-items:center;font-style:normal;
+  font-size:12px;color:var(--text-3);background:var(--surface-2);cursor:pointer;
+}
+
+/* ---------- 面板骨架（对齐 AppPanel） ---------- */
+.panel{
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--r-card);
+  box-shadow:var(--shadow);padding:18px 20px 20px;margin-bottom:14px;
+  backdrop-filter:blur(20px) saturate(150%);
+}
+.panel-hd{display:flex;align-items:flex-start;gap:12px;margin-bottom:14px}
+.panel-tt{flex:1;min-width:0}
+.panel-tt h2{margin:0;font-size:15px;font-weight:750;letter-spacing:-.2px;line-height:1.35}
+.panel-tt p{margin:3px 0 0;font-size:11.5px;color:var(--text-3);line-height:1.6}
+.panel-act{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+
+/* ---------- 按钮 ---------- */
+.btn{
+  display:inline-flex;align-items:center;gap:4px;height:31px;padding:0 13px;
+  font:inherit;font-size:12px;font-weight:600;color:var(--text-2);
+  background:var(--surface-solid);border:1px solid var(--line-2);border-radius:var(--r-input);
+  cursor:pointer;transition:.15s var(--ease);white-space:nowrap;
+}
+.btn:hover{border-color:var(--line-3);color:var(--text);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.primary{
+  color:#fff;border-color:transparent;
+  background:linear-gradient(140deg,var(--accent),var(--accent-deep));
+  box-shadow:0 6px 16px -8px rgba(125,91,166,.75);
+}
+[data-theme="dark"] .btn.primary{color:#221a33}
+.btn.primary:hover{filter:brightness(1.05)}
+.btn.ghost{background:transparent}
+.btn.sm{height:26px;padding:0 9px;font-size:11px;border-radius:9px}
+
+/* ---------- 概览数字 ---------- */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.stat{
+  padding:11px 13px;border-radius:16px;background:var(--surface-2);
+  border:1px solid var(--line-2);transition:.16s var(--ease);
+}
+.stat:hover{border-color:var(--line-3);transform:translateY(-1px)}
+.stat b{display:block;font-size:21px;font-weight:750;letter-spacing:-.6px;line-height:1.25}
+.stat b i{font-style:normal;font-size:11px;font-weight:600;color:var(--text-3);margin-left:3px}
+.stat span{font-size:11px;color:var(--text-3)}
+.stat.warn b{color:var(--warm)}
+.stat.warn{background:var(--warm-soft);border-color:rgba(201,169,97,.3)}
+
+/* ---------- 分段切换 ---------- */
+.seg{display:inline-flex;padding:3px;gap:2px;border-radius:12px;background:var(--surface-2);border:1px solid var(--line-2)}
+.seg button{
+  border:0;background:transparent;font:inherit;font-size:11.5px;color:var(--text-3);
+  padding:4px 10px;border-radius:9px;cursor:pointer;transition:.15s var(--ease);
+}
+.seg button:hover{color:var(--text)}
+.seg button.on{background:var(--surface-solid);color:var(--accent-deep);font-weight:650;box-shadow:0 1px 3px rgba(72,50,110,.12)}
+[data-theme="dark"] .seg button.on{color:var(--accent)}
+
+/* ---------- 矩阵 ---------- */
+.grid-wrap{
+  overflow:auto;max-height:430px;border-radius:14px;
+  border:1px solid var(--line-2);background:var(--surface-solid);
+}
+table{border-collapse:separate;border-spacing:0;width:100%;font-variant-numeric:tabular-nums}
+th,td{padding:0}
+thead th{
+  position:sticky;top:0;z-index:3;background:var(--surface-solid);
+  border-bottom:1px solid var(--line-2);padding:9px 6px;vertical-align:bottom;
+}
+thead th:first-child{left:0;z-index:4;border-right:1px solid var(--line-2)}
+.tname{width:206px;min-width:206px}
+.prod{width:110px;min-width:110px;text-align:center}
+.prod .pn{display:block;font-size:11.5px;font-weight:650;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prod .pa{display:block;font-size:10px;color:var(--text-3);margin-top:1px}
+.prod .pa b{color:var(--accent-deep);font-weight:700}
+[data-theme="dark"] .prod .pa b{color:var(--accent)}
+.rowh{text-align:left;padding:9px 10px 9px 12px!important;font-weight:650;font-size:11.5px;color:var(--text)}
+.rowh small{display:block;font-weight:400;font-size:10px;color:var(--text-3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:186px}
+tbody td{border-bottom:1px solid var(--line-2);padding:5px 4px}
+tbody tr:last-child td{border-bottom:0}
+tbody tr:hover td{background:var(--surface-2)}
+tbody th.rowh{position:sticky;left:0;z-index:2;background:var(--surface-solid);border-right:1px solid var(--line-2)}
+
+.cell{
+  position:relative;height:34px;border-radius:10px;display:grid;place-items:center;
+  cursor:pointer;font-size:13px;font-weight:750;transition:.14s var(--ease);
+  border:1px solid transparent;
+}
+.cell:hover{transform:translateY(-1px);box-shadow:0 4px 12px -6px rgba(72,50,110,.5)}
+.cell.s5{background:var(--ok-soft);color:var(--ok);border-color:rgba(47,122,91,.28)}
+.cell.s4{background:rgba(47,122,91,.07);color:var(--ok);border-color:rgba(47,122,91,.16)}
+.cell.s3{background:var(--warm-soft);color:#a8843c;border-color:rgba(201,169,97,.34)}
+[data-theme="dark"] .cell.s3{color:var(--warm)}
+.cell.s2{background:rgba(201,120,60,.14);color:#b0632f;border-color:rgba(201,120,60,.28)}
+[data-theme="dark"] .cell.s2{color:#e8a877}
+.cell.s1{background:var(--danger-soft);color:var(--danger);border-color:rgba(184,67,79,.26)}
+/* 深色下绿系的描边和底会沉进背景，单独给一套更亮的 */
+[data-theme="dark"] .cell.s5{background:rgba(125,211,168,.20);border-color:rgba(125,211,168,.40)}
+[data-theme="dark"] .cell.s4{background:rgba(125,211,168,.10);border-color:rgba(125,211,168,.22)}
+.cell.empty{
+  background:transparent;border:1px dashed var(--line-3);color:var(--text-3);
+  font-weight:400;font-size:14px;
+}
+.cell.empty:hover{border-color:var(--accent);color:var(--accent);background:var(--accent-soft)}
+.cell .n{
+  position:absolute;top:-3px;right:-3px;font-size:8.5px;font-weight:700;line-height:1;
+  padding:2px 3px;border-radius:6px;background:var(--surface-solid);
+  color:var(--text-3);border:1px solid var(--line-2);
+}
+.cell.empty .n{display:none}
+
+/* ---------- 产品档案 ---------- */
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(226px,1fr));grid-auto-rows:1fr;gap:10px}
+.pcard{
+  border:1px solid var(--line-2);border-radius:16px;padding:12px 13px;background:var(--surface-solid);
+  cursor:pointer;transition:.16s var(--ease);display:flex;flex-direction:column;gap:8px;
+}
+.pcard:hover{border-color:var(--line-3);transform:translateY(-2px);box-shadow:0 10px 24px -16px rgba(72,50,110,.6)}
+.pcard .hd{display:flex;align-items:center;gap:9px}
+.pico{
+  width:30px;height:30px;border-radius:10px;flex:0 0 auto;display:grid;place-items:center;
+  font-size:11px;font-weight:750;color:#fff;letter-spacing:-.5px;
+}
+.pcard .hdc{flex:1;min-width:0}
+.pcard .hdc b{display:block;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pcard .hdc span{display:block;font-size:10px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pscore{font-size:17px;font-weight:750;letter-spacing:-.5px;color:var(--accent-deep);flex:0 0 auto}
+[data-theme="dark"] .pscore{color:var(--accent)}
+.pcard .bar{height:4px;border-radius:3px;background:var(--accent-soft);overflow:hidden}
+.pcard .bar i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent-deep))}
+.pcard .ft{display:flex;align-items:center;gap:6px;font-size:10.5px;color:var(--text-3)}
+.tg{
+  font-size:10px;padding:1px 6px;border-radius:7px;background:var(--surface-2);
+  border:1px solid var(--line-2);color:var(--text-2);white-space:nowrap;
+}
+
+/* ---------- 流水 ---------- */
+.feed{display:flex;flex-direction:column}
+.fitem{display:grid;grid-template-columns:54px 96px 1fr auto;gap:10px;align-items:center;padding:9px 4px;border-bottom:1px solid var(--line-2)}
+.fitem:last-child{border-bottom:0}
+.fitem .d{font-size:10.5px;color:var(--text-3);font-variant-numeric:tabular-nums}
+.fitem .w{font-size:11.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fitem .t{font-size:11.5px;color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.fitem .t em{font-style:normal;color:var(--text-3)}
+.pill-s{font-size:11px;font-weight:750;padding:2px 8px;border-radius:8px;white-space:nowrap}
+
+/* ---------- 弹窗 ---------- */
+.mask{
+  position:fixed;inset:0;background:rgba(30,22,48,.26);backdrop-filter:blur(2px);
+  display:none;align-items:center;justify-content:center;padding:20px;z-index:40;
+}
+.mask.on{display:flex}
+.modal{
+  width:760px;max-width:100%;max-height:88vh;overflow:auto;
+  background:var(--surface-solid);border:1px solid var(--line);border-radius:var(--r-card);
+  box-shadow:0 30px 70px -30px rgba(30,20,50,.6);padding:18px 20px 16px;
+  animation:pop .22s var(--ease);
+}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.985)}to{opacity:1;transform:none}}
+.m-hd{display:flex;align-items:flex-start;gap:10px;margin-bottom:14px}
+.m-hd h3{margin:0;font-size:14.5px;font-weight:750;letter-spacing:-.2px}
+.m-hd p{margin:3px 0 0;font-size:11.5px;color:var(--text-3)}
+.m-close{
+  margin-left:auto;width:26px;height:26px;border-radius:9px;border:1px solid var(--line-2);
+  background:transparent;color:var(--text-3);cursor:pointer;font-size:13px;line-height:1;
+}
+.m-close:hover{color:var(--danger);border-color:var(--danger);background:var(--danger-soft)}
+
+.fld{margin-bottom:13px}
+.fld>label{display:block;font-size:11px;font-weight:650;color:var(--text-2);margin-bottom:6px}
+.fld>label em{font-style:normal;font-weight:400;color:var(--text-3);margin-left:4px}
+
+.dots{display:flex;align-items:center;gap:7px}
+.dot{
+  width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
+  border:1px solid var(--line-2);background:var(--surface-2);color:var(--text-3);
+  font-size:12.5px;font-weight:750;cursor:pointer;transition:.14s var(--ease);
+}
+.dot:hover{border-color:var(--line-3);color:var(--text);transform:translateY(-1px)}
+.dot.on{color:#fff;border-color:transparent;background:linear-gradient(140deg,var(--accent),var(--accent-deep));box-shadow:0 6px 14px -8px rgba(125,91,166,.8)}
+[data-theme="dark"] .dot.on{color:#221a33}
+.dots .hint{font-size:11px;color:var(--text-3);margin-left:4px}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{
+  font:inherit;font-size:11px;padding:3px 9px;border-radius:9px;cursor:pointer;
+  border:1px solid var(--line-2);background:transparent;color:var(--text-2);transition:.14s var(--ease);
+}
+.chip:hover{border-color:var(--line-3);color:var(--text)}
+.chip.on{background:var(--accent-soft);border-color:transparent;color:var(--accent-deep);font-weight:650}
+.chip.on.bad{background:var(--danger-soft);color:var(--danger)}
+[data-theme="dark"] .chip.on{color:var(--accent)}
+
+textarea,input[type="text"],input[type="number"]{
+  width:100%;font:inherit;font-size:12px;color:var(--text);background:var(--surface-2);
+  border:1px solid var(--line-2);border-radius:var(--r-input);padding:8px 11px;
+  outline:none;transition:.15s var(--ease);resize:vertical;
+}
+textarea:focus,input:focus{border-color:var(--accent);box-shadow:var(--ring);background:var(--surface-solid)}
+textarea.ans{min-height:112px;line-height:1.7}
+.row2{display:grid;grid-template-columns:1fr 130px;gap:10px}
+
+.m-ft{display:flex;align-items:center;gap:8px;margin-top:16px;padding-top:14px;border-top:1px solid var(--line-2)}
+.m-ft .tip{font-size:10.5px;color:var(--text-3);margin-right:auto}
+
+/* ---------- 提示条 ---------- */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translate(-50%,20px);
+  background:var(--surface-solid);border:1px solid var(--line-2);border-radius:14px;
+  box-shadow:0 18px 40px -20px rgba(30,20,50,.5);padding:9px 16px;font-size:12px;
+  opacity:0;pointer-events:none;transition:.24s var(--ease);z-index:60;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast b{color:var(--ok)}
+
+.empty-view{padding:26px;text-align:center;font-size:12px;color:var(--text-3)}
+
+@media (max-width:820px){
+  body{padding:12px 12px 32px}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .panel{padding:14px 14px 16px}
+  .panel-hd{flex-wrap:wrap}
+  .panel-act{width:auto;margin-left:auto}
+  .prod{width:94px;min-width:94px}
+  .row2{grid-template-columns:1fr}
+  .fitem{grid-template-columns:50px 1fr auto}
+  .fitem .t{display:none}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="topbar">
+    <div class="logo">执</div>
+    <span class="brand">执行工作台</span>
+    <nav class="pills">
+      <button>工作台</button><button>计划打卡</button><button>资金管理</button>
+      <button>每日发现</button><button>AI 大事</button><button>知识库</button>
+      <button>好公司</button><button class="on">网页测评</button><button>素材库</button>
+    </nav>
+    <div class="icons"><i>?</i><i>◐</i><i>＋</i></div>
+  </header>
+
+  <section class="panel">
+    <header class="panel-hd">
+      <div class="panel-tt">
+        <h2>测评概览</h2>
+        <p id="ovDesc">7 个产品 · 7 条任务 · 已记录 41 次评测</p>
+      </div>
+      <div class="panel-act">
+        <button class="btn ghost" onclick="toast('原型：这里会打开「新增测试任务」')">＋ 新增任务</button>
+        <button class="btn primary" onclick="toast('原型：这里会打开「添加被测产品」')">＋ 添加产品</button>
+      </div>
+    </header>
+    <div class="stats">
+      <div class="stat"><b id="stProd">7</b><span>被测产品</span></div>
+      <div class="stat"><b id="stTask">7</b><span>测试任务</span></div>
+      <div class="stat"><b id="stRun">0<i>次</i></b><span>累计评测记录</span></div>
+      <div class="stat warn"><b id="stGap">0<i>格</i></b><span>还没测的组合</span></div>
+    </div>
+  </section>
+
+  <section class="panel">
+    <header class="panel-hd">
+      <div class="panel-tt">
+        <h2 id="viewTitle">测评矩阵</h2>
+        <p id="viewDesc">行是测试任务，列是产品；格子里是最新一次评分，点一下就能记录</p>
+      </div>
+      <div class="panel-act">
+        <div class="seg" id="seg">
+          <button data-v="matrix" class="on">测评矩阵</button>
+          <button data-v="prod">产品档案</button>
+          <button data-v="feed">测试流水</button>
+        </div>
+      </div>
+    </header>
+
+    <div id="viewMatrix">
+      <div class="grid-wrap">
+        <table>
+          <thead><tr id="theadRow"></tr></thead>
+          <tbody id="tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div id="viewProd" style="display:none">
+      <div class="cards" id="prodCards"></div>
+    </div>
+
+    <div id="viewFeed" style="display:none">
+      <div class="feed" id="feed"></div>
+    </div>
+  </section>
+
+</div>
+
+<div class="mask" id="mask">
+  <div class="modal">
+    <div class="m-hd">
+      <div>
+        <h3 id="mTitle">记录一次评测</h3>
+        <p id="mSub"></p>
+      </div>
+      <button class="m-close" onclick="closeModal()">✕</button>
+    </div>
+
+    <div class="fld">
+      <label>综合评分 <em>1–5，凭手感给，不用算</em></label>
+      <div class="dots" id="dots">
+        <button class="dot" data-s="1">1</button>
+        <button class="dot" data-s="2">2</button>
+        <button class="dot" data-s="3">3</button>
+        <button class="dot" data-s="4">4</button>
+        <button class="dot" data-s="5">5</button>
+        <span class="hint" id="dotHint">未评分</span>
+      </div>
+    </div>
+
+    <div class="fld">
+      <label>好在哪 / 差在哪 <em>可多选，用来事后筛"谁最会做长文档"</em></label>
+      <div class="chips" id="chips"></div>
+    </div>
+
+    <div class="fld row2">
+      <div>
+        <label>本次提问 <em>默认用任务的提示词，可以这次临时改</em></label>
+        <textarea id="mPrompt" rows="2"></textarea>
+      </div>
+      <div>
+        <label>用时</label>
+        <input type="number" id="mSec" min="0" placeholder="秒">
+      </div>
+    </div>
+
+    <div class="fld">
+      <label>它的回答 <em>粘贴原文，方便以后对比同一道题的输出差异</em></label>
+      <textarea class="ans" id="mAns" placeholder="把回答原文贴进来…"></textarea>
+    </div>
+
+    <div class="fld">
+      <label>备注</label>
+      <input type="text" id="mNote" placeholder="比如：第 3 轮开始忘记设定的人物语气">
+    </div>
+
+    <div class="m-ft">
+      <span class="tip">保存后这一格显示最新评分，历史记录不会丢，仍可在「测试流水」里翻。</span>
+      <button class="btn" onclick="closeModal()">取消</button>
+      <button class="btn primary" onclick="saveRun()">保存记录</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* =========================================================
+   数据：产品 / 任务 / 运行记录
+   真实实现里这三张表独立，运行记录是唯一的事实来源，
+   格子和统计全部由它算出来（不存"格子分数"这种冗余字段）
+   ========================================================= */
+const PRODUCTS = [
+  { id:'deepseek', name:'DeepSeek',  short:'DS',  url:'chat.deepseek.com',  color:'#4d6bfe' },
+  { id:'kimi',     name:'Kimi',      short:'KM',  url:'kimi.moonshot.cn',   color:'#111827' },
+  { id:'doubao',   name:'豆包',      short:'DB',  url:'doubao.com',         color:'#3b7cff' },
+  { id:'qwen',     name:'通义千问',  short:'QW',  url:'tongyi.aliyun.com',  color:'#6b5ce7' },
+  { id:'chatgpt',  name:'ChatGPT',   short:'GPT', url:'chatgpt.com',        color:'#10a37f' },
+  { id:'claude',   name:'Claude',    short:'CL',  url:'claude.ai',          color:'#c96442' },
+  { id:'gemini',   name:'Gemini',    short:'GM',  url:'gemini.google.com',  color:'#4285f4' }
+];
+
+const TASKS = [
+  { id:'t1', name:'长文摘要',   brief:'2000 字文章压到 200 字，不许丢数字' },
+  { id:'t2', name:'代码改写',   brief:'Python 脚本转 TypeScript 并补类型' },
+  { id:'t3', name:'中文文案',   brief:'一条产品卖点写 300 字，别用"赋能"' },
+  { id:'t4', name:'表格抽取',   brief:'截图里的表格转成 Markdown' },
+  { id:'t5', name:'多轮追问',   brief:'同一话题追问 5 轮，看会不会跑偏' },
+  { id:'t6', name:'长文档理解', brief:'上传 30 页 PDF，提 5 条要点' },
+  { id:'t7', name:'图像理解',   brief:'看一张营收图，说出趋势和拐点' }
+];
+
+const GOOD = ['响应快','格式规整','理解准确','给了来源','中文自然','敢于拒绝'];
+const BAD  = ['事实出错','漏掉要求','格式乱','太啰嗦','超时','含糊其辞'];
+
+const ANS_SAMPLE = {
+  t1:'这篇文章讲的是门店客流下滑的三个原因。第一，周边商圈在去年新增了两家同类门店，分流约 18% 的客流；第二，外卖平台抽成从 18% 提到 22%，导致毛利被压缩 3.4 个百分点；第三，工作日午后时段（14:00–16:00）进店人数同比下降 27%，是全部时段里跌幅最大的。作者给出的对策是错峰做下午茶套餐，并把这部分客流导到小程序自提。',
+  t2:'改写完成：把 requests 调用换成 fetch 后保留了 3 个重试间隔（1s / 3s / 9s），并给 `fetchAll` 补了返回类型 `Promise<Item[]>`。原脚本里用 `except: pass` 吞掉的两处异常，改成显式抛出并在调用侧 catch，否则 TS 会把它当成 never。',
+  t3:'这个价位的咖啡机最怕两件事：早晨赶时间，和清洗麻烦。它把预热压到 25 秒，起床按下，刷牙回来就能出第一杯；冲煮头一键自清洗，一周不用拆。1.2L 水箱够两三个人喝到中午，奶泡杆是可拆的，洗起来不费劲。',
+  t4:'已经转成表格，共 4 列 11 行。注意原图第 6 行的"合计"被跨列合并了，我按数值加总核过一遍，比你图里的合计少了 120，可能是原表口径问题，标注在表下了。',
+  t5:'第 5 轮追问后仍然守住了前面设定的人物身份和语气，但在第 4 轮把我给的时间线记错了（说成 3 月，实际是 4 月），提醒后能改回来。',
+  t6:'5 条要点：① 收入结构里订阅占比从 41% 升到 58%；② 毛利率下降 2.1pct；③ 研发费用同比 +34%，主要投在多模态；④ 大客户集中度降到 22%；⑤ 管理层给的全年指引低于市场预期约 6%。',
+  t7:'这张图里营收从 2021 年的 138 亿涨到 2025 年的 412 亿，年复合增速 31%。拐点在 2023 年：之前增速 20% 左右，之后跳到 48%，对应的是订阅制改版那一年。'
+};
+
+let RUNS = [];
+let seq = 1;
+
+/* 用固定种子的伪随机，保证每次打开原型数据一致（截图可复现） */
+let _seed = 20261103;
+function rnd(){ _seed = (_seed * 1103515245 + 12345) % 2147483648; return _seed / 2147483648 }
+
+function seedRuns(){
+  const at = ['2026-11-02','2026-11-02','2026-11-01','2026-10-31','2026-10-30','2026-10-28','2026-10-26'];
+  // 故意留白：有 8 个组合还没测，让"待补测"是真实存在的
+  const blank = new Set(['deepseek|t4','deepseek|t7','kimi|t7','doubao|t6','qwen|t5','chatgpt|t4','claude|t7','gemini|t2']);
+  PRODUCTS.forEach((p, pi) => {
+    TASKS.forEach((t, ti) => {
+      if (blank.has(p.id + '|' + t.id)) return;
+      const times = rnd() > 0.72 ? 2 : 1;           // 少量格子测过两遍（复测）
+      for (let k = 0; k < times; k++) {
+        const base = 3 + Math.round(rnd() * 2);     // 3~5 偏多
+        const score = Math.max(1, Math.min(5, base - (k ? 1 : 0)));
+        const g = [], b = [];
+        for (let i = 0; i < 2; i++) if (rnd() > 0.55) g.push(GOOD[Math.floor(rnd() * GOOD.length)]);
+        for (let i = 0; i < 2; i++) if (rnd() > 0.72) b.push(BAD[Math.floor(rnd() * BAD.length)]);
+        RUNS.push({
+          id: seq++, ord: seq, pid: p.id, tid: t.id, score,
+          good: [...new Set(g)], bad: [...new Set(b)],
+          sec: 8 + Math.floor(rnd() * 55),
+          prompt: '（任务提示词）' + t.brief,
+          ans: ANS_SAMPLE[t.id] || '',
+          note: '',
+          date: at[Math.floor(rnd() * at.length)]
+        });
+      }
+    });
+  });
+  RUNS.sort((a, b) => a.date < b.date ? 1 : -1);
+}
+seedRuns();
+
+/* ord 是单调递增的顺序号：同一格子可能测过多次，永远以"最后一次"为准。
+   不用 id 比较大小，因为新记录 id 是字符串，'#12' 与 12 不可比。 */
+const lastRun = (pid, tid) => RUNS
+  .filter(r => r.pid === pid && r.tid === tid)
+  .sort((a, b) => b.ord - a.ord)[0];
+const countRun = (pid, tid) => RUNS.filter(r => r.pid === pid && r.tid === tid).length;
+const prodAvg = pid => {
+  const rs = RUNS.filter(r => r.pid === pid);
+  return rs.length ? rs.reduce((s, r) => s + r.score, 0) / rs.length : 0;
+};
+const cls = s => 's' + s;
+const fmt = n => (Math.round(n * 10) / 10).toFixed(1);
+
+/* ---------------- 渲染：矩阵 ---------------- */
+function renderMatrix(){
+  document.getElementById('theadRow').innerHTML =
+    '<th class="tname"><div class="rowh" style="padding:0;border:0">测试任务</div></th>' +
+    PRODUCTS.map(p => `<th class="prod">
+        <span class="pn">${p.name}</span>
+        <span class="pa">均分 <b>${fmt(prodAvg(p.id))}</b></span>
+      </th>`).join('');
+
+  document.getElementById('tbody').innerHTML = TASKS.map(t => {
+    let cells = '';
+    PRODUCTS.forEach(p => {
+      const r = lastRun(p.id, t.id), n = countRun(p.id, t.id);
+      cells += r
+        ? `<td><div class="cell ${cls(r.score)}" data-p="${p.id}" data-t="${t.id}" title="${p.name} · ${t.name}｜均分 ${fmt(prodAvg(p.id))}">
+             ${r.score}${n > 1 ? `<span class="n">×${n}</span>` : ''}
+           </div></td>`
+        : `<td><div class="cell empty" data-p="${p.id}" data-t="${t.id}" title="还没测，点一下记录">＋</div></td>`;
+    });
+    return `<tr><th class="rowh">${t.name}<small>${t.brief}</small></th>${cells}</tr>`;
+  }).join('');
+
+  document.querySelectorAll('.cell').forEach(el => el.onclick = () => openModal(el.dataset.p, el.dataset.t));
+}
+
+/* ---------------- 渲染：产品档案 ---------------- */
+function renderProd(){
+  document.getElementById('prodCards').innerHTML = PRODUCTS.map(p => {
+    const avg = prodAvg(p.id);
+    const rs = RUNS.filter(r => r.pid === p.id);
+    const good = [...new Set(rs.flatMap(r => r.good))].slice(0, 2);
+    return `<div class="pcard">
+      <div class="hd">
+        <div class="pico" style="background:${p.color}">${p.short}</div>
+        <div class="hdc"><b>${p.name}</b><span>${p.url}</span></div>
+        <div class="pscore">${fmt(avg)}</div>
+      </div>
+      <div class="bar"><i style="width:${avg / 5 * 100}%"></i></div>
+      <div class="ft">
+        <span>已测 ${rs.length} 次 / ${new Set(rs.map(r => r.tid)).size} 项</span>
+        ${good.map(g => `<span class="tg">${g}</span>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ---------------- 渲染：流水 ---------------- */
+function renderFeed(){
+  document.getElementById('feed').innerHTML = RUNS.slice(0, 24).map(r => {
+    const p = PRODUCTS.find(x => x.id === r.pid), t = TASKS.find(x => x.id === r.tid);
+    const color = r.score >= 4 ? 'var(--ok-soft);color:var(--ok)'
+      : r.score === 3 ? 'var(--warm-soft);color:#a8843c'
+      : 'var(--danger-soft);color:var(--danger)';
+    return `<div class="fitem">
+      <span class="d">${r.date.slice(5)}</span>
+      <span class="w">${p.name}</span>
+      <span class="t">${t.name} <em>· ${r.good.concat(r.bad).slice(0, 2).join(' / ') || '没打标签'}</em></span>
+      <span class="pill-s" style="background:${color}">${r.score} 分</span>
+    </div>`;
+  }).join('') || '<div class="empty-view">还没有记录</div>';
+}
+
+function renderStats(){
+  const total = PRODUCTS.length * TASKS.length;
+  document.getElementById('stRun').innerHTML = RUNS.length + '<i>次</i>';
+  document.getElementById('stGap').innerHTML = (total - new Set(RUNS.map(r => r.pid + '|' + r.tid)).size) + '<i>格</i>';
+  document.getElementById('ovDesc').textContent =
+    `${PRODUCTS.length} 个产品 · ${TASKS.length} 条任务 · 已记录 ${RUNS.length} 次评测`;
+}
+
+function renderAll(){ renderMatrix(); renderProd(); renderFeed(); renderStats(); }
+renderAll();
+
+/* ---------------- 视图切换 ---------------- */
+const VIEW_TITLE = {
+  matrix: ['测评矩阵', '行是测试任务，列是产品；格子里是最新一次评分，点一下就能记录'],
+  prod:   ['产品档案', '一个产品一行账：总分、测了几次、最突出的优点'],
+  feed:   ['测试流水', '按时间倒序，每一次测试都留底，方便回头翻原文']
+};
+document.querySelectorAll('#seg button').forEach(b => b.onclick = () => {
+  document.querySelectorAll('#seg button').forEach(x => x.classList.toggle('on', x === b));
+  const v = b.dataset.v;
+  document.getElementById('viewMatrix').style.display = v === 'matrix' ? '' : 'none';
+  document.getElementById('viewProd').style.display   = v === 'prod' ? '' : 'none';
+  document.getElementById('viewFeed').style.display   = v === 'feed' ? '' : 'none';
+  document.getElementById('viewTitle').textContent = VIEW_TITLE[v][0];
+  document.getElementById('viewDesc').textContent  = VIEW_TITLE[v][1];
+});
+
+/* ---------------- 弹窗 ---------------- */
+let cur = { pid:'', tid:'', score:0, good:[], bad:[] };
+
+function openModal(pid, tid){
+  const p = PRODUCTS.find(x => x.id === pid), t = TASKS.find(x => x.id === tid);
+  const prev = lastRun(pid, tid);
+  cur = { pid, tid, score: prev ? prev.score : 0,
+          good: prev ? [...prev.good] : [], bad: prev ? [...prev.bad] : [] };
+
+  document.getElementById('mTitle').textContent = `${p.name} · ${t.name}`;
+  document.getElementById('mSub').textContent =
+    countRun(pid, tid) ? `已测过 ${countRun(pid, tid)} 次，这次会追加一条记录` : '第一次测这一格';
+  document.getElementById('mPrompt').value = prev ? prev.prompt : '（任务提示词）' + t.brief;
+  document.getElementById('mSec').value = prev ? prev.sec : '';
+  document.getElementById('mAns').value = prev ? prev.ans : '';
+  document.getElementById('mNote').value = '';
+
+  document.getElementById('chips').innerHTML =
+    GOOD.map(g => `<button class="chip ${cur.good.includes(g) ? 'on' : ''}" data-k="good" data-v="${g}">${g}</button>`).join('') +
+    BAD.map(b => `<button class="chip bad ${cur.bad.includes(b) ? 'on' : ''}" data-k="bad" data-v="${b}">${b}</button>`).join('');
+
+  document.querySelectorAll('#chips .chip').forEach(c => c.onclick = () => {
+    const arr = cur[c.dataset.k];
+    const i = arr.indexOf(c.dataset.v);
+    if (i >= 0) arr.splice(i, 1); else arr.push(c.dataset.v);
+    c.classList.toggle('on');
+  });
+
+  syncDots();
+  document.getElementById('mask').classList.add('on');
+}
+
+function syncDots(){
+  document.querySelectorAll('#dots .dot').forEach(d => d.classList.toggle('on', +d.dataset.s === cur.score));
+  const hint = ['未评分', '不可用', '勉强能用', '凑合', '挺好', '可以直接用'][cur.score];
+  document.getElementById('dotHint').textContent = hint;
+}
+document.querySelectorAll('#dots .dot').forEach(d => d.onclick = () => { cur.score = +d.dataset.s; syncDots(); });
+
+function closeModal(){ document.getElementById('mask').classList.remove('on'); }
+document.getElementById('mask').onclick = e => { if (e.target.id === 'mask') closeModal(); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+function saveRun(){
+  if (!cur.score) { toast('先给个分，1–5 随便给一个'); return; }
+  const d = new Date();
+  const date = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  RUNS.unshift({
+    id: '#' + (++seq), ord: seq, pid: cur.pid, tid: cur.tid, score: cur.score,
+    good: [...cur.good], bad: [...cur.bad],
+    sec: +document.getElementById('mSec').value || 0,
+    prompt: document.getElementById('mPrompt').value,
+    ans: document.getElementById('mAns').value,
+    note: document.getElementById('mNote').value,
+    date
+  });
+  closeModal();
+  renderAll();
+  toast('已记录');
+}
+
+/* ---------------- toast ---------------- */
+let tmr;
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.innerHTML = '<b>✓</b> ' + msg;
+  el.classList.add('on');
+  clearTimeout(tmr); tmr = setTimeout(() => el.classList.remove('on'), 2200);
+}
+
+/* 截图 / 直链用：#dark（深色）、#open（打开记录弹窗）、#prod / #feed（切视图），可逗号组合 */
+const hs = location.hash.replace('#', '').split(',').filter(Boolean);
+if (hs.includes('dark')) document.documentElement.dataset.theme = 'dark';
+if (hs.includes('prod')) document.querySelector('#seg [data-v="prod"]').click();
+if (hs.includes('feed')) document.querySelector('#seg [data-v="feed"]').click();
+if (hs.includes('open')) setTimeout(() => openModal('kimi', 't5'), 60);
+</script>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第23期 · 杠杆</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 23 期</span>
+  <h1>今天的概念：<span class="tag">杠杆</span>（Leverage）</h1>
+  <div class="date">2026年10月18日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 阿珍的"三家店"梦</h2>
+    <p>阿珍攒了 <strong>20 万</strong> 本金，一手奶茶做得远近闻名。她面前摆着两个开法：<strong>全款方案</strong>——拿 20 万开一家小店，慢慢做；<strong>杠杆方案</strong>——自己出 20 万，再找亲友加银行借 <strong>80 万</strong>（月息约 1 万），凑成 <strong>100 万</strong> 一口气开 3 家。她用 20 万，撬动了 5 倍的钱。</p>
+    <p><strong>旺季来了</strong>，每家店月净利 <strong>2 万</strong>。全款方案：1 家 → 月赚 2 万，本金 20 万，月回报 <strong>+10%</strong>。杠杆方案：3 家 → 月赚 6 万，但要雷打不动付利息 <strong>1 万</strong>，净赚 5 万，本金 20 万，月回报 <strong>+25%</strong>。借来的钱，把她的赚头放大到了 2.5 倍，笑开了花。</p>
+    <p><strong>变天了</strong>。门店前修路、又来了大对手，每家店月净利只剩 <strong>0.5 万</strong>。全款方案：1 家 → 月赚 0.5 万，虽少但还赚着，睡得着。杠杆方案：3 家 → 月赚 1.5 万，可那 <strong>1 万利息</strong> 不管你赚不赚都得付，净赚只剩 0.5 万，本金回报率掉到 <strong>+2.5%</strong>；若每家店再差一点变成微亏，总营收可能连利息都盖不住，本金开始被蚕食。</p>
+    <div class="board">
+      <div class="row head"><span class="k">情景（本金均 20 万）</span><span class="v">全款 1 家 vs 杠杆 3 家（5倍）</span></div>
+      <div class="row"><span class="k">旺季（每店月净利 2万）</span><span class="v">全款 +2万(+10%) ｜ 杠杆 6万-1万息=+5万(+25%)</span></div>
+      <div class="row"><span class="k">变天（每店月净利 0.5万）</span><span class="v">全款 +0.5万(+2.5%) ｜ 杠杆 1.5万-1万息=+0.5万(+2.5%)</span></div>
+      <div class="row"><span class="k">生意黄了（3家关门）</span><span class="v">全款 亏掉一家投入，不欠谁 ｜ 杠杆 借的80万照还，本金可能归零还倒欠</span></div>
+      <div class="row"><span class="k">关键差别</span><span class="v">借来的钱放大赚头，但利息是"刚性负担"，行情一差先吞利润、再吞本金</span></div>
+    </div>
+    <p>最惨的一幕：生意彻底垮掉，3 家店关门。全款方案亏掉一家店的投入，但没欠谁钱；杠杆方案里那 <strong>80 万</strong> 一分都不能少还，阿珍的 20 万本金可能一夜归零，甚至倒欠银行。她苦笑："原来借来的东风，转身就成了压顶的债。"</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>杠杆</strong>，就是用<strong>借来的钱（或保证金）</strong>去放大自己的经营或投资规模。它的本质是一把"双面放大镜"：<strong>好时成倍放大收益，坏时成倍放大亏损</strong>，而且亏损可能超过你的本金。</p>
+    <div class="formula">实际收益率 ≈ 资产收益变动 × 杠杆倍数 − 固定利息负担　（杠杆率 = 总资产 ÷ 自有资金）</div>
+    <p>背后的逻辑是：<strong>风险和收益天生成对</strong>。你用了别人的钱，就要把别人的那份涨跌也扛在自己账上。阿珍 100÷20 = 5 倍杠杆，所以生意每波动一个百分点，都变成她本金的 5 个百分点。和普通涨跌不同，<strong>借来的钱有"刚性成本"</strong>——利息、月供不管你赚不赚都要付，这是杠杆最容易被忽视的暗箭：行情好时它只是小头，行情差时它会先吞掉利润、再吞本金，最后逼你"为还债而贱卖"。普通人最熟悉的杠杆是<strong>房贷、车贷、经营贷</strong>：它让你提前放大资产或生意，但也在利率上行、收入不稳时变成沉重枷锁。</p>
+    <p>🌰 换到你的钱包和生意：杠杆不是洪水猛兽，关键在<strong>三问</strong>——① 借这笔钱能撬动什么、年化成本多少？② 最坏情况下固定负担我扛不扛得住（收入断了还能还月供吗）？③ 这笔钱是不是"输不起"的救命钱？记住：<strong>能放大收益的，必然也能放大恐惧</strong>；只用你亏得起的钱去加杠杆，才是成年人的玩法。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>杠杆是双面放大镜，不是印钞机</strong>：收益和亏损按同一倍数放大，涨时笑、跌时哭，数学对两边一样公平。</li>
+      <li><strong>借的钱有"刚性负担"</strong>：利息、月供不管行情好坏都得付；行情一差，固定成本会先吞利润、再吞本金，这是杠杆最隐蔽的刀。</li>
+      <li><strong>只用亏得起的钱加杠杆</strong>：先算"最坏情况还扛不扛得住"，别把救命钱、短期要用的钱拿去撬；断了收入还能还得起，才谈得上用杠杆。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：沉没成本 —— 已经花掉、收不回来的钱，为什么总让人越陷越深？明明该"壮士断腕"，却偏偏"舍不得"，这里头藏着怎样的心理陷阱。</div>
+</div>
+</body>
+</html>

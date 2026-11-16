@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>好公司 · 原型 v1</title>
+<style>
+:root{
+  --bg:#f5f1e8; --bg-2:#eef3ea;
+  --surface:#fffdf8; --surface-2:#fbf8f0;
+  --line:rgba(80,60,30,.14); --line-2:rgba(80,60,30,.26);
+  --text:#2f2c26; --text-2:#6d6558; --text-3:#9c9488;
+  --accent:#4a9e66; --accent-soft:rgba(74,158,102,.12);
+  --warm:#c98342;
+  --up:#c9503c;            /* 涨：红 */
+  --down:#3f8f5e;          /* 跌：绿 */
+  --r:16px;
+  --shadow:0 14px 34px -26px rgba(80,60,30,.6);
+}
+[data-theme="dark"]{
+  --bg:#121815; --bg-2:#0e1714;
+  --surface:#1b2420; --surface-2:#212b26;
+  --line:rgba(230,240,232,.12); --line-2:rgba(230,240,232,.24);
+  --text:#e9ede8; --text-2:#b6c1ba; --text-3:#8f9d96;
+  --accent:#6fbf8a; --accent-soft:rgba(111,191,138,.14);
+  --warm:#e0a06a; --up:#e3705c; --down:#5fbd85;
+  --shadow:0 16px 36px -26px #000;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  color:var(--text);-webkit-font-smoothing:antialiased;padding-bottom:60px;
+  background:
+    radial-gradient(900px 500px at 10% -10%,rgba(74,158,102,.10),transparent 60%),
+    radial-gradient(700px 420px at 94% 2%,rgba(201,131,66,.09),transparent 62%),
+    var(--bg);
+  transition:background .4s,color .3s;
+}
+::selection{background:rgba(74,158,102,.22)}
+button{font:inherit;cursor:pointer;border:0;background:none;color:inherit}
+input,textarea,select{font:inherit;color:inherit}
+
+/* ===== 顶栏 ===== */
+.top{
+  position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:14px;
+  padding:11px 24px;background:color-mix(in srgb,var(--bg) 84%,transparent);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--line);
+}
+.logo{
+  width:30px;height:30px;border-radius:10px;display:grid;place-items:center;
+  font-weight:800;font-size:15px;color:#fff;background:linear-gradient(140deg,#4a9e66,#357a4e);
+  box-shadow:0 6px 14px -8px rgba(74,158,102,.9);
+}
+.brand{font-weight:700;font-size:15px}
+.brand small{display:block;font-weight:500;font-size:11px;color:var(--text-3)}
+.spacer{flex:1}
+/* 详情页滚动后出现的公司条 */
+.mini{display:none;align-items:center;gap:10px;font-size:13px}
+.mini.on{display:flex}
+.mini b{font-size:14px}
+.mini .px{font-variant-numeric:tabular-nums;font-weight:700}
+.icon-btn{
+  width:32px;height:32px;border-radius:10px;border:1px solid var(--line);background:var(--surface);
+  color:var(--text-2);display:grid;place-items:center;font-size:14px;transition:.16s;
+}
+.icon-btn:hover{color:var(--text);border-color:var(--line-2);transform:translateY(-1px)}
+
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+
+/* ===== 列表页 ===== */
+.hero{padding:38px 0 20px}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;letter-spacing:1.6px;color:var(--accent);font-weight:700;text-transform:uppercase}
+.eyebrow::before{content:"";width:16px;height:1.5px;background:var(--accent);border-radius:2px}
+.hero h1{margin:13px 0 9px;font-size:34px;line-height:1.2;letter-spacing:-.8px;font-weight:750}
+.hero h1 em{font-style:normal;color:var(--accent)}
+.hero p{margin:0;color:var(--text-2);font-size:13.5px;line-height:1.75;max-width:640px}
+
+.toolbar{display:flex;gap:10px;align-items:center;margin:24px 0 16px;flex-wrap:wrap}
+.search{
+  flex:1;min-width:220px;display:flex;align-items:center;gap:8px;padding:0 13px;height:38px;
+  border:1px solid var(--line);border-radius:12px;background:var(--surface);box-shadow:var(--shadow);
+}
+.search input{border:0;background:none;outline:none;flex:1;font-size:13px}
+.search input::placeholder{color:var(--text-3)}
+.search span{color:var(--text-3);font-size:14px}
+.add-btn{
+  height:38px;padding:0 17px;border-radius:12px;font-size:13px;font-weight:650;color:#fff;
+  background:linear-gradient(140deg,#4a9e66,#3d8a56);box-shadow:0 8px 18px -10px rgba(74,158,102,.9);
+  transition:.18s;white-space:nowrap;
+}
+.add-btn:hover{transform:translateY(-1px);box-shadow:0 12px 22px -10px rgba(74,158,102,.95)}
+.hint{
+  display:flex;gap:9px;align-items:flex-start;padding:10px 13px;border-radius:12px;margin-bottom:20px;
+  background:var(--accent-soft);border:1px solid rgba(74,158,102,.24);font-size:12px;line-height:1.7;color:var(--text-2);
+}
+.hint b{color:var(--accent)}
+.hint i{font-style:normal;color:var(--accent);font-size:13px;line-height:1.4}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:13px}
+.co{
+  border:1px solid var(--line);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);
+  padding:15px 17px 13px;cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s;
+  border-left:3px solid var(--accent);
+}
+.co:hover{transform:translateY(-2px);border-color:color-mix(in srgb,var(--accent) 40%,var(--line));box-shadow:0 20px 40px -26px rgba(80,60,30,.7)}
+.co .r1{display:flex;align-items:flex-start;gap:10px;margin-bottom:3px}
+.co .tk{font-size:11px;font-weight:800;letter-spacing:.6px;color:var(--accent);background:var(--accent-soft);padding:2px 7px;border-radius:6px}
+.co .nm{font-size:16px;font-weight:750;letter-spacing:-.2px}
+.co .sec{font-size:11.5px;color:var(--text-3);margin-bottom:12px}
+.co .px{margin-left:auto;text-align:right;line-height:1.25}
+.co .px b{font-size:19px;font-weight:750;font-variant-numeric:tabular-nums;letter-spacing:-.4px}
+.co .px i{display:block;font-style:normal;font-size:11.5px;font-weight:650;font-variant-numeric:tabular-nums}
+.up{color:var(--up)} .down{color:var(--down)} .flat{color:var(--text-3)}
+.kv{display:grid;grid-template-columns:repeat(4,1fr);gap:0;padding:11px 0 10px;border-top:1px solid var(--line);border-bottom:1px solid var(--line)}
+.kv div{padding:0 8px;border-left:1px solid var(--line)}
+.kv div:first-child{border-left:0;padding-left:0}
+.kv b{display:block;font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;letter-spacing:-.2px}
+.kv span{font-size:10.5px;color:var(--text-3)}
+.co .r4{display:flex;align-items:center;gap:8px;margin-top:10px}
+.tagi{font-size:10.5px;font-weight:700;padding:2px 9px;border-radius:999px;border:1px solid}
+.tag-watch{color:var(--warm);background:rgba(201,131,66,.1);border-color:rgba(201,131,66,.3)}
+.tag-core{color:var(--accent);background:var(--accent-soft);border-color:rgba(74,158,102,.32)}
+.tag-no{color:var(--text-3);background:color-mix(in srgb,var(--text) 5%,transparent);border-color:var(--line)}
+.co .up-time{margin-left:auto;font-size:10.5px;color:var(--text-3)}
+
+/* ===== 详情页 ===== */
+.detail-head{padding:26px 0 0}
+.back{
+  display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--text-2);
+  padding:5px 13px;border:1px solid var(--line);border-radius:999px;background:var(--surface);transition:.16s;margin-bottom:18px;
+}
+.back:hover{color:var(--text);border-color:var(--line-2);transform:translateX(-2px)}
+
+.dh{display:flex;gap:20px;align-items:flex-start;flex-wrap:wrap}
+.dh .left{flex:1;min-width:260px}
+.dh h1{margin:0 0 4px;font-size:27px;letter-spacing:-.6px;font-weight:780;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.dh h1 .tk{font-size:13px;font-weight:800;color:var(--accent);background:var(--accent-soft);padding:3px 9px;border-radius:7px;letter-spacing:.5px}
+.dh .sub{font-size:12.5px;color:var(--text-3);display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.dh .sub i{font-style:normal;width:3px;height:3px;border-radius:50%;background:var(--text-3);display:inline-block}
+.price-box{text-align:right;min-width:190px}
+.price-box .p{font-size:31px;font-weight:780;letter-spacing:-1px;font-variant-numeric:tabular-nums;line-height:1.1}
+.price-box .c{font-size:13px;font-weight:650;font-variant-numeric:tabular-nums;margin-top:1px}
+.price-box .m{font-size:11px;color:var(--text-3);margin-top:3px}
+
+.qstats{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0 22px}
+.qstat{
+  flex:1 1 128px;padding:11px 14px;border:1px solid var(--line);border-radius:13px;
+  background:var(--surface);box-shadow:var(--shadow);
+}
+.qstat b{display:block;font-size:17px;font-weight:750;letter-spacing:-.3px;font-variant-numeric:tabular-nums;line-height:1.3}
+.qstat span{font-size:10.5px;color:var(--text-3)}
+.qstat .note{display:block;font-size:9.5px;color:var(--warm);margin-top:2px}
+
+/* 区块通用 */
+.block{margin:0 0 26px}
+.block-head{display:flex;align-items:baseline;gap:11px;margin-bottom:10px;flex-wrap:wrap}
+.block-head h2{margin:0;font-size:14.5px;font-weight:750;letter-spacing:-.2px;display:flex;align-items:center;gap:7px}
+.block-head h2::before{content:"";width:3px;height:13px;border-radius:2px;background:var(--accent)}
+.block-head span{font-size:11.5px;color:var(--text-3)}
+.block-head .right{margin-left:auto;display:flex;gap:6px;align-items:center}
+.panel{border:1px solid var(--line);border-radius:var(--r);background:var(--surface);box-shadow:var(--shadow);padding:17px 19px}
+
+/* 股价图 */
+.chart-wrap{position:relative}
+.chart-wrap svg{display:block;width:100%;height:190px;overflow:visible}
+.chart-tip{
+  position:absolute;pointer-events:none;padding:5px 9px;border-radius:8px;font-size:11px;
+  background:var(--text);color:var(--bg);white-space:nowrap;opacity:0;transition:opacity .12s;
+  transform:translate(-50%,-130%);font-variant-numeric:tabular-nums;
+}
+.chart-tip.on{opacity:1}
+.seg{display:inline-flex;padding:3px;border:1px solid var(--line);border-radius:999px;background:var(--surface-2)}
+.seg button{border:0;background:none;font-size:11.5px;color:var(--text-2);padding:3px 10px;border-radius:999px;transition:.15s}
+.seg button.on{background:var(--text);color:var(--surface);font-weight:650}
+
+/* 业务 */
+.biz-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:20px}
+.biz-text{font-size:13px;line-height:1.85;color:var(--text-2)}
+.biz-text:focus{outline:none}
+.seg-bars{display:flex;flex-direction:column;gap:9px}
+.seg-row{display:grid;grid-template-columns:88px 1fr 42px;gap:9px;align-items:center;font-size:11.5px}
+.seg-row .nm{color:var(--text-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.seg-row .bar{height:7px;border-radius:4px;background:color-mix(in srgb,var(--text) 7%,transparent);overflow:hidden}
+.seg-row .bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent),color-mix(in srgb,var(--accent) 55%,transparent))}
+.seg-row .pc{text-align:right;color:var(--text-3);font-variant-numeric:tabular-nums}
+
+/* 历史时间线 */
+.hist{position:relative;padding-left:0}
+.hist-row{display:grid;grid-template-columns:58px 18px 1fr;gap:0;padding:4px 0;position:relative}
+.hist-row .yr{text-align:right;padding-right:8px;font-size:12px;font-weight:750;color:var(--text-2);font-variant-numeric:tabular-nums;padding-top:1px}
+.hist-row .rail{position:relative;display:flex;justify-content:center}
+.hist-row .rail::before{content:"";position:absolute;top:0;bottom:-8px;width:1.5px;background:var(--line)}
+.hist-row:first-child .rail::before{top:9px}
+.hist-row:last-child .rail::before{bottom:auto;height:9px}
+.hist-row .dot{position:relative;z-index:2;width:7px;height:7px;border-radius:50%;background:var(--accent);margin-top:6px;box-shadow:0 0 0 3px var(--accent-soft)}
+.hist-row .tx{font-size:12.5px;color:var(--text-2);line-height:1.6;padding-bottom:5px}
+
+/* 财务表 */
+.tbl-scroll{overflow-x:auto;overflow-y:hidden}
+table.fin{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums;white-space:nowrap}
+table.fin th,table.fin td{padding:7px 9px;text-align:right;border-bottom:1px solid var(--line)}
+table.fin th:first-child,table.fin td:first-child{text-align:left;position:sticky;left:0;background:var(--surface);z-index:2;font-weight:600;min-width:118px}
+table.fin thead th{font-size:10.5px;font-weight:600;color:var(--text-3);letter-spacing:.3px;border-bottom:1px solid var(--line-2)}
+table.fin thead th.cur{color:var(--accent);font-weight:750}
+table.fin tbody tr:hover td{background:color-mix(in srgb,var(--accent) 4%,transparent)}
+table.fin td.dim{color:var(--text-3)}
+table.fin td.pos{color:var(--down)}
+table.fin td.neg{color:var(--up)}
+table.fin tr.gap td{border-bottom:1px dashed var(--line)}
+.fin-note{font-size:11px;color:var(--text-3);margin-top:9px;line-height:1.7}
+
+/* 资产负债 */
+.bs-bar{display:flex;height:26px;border-radius:8px;overflow:hidden;margin:4px 0 12px;font-size:10.5px;font-weight:700;color:#fff}
+.bs-bar div{display:flex;align-items:center;justify-content:center;white-space:nowrap;transition:flex .3s}
+.bs-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:var(--text-2)}
+.bs-legend i{width:8px;height:8px;border-radius:3px;display:inline-block;margin-right:5px}
+
+/* 我的判断 */
+.checks{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.check{border:1px solid var(--line);border-radius:13px;background:var(--surface-2);padding:12px 14px}
+.check label{display:block;font-size:11.5px;font-weight:700;color:var(--text-2);margin-bottom:3px}
+.check .q{font-size:10.5px;color:var(--text-3);margin-bottom:7px;line-height:1.5}
+.check textarea{
+  width:100%;min-height:64px;border:1px solid var(--line);border-radius:9px;background:var(--surface);
+  padding:8px 10px;font-size:12px;line-height:1.65;resize:vertical;outline:none;transition:.15s;
+}
+.check textarea:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.verdict{display:flex;align-items:center;gap:9px;padding:13px 15px;border-radius:13px;background:var(--surface-2);border:1px solid var(--line);margin-top:13px;flex-wrap:wrap}
+.verdict .lb{font-size:11.5px;font-weight:700;color:var(--text-2)}
+.verdict .opts{display:flex;gap:6px;flex-wrap:wrap}
+.verdict .opts button{font-size:11.5px;padding:4px 12px;border-radius:999px;border:1px solid var(--line);color:var(--text-2);transition:.15s;background:var(--surface)}
+.verdict .opts button:hover{border-color:var(--line-2);color:var(--text)}
+.verdict .opts button.on{background:var(--text);color:var(--surface);border-color:transparent;font-weight:650}
+
+.src-foot{font-size:11px;color:var(--text-3);line-height:1.85;border-top:1px solid var(--line);padding-top:14px;margin-top:26px}
+.src-foot b{color:var(--text-2);font-weight:600}
+.src-foot code{background:color-mix(in srgb,var(--text) 6%,transparent);padding:1px 5px;border-radius:4px;font-size:10.5px}
+
+.empty{padding:56px 24px;text-align:center;border:1px dashed var(--line-2);border-radius:var(--r);color:var(--text-3);font-size:13px}
+[hidden]{display:none !important}
+
+@media (max-width:820px){
+  .wrap{padding:0 15px}
+  .hero{padding:26px 0 14px}
+  .hero h1{font-size:25px}
+  .biz-grid{grid-template-columns:1fr}
+  .checks{grid-template-columns:1fr}
+  .kv{grid-template-columns:repeat(2,1fr);gap:8px 0}
+  .kv div:nth-child(3){border-left:0;padding-left:0}
+  .dh h1{font-size:22px}
+  .price-box{text-align:left;min-width:0}
+  .qstat{flex:1 1 calc(50% - 5px)}
+  .brand small{display:none}
+}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="logo">好</div>
+  <div class="brand">好公司<small>研究档案 · 不是评分器</small></div>
+  <div class="mini" id="mini">
+    <b id="miniName">—</b>
+    <span id="miniTk" style="color:var(--text-3);font-size:12px"></span>
+    <span class="px" id="miniPx">—</span>
+    <span class="px" id="miniChg" style="font-size:11.5px">—</span>
+  </div>
+  <div class="spacer"></div>
+  <button class="icon-btn" id="themeBtn" title="切换深浅色">◐</button>
+</header>
+
+<div class="wrap">
+  <!-- ===== 列表 ===== -->
+  <section id="viewList">
+    <div class="hero">
+      <div class="eyebrow">Good Business</div>
+      <h1>先把事实摆齐，<em>判断是你的事</em></h1>
+      <p>一家公司好不好，取决于你怎么看它的生意、它的历史、它的钱是怎么花的。这个页面不替你下结论，只把财报、资产负债、股价和你自己写的笔记放在一处，不遗漏。</p>
+    </div>
+
+    <div class="toolbar">
+      <label class="search">
+        <span>⌕</span>
+        <input id="q" placeholder="输入股票代码，如 AAPL / MSFT / NVDA" />
+      </label>
+      <button class="add-btn" id="addBtn">+ 添加公司</button>
+    </div>
+
+    <div class="hint">
+      <i>◈</i>
+      <div><b>这里不会给你一个「好 / 不好」的分数。</b>财报数据来自 SEC 官方 10-K 原文（<code>data.sec.gov</code>），价格来自东方财富，每天收盘后自动更新一次；业务、历史、以及最后的判断，都留给你自己写。</div>
+    </div>
+
+    <div class="cards" id="cards"></div>
+    <div class="empty" id="emptyCards" hidden>没有匹配的公司。</div>
+  </section>
+
+  <!-- ===== 详情 ===== -->
+  <section id="viewDetail" hidden>
+    <div class="detail-head">
+      <button class="back" id="backBtn">← 全部公司</button>
+      <div class="dh">
+        <div class="left">
+          <h1><span id="dName">—</span><span class="tk" id="dTk">—</span></h1>
+          <div class="sub"><span id="dSector">—</span><i></i><span id="dMarket">—</span><i></i><span id="dUpdated">—</span></div>
+        </div>
+        <div class="price-box">
+          <div class="p" id="dPrice">—</div>
+          <div class="c" id="dChg">—</div>
+          <div class="m" id="dCap">—</div>
+        </div>
+      </div>
+
+      <div class="qstats" id="qstats"></div>
+    </div>
+
+    <!-- 股价 -->
+    <div class="block">
+      <div class="block-head">
+        <h2>股价</h2>
+        <span>前复权 · 月线收盘</span>
+        <div class="right">
+          <div class="seg" id="rangeSeg">
+            <button data-r="1" class="on">1 年</button>
+            <button data-r="3">3 年</button>
+            <button data-r="5">5 年</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="chart-wrap" id="priceWrap">
+          <svg id="priceChart" viewBox="0 0 900 190" preserveAspectRatio="none"></svg>
+          <div class="chart-tip" id="priceTip"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 业务 -->
+    <div class="block">
+      <div class="block-head"><h2>业务</h2><span>这家公司靠什么赚钱 · 点文字可直接改</span></div>
+      <div class="panel">
+        <div class="biz-grid">
+          <div class="biz-text" id="dBiz" contenteditable="true" spellcheck="false"></div>
+          <div class="seg-bars" id="dSegments"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 历史 -->
+    <div class="block">
+      <div class="block-head"><h2>历史</h2><span>关键节点 · 看得懂它怎么走到今天</span></div>
+      <div class="panel"><div class="hist" id="dHistory"></div></div>
+    </div>
+
+    <!-- 年度财务 -->
+    <div class="block">
+      <div class="block-head">
+        <h2>年度财务</h2>
+        <span>SEC 10-K 原文 · 单位：百万美元</span>
+        <div class="right">
+          <div class="seg" id="finSeg">
+            <button data-k="revenue" class="on">营收</button>
+            <button data-k="netIncome">净利润</button>
+            <button data-k="fcf">自由现金流</button>
+            <button data-k="roe">ROE</button>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="chart-wrap" style="margin-bottom:14px">
+          <svg id="finChart" viewBox="0 0 900 170" preserveAspectRatio="none"></svg>
+          <div class="chart-tip" id="finTip"></div>
+        </div>
+        <div class="tbl-scroll">
+          <table class="fin" id="finTable"></table>
+        </div>
+        <div class="fin-note" id="finNote"></div>
+      </div>
+    </div>
+
+    <!-- 资产负债 -->
+    <div class="block">
+      <div class="block-head"><h2>资产负债</h2><span>最近一个财年末 · 看钱的来源与去向</span></div>
+      <div class="panel">
+        <div class="bs-bar" id="bsBar"></div>
+        <div class="bs-legend" id="bsLegend"></div>
+        <div class="tbl-scroll" style="margin-top:14px">
+          <table class="fin" id="bsTable"></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 我的判断 -->
+    <div class="block">
+      <div class="block-head"><h2>我的判断</h2><span>不填也能存 · 但写下来的才是你的</span></div>
+      <div class="panel">
+        <div class="checks" id="checks"></div>
+        <div class="verdict">
+          <span class="lb">我的结论</span>
+          <div class="opts" id="verdictOpts">
+            <button data-v="待研究">待研究</button>
+            <button data-v="好公司">好公司</button>
+            <button data-v="观察中">观察中</button>
+            <button data-v="已否决">已否决</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="src-foot">
+      <b>数据来源</b>：财务报表取自 SEC EDGAR 官方 XBRL（<code>data.sec.gov/api/xbrl/companyfacts</code>，10-K 年报原文，按财年归集）；股价与市值取自东方财富行情接口，每日收盘后更新。<br />
+      <b>口径说明</b>：ROE 用当年净利润 ÷ 期末股东权益；苹果股东权益长期被回购压低，所以它的 ROE 会显著高于同业的常规水平——这不是算错，是要结合「资产负债」一起看的那种数字。<br />
+      <b>关于本页</b>：这是原型稿，三家公司都是真实数据（抓取于 2026-10-26）。正式版可添加任意美股，输入代码自动拉取。
+    </div>
+  </section>
+</div>
+
+<script>
+const DATA = [{"ticker":"TSLA","name":"特斯拉","sector":"电动车 / 能源","market":"NASDAQ","biz":"卖电动车（Model 3 / Y 占九成销量）、卖储能（Megapack / Powerwall）、卖软件（FSD 订阅）与碳积分。车是规模入口，储能是增速最快的一块，FSD 与 Robotaxi 是估值里最说不清的部分。","segments":[["汽车销售",79],["能源 generation & 存储",10],["服务及其他",11]],"history":[["2003","马丁·艾伯哈德与马克·塔彭宁创办，目标是先做高端跑车再往下打"],["2004","马斯克领投 A 轮 750 万美元，出任董事长"],["2008","马斯克接任 CEO，首款 Roadster 交付，同年差点资金断裂"],["2010","纳斯达克上市，成为首家上市的美国纯电动车企"],["2012","Model S 交付，第一次做出「能卖上价钱」的电动车"],["2017","Model 3 量产，经历产能地狱，靠 Model 3 打开大众市场"],["2020","首次实现全年盈利，12 月纳入标普 500"],["2022","柏林与德州工厂投产，交付量首次破百万"],["2023","全球降价换销量，毛利率从 26% 掉到 18%"],["2024","裁员超 10%，重心转向 FSD 与 Robotaxi"],["2025","全年营收首次出现下滑"]],"price":372.22,"chg":-0.63,"cap":14713,"pe":387.8,"pb":17.9,"fin":[{"fy":2015,"revenue":4046,"gross":924,"opIncome":-717,"netIncome":-889,"ocf":null,"capex":1635,"fcf":null,"eps":-6.93,"assets":8068,"liabilities":6937,"equity":1084,"cash":1197,"debt":null,"inventory":1278,"receivable":169,"grossMargin":22.8,"netMargin":-22,"roe":-82,"debtRatio":86},{"fy":2016,"revenue":7000,"gross":1599,"opIncome":-667,"netIncome":-675,"ocf":-124,"capex":1281,"fcf":-1405,"eps":-4.68,"assets":22664,"liabilities":16750,"equity":4753,"cash":3393,"debt":5892,"inventory":2067,"receivable":499,"grossMargin":22.8,"netMargin":-9.6,"roe":-14.2,"debtRatio":73.9},{"fy":2017,"revenue":11759,"gross":2223,"opIncome":-1632,"netIncome":-1962,"ocf":-61,"capex":3415,"fcf":-3476,"eps":-11.83,"assets":28655,"liabilities":23023,"equity":4237,"cash":3368,"debt":8829,"inventory":2264,"receivable":515,"grossMargin":18.9,"netMargin":-16.7,"roe":-46.3,"debtRatio":80.3},{"fy":2018,"revenue":21461,"gross":4042,"opIncome":-388,"netIncome":-976,"ocf":2098,"capex":2101,"fcf":-3,"eps":-1.14,"assets":29740,"liabilities":23427,"equity":4923,"cash":3686,"debt":8411,"inventory":3113,"receivable":949,"grossMargin":18.8,"netMargin":-4.5,"roe":-19.8,"debtRatio":78.8},{"fy":2019,"revenue":24578,"gross":4069,"opIncome":-69,"netIncome":-862,"ocf":2405,"capex":1327,"fcf":1078,"eps":-0.98,"assets":34309,"liabilities":26199,"equity":6618,"cash":6268,"debt":10402,"inventory":3552,"receivable":1324,"grossMargin":16.6,"netMargin":-3.5,"roe":-13,"debtRatio":76.4},{"fy":2020,"revenue":31536,"gross":6630,"opIncome":1994,"netIncome":721,"ocf":5943,"capex":3157,"fcf":2786,"eps":0.21,"assets":52148,"liabilities":28418,"equity":22225,"cash":19384,"debt":8462,"inventory":4101,"receivable":1886,"grossMargin":21,"netMargin":2.3,"roe":3.2,"debtRatio":54.5},{"fy":2021,"revenue":53823,"gross":13606,"opIncome":6523,"netIncome":5519,"ocf":11497,"capex":6482,"fcf":5015,"eps":1.63,"assets":62131,"liabilities":30548,"equity":30189,"cash":17576,"debt":4254,"inventory":5757,"receivable":1913,"grossMargin":25.3,"netMargin":10.3,"roe":18.3,"debtRatio":49.2},{"fy":2022,"revenue":81462,"gross":20853,"opIncome":13656,"netIncome":12556,"ocf":14724,"capex":7158,"fcf":7566,"eps":3.62,"assets":82338,"liabilities":36440,"equity":44704,"cash":16253,"debt":1029,"inventory":12839,"receivable":2952,"grossMargin":25.6,"netMargin":15.4,"roe":28.1,"debtRatio":44.3},{"fy":2023,"revenue":96773,"gross":17660,"opIncome":8891,"netIncome":14997,"ocf":13256,"capex":8899,"fcf":4357,"eps":4.3,"assets":106618,"liabilities":43009,"equity":62634,"cash":16398,"debt":2682,"inventory":13626,"receivable":3508,"grossMargin":18.2,"netMargin":15.5,"roe":23.9,"debtRatio":40.3},{"fy":2024,"revenue":97690,"gross":17450,"opIncome":7076,"netIncome":7091,"ocf":14923,"capex":11342,"fcf":3581,"eps":2.04,"assets":122070,"liabilities":48390,"equity":72913,"cash":16139,"debt":5535,"inventory":12017,"receivable":4418,"grossMargin":17.9,"netMargin":7.3,"roe":9.7,"debtRatio":39.6},{"fy":2025,"revenue":94827,"gross":17094,"opIncome":4355,"netIncome":3794,"ocf":14747,"capex":8527,"fcf":6220,"eps":1.08,"assets":137806,"liabilities":54941,"equity":82137,"cash":16513,"debt":6584,"inventory":12392,"receivable":4576,"grossMargin":18,"netMargin":4,"roe":4.6,"debtRatio":39.9}],"kline":[{"d":"2020-01-31","close":43.371},{"d":"2020-02-28","close":44.533},{"d":"2020-03-31","close":34.933},{"d":"2020-04-30","close":52.125},{"d":"2020-05-29","close":55.667},{"d":"2020-06-30","close":71.987},{"d":"2020-07-31","close":95.384},{"d":"2020-08-31","close":166.107},{"d":"2020-09-30","close":143.003},{"d":"2020-10-30","close":129.347},{"d":"2020-11-30","close":189.2},{"d":"2020-12-31","close":235.223},{"d":"2021-01-29","close":264.51},{"d":"2021-02-26","close":225.167},{"d":"2021-03-31","close":222.643},{"d":"2021-04-30","close":236.48},{"d":"2021-05-28","close":208.407},{"d":"2021-06-30","close":226.567},{"d":"2021-07-30","close":229.067},{"d":"2021-08-31","close":245.24},{"d":"2021-09-30","close":258.493},{"d":"2021-10-29","close":371.333},{"d":"2021-11-30","close":381.587},{"d":"2021-12-31","close":352.26},{"d":"2022-01-31","close":312.24},{"d":"2022-02-28","close":290.143},{"d":"2022-03-31","close":359.2},{"d":"2022-04-29","close":290.253},{"d":"2022-05-31","close":252.753},{"d":"2022-06-30","close":224.473},{"d":"2022-07-29","close":297.15},{"d":"2022-08-31","close":275.61},{"d":"2022-09-30","close":265.25},{"d":"2022-10-31","close":227.54},{"d":"2022-11-30","close":194.7},{"d":"2022-12-30","close":123.18},{"d":"2023-01-31","close":173.22},{"d":"2023-02-28","close":205.71},{"d":"2023-03-31","close":207.46},{"d":"2023-04-28","close":164.31},{"d":"2023-05-31","close":203.93},{"d":"2023-06-30","close":261.77},{"d":"2023-07-31","close":267.43},{"d":"2023-08-31","close":258.08},{"d":"2023-09-29","close":250.22},{"d":"2023-10-31","close":200.84},{"d":"2023-11-30","close":240.08},{"d":"2023-12-29","close":248.48},{"d":"2024-01-31","close":187.29},{"d":"2024-02-29","close":201.88},{"d":"2024-03-28","close":175.79},{"d":"2024-04-30","close":183.28},{"d":"2024-05-31","close":178.08},{"d":"2024-06-28","close":197.88},{"d":"2024-07-31","close":232.07},{"d":"2024-08-30","close":214.11},{"d":"2024-09-30","close":261.63},{"d":"2024-10-31","close":249.85},{"d":"2024-11-29","close":345.16},{"d":"2024-12-31","close":403.84},{"d":"2025-01-31","close":404.6},{"d":"2025-02-28","close":292.98},{"d":"2025-03-31","close":259.16},{"d":"2025-04-30","close":282.16},{"d":"2025-05-30","close":346.46},{"d":"2025-06-30","close":317.66},{"d":"2025-07-31","close":308.27},{"d":"2025-08-29","close":333.87},{"d":"2025-09-30","close":444.72},{"d":"2025-10-31","close":456.56},{"d":"2025-11-28","close":430.17},{"d":"2025-12-31","close":449.72},{"d":"2026-01-30","close":430.41},{"d":"2026-02-27","close":402.51},{"d":"2026-03-31","close":371.75},{"d":"2026-04-30","close":381.63},{"d":"2026-05-29","close":435.79},{"d":"2026-06-30","close":420.6},{"d":"2026-07-31","close":311.21},{"d":"2026-08-31","close":367.95},{"d":"2026-09-30","close":354.81},{"d":"2026-10-23","close":372.22}],"updated":"2026-10-26"},{"ticker":"AAPL","name":"苹果","sector":"消费电子","market":"NASDAQ","biz":"卖硬件（iPhone 占一半以上收入），靠 20 亿台活跃设备的存量收服务费：App Store 抽成、iCloud、Apple Music、广告与授权。硬件是入口，服务是利润增量。","segments":[["iPhone",51],["服务",24],["可穿戴 / 家居",10],["Mac",8],["iPad",7]],"history":[["1976","乔布斯与沃兹在车库创办，做个人电脑"],["1980","纳斯达克上市"],["1997","乔布斯回归，砍掉 70% 产品线"],["2001","iPod + iTunes，第一次把硬件和内容绑在一起"],["2007","iPhone 发布，重心从电脑转向手机"],["2011","库克接任 CEO，供应链成为核心竞争力"],["2015","Apple Watch，进入可穿戴"],["2020","Mac 换自研 M 系列芯片，摆脱 Intel"],["2024","Apple Intelligence，把 AI 塞进系统层"]],"price":347.73,"chg":-0.14,"cap":50748,"pe":45.3,"pb":68.8,"fin":[{"fy":2015,"revenue":233715,"gross":93626,"opIncome":71230,"netIncome":53394,"ocf":81266,"capex":11247,"fcf":70019,"eps":9.22,"assets":290345,"liabilities":170990,"equity":119355,"cash":21120,"debt":53329,"inventory":2349,"receivable":16849,"grossMargin":40.1,"netMargin":22.8,"roe":44.7,"debtRatio":58.9},{"fy":2016,"revenue":215639,"gross":84263,"opIncome":60024,"netIncome":45687,"ocf":66231,"capex":12734,"fcf":53497,"eps":8.31,"assets":321686,"liabilities":193437,"equity":128249,"cash":20484,"debt":75427,"inventory":2132,"receivable":15754,"grossMargin":39.1,"netMargin":21.2,"roe":35.6,"debtRatio":60.1},{"fy":2017,"revenue":229234,"gross":88186,"opIncome":61344,"netIncome":48351,"ocf":64225,"capex":12451,"fcf":51774,"eps":9.21,"assets":375319,"liabilities":241272,"equity":134047,"cash":20289,"debt":97207,"inventory":4855,"receivable":17874,"grossMargin":38.5,"netMargin":21.1,"roe":36.1,"debtRatio":64.3},{"fy":2018,"revenue":265595,"gross":101839,"opIncome":70898,"netIncome":59531,"ocf":77434,"capex":13313,"fcf":64121,"eps":2.98,"assets":365725,"liabilities":258578,"equity":107147,"cash":25913,"debt":93735,"inventory":3956,"receivable":23186,"grossMargin":38.3,"netMargin":22.4,"roe":55.6,"debtRatio":70.7},{"fy":2019,"revenue":260174,"gross":98392,"opIncome":63930,"netIncome":55256,"ocf":69391,"capex":10495,"fcf":58896,"eps":2.97,"assets":338516,"liabilities":248028,"equity":90488,"cash":48844,"debt":91807,"inventory":4106,"receivable":22926,"grossMargin":37.8,"netMargin":21.2,"roe":61.1,"debtRatio":73.3},{"fy":2020,"revenue":274515,"gross":104956,"opIncome":66288,"netIncome":57411,"ocf":80674,"capex":7309,"fcf":73365,"eps":3.28,"assets":323888,"liabilities":258549,"equity":65339,"cash":38016,"debt":98667,"inventory":4061,"receivable":16120,"grossMargin":38.2,"netMargin":20.9,"roe":87.9,"debtRatio":79.8},{"fy":2021,"revenue":365817,"gross":152836,"opIncome":108949,"netIncome":94680,"ocf":104038,"capex":11085,"fcf":92953,"eps":5.61,"assets":351002,"liabilities":287912,"equity":63090,"cash":34940,"debt":109106,"inventory":6580,"receivable":26278,"grossMargin":41.8,"netMargin":25.9,"roe":150.1,"debtRatio":82},{"fy":2022,"revenue":394328,"gross":170782,"opIncome":119437,"netIncome":99803,"ocf":122151,"capex":10708,"fcf":111443,"eps":6.11,"assets":352755,"liabilities":302083,"equity":50672,"cash":23646,"debt":110087,"inventory":4946,"receivable":28184,"grossMargin":43.3,"netMargin":25.3,"roe":197,"debtRatio":85.6},{"fy":2023,"revenue":383285,"gross":169148,"opIncome":114301,"netIncome":96995,"ocf":110543,"capex":10959,"fcf":99584,"eps":6.13,"assets":352583,"liabilities":290437,"equity":62146,"cash":29965,"debt":105103,"inventory":6331,"receivable":29508,"grossMargin":44.1,"netMargin":25.3,"roe":156.1,"debtRatio":82.4},{"fy":2024,"revenue":391035,"gross":180683,"opIncome":123216,"netIncome":93736,"ocf":118254,"capex":9447,"fcf":108807,"eps":6.08,"assets":364980,"liabilities":308030,"equity":56950,"cash":29943,"debt":96662,"inventory":7286,"receivable":33410,"grossMargin":46.2,"netMargin":24,"roe":164.6,"debtRatio":84.4},{"fy":2025,"revenue":416161,"gross":195201,"opIncome":133050,"netIncome":112010,"ocf":111482,"capex":12715,"fcf":98767,"eps":7.46,"assets":359241,"liabilities":285508,"equity":73733,"cash":35934,"debt":90678,"inventory":5718,"receivable":39777,"grossMargin":46.9,"netMargin":26.9,"roe":151.9,"debtRatio":79.5}],"kline":[{"d":"2020-01-31","close":71.025},{"d":"2020-02-28","close":62.18},{"d":"2020-03-31","close":57.413},{"d":"2020-04-30","close":67.29},{"d":"2020-05-29","close":73.53},{"d":"2020-06-30","close":85.245},{"d":"2020-07-31","close":100.305},{"d":"2020-08-31","close":123.29},{"d":"2020-09-30","close":110.06},{"d":"2020-10-30","close":103.11},{"d":"2020-11-30","close":113.505},{"d":"2020-12-31","close":127.145},{"d":"2021-01-29","close":126.415},{"d":"2021-02-26","close":115.92},{"d":"2021-03-31","close":116.81},{"d":"2021-04-30","close":126.12},{"d":"2021-05-28","close":119.49},{"d":"2021-06-30","close":131.84},{"d":"2021-07-30","close":140.74},{"d":"2021-08-31","close":146.93},{"d":"2021-09-30","close":136.6},{"d":"2021-10-29","close":144.9},{"d":"2021-11-30","close":160.62},{"d":"2021-12-31","close":172.89},{"d":"2022-01-31","close":170.1},{"d":"2022-02-28","close":160.66},{"d":"2022-03-31","close":170.15},{"d":"2022-04-29","close":153.19},{"d":"2022-05-31","close":144.61},{"d":"2022-06-30","close":132.49},{"d":"2022-07-29","close":158.28},{"d":"2022-08-31","close":153.22},{"d":"2022-09-30","close":134.2},{"d":"2022-10-31","close":149.34},{"d":"2022-11-30","close":144.26},{"d":"2022-12-30","close":126.16},{"d":"2023-01-31","close":140.52},{"d":"2023-02-28","close":143.87},{"d":"2023-03-31","close":161.36},{"d":"2023-04-28","close":166.14},{"d":"2023-05-31","close":173.95},{"d":"2023-06-30","close":190.67},{"d":"2023-07-31","close":193.15},{"d":"2023-08-31","close":184.81},{"d":"2023-09-29","close":168.15},{"d":"2023-10-31","close":167.71},{"d":"2023-11-30","close":187.13},{"d":"2023-12-29","close":189.71},{"d":"2024-01-31","close":181.58},{"d":"2024-02-29","close":178.17},{"d":"2024-03-28","close":168.9},{"d":"2024-04-30","close":167.75},{"d":"2024-05-31","close":189.92},{"d":"2024-06-28","close":208.29},{"d":"2024-07-31","close":219.75},{"d":"2024-08-30","close":226.92},{"d":"2024-09-30","close":230.92},{"d":"2024-10-31","close":223.83},{"d":"2024-11-29","close":235.5},{"d":"2024-12-31","close":248.59},{"d":"2025-01-31","close":234.17},{"d":"2025-02-28","close":240.26},{"d":"2025-03-31","close":220.55},{"d":"2025-04-30","close":210.92},{"d":"2025-05-30","close":199.53},{"d":"2025-06-30","close":203.85},{"d":"2025-07-31","close":206.25},{"d":"2025-08-29","close":231.08},{"d":"2025-09-30","close":253.57},{"d":"2025-10-31","close":269.31},{"d":"2025-11-28","close":278.05},{"d":"2025-12-31","close":271.06},{"d":"2026-01-30","close":258.68},{"d":"2026-02-27","close":263.64},{"d":"2026-03-31","close":253.25},{"d":"2026-04-30","close":270.81},{"d":"2026-05-29","close":311.79},{"d":"2026-06-30","close":289.09},{"d":"2026-07-31","close":308.64},{"d":"2026-08-31","close":316.85},{"d":"2026-09-30","close":333.02},{"d":"2026-10-23","close":347.725}],"updated":"2026-10-26"},{"ticker":"NVDA","name":"英伟达","sector":"半导体 / AI 算力","market":"NASDAQ","biz":"卖 AI 训练与推理用的 GPU 和整机柜系统，附带 CUDA 软件生态。数据中心业务已占九成以上收入，客户是云厂商和主权 AI。","segments":[["数据中心",88],["游戏",9],["专业可视化",2],["汽车",1]],"history":[["1993","黄仁勋等三人创办，做图形芯片"],["1999","上市；同年发明 GPU（GeForce 256）"],["2006","发布 CUDA，让 GPU 能跑通用计算"],["2012","AlexNet 用 GPU 训练，深度学习转向 GPU"],["2016","交付第一台 DGX-1"],["2020","收购 Mellanox，补齐网络互联"],["2023","生成式 AI 爆发，数据中心业务翻数倍"],["2025","市值站上 5 万亿美元"]],"price":210.96,"chg":-0.59,"cap":50841,"pe":42.3,"pb":32.3,"fin":[{"fy":2016,"revenue":5010,"gross":2811,"opIncome":747,"netIncome":614,"ocf":1175,"capex":null,"fcf":null,"eps":1.08,"assets":7370,"liabilities":2814,"equity":4469,"cash":596,"debt":0,"inventory":418,"receivable":505,"grossMargin":56.1,"netMargin":12.3,"roe":13.7,"debtRatio":38.2},{"fy":2017,"revenue":6910,"gross":4063,"opIncome":1934,"netIncome":1666,"ocf":1672,"capex":null,"fcf":null,"eps":2.57,"assets":9841,"liabilities":4048,"equity":5762,"cash":1766,"debt":1983,"inventory":794,"receivable":826,"grossMargin":58.8,"netMargin":24.1,"roe":28.9,"debtRatio":41.1},{"fy":2018,"revenue":9714,"gross":5822,"opIncome":3210,"netIncome":3047,"ocf":3502,"capex":null,"fcf":null,"eps":4.82,"assets":11241,"liabilities":3770,"equity":7471,"cash":4002,"debt":1985,"inventory":796,"receivable":1265,"grossMargin":59.9,"netMargin":31.4,"roe":40.8,"debtRatio":33.5},{"fy":2019,"revenue":11716,"gross":7171,"opIncome":3804,"netIncome":4141,"ocf":3743,"capex":null,"fcf":null,"eps":6.63,"assets":13292,"liabilities":3950,"equity":9342,"cash":782,"debt":1988,"inventory":1575,"receivable":1424,"grossMargin":61.2,"netMargin":35.3,"roe":44.3,"debtRatio":29.7},{"fy":2020,"revenue":10918,"gross":6768,"opIncome":2846,"netIncome":2796,"ocf":4761,"capex":null,"fcf":null,"eps":1.13,"assets":17315,"liabilities":5111,"equity":12204,"cash":10896,"debt":1991,"inventory":979,"receivable":1657,"grossMargin":62,"netMargin":25.6,"roe":22.9,"debtRatio":29.5},{"fy":2021,"revenue":16675,"gross":10396,"opIncome":4532,"netIncome":4332,"ocf":5822,"capex":null,"fcf":null,"eps":1.73,"assets":28791,"liabilities":11898,"equity":16893,"cash":847,"debt":6963,"inventory":1826,"receivable":2429,"grossMargin":62.3,"netMargin":26,"roe":25.6,"debtRatio":41.3},{"fy":2022,"revenue":26914,"gross":17475,"opIncome":10041,"netIncome":9752,"ocf":9108,"capex":null,"fcf":null,"eps":3.85,"assets":44187,"liabilities":17575,"equity":26612,"cash":1990,"debt":10946,"inventory":2605,"receivable":4650,"grossMargin":64.9,"netMargin":36.2,"roe":36.6,"debtRatio":39.8},{"fy":2023,"revenue":26974,"gross":15356,"opIncome":4224,"netIncome":4368,"ocf":5641,"capex":null,"fcf":null,"eps":0.17,"assets":41182,"liabilities":19081,"equity":22101,"cash":3389,"debt":10953,"inventory":5159,"receivable":3827,"grossMargin":56.9,"netMargin":16.2,"roe":19.8,"debtRatio":46.3},{"fy":2024,"revenue":60922,"gross":44301,"opIncome":32972,"netIncome":29760,"ocf":28090,"capex":null,"fcf":null,"eps":1.19,"assets":65728,"liabilities":22750,"equity":42978,"cash":7280,"debt":9709,"inventory":5282,"receivable":9999,"grossMargin":72.7,"netMargin":48.8,"roe":69.2,"debtRatio":34.6},{"fy":2025,"revenue":130497,"gross":97858,"opIncome":81453,"netIncome":72880,"ocf":64089,"capex":null,"fcf":null,"eps":2.94,"assets":111601,"liabilities":32274,"equity":79327,"cash":8589,"debt":8463,"inventory":10080,"receivable":23065,"grossMargin":75,"netMargin":55.8,"roe":91.9,"debtRatio":28.9},{"fy":2026,"revenue":215938,"gross":153463,"opIncome":130387,"netIncome":120067,"ocf":102718,"capex":null,"fcf":null,"eps":4.9,"assets":206803,"liabilities":49510,"equity":157293,"cash":10605,"debt":8468,"inventory":21403,"receivable":38466,"grossMargin":71.1,"netMargin":55.6,"roe":76.3,"debtRatio":23.9}],"kline":[{"d":"2020-01-31","close":5.263},{"d":"2020-02-28","close":6.108},{"d":"2020-03-31","close":5.946},{"d":"2020-04-30","close":6.663},{"d":"2020-05-29","close":8.232},{"d":"2020-06-30","close":8.858},{"d":"2020-07-31","close":9.975},{"d":"2020-08-31","close":12.735},{"d":"2020-09-30","close":12.895},{"d":"2020-10-30","close":11.898},{"d":"2020-11-30","close":12.766},{"d":"2020-12-31","close":12.423},{"d":"2021-01-29","close":12.358},{"d":"2021-02-26","close":13.083},{"d":"2021-03-31","close":12.72},{"d":"2021-04-30","close":14.382},{"d":"2021-05-28","close":15.617},{"d":"2021-06-30","close":19.379},{"d":"2021-07-30","close":18.875},{"d":"2021-08-31","close":21.765},{"d":"2021-09-30","close":20.096},{"d":"2021-10-29","close":24.947},{"d":"2021-11-30","close":32.056},{"d":"2021-12-31","close":28.795},{"d":"2022-01-31","close":23.87},{"d":"2022-02-28","close":23.769},{"d":"2022-03-31","close":26.674},{"d":"2022-04-29","close":17.935},{"d":"2022-05-31","close":18.06},{"d":"2022-06-30","close":14.551},{"d":"2022-07-29","close":17.555},{"d":"2022-08-31","close":14.486},{"d":"2022-09-30","close":11.535},{"d":"2022-10-31","close":12.893},{"d":"2022-11-30","close":16.323},{"d":"2022-12-30","close":14.014},{"d":"2023-01-31","close":18.937},{"d":"2023-02-28","close":22.616},{"d":"2023-03-31","close":27.181},{"d":"2023-04-28","close":27.153},{"d":"2023-05-31","close":37.238},{"d":"2023-06-30","close":41.71},{"d":"2023-07-31","close":46.137},{"d":"2023-08-31","close":48.763},{"d":"2023-09-29","close":42.911},{"d":"2023-10-31","close":40.192},{"d":"2023-11-30","close":46.182},{"d":"2023-12-29","close":48.938},{"d":"2024-01-31","close":60.943},{"d":"2024-02-29","close":78.528},{"d":"2024-03-28","close":89.776},{"d":"2024-04-30","close":85.822},{"d":"2024-05-31","close":109.053},{"d":"2024-06-28","close":122.97},{"d":"2024-07-31","close":116.45},{"d":"2024-08-30","close":118.8},{"d":"2024-09-30","close":120.88},{"d":"2024-10-31","close":132.2},{"d":"2024-11-29","close":137.69},{"d":"2024-12-31","close":133.74},{"d":"2025-01-31","close":119.52},{"d":"2025-02-28","close":124.37},{"d":"2025-03-31","close":107.84},{"d":"2025-04-30","close":108.38},{"d":"2025-05-30","close":134.59},{"d":"2025-06-30","close":157.46},{"d":"2025-07-31","close":177.34},{"d":"2025-08-29","close":173.65},{"d":"2025-09-30","close":186.06},{"d":"2025-10-31","close":201.97},{"d":"2025-11-28","close":176.48},{"d":"2025-12-31","close":185.99},{"d":"2026-01-30","close":190.62},{"d":"2026-02-27","close":176.68},{"d":"2026-03-31","close":173.9},{"d":"2026-04-30","close":199.07},{"d":"2026-05-29","close":210.64},{"d":"2026-06-30","close":199.84},{"d":"2026-07-31","close":200.5},{"d":"2026-08-31","close":220.53},{"d":"2026-09-30","close":228.38},{"d":"2026-10-23","close":210.96}],"updated":"2026-10-26"},{"ticker":"MSFT","name":"微软","sector":"软件 / 云计算","market":"NASDAQ","biz":"三块：Azure 云与服务器、Microsoft 365 办公订阅、Windows 与游戏（含动视暴雪）。企业客户按年订阅，收入可预测性极高。","segments":[["智能云",43],["生产力与业务流程",32],["个人计算",25]],"history":[["1975","盖茨与艾伦创办，做 BASIC 解释器"],["1986","纳斯达克上市"],["1990","Windows 3.0，PC 操作系统定型"],["2001","Xbox 进入游戏"],["2014","纳德拉接任，转向「云优先」"],["2019","成为市值万亿美元公司"],["2023","向 OpenAI 投资，Copilot 全线嵌入"],["2024","完成收购动视暴雪"]],"price":524.51,"chg":0.66,"cap":38952,"pe":29.1,"pb":8.8,"fin":[{"fy":2016,"revenue":85320,"gross":58374,"opIncome":26078,"netIncome":20539,"ocf":33325,"capex":8343,"fcf":24982,"eps":2.56,"assets":193468,"liabilities":121471,"equity":83090,"cash":6510,"debt":40600,"inventory":2251,"receivable":18277,"grossMargin":68.4,"netMargin":24.1,"roe":24.7,"debtRatio":62.8},{"fy":2017,"revenue":89950,"gross":62310,"opIncome":29025,"netIncome":25489,"ocf":39507,"capex":8129,"fcf":31378,"eps":3.25,"assets":250312,"liabilities":162601,"equity":87711,"cash":7663,"debt":77100,"inventory":2181,"receivable":22431,"grossMargin":69.3,"netMargin":28.3,"roe":29.1,"debtRatio":65},{"fy":2018,"revenue":110360,"gross":72007,"opIncome":35058,"netIncome":16571,"ocf":43884,"capex":11632,"fcf":32252,"eps":2.13,"assets":258848,"liabilities":176130,"equity":82718,"cash":11946,"debt":76200,"inventory":2662,"receivable":26481,"grossMargin":65.2,"netMargin":15,"roe":20,"debtRatio":68},{"fy":2019,"revenue":125843,"gross":82933,"opIncome":42959,"netIncome":39240,"ocf":52185,"capex":13925,"fcf":38260,"eps":5.06,"assets":286556,"liabilities":184226,"equity":102330,"cash":11356,"debt":72178,"inventory":2063,"receivable":29524,"grossMargin":65.9,"netMargin":31.2,"roe":38.3,"debtRatio":64.3},{"fy":2020,"revenue":143015,"gross":96937,"opIncome":52959,"netIncome":44281,"ocf":60675,"capex":15441,"fcf":45234,"eps":5.76,"assets":301311,"liabilities":183007,"equity":118304,"cash":13576,"debt":63327,"inventory":1895,"receivable":32011,"grossMargin":67.8,"netMargin":31,"roe":37.4,"debtRatio":60.7},{"fy":2021,"revenue":168088,"gross":115856,"opIncome":69916,"netIncome":61271,"ocf":76740,"capex":20622,"fcf":56118,"eps":8.05,"assets":333779,"liabilities":191791,"equity":141988,"cash":14224,"debt":58146,"inventory":2636,"receivable":38043,"grossMargin":68.9,"netMargin":36.5,"roe":43.2,"debtRatio":57.5},{"fy":2022,"revenue":198270,"gross":135620,"opIncome":83383,"netIncome":72738,"ocf":89035,"capex":23886,"fcf":65149,"eps":9.65,"assets":364840,"liabilities":198298,"equity":166542,"cash":13931,"debt":49781,"inventory":3742,"receivable":44261,"grossMargin":68.4,"netMargin":36.7,"roe":43.7,"debtRatio":54.4},{"fy":2023,"revenue":211915,"gross":146052,"opIncome":88523,"netIncome":72361,"ocf":87582,"capex":28107,"fcf":59475,"eps":9.68,"assets":411976,"liabilities":205753,"equity":206223,"cash":34704,"debt":47237,"inventory":2500,"receivable":48688,"grossMargin":68.9,"netMargin":34.1,"roe":35.1,"debtRatio":49.9},{"fy":2024,"revenue":245122,"gross":171008,"opIncome":109433,"netIncome":88136,"ocf":118548,"capex":44477,"fcf":74071,"eps":11.8,"assets":512163,"liabilities":243686,"equity":268477,"cash":18315,"debt":44937,"inventory":1246,"receivable":56924,"grossMargin":69.8,"netMargin":36,"roe":32.8,"debtRatio":47.6},{"fy":2025,"revenue":281724,"gross":193893,"opIncome":128528,"netIncome":101832,"ocf":136162,"capex":64551,"fcf":71611,"eps":13.64,"assets":619003,"liabilities":275524,"equity":343479,"cash":30242,"debt":43151,"inventory":938,"receivable":69905,"grossMargin":68.8,"netMargin":36.1,"roe":29.6,"debtRatio":44.5},{"fy":2026,"revenue":331839,"gross":225465,"opIncome":155237,"netIncome":133749,"ocf":182935,"capex":115948,"fcf":66987,"eps":17.95,"assets":758376,"liabilities":315989,"equity":442387,"cash":20935,"debt":40294,"inventory":1397,"receivable":80876,"grossMargin":67.9,"netMargin":40.3,"roe":30.2,"debtRatio":41.7}],"kline":[{"d":"2020-01-31","close":151.3},{"d":"2020-02-28","close":143.59},{"d":"2020-03-31","close":139.29},{"d":"2020-04-30","close":160.79},{"d":"2020-05-29","close":165.34},{"d":"2020-06-30","close":185.6},{"d":"2020-07-31","close":187.1},{"d":"2020-08-31","close":208.13},{"d":"2020-09-30","close":192.93},{"d":"2020-10-30","close":185.07},{"d":"2020-11-30","close":197.23},{"d":"2020-12-31","close":205.58},{"d":"2021-01-29","close":215.12},{"d":"2021-02-26","close":216.1},{"d":"2021-03-31","close":219.49},{"d":"2021-04-30","close":235.9},{"d":"2021-05-28","close":233.96},{"d":"2021-06-30","close":255.18},{"d":"2021-07-30","close":269.19},{"d":"2021-08-31","close":286.72},{"d":"2021-09-30","close":266.76},{"d":"2021-10-29","close":316.46},{"d":"2021-11-30","close":316.05},{"d":"2021-12-31","close":321.78},{"d":"2022-01-31","close":296.44},{"d":"2022-02-28","close":284.87},{"d":"2022-03-31","close":294.39},{"d":"2022-04-29","close":263.6},{"d":"2022-05-31","close":258.57},{"d":"2022-06-30","close":243.53},{"d":"2022-07-29","close":267.44},{"d":"2022-08-31","close":248.79},{"d":"2022-09-30","close":220.22},{"d":"2022-10-31","close":219.45},{"d":"2022-11-30","close":243.14},{"d":"2022-12-30","close":227.82},{"d":"2023-01-31","close":235.81},{"d":"2023-02-28","close":238.1},{"d":"2023-03-31","close":276.98},{"d":"2023-04-28","close":295.94},{"d":"2023-05-31","close":317.75},{"d":"2023-06-30","close":329.9},{"d":"2023-07-31","close":325.28},{"d":"2023-08-31","close":317.8},{"d":"2023-09-29","close":305.79},{"d":"2023-10-31","close":328.15},{"d":"2023-11-30","close":369.7},{"d":"2023-12-29","close":366.83},{"d":"2024-01-31","close":388.37},{"d":"2024-02-29","close":405.18},{"d":"2024-03-28","close":412.26},{"d":"2024-04-30","close":380.87},{"d":"2024-05-31","close":407.42},{"d":"2024-06-28","close":439.24},{"d":"2024-07-31","close":410.64},{"d":"2024-08-30","close":410.18},{"d":"2024-09-30","close":423.34},{"d":"2024-10-31","close":399.39},{"d":"2024-11-29","close":417.33},{"d":"2024-12-31","close":415.37},{"d":"2025-01-31","close":408.93},{"d":"2025-02-28","close":391.69},{"d":"2025-03-31","close":370.09},{"d":"2025-04-30","close":389.96},{"d":"2025-05-30","close":455.89},{"d":"2025-06-30","close":492.94},{"d":"2025-07-31","close":529.03},{"d":"2025-08-29","close":503.05},{"d":"2025-09-30","close":514.31},{"d":"2025-10-31","close":514.17},{"d":"2025-11-28","close":489.28},{"d":"2025-12-31","close":480.89},{"d":"2026-01-30","close":427.56},{"d":"2026-02-27","close":390.92},{"d":"2026-03-31","close":368.35},{"d":"2026-04-30","close":405.96},{"d":"2026-05-29","close":449.33},{"d":"2026-06-30","close":372.11},{"d":"2026-07-31","close":463.81},{"d":"2026-08-31","close":507.29},{"d":"2026-09-30","close":512.9},{"d":"2026-10-23","close":524.51}],"updated":"2026-10-26"}];
+
+const CHECK_ITEMS = [
+  { k: 'moat', t: '护城河', q: '客户为什么换不掉它？换个供应商的代价有多大？' },
+  { k: 'mgmt', t: '管理层', q: '过去 5 年说过的话兑现了多少？有没有乱花钱（高价并购、乱扩产）？' },
+  { k: 'space', t: '行业空间', q: '这个生意的天花板在哪里？它是分蛋糕的还是在做新的蛋糕？' },
+  { k: 'money', t: '钱的质量', q: '净利润有多少真的变成了现金？会不会是应收账款堆出来的利润？' },
+  { k: 'risk', t: '最大风险', q: '什么情况下这笔投资会永久性亏钱？' },
+  { k: 'price', t: '买入价与理由', q: '什么价格你会买？为什么是这个价格？' }
+];
+const VERDICTS = ['待研究', '好公司', '观察中', '已否决'];
+
+let cur = null;          // 当前详情公司
+let priceRange = 1;      // 股价图区间（年）
+let finKey = 'revenue';  // 财务图指标
+const store = JSON.parse(localStorage.getItem('goodco-notes') || '{}');
+const saveNotes = () => { try { localStorage.setItem('goodco-notes', JSON.stringify(store)) } catch {} };
+
+// ===== 格式化 =====
+// 单位：财报一律以「百万美元」为单位送进来
+// 1 万亿 = 1,000,000 百万；1 亿 = 100 百万。这两个除数写错过一次（把亿当成了万亿），别再动
+const money = m => {
+  if (m == null) return '—';
+  const a = Math.abs(m);
+  if (a >= 1000000) return (m / 1000000).toFixed(2) + '万亿';
+  if (a >= 100) return (m / 100).toFixed(0) + '亿';
+  return m.toFixed(0) + '百万';
+};
+const pctTxt = v => v == null ? '—' : v.toFixed(1) + '%';
+const chgCls = v => v > 0 ? 'up' : (v < 0 ? 'down' : 'flat');
+const sign = v => (v > 0 ? '+' : '') + v.toFixed(2) + '%';
+const growth = (a, b) => (a && b) ? ((a - b) / Math.abs(b) * 100) : null;
+
+// ===== 列表 =====
+function renderList(filter = '') {
+  const f = filter.trim().toUpperCase();
+  const list = DATA.filter(c => !f || c.ticker.includes(f) || c.name.includes(filter.trim()) || c.sector.includes(filter.trim()));
+  document.getElementById('emptyCards').hidden = list.length > 0;
+  document.getElementById('cards').innerHTML = list.map(c => {
+    const last = c.fin.at(-1), prev = c.fin.at(-2);
+    const g = growth(last.revenue, prev.revenue);
+    const tag = store[c.ticker]?.verdict || '待研究';
+    const cls = tag === '好公司' ? 'tag-core' : (tag === '已否决' ? 'tag-no' : 'tag-watch');
+    return `<article class="co" data-tk="${c.ticker}">
+      <div class="r1">
+        <div style="min-width:0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:2px">
+            <span class="tk">${c.ticker}</span><span class="nm">${c.name}</span>
+          </div>
+          <div class="sec">${c.sector} · ${c.market}</div>
+        </div>
+        <div class="px">
+          <b>$${c.price.toFixed(2)}</b>
+          <i class="${chgCls(c.chg)}">${sign(c.chg)}</i>
+        </div>
+      </div>
+      <div class="kv">
+        <div><b>${c.cap >= 10000 ? (c.cap / 10000).toFixed(2) + '万亿' : c.cap + '亿'}</b><span>市值</span></div>
+        <div><b>${c.pe ?? '—'}</b><span>市盈率</span></div>
+        <div><b>${g == null ? '—' : sign(g)}</b><span>营收增速</span></div>
+        <div><b>${pctTxt(last.roe)}</b><span>ROE</span></div>
+      </div>
+      <div class="r4">
+        <span class="tagi ${cls}">${tag}</span>
+        <span class="up-time">FY${last.fy} · 更新于 ${c.updated.slice(5)}</span>
+      </div>
+    </article>`;
+  }).join('');
+  document.querySelectorAll('.co').forEach(el => el.onclick = () => openCompany(el.dataset.tk));
+}
+
+// ===== 折线图（通用）=====
+function drawLine(svg, box, series, opts = {}) {
+  const W = 900, H = box.h;
+  const pad = { l: 6, r: 6, t: 14, b: 20 };
+  const vals = series.map(s => s.v);
+  const min = opts.min != null ? opts.min : Math.min(...vals);
+  const max = opts.max != null ? opts.max : Math.max(...vals);
+  const span = (max - min) || 1;
+  const X = i => pad.l + (W - pad.l - pad.r) * (i / Math.max(1, series.length - 1));
+  const Y = v => pad.t + (H - pad.t - pad.b) * (1 - (v - min) / span);
+  const pts = series.map((s, i) => `${X(i).toFixed(1)},${Y(s.v).toFixed(1)}`).join(' L ');
+  const up = series.at(-1).v >= series[0].v;
+  const color = opts.color || (up ? 'var(--up)' : 'var(--down)');
+  const id = 'g' + Math.random().toString(36).slice(2, 7);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = `
+    <defs><linearGradient id="${id}" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="${color}" stop-opacity=".22"/>
+      <stop offset="100%" stop-color="${color}" stop-opacity="0"/>
+    </linearGradient></defs>
+    <path d="M ${X(0)},${H - pad.b} L ${pts} L ${X(series.length - 1)},${H - pad.b} Z" fill="url(#${id})"/>
+    <path d="M ${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${X(series.length - 1)}" cy="${Y(series.at(-1).v)}" r="3.5" fill="${color}"/>
+    <line id="cursor" x1="0" y1="${pad.t}" x2="0" y2="${H - pad.b}" stroke="var(--line-2)" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
+    <circle id="cursorDot" r="4" fill="${color}" opacity="0"/>
+  `;
+  svg._geo = { X, Y, W, H, series, pad };
+}
+
+function bindTip(svg, tipEl, fmt) {
+  const wrap = svg.parentElement;
+  wrap.onmousemove = ev => {
+    const g = svg._geo; if (!g) return;
+    const rect = svg.getBoundingClientRect();
+    const rel = (ev.clientX - rect.left) / rect.width * g.W;
+    let idx = 0, best = 1e9;
+    g.series.forEach((s, i) => { const d = Math.abs(g.X(i) - rel); if (d < best) { best = d; idx = i } });
+    const p = g.series[idx];
+    const cur = svg.querySelector('#cursor'), dot = svg.querySelector('#cursorDot');
+    cur.setAttribute('x1', g.X(idx)); cur.setAttribute('x2', g.X(idx)); cur.setAttribute('opacity', '1');
+    dot.setAttribute('cx', g.X(idx)); dot.setAttribute('cy', g.Y(p.v)); dot.setAttribute('opacity', '1');
+    tipEl.textContent = fmt(p, idx);
+    tipEl.style.left = (g.X(idx) / g.W * rect.width) + 'px';
+    tipEl.style.top = (g.Y(p.v) / g.H * rect.height) + 'px';
+    tipEl.classList.add('on');
+  };
+  wrap.onmouseleave = () => {
+    tipEl.classList.remove('on');
+    const cur = svg.querySelector('#cursor'), dot = svg.querySelector('#cursorDot');
+    if (cur) { cur.setAttribute('opacity', '0'); dot.setAttribute('opacity', '0') }
+  };
+}
+
+// ===== 柱状图（财务）=====
+function drawBars(svg, rows, key, fmt, tipEl) {
+  const W = 900, H = 170, pad = { l: 6, r: 6, t: 18, b: 22 };
+  const vals = rows.map(r => r[key] ?? 0);
+  const max = Math.max(...vals, 1), min = Math.min(...vals, 0);
+  const span = (max - min) || 1;
+  const bw = (W - pad.l - pad.r) / rows.length;
+  const Y = v => pad.t + (H - pad.t - pad.b) * (1 - (v - min) / span);
+  const zero = Y(0);
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+  svg.innerHTML = rows.map((r, i) => {
+    const v = r[key] ?? 0;
+    const x = pad.l + bw * i + bw * 0.18;
+    const w = bw * 0.64;
+    const y = Math.min(Y(v), zero), h = Math.max(2, Math.abs(zero - Y(v)));
+    const isLast = i === rows.length - 1;
+    return `<rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${w.toFixed(1)}" height="${h.toFixed(1)}" rx="3"
+      fill="${isLast ? 'var(--accent)' : 'color-mix(in srgb,var(--accent) 42%,transparent)'}"/>
+      <text x="${(x + w / 2).toFixed(1)}" y="${H - 6}" font-size="19" fill="var(--text-3)" text-anchor="middle">${String(r.fy).slice(2)}</text>`;
+  }).join('');
+  svg._rows = rows; svg._bw = bw; svg._pad = pad; svg._W = W;
+}
+function bindBarTip(svg, tipEl, key, fmt) {
+  const wrap = svg.parentElement;
+  wrap.onmousemove = ev => {
+    if (!svg._rows) return;
+    const rect = svg.getBoundingClientRect();
+    const rel = (ev.clientX - rect.left) / rect.width * svg._W;
+    const idx = Math.max(0, Math.min(svg._rows.length - 1, Math.floor((rel - svg._pad.l) / svg._bw)));
+    const r = svg._rows[idx];
+    tipEl.textContent = `FY${r.fy} · ${fmt(r[key])}`;
+    tipEl.style.left = ((svg._pad.l + svg._bw * (idx + 0.5)) / svg._W * rect.width) + 'px';
+    tipEl.style.top = '10px';
+    tipEl.classList.add('on');
+  };
+  wrap.onmouseleave = () => tipEl.classList.remove('on');
+}
+
+// ===== 详情 =====
+function openCompany(tk) {
+  const c = DATA.find(x => x.ticker === tk);
+  if (!c) return;
+  cur = c;
+  location.hash = 'co/' + tk;
+  document.getElementById('viewList').hidden = true;
+  document.getElementById('viewDetail').hidden = false;
+  window.scrollTo(0, 0);
+  renderDetail();
+}
+
+function renderDetail() {
+  const c = cur, last = c.fin.at(-1), prev = c.fin.at(-2);
+  const note = store[c.ticker] || {};
+  document.getElementById('dName').textContent = c.name;
+  document.getElementById('dTk').textContent = c.ticker;
+  document.getElementById('dSector').textContent = c.sector;
+  document.getElementById('dMarket').textContent = c.market;
+  document.getElementById('dUpdated').textContent = '更新于 ' + c.updated;
+  document.getElementById('dPrice').textContent = '$' + c.price.toFixed(2);
+  const ch = document.getElementById('dChg');
+  ch.className = 'c ' + chgCls(c.chg);
+  ch.textContent = sign(c.chg);
+  document.getElementById('dCap').textContent = '市值 ' + (c.cap >= 10000 ? (c.cap / 10000).toFixed(2) + ' 万亿美元' : c.cap + ' 亿美元');
+  document.getElementById('miniName').textContent = c.name;
+  document.getElementById('miniTk').textContent = c.ticker;
+  document.getElementById('miniPx').textContent = '$' + c.price.toFixed(2);
+  const mc = document.getElementById('miniChg');
+  mc.className = 'px ' + chgCls(c.chg); mc.textContent = sign(c.chg);
+
+  // 六个数：判断要先看的
+  const g = growth(last.revenue, prev.revenue);
+  const gn = growth(last.netIncome, prev.netIncome);
+  const q = [
+    ['市盈率 TTM', c.pe ?? '—', '市值 ÷ 最新年报净利'],
+    ['市净率', c.pb ?? '—', c.pb > 20 ? '权益被回购压低' : ''],
+    ['营收 增速', g == null ? '—' : sign(g), 'FY' + last.fy],
+    ['净利 增速', gn == null ? '—' : sign(gn), 'FY' + last.fy],
+    ['毛利率', pctTxt(last.grossMargin), '近 3 年 ' + c.fin.slice(-3).map(f => f.grossMargin?.toFixed(0) + '%').join(' / ')],
+    ['自由现金流', money(last.fcf), '经营现金流减资本开支']
+  ];
+  document.getElementById('qstats').innerHTML = q.map(([k, v, n]) =>
+    `<div class="qstat"><b>${v}</b><span>${k}</span>${n ? `<span class="note">${n}</span>` : ''}</div>`).join('');
+
+  // 股价
+  renderPrice();
+
+  // 业务
+  const bizEl = document.getElementById('dBiz');
+  bizEl.textContent = note.biz || c.biz;
+  bizEl.onblur = () => { (store[c.ticker] = store[c.ticker] || {}).biz = bizEl.textContent.trim(); saveNotes() };
+  document.getElementById('dSegments').innerHTML = c.segments.map(([n, p]) =>
+    `<div class="seg-row"><div class="nm">${n}</div><div class="bar"><i style="width:${p}%"></i></div><div class="pc">${p}%</div></div>`).join('');
+
+  // 历史
+  document.getElementById('dHistory').innerHTML = c.history.map(([y, t]) =>
+    `<div class="hist-row"><div class="yr">${y}</div><div class="rail"><span class="dot"></span></div><div class="tx">${t}</div></div>`).join('');
+
+  // 财务表
+  renderFinTable();
+  renderFinChart();
+  renderBalance();
+
+  // 我的判断
+  document.getElementById('checks').innerHTML = CHECK_ITEMS.map(it =>
+    `<div class="check"><label>${it.t}</label><div class="q">${it.q}</div>
+      <textarea data-k="${it.k}" placeholder="写点什么…">${(note.checks || {})[it.k] || ''}</textarea></div>`).join('');
+  document.querySelectorAll('.check textarea').forEach(t => {
+    t.oninput = () => {
+      const n = store[c.ticker] = store[c.ticker] || {};
+      n.checks = n.checks || {}; n.checks[t.dataset.k] = t.value; saveNotes();
+    };
+  });
+  document.querySelectorAll('#verdictOpts button').forEach(b => {
+    b.classList.toggle('on', (note.verdict || '待研究') === b.dataset.v);
+    b.onclick = () => {
+      const n = store[c.ticker] = store[c.ticker] || {};
+      n.verdict = b.dataset.v; saveNotes();
+      document.querySelectorAll('#verdictOpts button').forEach(x => x.classList.toggle('on', x === b));
+    };
+  });
+}
+
+function renderPrice() {
+  const c = cur;
+  const months = priceRange * 12;
+  const series = c.kline.slice(-months - 1).map(k => ({ v: k.close, d: k.d }));
+  const svg = document.getElementById('priceChart');
+  const tip = document.getElementById('priceTip');
+  drawLine(svg, { h: 190 }, series);
+  bindTip(svg, tip, p => `${p.d.slice(0, 7)} · $${p.v.toFixed(2)}`);
+}
+
+function renderFinChart() {
+  const c = cur;
+  const svg = document.getElementById('finChart');
+  const tip = document.getElementById('finTip');
+  const isPct = finKey === 'roe';
+  drawBars(svg, c.fin, finKey, v => isPct ? pctTxt(v) : money(v), tip);
+  bindBarTip(svg, tip, finKey, v => isPct ? pctTxt(v) : money(v));
+}
+
+function renderFinTable() {
+  const c = cur, rows = c.fin;
+  // 负数用红（会计红字的惯例），正数不上色。
+  // 这里刻意不给「同比增长」上红绿：股价是「红涨绿跌」，财务好坏若也用同一套色，同一个页面上
+  // 「营收 -2.9% 显示红色」和「股价 -0.63% 显示绿色」会互相打脸，只留正负号最不容易误读。
+  const call = (v, fmt = money) => {
+    if (v == null) return '<span style="color:var(--text-3)">—</span>';
+    const s = fmt(v);
+    return v < 0 ? `<span style="color:var(--up)">${s}</span>` : s;
+  };
+  const gr = (a, b) => {
+    if (a == null || b == null || !b) return '<span style="color:var(--text-3)">—</span>';
+    const d = (a - b) / Math.abs(b) * 100;
+    return (d >= 0 ? '+' : '') + d.toFixed(1) + '%';
+  };
+  const head = `<thead><tr><th>指标</th>${rows.map((r, i) => `<th class="${i === rows.length - 1 ? 'cur' : ''}">FY${String(r.fy).slice(2)}</th>`).join('')}</tr></thead>`;
+  const line = (name, key, fmt = money, cls = '') =>
+    `<tr><td>${name}</td>${rows.map(r => `<td class="${cls}">${call(r[key], fmt)}</td>`).join('')}</tr>`;
+  const grow = name => `<tr class="gap"><td>${name}</td>${rows.map((r, i) => `<td>${i === 0 ? '—' : gr(r.revenue, rows[i - 1].revenue)}</td>`).join('')}</tr>`;
+  document.getElementById('finTable').innerHTML = head + `<tbody>
+    ${line('营业收入', 'revenue')}
+    ${grow('营收 同比')}
+    ${line('毛利', 'gross')}
+    ${line('毛利率', 'grossMargin', pctTxt)}
+    ${line('营业利润', 'opIncome')}
+    ${line('净利润', 'netIncome')}
+    ${line('净利率', 'netMargin', pctTxt)}
+    ${line('摊薄 EPS', 'eps', v => '$' + v.toFixed(2))}
+    ${line('经营现金流', 'ocf')}
+    ${line('资本开支', 'capex')}
+    ${line('自由现金流', 'fcf')}
+    ${line('ROE', 'roe', pctTxt)}
+  </tbody>`;
+  const last = rows.at(-1);
+  document.getElementById('finNote').innerHTML =
+    `最新财年 FY${last.fy}（截至 ${c.fin.at(-1).fy} 年末）：营收 ${money(last.revenue)}，净利 ${money(last.netIncome)}，自由现金流 ${money(last.fcf)}。` +
+    (last.roe > 100 ? ` ROE ${pctTxt(last.roe)} 偏高，因为股东权益只有 ${money(last.equity)}——见下方资产负债。` : '');
+}
+
+function renderBalance() {
+  const c = cur, last = c.fin.at(-1);
+  const assets = last.assets || 0;
+  const liab = last.liabilities || 0;
+  const eq = last.equity || 0;
+  // 资产 = 负债 + 股东权益 + 少数股东权益，前两项相加常常差一点点，差的这段不补上结构条就只有 99%
+  const other = Math.max(0, assets - liab - eq);
+  const lp = liab / assets * 100, ep = eq / assets * 100, op = other / assets * 100;
+  document.getElementById('bsBar').innerHTML =
+    `<div style="flex:${lp};background:linear-gradient(135deg,#c98342,#b06e2f)">负债 ${lp.toFixed(1)}%</div>
+     <div style="flex:${ep};background:linear-gradient(135deg,#4a9e66,#357a4e)">股东权益 ${ep.toFixed(1)}%</div>` +
+    (op > 0.3 ? `<div style="flex:${op};background:color-mix(in srgb,var(--text) 30%,transparent)" title="少数股东权益 ${op.toFixed(1)}%">${op > 4 ? op.toFixed(1) + '%' : ''}</div>` : '');
+  document.getElementById('bsLegend').innerHTML =
+    `<span><i style="background:#c98342"></i>总负债 ${money(liab)}</span>
+     <span><i style="background:#4a9e66"></i>股东权益 ${money(eq)}</span>
+     ${op > 0.3 ? `<span><i style="background:rgba(120,120,120,.5)"></i>少数股东权益 ${money(other)}</span>` : ''}
+     <span style="color:var(--text-3)">总资产 ${money(assets)}</span>`;
+  const rows = c.fin;
+  const head = `<thead><tr><th>科目</th>${rows.map((r, i) => `<th class="${i === rows.length - 1 ? 'cur' : ''}">FY${String(r.fy).slice(2)}</th>`).join('')}</tr></thead>`;
+  const line = (name, key, fmt = money) =>
+    `<tr><td>${name}</td>${rows.map(r => {
+      const v = r[key];
+      if (v == null) return '<td><span style="color:var(--text-3)">—</span></td>';
+      const s = fmt(v);
+      return `<td>${v < 0 ? `<span style="color:var(--up)">${s}</span>` : s}</td>`;
+    }).join('')}</tr>`;
+  document.getElementById('bsTable').innerHTML = head + `<tbody>
+    ${line('总资产', 'assets')}
+    ${line('现金及等价物', 'cash')}
+    ${line('应收账款', 'receivable')}
+    ${line('存货', 'inventory')}
+    ${line('总负债', 'liabilities')}
+    ${line('长期有息负债', 'debt')}
+    ${line('股东权益', 'equity')}
+    ${line('资产负债率', 'debtRatio', pctTxt)}
+  </tbody>`;
+}
+
+// ===== 路由与交互 =====
+function showList() {
+  cur = null;
+  location.hash = '';
+  document.getElementById('viewDetail').hidden = true;
+  document.getElementById('viewList').hidden = false;
+  document.getElementById('mini').classList.remove('on');
+  renderList(document.getElementById('q').value);   // 详情里改过结论/笔记，回列表必须重画，否则标签还是旧的
+  window.scrollTo(0, 0);
+}
+document.getElementById('backBtn').onclick = showList;
+window.addEventListener('popstate', () => {
+  const h = location.hash.replace('#', '');
+  if (h.startsWith('co/')) {
+    const tk = h.slice(3);
+    const c = DATA.find(x => x.ticker === tk);
+    if (c) { cur = c; document.getElementById('viewList').hidden = true; document.getElementById('viewDetail').hidden = false; renderDetail() }
+  } else showList();
+});
+document.getElementById('q').oninput = e => renderList(e.target.value);
+document.getElementById('addBtn').onclick = () => {
+  const tk = prompt('输入美股代码（如 TSLA、GOOGL、BRK.B）：', '');
+  if (!tk) return;
+  alert(`原型阶段只内置了三家真实数据。\n\n正式版在这里会：\n① 用 SEC 官方 ticker→CIK 映射找到公司\n② 拉取 10 年 10-K 财报与资产负债\n③ 从东方财富拉实时价与日线\n\n输入的是：${tk.trim().toUpperCase()}`);
+};
+document.getElementById('rangeSeg').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  priceRange = Number(b.dataset.r);
+  document.querySelectorAll('#rangeSeg button').forEach(x => x.classList.toggle('on', x === b));
+  renderPrice();
+};
+document.getElementById('finSeg').onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  finKey = b.dataset.k;
+  document.querySelectorAll('#finSeg button').forEach(x => x.classList.toggle('on', x === b));
+  renderFinChart();
+};
+document.getElementById('themeBtn').onclick = () => {
+  const r = document.documentElement;
+  r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark';
+};
+// 详情页滚过头部后，顶栏换成公司名 + 现价
+window.addEventListener('scroll', () => {
+  const on = !document.getElementById('viewDetail').hidden && window.scrollY > 210;
+  document.getElementById('mini').classList.toggle('on', on);
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && cur) showList();
+});
+
+renderList();
+if (location.hash.startsWith('#co/')) {
+  const tk = location.hash.slice(4);
+  const c = DATA.find(x => x.ticker === tk);
+  if (c) { cur = c; document.getElementById('viewList').hidden = true; document.getElementById('viewDetail').hidden = false; renderDetail() }
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第14期 · 心理账户</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 14 期</span>
+  <h1>今天的概念：<span class="tag">心理账户</span>（Mental Accounting）</h1>
+  <div class="date">2026年10月2日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 同一笔钱，在晓雯心里住进了不同的"抽屉"</h2>
+    <p>晓雯月薪一万二，是个会过日子的人：工资一到账，先转三千进"保命"储蓄，房租水电雷打不动，剩下才敢花。可只要钱换个"入口"进来，她的脑子就像被按了切换键。过年抢到一个 888 元的红包，她眼皮都不眨就点开了购物车，给那只观望半年的口红下了单——"<em>反正是白捡的，不花白不花</em>"。可这 888 元，若是从工资里出，她能纠结三天："都够我两顿菜钱了，再等等吧。"</p>
+    <p>更绝的是她对"差价"的双标。有回看中一件 1299 的大衣，同事说"<strong>隔壁商场同款便宜 50</strong>"，她翻了个白眼："懒得跑，差这点儿无所谓。"可周末逛菜场，发现常买的鸡蛋每斤贵了<strong>三毛</strong>，她硬是绕到两条街外那家，就为省下几块钱。同是钱，省 50 她嫌麻烦，省 3 毛她跑断腿——因为"大衣"和"鸡蛋"在她心里，根本不是一个账户。</p>
+    <p>最隐蔽的一笔，藏在她那张信用卡里。她用分期买下 6000 块的吹风机，每月还 500，"<em>就当少喝几杯奶茶</em>"，心安理得；与此同时，她余额宝里正躺着两万块活期，一年利息还不到 300 块。她没算过一笔账：<strong>借钱消费付的是"享受账户"的舒适，可那两万块本可以提前还掉这笔分期</strong>。钱在她脑子里被隔成一个个带标签的小格子，"这个格子的钱"和"那个格子的钱"，待遇天差地别。</p>
+    <div class="board">
+      <div class="row head"><span class="k">钱的来源 / 归属，决定她的态度</span><span class="v">理性 vs 心理账户</span></div>
+      <div class="row"><span class="k">工资到账</span><span class="v">精打细算、先存后花 → 进"保命账户"</span></div>
+      <div class="row"><span class="k">红包 / 退税 888 元</span><span class="v">眼都不眨买口红 → 当"白捡账户"</span></div>
+      <div class="row"><span class="k">大衣便宜 50 元</span><span class="v">嫌麻烦不跑 → "大额账户"对小数不敏感</span></div>
+      <div class="row"><span class="k">鸡蛋贵 3 毛</span><span class="v">绕路两公里 → "小额账户"对小数极敏感</span></div>
+      <div class="row"><span class="k">若把所有钱视为一体</span><span class="v">先还分期、再谈享受，利息不吃亏</span></div>
+    </div>
+    <p>看这张表你会发现：<strong>晓雯不是没钱的概念，而是"钱"在她脑子里被分了家</strong>。同一个 888 元，贴上"工资"的标签就珍贵，贴上"红包"的标签就廉价；同一笔差价，放进"大衣"的格子就不值当，放进"鸡蛋"的格子就值得跑——可钱本身，从不会因为你给它贴了标签就变成另一种钱。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>心理账户</strong>，是诺奖得主理查德·塞勒提出的概念：人不会把所有的钱看作一个整体，而是会在心里把它<strong>分成一个个带标签的小账户</strong>——"工资账户""红包账户""旅游账户""享受账户"……并对不同账户的钱，采用<strong>完全不同的消费标准和风险态度</strong>。可现实里，钱是<strong>可替换的（fungible）</strong>：从钱包里掏出的一百块，不会因为它来自工资就比来自红包更值钱。心理账户，本质上是大脑给钱"贴错了标签"。</p>
+    <div class="formula">钱被贴上标签 → 不同账户不同标准 → 同样的钱被区别对待 → 总和并非最优</div>
+    <p>这条规律往下延伸，能解释很多"明明不理性却人人都做"的事：其一，<strong>"白捡的钱"最容易被挥霍</strong>。红包、退税、中奖，一旦被归进"意外之财"账户，人就更敢冲动消费——可它和工资一样，都是能攒、能还债的真金白银。其二，<strong>对"差价"的敏感度，取决于它在哪笔交易里</strong>。省大衣的 50 元觉得烦，省鸡蛋的 3 毛觉得值，是因为大脑拿差价和"那笔交易的总价"比，而不是和"钱本身"比。其三，<strong>拆东墙补西墙的错觉</strong>：一边用 18% 年化分期买吹风机，一边让 2% 年化的存款躺着——两个账户各自"算得过来"，合在一起却是净亏。心理账户让人忘了把账"并表"。</p>
+    <p>🌰 换到你的钱包：下次花钱前，先问自己一句——"<strong>如果这笔钱是从工资里出的，我还会买吗？</strong>"把红包、退税、中奖，都和工资放进<strong>同一个大账户</strong>；做大额消费决策时，算的是"总账"而不是"每月那点小钱"；看到差价，别管它挂在什么商品上，只问"省下的就是赚到的吗"。当所有钱在你心里住进同一个抽屉，你才真正开始替自己管钱。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>钱贴了标签，就不值那个标签的钱</strong>：心理账户让人把工资、红包、退税分进不同抽屉，用不同标准对待同一笔钱。红包被当"白捡"挥霍、工资被精打细算——可钱本身不会因来源不同而变贵变贱，它是可替换的。</li>
+      <li><strong>对"差价"的敏感度，看它在哪笔交易里</strong>：大衣便宜 50 懒得跑、鸡蛋贵 3 毛绕两公里，是因为大脑拿差价和"那笔总价"比，不是和"钱本身"比。决策时只看"省下的是不是真金白银"，别被交易的标签带偏。</li>
+      <li><strong>别让账户各自"算得过来"骗了你</strong>：一边高息分期买享受、一边低息存款躺着，单看都合理，合起来净亏。把账"并表"——所有钱视为一体，先还债再享受，你才真正在替自己管钱。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：信用与利率 —— 为什么同样是"借"，有人用银行的钱滚出资产，有人却被利息压垮？为什么信用卡"这个月先花、下个月再还"像免费用，逾期一天却可能翻几倍？一张"信用"如何变成能换钱、也能反噬你的东西。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第09期 · 资产配置</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 09 期</span>
+  <h1>今天的概念：<span class="tag">资产配置</span>（Asset Allocation）</h1>
+  <div class="date">2026年9月18日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 老李的"两笔钱一口锅"</h2>
+    <p>老李辛苦攒了两笔钱：一笔 <strong>50 万</strong> 是明年要付的<strong>买房首付</strong>，一笔 <strong>30 万</strong> 是给 <strong>20 年后退休</strong> 养老用的。听朋友说"股票基金涨得快"，他没多想，把两笔钱一股脑全买进了同一只<strong>高波动科技基金</strong>。头半年基金涨了 20%，老李美滋滋。结果买房前一个月，市场突遇大跌，基金净值 <strong>回撤 25%</strong>。</p>
+    <p>买房首付那 <strong>50 万</strong> 瞬间缩水成 <strong>37.5 万</strong>，差一大截凑不齐，他只能含泪推迟买房、继续租房。而那笔养老钱，明明可以扛住波动、等 20 年慢慢回血，却也跟着一起被深套，白白浪费了"用时间换空间"的最大优势。一个问题，把两件事全耽误了。</p>
+    <p>其实毛病不在"买基金"，而在<strong>"把两笔用途完全不同的钱，装进了同一个锅"</strong>。买房首付是 <strong>1 年内的刚性支出</strong>，最怕波动——它本该待在存款、货币基金、短债这种"<strong>稳</strong>"的地方；养老钱是 <strong>20 年后才用</strong>，时间够长、扛得住颠簸去博更高收益——它本该多配股票。可老李没做"<strong>资产配置</strong>"，两笔钱一个比例，于是<strong>短钱被长钱的风险误伤，长钱也没发挥出它该有的进攻性</strong>。</p>
+    <div class="board">
+      <div class="row head"><span class="k">两种做法（同样两笔钱：首付50万 / 养老30万）</span><span class="v">一口锅 vs 分锅下料</span></div>
+      <div class="row"><span class="k">老李：两笔钱同买一只基金</span><span class="v">首付被套25%、买房推迟；养老也深套，浪费20年耐心</span></div>
+      <div class="row"><span class="k">该有的配置</span><span class="v">首付→存款/短债（稳）；养老→多配股票（搏长期）</span></div>
+      <div class="row"><span class="k">关键差别</span><span class="v">前者"一锅煮两道不同菜"，后者"按用途分锅、各有火候"</span></div>
+      <div class="row"><span class="k">结果对比</span><span class="v">前者被动推迟人生计划；后者短钱安心、长钱增值</span></div>
+    </div>
+    <p>这戏码在普通人身上天天上演：把"马上要用的钱"和"十年用不到的钱"买成同一个东西；临近买房/结婚却重仓权益，一跌就打乱全部计划。配置没做对，选再好的产品也救不了<strong>"用钱的时候它正好在跌"</strong>的被动。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>资产配置</strong>，就是<strong>根据你的目标、期限和风险承受力，把资产分到不同类别（股票 / 债券 / 现金 / 另类），让每一类各司其职</strong>。它比我们第05期讲的"分散投资"又进了一步：分散是"别把鸡蛋放一个篮子"，而配置是"<strong>每个篮子该放几个、放什么蛋</strong>"——核心是按你的<strong>目标和期限</strong>定出比例。</p>
+    <div class="formula">资产配置 = 按期限与风险承受力，定出股 / 债 / 现 的大类比例，再去挑具体产品</div>
+    <p>经典经验法则叫"<strong>年龄法则</strong>"：股票类比例 ≈ <strong>110（或100）− 你的年龄</strong>，剩下配债券和现金。年轻人时间长、摔得起，可多配股博增长；临近用钱则重稳健。更重要的是<strong>再平衡（Rebalance）</strong>：某类涨多了、比例漂移后，卖出一点涨多的、补一点涨少的，把比例调回原定——这等于纪律化的"<strong>高抛低吸</strong>"，不用猜涨跌，到点就操作。研究反复证明：长期收益里，<strong>大类配置的决定作用远大于具体挑哪只产品</strong>。老李的悲剧，恰恰是跳过了"先定比例"这一步，直接把两笔钱塞进同一个篮子。</p>
+    <p>🌰 换到你的钱包：先把钱按"什么时候用"分堆——<strong>1 年内要用的求稳（存款/货基/短债），5 年以上不用的才配承受波动（股基/指数）</strong>；再给每堆定个比例，半年看一次、漂移了就调回。记住：<strong>配置做对了，睡觉才踏实；产品只是落在配置骨架上的肉</strong>。别让"明天的首付"去替"二十年的养老"扛风险。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>配置先于选品</strong>：先定"股 / 债 / 现"的大类比例，再去挑具体基金和股票；用途不同，比例就不同，别把两笔钱装一个锅。</li>
+      <li><strong>期限决定进攻性</strong>：1 年内要用的钱求稳，20 年后才用的钱才配承受波动博收益——短钱被长钱的风险误伤，是最冤的亏损。</li>
+      <li><strong>定期再平衡</strong>：比例漂移后卖涨多的、补涨少的，调回原定比例，等于纪律化"高抛低吸"，不靠预测也能稳住组合。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：边际效用 —— 为什么第二杯奶茶没第一杯好喝？多赚的 1 万块，对穷人比富人更"值钱"？欲望被满足的规律，藏着定价、消费与幸福的全部秘密。</div>
+</div>
+</body>
+</html>

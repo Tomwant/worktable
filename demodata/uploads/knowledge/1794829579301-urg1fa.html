@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融概念 第43期 · 沉没成本</title>
+<style>
+  :root{
+    --accent:#3a4cc0;
+    --accent2:#8a5cf6;
+    --ink:#1f2440;
+    --ink-soft:#5a6079;
+    --line:#e8eaf2;
+    --bg:#f5f6fb;
+    --card:#ffffff;
+    --warn:#d9534f;
+    --warn-soft:#fbeaea;
+    --good:#2e9e6b;
+    --good-soft:#e8f6ef;
+    --r:16px;
+    --gap:18px;
+    --shadow:0 6px 22px rgba(36,42,90,.08);
+    --shadow-sm:0 2px 10px rgba(36,42,90,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+    padding:0 0 40px;
+  }
+  /* 头部 */
+  .hero{
+    background:linear-gradient(135deg,var(--accent) 0%,var(--accent2) 100%);
+    color:#fff;
+    padding:42px 28px 36px;
+    border-bottom-left-radius:28px;
+    border-bottom-right-radius:28px;
+    box-shadow:var(--shadow);
+  }
+  .hero .issue{
+    display:inline-block;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35);
+    padding:5px 14px;
+    border-radius:999px;
+    font-size:14px;
+    letter-spacing:1px;
+    margin-bottom:14px;
+  }
+  .hero h1{font-size:34px;line-height:1.3;font-weight:800;letter-spacing:1px;}
+  .hero .sub{font-size:16px;opacity:.92;margin-top:8px;font-weight:400;}
+  .hero .meta{
+    margin-top:18px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;
+    font-size:13px;opacity:.95;
+  }
+  .hero .meta span{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:8px;}
+  .hero .tags{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px;}
+  .hero .tags em{
+    font-style:normal;background:rgba(255,255,255,.22);
+    padding:3px 11px;border-radius:999px;font-size:12.5px;
+  }
+  /* 容器 */
+  .wrap{max-width:840px;margin:0 auto;padding:0 18px;}
+  .card{
+    background:var(--card);
+    border-radius:var(--r);
+    box-shadow:var(--shadow-sm);
+    padding:26px 24px;
+    margin-top:var(--gap);
+    border:1px solid var(--line);
+  }
+  .card h2{
+    font-size:20px;color:var(--accent);
+    display:flex;align-items:center;gap:10px;margin-bottom:14px;font-weight:700;
+  }
+  .card h2 .dot{
+    width:10px;height:10px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    flex:none;
+  }
+  .card p{margin:10px 0;color:var(--ink-soft);}
+  .card p.lead{color:var(--ink);font-size:16px;}
+  .card strong{color:var(--ink);}
+  /* 故事 */
+  .story{background:linear-gradient(180deg,#fbfbff,#ffffff);}
+  .story .scene{
+    border-left:4px solid var(--accent2);
+    padding:4px 0 4px 16px;margin:14px 0;color:var(--ink);
+  }
+  /* 概念卡片 */
+  .def{
+    background:linear-gradient(135deg,#eef0ff,#f6f0ff);
+    border:1px solid #dfe2fb;border-radius:14px;padding:20px;margin:8px 0 4px;
+  }
+  .def .term{font-size:18px;font-weight:800;color:var(--accent);}
+  .def .formula{
+    display:inline-block;background:#fff;border:1px dashed var(--accent2);
+    border-radius:10px;padding:8px 14px;margin:10px 0;color:var(--ink);font-size:14.5px;
+  }
+  .def ul{margin:8px 0 0 18px;color:var(--ink-soft);}
+  .def ul li{margin:6px 0;}
+  /* 案例 */
+  .case{
+    border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin:12px 0;
+    background:#fcfdff;
+  }
+  .case h3{font-size:16px;color:var(--ink);margin-bottom:6px;}
+  .case .tag{
+    display:inline-block;font-size:12px;color:var(--accent);
+    background:#eef0ff;padding:2px 9px;border-radius:6px;margin-bottom:8px;
+  }
+  /* 可视化 */
+  .viz{display:flex;flex-direction:column;gap:14px;margin:16px 0 6px;}
+  .bar-row{display:grid;grid-template-columns:140px 1fr;align-items:center;gap:12px;}
+  .bar-row .lab{font-size:13.5px;color:var(--ink-soft);text-align:right;}
+  .bar-track{background:#eef0f7;border-radius:10px;height:30px;position:relative;overflow:hidden;}
+  .bar-fill{height:100%;border-radius:10px;display:flex;align-items:center;justify-content:flex-end;
+    padding-right:10px;color:#fff;font-size:13px;font-weight:700;}
+  .bar-fill.a{background:linear-gradient(90deg,#2e9e6b,#56c596);}
+  .bar-fill.b{background:linear-gradient(90deg,#d9534f,#e88582);}
+  .viz .note{font-size:13px;color:var(--ink-soft);text-align:center;margin-top:2px;}
+  /* 关联 */
+  .rel{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;}
+  .rel .item{border:1px solid var(--line);border-radius:12px;padding:14px;background:#fbfcff;}
+  .rel .item b{color:var(--accent);font-size:14.5px;}
+  .rel .item p{font-size:13.5px;margin:6px 0 0;color:var(--ink-soft);}
+  /* 启示 */
+  .tips{list-style:none;counter-reset:t;}
+  .tips li{
+    position:relative;padding:12px 14px 12px 48px;margin:10px 0;
+    background:#fbfcff;border:1px solid var(--line);border-radius:12px;color:var(--ink);font-size:14.5px;
+  }
+  .tips li:before{
+    counter-increment:t;content:counter(t);
+    position:absolute;left:12px;top:12px;width:26px;height:26px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;
+    display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;
+  }
+  /* 思考题 */
+  .think{background:linear-gradient(135deg,#fff7ec,#fff);border:1px solid #f3e2c0;}
+  .think h2{color:#c8862a;}
+  .think .q{
+    background:#fff;border:1px solid #f0e2c4;border-radius:12px;padding:16px 18px;margin-top:10px;
+    color:var(--ink);font-size:15px;
+  }
+  /* 脚注 */
+  .foot{
+    text-align:center;color:var(--ink-soft);font-size:12.5px;margin-top:26px;line-height:1.9;
+  }
+  .foot .sep{width:60px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));margin:0 auto 14px;}
+  @media (max-width:600px){
+    .hero{padding:30px 18px 26px;border-radius:0;}
+    .hero h1{font-size:26px;}
+    .hero .sub{font-size:14.5px;}
+    .wrap{padding:0 14px;}
+    .card{padding:20px 16px;}
+    .card h2{font-size:18px;}
+    .bar-row{grid-template-columns:96px 1fr;gap:8px;}
+    .bar-row .lab{font-size:12px;}
+    .rel{grid-template-columns:1fr;}
+    body{padding-bottom:30px;}
+  }
+</style>
+</head>
+<body>
+
+  <header class="hero">
+    <div class="issue">第 43 期</div>
+    <h1>沉没成本：别为打翻的牛奶，再赔上一整杯</h1>
+    <div class="sub">为什么我们明明知道该停手，却还是咬着牙把烂局撑下去？</div>
+    <div class="meta">
+      <span>日期：2026-11-14</span>
+      <span>主题：沉没成本</span>
+      <span>类型：行为金融</span>
+    </div>
+    <div class="tags">
+      <em>向前看</em><em>止损</em><em>决策陷阱</em><em>机会成本</em><em>心理账户</em>
+    </div>
+  </header>
+
+  <main class="wrap">
+
+    <!-- 故事 -->
+    <section class="card story">
+      <h2><span class="dot"></span>一、先听个故事</h2>
+      <p class="lead">老周盘下一家转让的火锅店，交了 30 万转让费，又砸了 80 万装修成网红风，请了团队、买了设备。开业三个月，每天流水只有支出的六成，月月亏。</p>
+      <div class="scene">
+        朋友劝他："趁早关店止损，别硬撑了。"<br>
+        老周却说："我都投了一百多万了，现在关不是全打水漂？再撑撑，说不定哪天就火了。"
+      </div>
+      <p>他又硬撑了半年，又亏了 60 万才终于关门。算总账：一共亏了 <strong>170 万</strong>。</p>
+      <p>问题出在哪？老周一直在算<strong>"已经花掉的一百多万"</strong>，而不是问自己一个更关键的问题——</p>
+      <p class="lead" style="text-align:center;color:var(--accent);font-weight:700;">"如果今天我手里有一百万现金、没有这家店，我还会拿这一百万去开这家店吗？"</p>
+      <p>后一个问题的答案才是关键。那个"已经花掉、收不回来"的一百多万，就是今天要讲的主角：<strong>沉没成本</strong>。老周多亏的 60 万，正是他为"已经打翻的牛奶"又赔上的那一整杯。</p>
+    </section>
+
+    <!-- 概念卡片 -->
+    <section class="card">
+      <h2><span class="dot"></span>二、概念卡片</h2>
+      <div class="def">
+        <div class="term">沉没成本（Sunk Cost）</div>
+        <p>指<strong>已经发生、并且无论你未来怎么决策都无法收回</strong>的支出——无论是时间、金钱还是精力。它属于过去，不该影响面向未来的选择。</p>
+        <span class="formula">理性决策原则：只看"从今天起"的增量成本与增量收益，把已发生的部分从账上抹掉</span>
+        <ul>
+          <li><strong>已花</strong>的钱不可收回 → 是沉没成本，决策时应忽略；</li>
+          <li><strong>将花 / 将赚</strong>的钱才与决策有关 → 是向前看（forward-looking）的边际量；</li>
+          <li>常见误区叫"<strong>沉没成本谬误</strong>"：因为已经投入，就继续投入，结果越陷越深。</li>
+          <li>一句老话最贴切：<strong>不要为打翻的牛奶哭泣</strong>。</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 真实案例 -->
+    <section class="card">
+      <h2><span class="dot"></span>三、真实案例</h2>
+
+      <div class="case">
+        <span class="tag">国家级工程</span>
+        <h3>协和式超音速客机：几十亿砸进去，明知亏还要飞</h3>
+        <p>上世纪英法联合研制协和飞机，研发成本一路失控、远超预算。早在试飞阶段，市场测算就已显示它商业上几乎不可能盈利。但两国政府想的是："都已经投了几十亿，现在停，前面的钱全白花。"于是继续烧钱，最终协和只卖了 20 架、每架成本远高于售价，成为沉没成本谬误的经典教材。真正理性的做法，是在算清"未来继续投入能否收回"后及时下马。</p>
+      </div>
+
+      <div class="case">
+        <span class="tag">企业转型</span>
+        <h3>诺基亚与塞班：为旧系统的研发投入，拖慢了转身</h3>
+        <p>智能手机浪潮到来时，诺基亚已在塞班（Symbian）系统上投入海量研发与生态。管理层迟迟不愿彻底转向，部分原因正是"我们为塞班花了这么多，不能轻易放弃"。结果错失智能机窗口，被安卓与 iOS 反超。旧投入已是沉没成本，继续绑定它，只会在错误的方向上多走几年。</p>
+      </div>
+
+      <div class="case">
+        <span class="tag">日常生活</span>
+        <h3>难吃的自助餐、坏掉的手机、将就的感情</h3>
+        <p>付了 200 元电影票，看了 20 分钟发现是烂片，却因为"钱都花了"硬坐到结束——这 200 元已经沉没，继续坐下去的成本是你本可用的一小时。难吃的自助餐硬撑到扶墙出、坏了还想修的旧手机、因为"在一起这么久"而不舍得分手的关系，本质都是同一道题：用未来的代价，去"挽回"一个回不来的过去。</p>
+      </div>
+    </section>
+
+    <!-- 可视化 -->
+    <section class="card">
+      <h2><span class="dot"></span>四、老周的两种结局</h2>
+      <p>用老周的例子把"沉没成本谬误"的代价画出来：横条越长，亏得越多。</p>
+      <div class="viz">
+        <div class="bar-row">
+          <div class="lab">及时止损<br>（第3个月关）</div>
+          <div class="bar-track"><div class="bar-fill a" style="width:65%;">总亏 110 万</div></div>
+        </div>
+        <div class="bar-row">
+          <div class="lab">硬撑半年<br>（多烧 60 万）</div>
+          <div class="bar-track"><div class="bar-fill b" style="width:100%;">总亏 170 万</div></div>
+        </div>
+      </div>
+      <p class="note">那多出来的 60 万红条，就是"为已经打翻的牛奶继续买单"的代价——它本可以避免。</p>
+    </section>
+
+    <!-- 关联 -->
+    <section class="card">
+      <h2><span class="dot"></span>五、和已学概念怎么连</h2>
+      <div class="rel">
+        <div class="item">
+          <b>机会成本（第38期）</b>
+          <p>两者都谈"成本"，方向相反：机会成本是"下一步最好选择"的价值（向前看）；沉没成本是"已经回不来"的钱（应忽略）。常有人把沉没成本误当机会成本去比较，这是最大的混淆点。</p>
+        </div>
+        <div class="item">
+          <b>风险与回报（第42期）</b>
+          <p>及时止损，本质就是承认沉没成本、不再为回不来的投入追加下注。把"已亏的部分"和"未来该不该继续"分开，是风险管理的基本功。</p>
+        </div>
+        <div class="item">
+          <b>杠杆（第41期）</b>
+          <p>高杠杆下，沉没成本谬误更致命：亏了想"加仓摊平"回本，结果放大亏损直至爆仓。杠杆让"再撑一下"的诱惑变成绞索。</p>
+        </div>
+        <div class="item">
+          <b>心理账户（第30期）</b>
+          <p>人们把不同来路的钱分账管理，沉没成本常发生在"我已为这个账户投入很多"的心理账户里，于是更难割舍。</p>
+        </div>
+        <div class="item">
+          <b>锚定效应（第28期）</b>
+          <p>初始的巨额投入像一只"锚"，钉住了人的心理价位，让人总觉得"已经花了这么多，不能便宜出局"，从而被过去绑架。</p>
+        </div>
+        <div class="item">
+          <b>分散投资 / 资产配置</b>
+          <p>给组合设好止损线和再平衡规则，相当于用机制对抗"舍不得割肉"的人性，避免单一持仓的沉没成本拖垮整体。</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 启示 -->
+    <section class="card">
+      <h2><span class="dot"></span>六、给普通投资者的启示</h2>
+      <ol class="tips">
+        <li>决策前问一句："<strong>如果现在重来，我还会这样做吗？</strong>"——把已发生的投入从账上抹掉，只看当下。</li>
+        <li>严格区分"<strong>已花</strong>"与"<strong>将花</strong>"：前者不可收回，本就不该影响你的选择。</li>
+        <li>给每个项目预先设定"<strong>止损线</strong>"，提前写下退出条件，避免临场被情绪裹挟。</li>
+        <li>警惕那句"<strong>都投了这么多，现在退太亏</strong>"——它往往是陷阱的开端，而非理性的理由。</li>
+        <li>在亏损中"<strong>加仓摊平</strong>"常是"沉没成本谬误 + 杠杆"的致命组合，越摊越深。</li>
+        <li>不止投资：感情、职业、学习同理——沉没的是时间，别让它绑架你的未来。</li>
+        <li>组织层面警惕"<strong>大项目不能停</strong>"的政治压力，用独立小组评估"继续还是终止"。</li>
+        <li>记住"<strong>向前看</strong>"原则：未来的你只在乎从今天的增量，不关心过去的账单。</li>
+      </ol>
+    </section>
+
+    <!-- 思考题 -->
+    <section class="card think">
+      <h2><span class="dot"></span>七、今日思考题</h2>
+      <div class="q">
+        假设你 3 年前以 50 元买入某只股票，如今跌到 20 元；你手里另有一笔 10 万元现金。<br><br>
+        问：要不要卖出这只股票，取决于"我已经每股亏了 30 元"这个事实吗？如果不取决于，那真正取决于什么？<br><br>
+        把它和本期讲的<strong>机会成本</strong>对照：你的卖出决策，其实是一次新的资源配置——你卖或不卖，都是在问"<strong>这价值 20 元的股票，和别的选择比，哪个更好？</strong>"过去的 30 元亏损，既不会因为你持有而变小，也不会因为你卖出而变大。想清楚这一点，很多"舍不得割肉"的纠结，会不会就松动了？
+      </div>
+    </section>
+
+    <div class="foot">
+      <div class="sep"></div>
+      金融概念日报 · 第43期《沉没成本》 · 2026-11-14<br>
+      本页为自包含离线报告，无外部依赖，可任意复制存档。内容仅供学习，不构成投资建议。
+    </div>
+
+  </main>
+
+</body>
+</html>

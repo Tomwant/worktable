@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第06期 · 流动性</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 06 期</span>
+  <h1>今天的概念：<span class="tag">流动性</span>（Liquidity）</h1>
+  <div class="date">2026年9月13日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 阿杰和小陈的"百万身家"</h2>
+    <p>阿杰和小陈是同学，聊天时都觉得自己"财务自由了"。阿杰的 <strong>120 万</strong> 大多压在郊区一套房和几块名表上，纸面估值光鲜；小陈的 <strong>100 万</strong> 则放在活期、货币基金和随时可卖的国债里，外加一点股票。</p>
+    <p>某天，阿杰母亲突然住院，急需 <strong>30 万</strong>。他信心满满："我身家百万，区区30万算什么。"可郊区房子挂牌两个月无人问津，名表想变现得折价三成才有人接——越急用钱，越卖不上价。</p>
+    <p>同一时间，小陈家里也遇到急事，同样要 <strong>30 万</strong>。他打开手机，货币基金赎回 + 活期取现，<strong>两小时</strong> 钱就到了卡上，一分没折价。</p>
+    <div class="board">
+      <div class="row head"><span class="k">方案</span><span class="v">急用 30 万时</span></div>
+      <div class="row"><span class="k">阿杰 · 房产+名表</span><span class="v">房子2月未售，名表折价30%才脱手 → 卡在"纸面"</span></div>
+      <div class="row"><span class="k">小陈 · 活期+货基+国债</span><span class="v">2小时到账，零折价 → 真金白银到手</span></div>
+      <div class="row"><span class="k">关键差别</span><span class="v">阿杰的"百万"是账面富贵，小陈的"百万"随时能变现金</span></div>
+    </div>
+    <p>阿杰最后靠借遍亲友才凑齐医药费，看着估值单苦笑："数字再好看，取不出来就是别人的钱。"小陈则平平稳稳过了关。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>流动性</strong>，说的就是：<strong>一项资产能以接近市价、快速变现成现金的能力</strong>。变现越快、折价越小，流动性越好；反之，就是"有价无市"。</p>
+    <div class="formula">流动性 ≈ 变现速度 × 价格折让　（越快、折让越小，流动性越好）</div>
+    <p>背后的逻辑是：<strong>钱只有在"随时能拿出来"时才真正属于你</strong>。现金、活期、货币基金几乎瞬间可动用；定期提前取要损失利息；股票能卖但看天吃饭；房产、收藏品、私募、未上市公司股权，想卖往往要等很久、还可能大幅折价。风险、收益之外的第三个维度——能不能"说取就取"，决定你在突发时刻是救命还是误事。</p>
+    <p>🌰 换到你的钱包：应急资金（3–6 个月开支）必须放在<strong>高流动性</strong>的地方——活期、货币基金、随时可赎的短债；别把救命钱锁在长期定存或房产里。但也别走极端：高流动性资产收益通常偏低（活期利息几乎为零），低流动性资产往往会给"流动性溢价"（如房产的长期回报、私募的锁定期补偿）。聪明的做法是按<strong>"用钱时间表"</strong>来搭配：近期要用的放活钱，十年不用的才锁长期。记住：<strong>纸面富贵，不如手头现金</strong>。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>估值 ≠ 现金</strong>：资产账面再值钱，卖不掉或折价卖，关键时刻都等于零。先问"真要取，几天能到手、折多少"。</li>
+      <li><strong>留好"急用钱"的口子</strong>：3–6 个月生活费放在活期、货基等随时可取处，别全锁进长期资产里等用钱时干瞪眼。</li>
+      <li><strong>流动性有代价</strong>：高流动性资产收益低，低流动性资产给溢价——按"什么时候用钱"来排兵布阵，而不是只盯着收益率。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：杠杆 —— 借来的钱如何放大收益、也放大风险，为什么"撬动"世界的同时，也可能在转身间压垮自己。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第1期 · 条件概率</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>每日概率学 · 第 1 期</h1>
+<ul>
+<li><strong>日期</strong>：2026-09-12（周六）</li>
+<li><strong>今日概念</strong>：条件概率（Conditional Probability）——"已知某些信息后，概率会变"</li>
+<li><strong>一句话心智模型</strong>：新信息会<strong>缩小样本空间</strong>，在更小的世界里重新算比例。</li>
+</ul>
+<hr>
+<h2>一、故事引入：那张让人心跳加速的体检报告</h2>
+<p>小琳刚做完公司年度体检。护士把她叫到一旁，神色凝重："你的某项肿瘤标志物检测呈<strong>阳性</strong>，建议尽快复查。"</p>
+<p>小琳吓坏了。她记得护士说过，这个检测"准确率高达 <strong>99%</strong>"。她脑子里立刻冒出等式——"99% 阳性 ≈ 99% 患病"，整夜未眠。</p>
+<p>第二天挂了专科号。医生看了报告却很淡定："别慌，这个病在你们这个年龄段人群里的发病率大约只有<strong>万分之一</strong>。我先给你算笔账。"</p>
+<p>医生在纸上写：</p>
+<p>| 项目 | 数值 |</p>
+<p>| --- | --- |</p>
+<p>| 人群中真正患病的概率（先验） | 1 / 10000 = 0.01% |</p>
+<p>| 检测灵敏度（患病→检出阳性） | 99% |</p>
+<p>| 检测特异性（没病→判为阴性） | 99% |</p>
+<p>"假设一万人一起做这个检测：那 1 个真病人几乎肯定被检出阳性；而 9999 个健康人里，约 1% 会被<strong>误判阳性</strong>，也就是约 100 人。所以所有阳性结果中，真病人只有 1 个，假阳性却有约 100 个。你阳性的真实患病概率，其实只有约 <strong>1%</strong>。"</p>
+<p>小琳松了口气——后来复查证实她确实没病。</p>
+<p><strong>这就是条件概率：当"检测结果为阳性"这个新信息到来后，患病概率从 0.01% 跳到了 1%，但绝不是直觉以为的 99%。</strong></p>
+<hr>
+<h2>二、概念讲解</h2>
+<p>条件概率记作 <strong>P(A|B)</strong>，读作"在事件 B 已经发生的前提下，事件 A 发生的概率"。</p>
+<p>核心公式：</p>
+<p>```</p>
+<p>P(A|B) = P(A ∩ B) / P(B)        （要求 P(B) &gt; 0）</p>
+<p>```</p>
+<p>直觉拆解：</p>
+<ol>
+<li>事件 B 发生，等于把我们的"世界"<strong>缩小</strong>到 B 内部；</li>
+<li>在 B 这个更小的世界里，看其中 A 占多大比例。</li>
+</ol>
+<p>⚠️ 两个最容易踩的坑：</p>
+<ul>
+<li><strong>混淆 P(A|B) 与 P(B|A)</strong>："检测阳性时你患病的概率" ≠ "患病时检测阳性的概率"。前者是我们要的，后者只是检测的灵敏度。</li>
+<li><strong>忽视基础概率（先验）</strong>：再准的检测，面对极罕见的病，假阳性也会淹没真阳性。这叫<strong>基础概率谬误</strong>（base-rate neglect）。</li>
+</ul>
+<hr>
+<h2>三、代表性题目 / 故事（请你来总结 ✍️）</h2>
+<p>请试着对每道题写出：① 关键陷阱在哪；② 你的答案；③ 一句话心法。</p>
+<h3>题目 1 · 两个孩子的谜题</h3>
+<p>一户人家有两个孩子。</p>
+<ul>
+<li><strong>情形甲</strong>：你听说"这家里<strong>至少有一个女孩</strong>"。请问两个都是女孩的概率是多少？</li>
+<li><strong>情形乙</strong>：你看到"<strong>老大是女孩</strong>"。请问两个都是女孩的概率是多少？</li>
+</ul>
+<blockquote>两情形答案一样吗？为什么"已知的信息形式"会改变结果？</blockquote>
+<h3>题目 2 · 三个囚犯的赦免</h3>
+<p>三个囚犯 A、B、C 中，只有一人会被<strong>随机</strong>赦免。A 问看守："B 和 C 谁会被处决？"</p>
+<p>看守答："<strong>B 会被处决。</strong>"（规则：若 A 被赦免，看守在 B、C 中任选一个说；否则如实说出那个将被处决者）</p>
+<blockquote>听完后，A 被赦免的概率变了吗？A 和 C，谁的赦免概率更高？</blockquote>
+<h3>题目 3 · 抽牌的连锁</h3>
+<p>一副去掉大小王的 52 张牌（13 张红桃）。</p>
+<ul>
+<li><strong>甲</strong>：连续抽两张且<strong>不放回</strong>，已知<strong>第一张是红桃</strong>，求第二张也是红桃的概率。</li>
+<li><strong>乙</strong>：抽两张后，朋友看了一眼说"<strong>至少有一张是红桃</strong>"，求两张都是红桃的概率。</li>
+</ul>
+<blockquote>"已知第一张是红桃" 和 "已知至少一张是红桃"，是一回事吗？</blockquote>
+<hr>
+<h2>四、提示（如需逐题完整推导，回复"揭晓答案"）</h2>
+<ul>
+<li><strong>题目 1</strong>：两个孩子样本空间为 {男男, 男女, 女男, 女女}（等可能）。</li>
+<li>甲排除"男男"，剩 3 种，两女占 <strong>1/3</strong>；</li>
+<li>乙锁定老大为女，剩 {女男, 女女} 两种，两女占 <strong>1/2</strong>。</li>
+<li>心法：<strong>信息如何获得的，决定了样本空间怎么缩</strong>。</li>
+</ul>
+<ul>
+<li><strong>题目 2</strong>：A 仍是 <strong>1/3</strong>，C 升到 <strong>2/3</strong>。这是蒙特霍尔问题的"表亲"——多得到的信息只排除了 B，却把所有"权重"推给了 C。</li>
+</ul>
+<ul>
+<li><strong>题目 3</strong>：</li>
+<li>甲 = 12/51 ≈ <strong>23.5%</strong>（红桃剩 12 张，总牌剩 51 张）；</li>
+<li>乙 = P(两张红桃) / P(至少一张红桃) = C(13,2)/C(52,2) ÷ [1 − C(39,2)/C(52,2)] = 78/585 = <strong>2/15 ≈ 13.3%</strong>。</li>
+<li>心法：乙的信息更"弱"（只说"至少一张"），所以概率比甲低得多。</li>
+</ul>
+<hr>
+<blockquote>📌 明日预告：第 2 期 <strong>贝叶斯定理</strong>——如何把"新证据"系统地更新成"新信念"。</blockquote></div></body></html>

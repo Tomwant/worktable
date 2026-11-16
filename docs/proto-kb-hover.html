@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>原型 · 知识库卡片悬停查看全文</title>
+<style>
+:root{
+  --bg1:#f4efe4; --bg2:#eaf1e7;
+  --surface:rgba(255,255,255,.58); --surface-2:rgba(255,255,255,.36); --surface-solid:#fffdf7;
+  --text:#33302a; --text-2:#7a746a; --text-3:#a8a094;
+  --line:rgba(255,255,255,.66);
+  --line-2:rgba(80,60,30,.12); --line-3:rgba(80,60,30,.24);
+  --accent:#4a9e66; --accent-deep:#398a54; --accent-soft:rgba(74,158,102,.13);
+  --warm:#e09a66; --warm-soft:rgba(224,154,102,.16);
+  --danger:#cf6a57;
+  --blur:blur(20px) saturate(150%);
+  --r-input:14px; --r-card:22px; --r-top:26px;
+  --shadow:0 1px 2px rgba(80,60,30,.05),0 12px 36px -14px rgba(80,60,30,.22),inset 0 1px 0 rgba(255,255,255,.6);
+  --ease:cubic-bezier(.22,.9,.34,1);
+}
+[data-theme="dark"]{
+  --bg1:#151b17; --bg2:#101a1e;
+  --surface:rgba(255,255,255,.055); --surface-2:rgba(255,255,255,.05); --surface-solid:#1c2420;
+  --text:#e9ede8; --text-2:#b6c1ba; --text-3:#a9b5ae;
+  --line:rgba(255,255,255,.12); --line-2:rgba(255,255,255,.12); --line-3:rgba(255,255,255,.22);
+  --accent:#66d18d; --accent-deep:#4fc37c; --accent-soft:rgba(102,209,141,.15);
+  --warm:#efaa7c; --warm-soft:rgba(239,170,124,.18);
+  --danger:#f09595;
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 16px 44px -16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;padding:0;font-family:'Noto Sans SC',-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  -webkit-font-smoothing:antialiased;color:var(--text);
+  background:linear-gradient(135deg,var(--bg1),var(--bg2));background-attachment:fixed;
+  transition:color .4s,background .4s;
+}
+.wrap{max-width:940px;margin:0 auto;padding:34px 26px 120px}
+
+/* 顶部实验条 */
+.bar{
+  position:sticky;top:14px;z-index:100;display:flex;align-items:center;gap:8px;flex-wrap:wrap;
+  background:var(--surface);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid var(--line);border-radius:var(--r-top);padding:10px 12px;box-shadow:var(--shadow);margin-bottom:24px;
+}
+.bar .ttl{font-size:12.5px;color:var(--text-3);margin-right:4px;letter-spacing:.02em}
+.bar .spacer{flex:1}
+.seg{display:inline-flex;gap:3px;padding:3px;background:var(--surface-2);border:1px solid var(--line-2);border-radius:14px}
+.seg button{
+  border:0;background:none;font:inherit;font-size:13px;color:var(--text-2);cursor:pointer;
+  padding:7px 14px;border-radius:11px;transition:.2s var(--ease);white-space:nowrap;
+}
+.seg button:hover{color:var(--text)}
+.seg button.on{background:var(--surface-solid);color:var(--accent-deep);font-weight:600;box-shadow:0 1px 3px rgba(80,60,30,.12)}
+.icon-btn{width:34px;height:34px;border-radius:11px;border:1px solid var(--line-2);background:var(--surface-2);cursor:pointer;color:var(--text-2);font-size:15px}
+.icon-btn:hover{border-color:var(--line-3);color:var(--text)}
+
+/* 说明 */
+.tip{
+  font-size:12.5px;line-height:1.7;color:var(--text-2);background:var(--accent-soft);
+  border:1px solid rgba(74,158,102,.2);border-radius:var(--r-input);padding:11px 14px;margin-bottom:20px;
+}
+.tip b{color:var(--accent-deep)}
+
+/* 卡片列表 */
+.k-list{position:relative;display:flex;flex-direction:column;gap:14px}
+.k-card{
+  position:relative;background:var(--surface);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid var(--line);border-radius:var(--r-card);padding:18px 20px;box-shadow:var(--shadow);
+  transition:transform .2s var(--ease),box-shadow .2s var(--ease),border-color .2s var(--ease);
+}
+.k-card:hover{transform:translateY(-2px);border-color:var(--line-3)}
+.k-head{display:flex;align-items:flex-start;gap:12px}
+.k-head h3{margin:0;font-size:15px;font-weight:700;letter-spacing:-.01em;flex:1}
+.k-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.k-actions .date{color:var(--text-3);font-size:11.5px}
+.ghost{
+  border:1px solid var(--line-2);background:var(--surface-2);color:var(--text-2);
+  font:inherit;font-size:12px;padding:5px 11px;border-radius:10px;cursor:pointer;transition:.18s;
+}
+.ghost:hover{border-color:var(--line-3);color:var(--text);background:var(--surface-solid)}
+.ghost.danger{color:var(--danger);border-color:rgba(207,106,87,.24)}
+.ghost.danger:hover{background:rgba(207,106,87,.1)}
+
+.content{
+  color:var(--text-2);font-size:13.5px;line-height:1.68;margin:9px 0 0;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.meta-row{color:var(--text-3);font-size:11.5px;display:flex;flex-wrap:wrap;gap:8px;margin-top:9px;align-items:center}
+.chip{background:var(--accent-soft);color:var(--accent-deep);padding:2px 8px;border-radius:8px;font-size:11px;margin-right:4px}
+
+/* ===== 方案 A：悬停浮层 ===== */
+.mA .k-card .hover-panel{
+  position:absolute;left:-1px;right:-1px;top:100%;z-index:40;
+  background:var(--surface-solid);border:1px solid var(--line-2);border-radius:0 0 18px 18px;
+  box-shadow:0 22px 50px -18px rgba(80,60,30,.42);
+  padding:0;max-height:0;overflow:hidden;opacity:0;visibility:hidden;
+  transition:max-height .26s var(--ease) .22s,opacity .2s var(--ease) .22s,visibility 0s linear .48s;
+}
+.mA .k-card:hover .hover-panel,
+.mA .k-card .hover-panel:hover{
+  max-height:min(52vh,400px);opacity:1;visibility:visible;
+  transition:max-height .3s var(--ease) .25s,opacity .22s var(--ease) .25s,visibility 0s .25s;
+}
+.mA .hover-inner{padding:16px 20px 18px;max-height:inherit;overflow:auto;overscroll-behavior:contain}
+.mA .hover-inner::-webkit-scrollbar{width:8px}
+.mA .hover-inner::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:8px}
+.mA .hover-inner::-webkit-scrollbar-thumb:hover{background:var(--line-3)}
+
+/* ===== 方案 B：滑过自动长高 ===== */
+.mB .k-card .content{
+  -webkit-line-clamp:2;max-height:calc(1.68em * 2);transition:max-height .3s var(--ease),-webkit-line-clamp 0s;
+}
+.mB .k-card:hover .content{
+  -webkit-line-clamp:unset;display:block;max-height:min(52vh,400px);overflow:auto;padding-right:6px;
+}
+.mB .k-card:hover .content::-webkit-scrollbar{width:8px}
+.mB .k-card:hover .content::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:8px}
+.mB .fade-hint{
+  position:absolute;left:0;right:0;bottom:0;height:34px;border-radius:0 0 var(--r-card) var(--r-card);
+  background:linear-gradient(to top,var(--surface-solid),transparent);
+  pointer-events:none;opacity:0;transition:opacity .2s;
+}
+
+/* 全文排版（浮层与展开共用） */
+.rich{font-size:13.5px;line-height:1.78;color:var(--text-2)}
+.rich .h{display:block;font-weight:700;color:var(--text);margin:14px 0 6px;font-size:13.5px}
+.rich .h:first-child{margin-top:0}
+.rich .lead{color:var(--text-3);font-size:12px;margin-bottom:10px}
+.rich b{color:var(--text);font-weight:600}
+.rich .k{color:var(--accent-deep);font-weight:600}
+.rich hr{border:0;border-top:1px dashed var(--line-2);margin:14px 0}
+.rich .foot{margin-top:14px;padding-top:12px;border-top:1px dashed var(--line-2);color:var(--text-3);font-size:12px}
+
+/* 浮层底部操作条 */
+.hover-foot{
+  position:sticky;bottom:0;display:flex;gap:8px;align-items:center;padding:10px 20px;
+  background:linear-gradient(to top,var(--surface-solid) 62%,rgba(255,253,247,0));
+  border-top:1px solid var(--line-2);margin-top:14px;
+}
+[data-theme="dark"] .hover-foot{background:linear-gradient(to top,var(--surface-solid) 62%,rgba(28,36,32,0))}
+.hover-foot .hint{flex:1;font-size:11.5px;color:var(--text-3)}
+.scroll-fade{position:sticky;bottom:56px;height:16px;margin-top:-16px;background:linear-gradient(to top,var(--surface-solid),transparent);pointer-events:none}
+
+/* 模态 */
+.mask{
+  position:fixed;inset:0;background:rgba(40,34,24,.36);backdrop-filter:blur(4px);
+  display:none;align-items:center;justify-content:center;z-index:200;padding:40px 20px;
+}
+.mask.on{display:flex}
+.modal{
+  width:min(720px,100%);max-height:80vh;display:flex;flex-direction:column;
+  background:var(--surface-solid);border:1px solid var(--line-2);border-radius:24px;
+  box-shadow:0 30px 80px -24px rgba(40,34,24,.5);overflow:hidden;
+}
+.modal header{display:flex;align-items:center;gap:12px;padding:18px 22px 14px;border-bottom:1px solid var(--line-2)}
+.modal header h3{margin:0;font-size:16px;flex:1}
+.modal .body{padding:18px 22px 24px;overflow:auto}
+.modal .body::-webkit-scrollbar{width:9px}
+.modal .body::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:9px}
+.x{width:30px;height:30px;border-radius:9px;border:1px solid var(--line-2);background:var(--surface-2);cursor:pointer;color:var(--text-2)}
+.note{font-size:12px;color:var(--text-3);margin-top:26px;line-height:1.8;text-align:center}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="bar">
+    <span class="ttl">悬停交互方案</span>
+    <div class="seg" id="seg">
+      <button data-m="A" class="on">A 悬停浮层</button>
+      <button data-m="B">B 自动长高</button>
+      <button data-m="C">C 浮层 + 大窗</button>
+    </div>
+    <span class="spacer"></span>
+    <button class="icon-btn" id="themeBtn" title="切换深色">◐</button>
+  </div>
+
+  <div class="tip" id="tip">
+    <b>方案 A：</b>鼠标停在卡片上约 0.25 秒，卡片下方滑出完整正文浮层，可在浮层里滚轮阅读；移开即收起。列表高度不跳动。
+  </div>
+
+  <div class="k-list" id="list">
+
+    <div class="k-card">
+      <div class="k-head">
+        <h3>第2期 · 机会成本</h3>
+        <div class="k-actions">
+          <small class="date">2026-09-09</small>
+          <button class="ghost">查看原报告</button>
+          <button class="ghost danger">删除</button>
+        </div>
+      </div>
+      <p class="content">每日金融概念 · 第02期 · 机会成本 每日金融概念 · 第 02 期 今天的概念： 机会成本 （Opportunity Cost） 2026年9月9日 · 用一个故事讲清它 📖 一张"免费"的演唱会门票 周五下午，小王接到朋友电话："我多了一张今晚的演唱会门票，送你！免费的，不去白不去。"</p>
+      <div class="meta-row">
+        <span>来源：定时任务 · 金融概念</span>
+        <span><span class="chip">#金融概念</span><span class="chip">#每日</span><span class="chip">#第2期</span></span>
+      </div>
+    </div>
+
+    <div class="k-card">
+      <div class="k-head">
+        <h3>第1期 · 复利</h3>
+        <div class="k-actions">
+          <small class="date">2026-09-09</small>
+          <button class="ghost">查看原报告</button>
+          <button class="ghost danger">删除</button>
+        </div>
+      </div>
+      <p class="content">每日金融概念 · 第01期 · 复利 今天的概念：复利（Compound Interest）。很多人以为财富增长是一条直线，其实它是一条越来越陡的曲线。真正决定终点的，不是你起步时有多少，而是你让它滚了多久。</p>
+      <div class="meta-row">
+        <span>来源：定时任务 · 金融概念</span>
+        <span><span class="chip">#金融概念</span><span class="chip">#第1期</span></span>
+      </div>
+    </div>
+
+    <div class="k-card">
+      <div class="k-head">
+        <h3>第20期 · 美股每日新闻简报</h3>
+        <div class="k-actions">
+          <small class="date">2026-10-22</small>
+          <button class="ghost">查看原报告</button>
+          <button class="ghost danger">删除</button>
+        </div>
+      </div>
+      <p class="content">美股每日新闻简报 · 2026-10-22 美股每日新闻简报 2026年10月22日（周四）· 盘前要闻 隔夜三大指数涨跌互现，纳指小幅收高，标普 500 与道指微跌。市场等待今晚公布的初请失业金人数与成屋销售数据。</p>
+      <div class="meta-row">
+        <span>来源：定时任务 · 实时新闻</span>
+        <span><span class="chip">#美股</span><span class="chip">#第20期</span></span>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="note">原型 · 内容为真实条目摘要，仅用于确认交互手感<br>3 张卡都能滑过体验，切换上方三个方案对比</p>
+</div>
+
+<div class="mask" id="mask">
+  <div class="modal">
+    <header>
+      <h3 id="mTitle">第2期 · 机会成本</h3>
+      <button class="x" id="mClose">✕</button>
+    </header>
+    <div class="body" id="mBody"></div>
+  </div>
+</div>
+
+<script>
+// ---- 真实正文（用于浮层/展开/大窗）----
+const FULL = {
+  '第2期 · 机会成本': `
+    <div class="lead">每日金融概念 · 第 02 期 · 2026年9月9日</div>
+    <span class="h">今天的概念：机会成本（Opportunity Cost）</span>
+    <span class="h">📖 一张"免费"的演唱会门票</span>
+    周五下午，小王接到朋友电话："我多了一张今晚的演唱会门票，送你！免费的，不去白不去。"小王一乐，收下就准备出门。
+    可他忘了：今晚他原本有两个安排——
+    <br><br>选项 A：去看免费演唱会，<b>花费 ¥0 门票</b>
+    <br>选项 B：去做兼职夜班，<b>能赚 ¥500</b>
+    <br>选项 C：陪刚到这座城市的妈妈吃饭，<b>无价的陪伴</b>
+    <br><br>小王心想："门票免费，等于没花钱，这波稳赚。"于是他去了演唱会。可是——<b>"免费"不等于"没有代价"</b>。一旦他坐在演唱会现场，那 500 元的兼职收入和陪妈妈的一晚时光，就永远回不来了。
+    <hr>
+    <span class="h">💡 故事里的金融道理</span>
+    这就是 <span class="k">机会成本</span>：做任何一个选择，真实的代价不是你花出去的钱，而是<b>你为此放弃的其他最优选项的价值</b>。
+    <br><br>某选择的真实成本 = 你放弃的次优选项中，价值最高的那个。
+    <br><br>它和"会计成本"（账面花的钱）不同。会计只看你掏了多少，机会成本还看你少赚了多少、错过了什么。所以"免费"的东西往往最贵——因为你把本可用在别处的资源（时间、钱、精力）压在了它身上。
+    <hr>
+    <span class="h">🌰 换到日常</span>
+    读三年研究生，学费只是会计成本；机会成本是你这三年本可以工作赚的几十万。买一个新款手机"省"下的，是这笔钱拿去理财可能增值的部分。每一个"要"的背面，都藏着一个"没要"。
+    <span class="h">✅ 今天记住三点</span>
+    1. <b>"免费"几乎从不免费</b>：真正的账单写在你放弃的东西上，而非标价签上。<br>
+    2. <b>比较的是"次优选项"</b>：机会成本不是你放弃的全部，而是其中价值最高的那一个。<br>
+    3. <b>大决策更要算它</b>：跳槽、创业、读研、买房——这些动辄以年计的选择，机会成本往往远超眼前数字。
+    <div class="foot">下期预告：通货膨胀 —— 为什么你的钱会"悄悄变瘦"。</div>`,
+  '第1期 · 复利': `
+    <div class="lead">每日金融概念 · 第 01 期 · 2026年9月9日</div>
+    <span class="h">今天的概念：复利（Compound Interest）</span>
+    很多人以为财富增长是一条直线，其实它是一条越来越陡的曲线。真正决定终点的，不是你起步时有多少，而是<b>你让它滚了多久</b>。
+    <hr>
+    <span class="h">📖 一个雪球的故事</span>
+    山坡上滚下的雪球，第一圈只粘上一层薄雪，看起来毫无变化；可当它滚到山脚，一次滚动粘上的雪，比刚起步时一整段路都多。复利就是"利滚利"——利息本身也开始生息。
+    <br><br>公式：<span class="k">A = P × (1 + r)^n</span>，其中 P 是本金、r 是收益率、n 是期数。n 在指数上，所以时间才是最大的变量。
+    <hr>
+    <span class="h">💡 关键直觉</span>
+    72 法则：用 72 除以年化收益率，约等于本金翻倍需要的年数。年化 8% → 约 9 年翻倍；年化 3% → 需要 24 年。
+    <span class="h">✅ 今天记住三点</span>
+    1. <b>时间是主变量</b>：早起步 5 年，往往胜过每年多投一大笔。<br>
+    2. <b>别中途打断它</b>：复利最怕中断，一次大额赎回可能抹掉数年积累。<br>
+    3. <b>负复利同样陡</b>：亏损也是复利，-20% 需要 +25% 才能回本。
+    <div class="foot">下期预告：机会成本 —— 免费的东西为什么最贵。</div>`,
+  '第20期 · 美股每日新闻简报': `
+    <div class="lead">美股每日新闻简报 · 2026年10月22日（周四）</div>
+    <span class="h">盘前要闻</span>
+    隔夜三大指数涨跌互现：纳指小幅收高，标普 500 与道指微跌。市场等待今晚公布的初请失业金人数与成屋销售数据，情绪偏谨慎。
+    <hr>
+    <span class="h">📌 关注方向</span>
+    · <b>科技板块</b>：AI 算力链条继续获得资金关注，龙头股盘前小幅走高。<br>
+    · <b>金融板块</b>：长端利率回落，银行股承压。<br>
+    · <b>能源板块</b>：原油价格震荡，能源股跟随波动。
+    <span class="h">📊 今日数据</span>
+    初请失业金人数、成屋销售年化总数、EIA 原油库存变动。
+    <div class="foot">以上内容为信息整理，不构成投资建议。</div>`
+};
+
+const tipText = {
+  A: '<b>方案 A：</b>鼠标停在卡片上约 0.25 秒，卡片下方滑出完整正文浮层，可在浮层里滚轮阅读；移开即收起。列表高度不跳动。',
+  B: '<b>方案 B：</b>鼠标停在卡片上，摘要区自己向上长高（最多约 400px）露出全文，滑走缩回两行。阅读位置和标题不分离，但列表会跟着推挤。',
+  C: '<b>方案 C：</b>A 的浮层 + 底部「展开阅读」按钮，点开后是居中大窗，正文排得最舒展，适合长报告。'
+};
+
+let mode = 'A';
+const list = document.getElementById('list');
+const tip = document.getElementById('tip');
+
+function render(){
+  tip.innerHTML = tipText[mode];
+  document.body.className = 'm' + mode;
+  list.querySelectorAll('.hover-panel, .fade-hint').forEach(n => n.remove());
+  list.querySelectorAll('.k-card').forEach(card => {
+    const title = card.querySelector('h3').textContent.trim();
+    const html = FULL[title] || '<p>暂无内容</p>';
+    if (mode === 'A' || mode === 'C'){
+      const panel = document.createElement('div');
+      panel.className = 'hover-panel';
+      panel.innerHTML = `<div class="hover-inner">
+        <div class="rich">${html}</div>
+        ${mode === 'C' ? `<div class="hover-foot"><span class="hint">滚轮继续阅读</span><button class="ghost expand">展开阅读</button></div>` : ''}
+      </div>`;
+      card.appendChild(panel);
+      if (mode === 'C'){
+        panel.querySelector('.expand').addEventListener('click', e => {
+          e.stopPropagation();
+          openModal(title, html);
+        });
+      }
+    }
+    if (mode === 'B'){
+      card.querySelector('.content').innerHTML = html.replace(/<div class="lead">.*?<\/div>/, '').replace(/<span class="h">/g, '<br><br><span class="h">');
+    }
+  });
+}
+
+function openModal(title, html){
+  document.getElementById('mTitle').textContent = title;
+  document.getElementById('mBody').innerHTML = `<div class="rich">${html}</div>`;
+  document.getElementById('mask').classList.add('on');
+}
+document.getElementById('mClose').onclick = () => document.getElementById('mask').classList.remove('on');
+document.getElementById('mask').onclick = e => { if (e.target.id === 'mask') e.currentTarget.classList.remove('on'); };
+document.addEventListener('keydown', e => { if (e.key === 'Escape') document.getElementById('mask').classList.remove('on'); });
+
+document.getElementById('seg').addEventListener('click', e => {
+  const b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('#seg button').forEach(x => x.classList.remove('on'));
+  b.classList.add('on');
+  mode = b.dataset.m;
+  render();
+});
+
+document.getElementById('themeBtn').onclick = () => {
+  const r = document.documentElement;
+  r.dataset.theme = r.dataset.theme === 'dark' ? 'light' : 'dark';
+};
+
+render();
+</script>
+</body>
+</html>

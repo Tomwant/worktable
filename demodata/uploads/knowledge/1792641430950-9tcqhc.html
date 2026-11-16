@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第13期 · 羊群效应</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 13 期</span>
+  <h1>今天的概念：<span class="tag">羊群效应</span>（Herd Behavior）</h1>
+  <div class="date">2026年9月28日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 当整条街都在跑，你很难停下自己的脚</h2>
+    <p>阿强有个习惯：从不炒股，觉得那玩意儿"不靠谱"。可 2020 年那阵子，他发现自己被架进了一个奇怪的场子——办公室茶水间的话题，悄悄从八卦变成了<strong>晒收益截图</strong>。先是隔壁组的小王，然后是平时只聊带娃的李姐，最后连从不碰手机的保洁阿姨都乐呵呵地说"我开户了，跟着买就行"。阿强心里那根"别碰"的弦，在一次次"你看人家都赚了"的暗示里，慢慢松了。</p>
+    <p>真正推他下水的，是一个下午。同事老张神秘兮兮地凑过来："<strong>这只基金，大家都在买，闭眼进</strong>。"阿强犹豫了两秒，心想"<em>这么多人买，总不会错吧</em>"，于是也在那个阶段高点，跟着买了一笔。他以为自己在"投资"，其实只是在<strong>数人头</strong>——而"这么多人"本身，恰恰就是风险。</p>
+    <p>几个月后画风突变。市场一回调，朋友圈从前天的"晒收益"变成了今天的"要不要割"。老张慌了，在群里喊"赶紧跑"；李姐说"亏了点但落袋为安"；阿姨也跟着问"是不是该卖"。阿强看着绿油油的账户，手脚比脑子快，<strong>在低点把基金全卖了</strong>。一买一卖，他完美踩中——高位接盘，低位割肉，把"别人贪婪我更贪婪、别人恐惧我更恐惧"演了一遍。</p>
+    <div class="board">
+      <div class="row head"><span class="k">"大家都在做" 不等于 "做对了"</span><span class="v">跟随 vs 独立判断</span></div>
+      <div class="row"><span class="k">茶水间都在晒收益</span><span class="v">阿强放心买入 → 买在阶段高点</span></div>
+      <div class="row"><span class="k">群体热闹本身</span><span class="v">就是最贵的"信号"，不是安全垫</span></div>
+      <div class="row"><span class="k">回调后大家都在喊跑</span><span class="v">阿强跟着割 → 割在低点</span></div>
+      <div class="row"><span class="k">若他先看估值再决定</span><span class="v">高点未必追、低点未必逃</span></div>
+    </div>
+    <p>看这张表你会发现：<strong>让阿强买和卖的，从来不是他对那只基金的独立判断，而是"身边人都在动"这件事</strong>。别人的行动，变成了他做决定的全部依据——羊群一跑，他脚也动了。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>羊群效应</strong>，说的是人会在不确定时，放弃自己的独立判断，转而去<strong>模仿大多数人的行为</strong>，因为"大家都这么做"会给人一种"多半没错"的安全感。在金融里，它常常酿成两种极端：上涨时<strong>集体追高</strong>（泡沫越吹越大），下跌时<strong>集体踩踏</strong>（本来不至于崩的也崩了）。用一句学术点的话说，它也叫"<strong>信息瀑布</strong>"——你以为前面的人在理性分析，其实前面的人也在看更前面的人，最后谁都没在分析，全在跟随。</p>
+    <div class="formula">不确定 + 看别人怎么做 → 放弃独立思考 → 跟随 → 价格被"人数"而非"价值"推动</div>
+    <p>这条规律往下延伸，能解释很多现象：其一，<strong>热闹本身就是风险信号</strong>。当连不关心市场的人都在聊某个标的，往往意味着它已经涨了不少、聚集了大量"后知后觉"的跟风资金——这正是风险最高的时刻。其二，<strong>从众买来的"安心"，是假安心</strong>。你买是因为别人买，别人卖你也会卖，所以你永远踩在人群情绪的最末端，价格对你不利。其三，<strong>真正的反向指标，常常是"全民共识"</strong>。巴菲特那句"别人贪婪时我恐惧"，本质就是提醒你：群体的方向，往往不是你的方向。</p>
+    <p>🌰 换到你的钱包：下次再听到"大家都在买"，先停三秒，问自己——"<strong>我是真看好它，还是怕被落下？</strong>"把"身边人都在做"从你的决策依据里摘出去，<strong>换成你自己的估值和逻辑</strong>。市场最危险的时刻，往往是所有人都觉得"稳了"的那一刻；而当恐慌蔓延、人人喊跑时，也许正该冷静看一眼：东西本身变了吗？</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>"大家都在做"不代表"做对了"</strong>：羊群效应让人在不确定时放弃独立判断、模仿多数人。群体的热闹是风险的信号，不是安全的证明——阿强就是被"人头"带进了高点和低点。</li>
+      <li><strong>从众买来的安心是假的</strong>：你买因为别人买、卖因为别人卖，永远踩在人群情绪的末端，价格天然对你不利。把"大家都在买"从决策依据里摘掉，换成你自己的估值与逻辑。</li>
+      <li><strong>"全民共识"常是反向指标</strong>：当不关心市场的人都在聊某个标的，往往是最该警惕的时候；人人喊跑的恐慌里，反而值得冷静问一句——东西本身变了吗？逆着人群的情绪，先想清楚再动。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：心理账户 —— 为什么你愿意花 200 块喝一杯奶茶眼都不眨，却为超市 5 毛差价绕路两公里？为什么退款到账像"白捡"，工资到手却精打细算？同一笔钱，在你心里被分进了不同的"抽屉"。</div>
+</div>
+</body>
+</html>

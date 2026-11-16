@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美股每日新闻简报 · 2026-10-20</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#ffffff; --line:#e3e6ea; --text:#1a1d21; --sub:#5b6470;
+    --up:#d32029; --down:#0f8a4a; --accent:#1f5fd6; --warn:#b8620a; --chip:#eef2f7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;line-height:1.7;padding:28px 16px}
+  .wrap{max-width:940px;margin:0 auto}
+  header{background:linear-gradient(135deg,#1f2a44,#2f4a8c);color:#fff;border-radius:14px;padding:28px 30px;margin-bottom:22px}
+  header h1{font-size:26px;font-weight:700;letter-spacing:.5px}
+  header .meta{margin-top:8px;font-size:13px;opacity:.85}
+  .tag{display:inline-block;background:rgba(255,255,255,.16);border-radius:20px;padding:2px 12px;font-size:12px;margin-right:6px;margin-top:10px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 26px;margin-bottom:18px}
+  h2{font-size:18px;margin-bottom:14px;padding-left:10px;border-left:4px solid var(--accent);line-height:1.3}
+  h3{font-size:15px;margin:16px 0 8px;color:#2b3440}
+  p{font-size:14px;color:#2b3440;margin-bottom:8px}
+  ul{margin:6px 0 6px 20px}
+  li{font-size:14px;margin-bottom:4px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
+  th{background:#f0f3f7;font-weight:600;color:#3a4451;font-size:13px}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .up{color:var(--up);font-weight:600}
+  .down{color:var(--down);font-weight:600}
+  .flat{color:var(--sub)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px}
+  .kv{background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+  .kv .k{font-size:12px;color:var(--sub)}
+  .kv .v{font-size:19px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+  .kv .c{font-size:12px;margin-top:2px}
+  .note{background:#fff8ec;border-left:3px solid var(--warn);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .alert{background:#fdeeee;border-left:3px solid var(--up);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .good{background:#eefaf3;border-left:3px solid var(--down);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .hl{background:linear-gradient(180deg,transparent 62%,#ffe9a8 62%);font-weight:600}
+  .chip{display:inline-block;background:var(--chip);color:#3a4451;border-radius:6px;padding:2px 9px;font-size:12px;margin:2px 4px 2px 0}
+  .tm{display:inline-block;min-width:74px;color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums}
+  .star{color:var(--up);font-weight:700}
+  footer{text-align:center;color:var(--sub);font-size:12px;padding:16px 0 8px}
+  .lvl{display:inline-block;font-size:11px;border-radius:4px;padding:1px 7px;margin-right:6px;color:#fff}
+  .l1{background:#d32029}.l2{background:#d97b08}.l3{background:#2f7fbf}
+  .src{font-size:12px;color:var(--sub);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>美股每日新闻简报</h1>
+  <div class="meta">2026年10月20日（周二）· 覆盖纳斯达克、标普500、道琼斯 · 数据截至北京时间 09:08（对应美东 10/19 周一收盘；今日周二盘前/亚盘情绪延续反弹，美股尚未开盘）</div>
+  <div>
+    <span class="tag">纳指 +1.11% · 费半结束八连跌</span>
+    <span class="tag">道指微跌 0.07% · 标普 +0.41%</span>
+    <span class="tag">高盛上调 CoreWeave 至买入 · 债收益率回 15%</span>
+    <span class="tag">布油 ~109 · 霍尔木兹通航骤降</span>
+    <span class="tag">美债 10Y 5.14%</span>
+    <span class="tag">财报季大考：META / TSLA 周三盘后</span>
+  </div>
+</header>
+
+<section>
+  <h2>一、市场速览（10/19 周一收盘 · 最新完整交易日）</h2>
+  <p>周一美股呈现<strong>"科技单骑救主"式反弹</strong>：纳指在半导体与大型科技股带动下高开高走，收涨 <strong>1.11%</strong>，收复上周五部分失地（约收复纳指周跌幅的四分之一）；标普 500 小涨 <strong>0.41%</strong>；道指则受公用事业、房地产与金融拖累微跌 <strong>0.07%</strong>。整周视角（截至上周五）：标普 500 跌 <strong>1.95%</strong>、纳指跌 <strong>4.48%</strong>（6 月来最差单周），本轮反弹尚属"修复"而非"反转"。<span class="hl">盘面结构分化依旧严重</span>——标普 11 大板块<strong>七跌四涨</strong>，反弹由科技（+1.19%~1.36%）与非必需消费品（+2.73%）独撑，公用事业（-1.97%~-2.01%）、房地产（-1.17%）领跌。恐慌指数 VIX 自 19.99 回落至 <strong>18.44（-7.75%）</strong>。</p>
+
+  <table>
+    <tr><th>指数 / 标的</th><th class="num">收盘</th><th class="num">日涨跌</th><th class="num">上周周涨跌（至 10/16）</th></tr>
+    <tr><td>道琼斯工业指数</td><td class="num">51,966.03</td><td class="num down">-0.07% / -36.38</td><td class="num up">+0.67%</td></tr>
+    <tr><td>标普 500 指数</td><td class="num">7,690.73</td><td class="num up">+0.41% / +31.29</td><td class="num down">-1.95%</td></tr>
+    <tr><td>纳斯达克综合指数</td><td class="num">26,430.89</td><td class="num up">+1.11% / +290.85</td><td class="num down">-4.48%</td></tr>
+    <tr><td>纳斯达克100（NDX）</td><td class="num">29,529.34</td><td class="num up">+1.17%</td><td class="num down">上周约 -5.5%</td></tr>
+    <tr><td>费城半导体指数（SOX）</td><td class="num">—</td><td class="num up">+1.61%~+2.8%</td><td class="num down">上周跌逾 11%（结束八/九连跌）</td></tr>
+    <tr><td>罗素 2000（小盘）</td><td class="num">2,728.30</td><td class="num up">+0.25%</td><td class="num flat">—</td></tr>
+    <tr><td>VIX 恐慌指数</td><td class="num">18.44</td><td class="num down">-7.75%（自 19.99 回落）</td><td class="num up">上周 +34.7%</td></tr>
+  </table>
+
+  <div class="grid">
+    <div class="kv"><div class="k">10年期美债收益率</div><div class="v">5.14%</div><div class="c up">+5.9bp（2.0 年来高位，利率压制延续）</div></div>
+    <div class="kv"><div class="k">30年期美债收益率</div><div class="v">5.48%</div><div class="c up">+5.3bp；长端高位</div></div>
+    <div class="kv"><div class="k">2年期美债收益率</div><div class="v">4.78%</div><div class="c up">+3.8bp；曲线熊陡</div></div>
+    <div class="kv"><div class="k">美元指数 DXY</div><div class="v">101.99</div><div class="c up">+0.15%~0.21%</div></div>
+    <div class="kv"><div class="k">WTI 原油（11月）</div><div class="v">$103.66</div><div class="c up">+2.2%（9/15 来最高结算）；12月合约 $98.54（-0.5%）</div></div>
+    <div class="kv"><div class="k">布伦特原油</div><div class="v">$109.4</div><div class="c flat">约 -0.3%~-0.4%，仍守 109（前周逼 110）</div></div>
+    <div class="kv"><div class="k">COMEX 黄金</div><div class="v">$4,142.08</div><div class="c down">-0.91%；美元与收益率走强压制</div></div>
+    <div class="kv"><div class="k">COMEX 白银</div><div class="v">$56.95</div><div class="c down">-1.10%</div></div>
+    <div class="kv"><div class="k">比特币 BTC</div><div class="v">约 $81,800</div><div class="c flat">基本持平（跨源 +1.05% / -0.29% 分歧）</div></div>
+    <div class="kv"><div class="k">美债 2s10s 利差</div><div class="v">~36bp</div><div class="c up">熊陡，短端 4.78% / 长端 5.14%</div></div>
+  </div>
+
+  <div class="note"><strong>口径提示（多源并列）：</strong>①收盘主流口径 道指 51,966.03 / 标普 7,690.73 / 纳指 26,430.89（新华社、中国证券网、新浪、央广、CNBC、streetstats、swingfolio 一致）。②费半涨幅跨源分歧：中央社 +1.61% vs Reuters +2.4% vs MarketScreener +2.8%，方向一致（结束八/九连跌），幅度因采样时点不同；本文取区间标注。③CoreWeave 当日表现跨源分歧——Reuters/yournews 称高盛上调后"跳涨 2.4%~3.4%"，中央社称尾盘回落收跌 0.62%；综合看为高开冲高后回落，债券 2031 到期收益率从 &gt;16% 降至约 15%。④原油跨合约：NYMEX 11 月 WTI 103.66、12 月 98.54；Brent 结算 109.55（PFL）/109.39（streetstats），方向一致、价差源于月份。</div>
+</section>
+
+<section>
+  <h2>二、六大核心驱动事件</h2>
+
+  <h3><span class="lvl l3">1</span>AI / 半导体"绝地反弹"：费半结束连跌，但定性"死猫跳"仍存疑</h3>
+  <p>经历两周（八至九个交易日）惨烈抛售后，科技股周一集体反攻。费城半导体指数终结 2008 年以来最长连跌纪录，盘初一度涨超 3%；<span class="hl">存储链领涨</span>——西部数据 <strong>+6.09%</strong>、闪迪 <strong>+5.53%</strong>、SK 海力士 <strong>+4.67%</strong>、希捷 <strong>+3.41%</strong>、美光 <strong>+2.97%</strong>；英伟达 +1.38%、AMD +1.76%、博通 +2.4%、台积电 ADR +1.84%、英特尔 +2.43%。亚马逊 <strong>+4.98%</strong>（摩根士丹利列为首选）。华尔街集体发声"虚惊一场"：艾夫斯（Dan Ives）称此为 AI 基建"SaaS 末日"式错杀、回调即买点；Moorhead 称"又一轮恐慌而已"；瑞银 CIO 上调 2026 年全球 AI 资本开支预期至 <strong>9,000 亿美元（+84%）</strong>、2027 年 1.2 万亿。但 Great Hill Capital 的 Hayes 警告"今天是典型的死猫跳，债券市场对融资仍高度怀疑"，反弹成色本周财报见分晓。</p>
+
+  <h3><span class="lvl l3">2</span>CoreWeave + AI 债务叙事边际缓和，但信贷风险未解除</h3>
+  <ul>
+    <li><strong>高盛上调 CoreWeave 至"买入"</strong>（由中性，目标价 139→106 美元），理由为算力稀缺、相对同业性能优势将推高每兆瓦年经常性收入，称近期大跌为"买入机会"。</li>
+    <li><strong>债券收益率回落</strong>：CoreWeave 2031 到期债收益率从 &gt;16% 降至约 <strong>15%</strong>（-19.5 至 -25bp，Tradeweb 数据），但仍处极高位；Nebius +3.4%~4.5%、Applied Digital +8.5%、IREN +5%~5.7% 同步反弹。</li>
+    <li><strong>质疑仍在</strong>：LNW 投资官 Albahary 称"市场越来越苛刻地审视这些公司举债能否创造回报"，CoreWeave 公司债状况是 AI 交易转折的征兆；AllMind 提示"股权反弹的信息量低于融资信号——15.13% 的边际融资成本与轻松增长估值仍不匹配"。</li>
+  </ul>
+
+  <h3><span class="lvl l1">3</span>油价高位震荡，霍尔木兹通航骤降：通胀黏性"火种"未灭</h3>
+  <ul>
+    <li><strong>通航数据骤降</strong>：Kpler 显示经霍尔木兹海峡原油流量七日均量降至约 <strong>850 万桶/日</strong>（前一周 &gt;2,000 万桶/日）；上周至少 <strong>10 起</strong>商船遇袭确认。</li>
+    <li><strong>袭击密集</strong>：胡塞武装称袭击沙特延布 Aramco 设施与 Shaybah 油田；伊朗革命卫队称一艘违规油轮在霍尔木兹南部<strong>触雷爆炸起火</strong>；埃及表态愿支持沙特防御胡塞。</li>
+    <li><strong>特朗普"压价"操作</strong>：签署行政令豁免俄能源部分制裁/关税，美俄柴油协议启动（本月约 230 万桶、后升至约 760 万桶/月），鲁比奥称将用 <strong>60 天</strong>评估影响；但分析称"治标不治本"，未解决霍尔木兹物理中断。OPEC 9 月增产（沙特、伊拉克领增）部分对冲。维多 CEO 警告：若海峡航运中断，油价或冲 <strong>200 美元</strong>。</li>
+  </ul>
+
+  <h3><span class="lvl l2">4</span>美债收益率回升、利率压制延续：公用事业/银行再挨刀</h3>
+  <ul>
+    <li>10Y <strong>5.14%</strong>（+5.9bp）、30Y 5.48%（+5.3bp）、2Y 4.78%（+3.8bp），曲线熊陡——高利率环境仍是高估值科技/成长股的天花板。</li>
+    <li>受收益率上行直接冲击：<strong>公用事业 -2.01%</strong>、<strong>银行板块约 -2%</strong> 领跌；利率敏感资产承压。美元走强（DXY 101.99）叠加收益率上行，压制黄金、白银与比特币。</li>
+    <li>中信证券研报：美伊谈判未获突破、霍尔木兹风险溢价维持高位，预计 2026 年剩余时间油价高位震荡，间接支撑通胀黏性叙事。</li>
+  </ul>
+
+  <h3><span class="lvl l1">5</span>财报季大考开启：本周约 70–112 家标普 500 披露，AI 回报成"试金石"</h3>
+  <ul>
+    <li>本周是美股三季报最密集阶段之一，约 <strong>70–112 家</strong>标普 500 成分披露业绩。市场关注的已不是"AI 是否继续增长"，而是"<strong>投资者还愿不愿意为增长付溢价</strong>"（Freedom Capital 的 Woods）。</li>
+    <li><strong>时间轴</strong>：周二盘后 <strong>Netflix（NFLX）</strong> 打响第一枪；<strong>周三盘后 Meta、特斯拉（TSLA）、IBM、AT&amp;T、德州仪器、Lam Research</strong> 为全周焦点；周四宝洁、洛克希德、Spotify；周五美国运通、斯伦贝谢。</li>
+    <li>市场预期 Q3 盈利同比激增逾 30%（主要由 AI 相关巨头拉动），但若"巨额 Capex 回报"信号缺失，反弹恐难延续。</li>
+  </ul>
+
+  <h3><span class="lvl l2">6</span>结构分化仍深：VIX 回落但广度偏弱，反弹"非普惠"</h3>
+  <ul>
+    <li>标普 <strong>七跌四涨</strong>，纳指反弹由科技与非必需消费（+2.73%）独撑，防御与金融权重拖累道指；属"少数权重股拉动"式反弹，广度未实质改善。</li>
+    <li>VIX 回落至 18.44 属"过渡而非放松"——市场处于<strong>重新定价</strong>阶段（FinLore 评）；罗素 2000 仅 +0.25%，小盘风险偏好仍谨慎。</li>
+    <li>亚特兰大联储 GDPNow 等高频指向经济仍稳，但政府停摆（已进入第三周）导致失业金、部分 CPI/PCE 口径推迟，数据"黑洞"持续。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>三、板块与个股</h2>
+  <h3>领涨 / 领跌板块（标普 11 大板块）</h3>
+  <ul>
+    <li><span class="up">非必需消费品 +2.73%</span>、<span class="up">科技 +1.19%~1.36%</span> 领涨（亚马逊 +4.98%、特斯拉链、半导体反弹拉动）。</li>
+    <li><span class="down">公用事业 -1.97%~-2.01%</span>、<span class="down">房地产 -1.17%</span> 领跌（10Y 收益率回升直接压制高股息/利率敏感板块）。</li>
+  </ul>
+  <h3>科技 / AI 个股要点</h3>
+  <ul>
+    <li><strong>存储链集体回暖</strong>：西部数据 +6.09%、闪迪 +5.53%、SK 海力士 +4.67%、希捷 +3.41%、美光 +2.97%（上周重灾区反弹最猛）。</li>
+    <li><strong>核心芯片</strong>：英伟达 +1.38%、AMD +1.76%、博通 +2.4%、台积电 ADR +1.84%、英特尔 +2.43%（JPM 上调英特尔至中性）。</li>
+    <li><strong>云/平台</strong>：谷歌 +0.96%、亚马逊 +4.98%；<span class="down">Meta -0.55%</span>（周三盘后财报前观望）；<strong>SpaceX +1.32%</strong>（马斯克宣布将向每名美国儿童赠一股）。</li>
+    <li><strong>CoreWeave（CRWV）</strong>：高盛上调至买入后盘中冲高、尾盘回落（跨源收 -0.62% 至 +3.4%），2031 债收益率回落至约 15%。</li>
+    <li><strong>小盘/生物科技</strong>：Disc Medicine +38.86%、Cleveland-Cliffs +16.34% 居涨幅前列；Fannie Mae -9.04%、VinFast -7.05% 领跌。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>四、盘前 / 亚盘最新动态（10/20 周二，美股尚未开盘）</h2>
+  <ul>
+    <li><strong>期指情绪</strong>：周一盘前期货分化——<span class="up">纳指期货一度涨超 1%</span>、标普 500 期货 +0.51%，道指期货 -0.16%（百度百家号 10/19 盘前快照，反映周一反弹余温，<strong>不构成今日开盘预测</strong>）。</li>
+    <li><strong>亚洲市场</strong>：10/20 日韩开盘走低——日经 225 跌 0.25%（64,755.49）、韩国 KOSPI 跌 0.60%（5,733.57）；中国境内纳指 ETF（博时 513390）、全球芯片 LOF（501225）、美国 50ETF（易方达 513850）今日开市至 10:30 停牌后复牌。</li>
+    <li><strong>苹果</strong>：将于 <strong>10/28 洛杉矶</strong>举行发布会，彭博称将推首款<strong>触控屏 MacBook Pro</strong>（M5 Pro/Max、灵动岛式界面、OLED 屏），另有 M6 入门款、升级版 iMac、新 iPad mini。</li>
+    <li><strong>Anthropic</strong>：据彭博，英国 AI 云公司 Nscale 正与 Anthropic 洽谈规模约 <strong>450 亿美元</strong>的算力供应协议（谈判中、未最终确定），显示超大规模算力需求仍在扩张。</li>
+    <li><strong>特斯拉财报前瞻</strong>：彭博一致预期 Q3 营收约 277.3 亿美元（同比微降 1%）、调整后净利 15.5 亿（同比 -13%）、EPS 0.23 美元（同比 -40%）；交付超预期，Robotaxi/Optimus 与 SpaceX 合并计划成焦点。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>五、本周关键日程（美东时间，北京 +12h）</h2>
+  <table>
+    <tr><th>日期（美东）</th><th>事件 / 财报</th><th>北京时刻</th></tr>
+    <tr style="background:#fafbfc"><td>周一 10/19（已收）</td><td><strong>科技反弹</strong>：纳指 +1.11%、费半结束连跌；NAHB 住房指数；盘前 Fifth Third(FITB)、盘后 Steel Dynamics(STLD)、W.R. Berkley(WRB)</td><td>已完成</td></tr>
+    <tr><td>周二 10/20（今日）</td><td>经济数据：9 月新屋开工 + 营建许可（8:30）、成屋待完成销售（10:00）；部分日历另列 ADP 私营就业（8:15，以官方为准）。<strong>盘后 Netflix(NFLX) 打响财报季第一枪</strong>、Intuitive Surgical、Chubb、Capital One、United Airlines；盘前 GE Aerospace、RTX、3M、GM、NOC、MSCI、Halliburton、KeyCorp</td><td>数据 <span class="tm">20:30</span> / 财报 <span class="tm">04:01+</span></td></tr>
+    <tr><td>周三 10/21</td><td><strong>本周焦点日</strong>：盘后 <span class="star">Meta、特斯拉(TSLA)、IBM、AT&amp;T、德州仪器(TXN)、Lam Research</span>；盘前 Abbott、Thermo Fisher、NextEra、Philip Morris；SpaceX 亦在本周披露窗口</td><td>财报 <span class="tm">04:01</span> 起</td></tr>
+    <tr><td>周四 10/22</td><td><strong>初请失业金</strong>（8:30）+ Conference Board 9 月领先指标（10:00）；盘前 P&amp;G、Honeywell、Lockheed、Comcast、Union Pacific；盘后 Western Digital、Newmont；SK 海力士（首尔）</td><td>失业金 <span class="tm">20:30</span></td></tr>
+    <tr><td>周五 10/23</td><td><strong>10 月 S&amp;P Global 综合 PMI 初值</strong>（9:45）+ 密歇根消费者信心终值（10:00）；盘前 American Express、SLB；日本 9 月 CPI（早间）</td><td>PMI <span class="tm">21:45</span></td></tr>
+    <tr style="background:#fafbfc"><td>后续 / 政策</td><td><span class="chip">美联储静默期 10/17—29</span>；<span class="chip">FOMC 10/27—28（北京 10/29 02:00）</span>；9 月新屋销售/耐用品 <span class="tm">10/27</span>；<strong>Q3 GDP + 9 月 PCE 10/29</strong>；二十届五中全会 10/26—29；10/25 欧洲冬令时</td><td>—</td></tr>
+  </table>
+  <div class="good"><strong>本周焦点排序：</strong>①周三盘后 <strong>Meta + 特斯拉</strong> 的 AI 资本开支与交付指引，直接定调科技股情绪、验证"业绩能否对冲融资担忧"；②周二盘后 <strong>Netflix</strong> 财报季第一枪；③周五 PMI + 周度初请，检验政府停摆下的数据成色；④10/25 起欧洲冬令时，交易与数据时刻延后一小时。LSEG 平均预期 Q3 盈利同比激增逾 30%（主要由 AI 相关巨头拉动），但"为增长付溢价"的意愿将决定反弹能否延续。</div>
+</section>
+
+<section>
+  <h2>六、风险提示</h2>
+  <ul>
+    <li><strong>AI 融资 / 债务尾部风险</strong>：CoreWeave 债券收益率仍约 15%、总债务逾 510 亿；Anthropic 600 亿高息融资、Meta 表外债务——"融资—现金流"叙事敏感，集中度风险未消；周一反弹部分源于"死猫跳"性质，需财报验证。</li>
+    <li><strong>油价与地缘</strong>：Brent 仍守 ~109、WTI 11 月 103.66（9/15 来最高）；霍尔木兹通航骤降至 850 万桶/日（前周 &gt;2,000 万），胡塞袭沙特、油轮触雷、10+ 商船遇袭；特朗普豁免俄能源制裁为"治标"，维多警告中断或冲 200 美元。</li>
+    <li><strong>高利率环境</strong>：10Y 回升至 5.14%、30Y 5.48%，曲线熊陡；公用事业、银行再承压，高估值成长股估值天花板未解，若加息预期回潮或长债标售疲弱，收益率或再冲 5.3%+。</li>
+    <li><strong>政府停摆与"数据黑洞"</strong>：停摆进入第三周，失业金、非农、部分 CPI/PCE 口径推迟或缺失，美联储"盲飞"；TGA 抽走流动性或推高美债风险溢价。</li>
+    <li><strong>通胀黏性与加息路径分裂</strong>：9 月 CPI（+3.7%）与 PPI（+6.3% 同比）双爆表；CME 12 月加息概率升至 74.3%（一周前 50.2%），巴克莱看 12 月、1 月各加 25bp，政策路径分歧加大。</li>
+    <li><strong>广度恶化 + 结构背离</strong>：标普七跌四涨、反弹由少数权重股独撑，VIX 虽回落至 18.44 仍处"重新定价"区间；小盘（罗素 2000 +0.25%）风险偏好谨慎。</li>
+    <li><strong>财报不及预期风险</strong>：本周约 70–112 家标普披露，若 Meta/特斯拉/芯片股"巨额 Capex 回报"信号缺失，或触发反弹回吐；同时关注中期选举（民主党横扫概率 64%）政策扰动。</li>
+  </ul>
+  <div class="src">主要信源：新华社、CNBC、Reuters、Yahoo Finance、Swingfolio、StreetStats、MarketWatch、MarketScreener、中央社、证券时报、上海证券报、中国金融信息网、ChannelNewsAsia、PFL Petroleum、百度百家号、彭博（转引）、雪球等。部分指标（费半涨幅、CoreWeave 当日表现、原油合约、BTC、周涨跌）跨源存在口径差异，本文已并列标注，弃用明显为旧年份/错月份的低质聚合稿（如 tickerdaily 等虚构行情源）。</div>
+</section>
+
+<footer>本报告由自动化任务生成，仅供市场研究与学习交流，不构成任何投资建议。市场有风险，投资需谨慎。<br>生成时间：2026-10-20 09:08（GMT+8）</footer>
+
+</div>
+</body>
+</html>

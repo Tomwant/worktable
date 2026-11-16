@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>识别模块 · 交互原型</title>
+<style>
+:root{
+  --bg:#f6f3ec;
+  --glass:rgba(255,255,255,.62);
+  --glass-2:rgba(255,255,255,.40);
+  --line:rgba(80,60,30,.12);
+  --line-2:rgba(80,60,30,.20);
+  --text:#2f2c26;
+  --text-2:#6b675e;
+  --text-3:#9a948a;
+  --accent:#4a9e66;
+  --accent-soft:rgba(74,158,102,.12);
+  --warm:#c07f42;
+  --warm-soft:rgba(192,127,66,.13);
+  --blue:#4a7fb5;
+  --blue-soft:rgba(74,127,181,.13);
+  --danger:#c05a4a;
+  --r-input:14px;
+  --r-card:22px;
+  --r-top:26px;
+  --gap:14px;
+}
+[data-theme="dark"]{
+  --bg:#141712;
+  --glass:rgba(255,255,255,.065);
+  --glass-2:rgba(255,255,255,.04);
+  --line:rgba(255,255,255,.10);
+  --line-2:rgba(255,255,255,.17);
+  --text:#e9ede8;
+  --text-2:#b6c1ba;
+  --text-3:#a9b5ae;
+  --accent:#6cbb85;
+  --accent-soft:rgba(108,187,133,.16);
+  --warm:#d9a066;
+  --warm-soft:rgba(217,160,102,.16);
+  --blue:#7aa8d6;
+  --blue-soft:rgba(122,168,214,.16);
+  --danger:#d97a6a;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  font-size:14px;
+  line-height:1.65;
+  transition:background .25s,color .25s;
+  overflow-x:hidden;
+}
+.bg-blobs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+.blob{position:absolute;border-radius:50%;filter:blur(70px);opacity:.5}
+[data-theme="light"] .b1{width:420px;height:420px;background:#e6d7bd;top:-140px;left:-120px}
+[data-theme="light"] .b2{width:380px;height:380px;background:#cfe4cd;top:120px;right:-140px}
+[data-theme="light"] .b3{width:340px;height:340px;background:#cfe1e6;bottom:-120px;left:22%}
+[data-theme="dark"] .blob{opacity:.8}
+[data-theme="dark"] .b1{width:420px;height:420px;background:#1d3a2b;top:-140px;left:-120px}
+[data-theme="dark"] .b2{width:380px;height:380px;background:#12403a;top:120px;right:-140px}
+[data-theme="dark"] .b3{width:340px;height:340px;background:#12323c;bottom:-120px;left:22%}
+
+.topbar{
+  position:relative;z-index:2;
+  margin:14px 18px 0;
+  padding:10px 14px;
+  display:flex;align-items:center;gap:12px;
+  background:var(--glass);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--line);
+  border-radius:var(--r-top);
+}
+.brand{display:flex;align-items:center;gap:9px;font-weight:500;white-space:nowrap}
+.brand i{
+  width:28px;height:28px;border-radius:9px;
+  background:var(--accent);color:#fff;
+  display:grid;place-items:center;
+  font-size:14px;font-style:normal;font-weight:500;
+}
+.brand small{color:var(--text-3);font-weight:400;font-size:11px}
+.nav{display:flex;gap:4px;margin-left:8px;flex-wrap:wrap}
+.nav a{
+  padding:6px 13px;border-radius:999px;font-size:13px;
+  color:var(--text-2);text-decoration:none;cursor:pointer;
+  transition:background .18s,color .18s;
+}
+.nav a:hover{background:var(--glass-2);color:var(--text)}
+.nav a.on{background:var(--accent-soft);color:var(--accent);font-weight:500}
+.spacer{flex:1}
+.icon-btn{
+  width:32px;height:32px;border-radius:11px;
+  border:1px solid var(--line);background:var(--glass-2);
+  color:var(--text-2);cursor:pointer;
+  display:grid;place-items:center;transition:.18s;
+}
+.icon-btn:hover{border-color:var(--line-2);color:var(--text)}
+
+.wrap{
+  position:relative;z-index:1;
+  max-width:1180px;margin:0 auto;
+  padding:20px 18px 60px;
+  display:grid;grid-template-columns:384px minmax(0,1fr);gap:var(--gap);
+  align-items:start;
+}
+.page-hd{grid-column:1/-1;padding:2px 4px 4px}
+.page-hd h1{font-size:20px;font-weight:500;letter-spacing:-.2px}
+.page-hd p{color:var(--text-2);font-size:13px;margin-top:2px}
+
+.card{
+  background:var(--glass);
+  backdrop-filter:blur(18px);
+  -webkit-backdrop-filter:blur(18px);
+  border:1px solid var(--line);
+  border-radius:var(--r-card);
+  padding:16px;
+  margin-bottom:var(--gap);
+}
+.card-hd{
+  display:flex;align-items:center;gap:8px;
+  font-size:14px;font-weight:500;margin-bottom:12px;
+}
+.card-hd .count{
+  font-size:11px;font-weight:400;color:var(--text-3);
+  background:var(--glass-2);border:1px solid var(--line);
+  padding:1px 8px;border-radius:999px;
+}
+
+.conn{
+  display:flex;align-items:center;gap:8px;
+  padding:8px 11px;border-radius:var(--r-input);
+  font-size:12px;cursor:pointer;
+  border:1px solid var(--line);background:var(--glass-2);
+  color:var(--text-2);margin-bottom:12px;
+  transition:.18s;
+}
+.conn:hover{border-color:var(--line-2)}
+.conn .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);flex-shrink:0}
+.conn.off .dot{background:var(--danger)}
+.conn.off{color:var(--warm);border-color:var(--line-2);background:var(--warm-soft)}
+
+.dropzone{
+  border:1.5px dashed var(--line-2);
+  border-radius:var(--r-input);
+  padding:26px 16px;
+  text-align:center;
+  cursor:pointer;
+  transition:.18s;
+  background:var(--glass-2);
+}
+.dropzone:hover,.dropzone.over{
+  border-color:var(--accent);
+  background:var(--accent-soft);
+}
+.dropzone svg{color:var(--text-3);margin-bottom:8px}
+.dropzone.over svg,.dropzone:hover svg{color:var(--accent)}
+.dz-title{font-size:13px;font-weight:500}
+.dz-sub{font-size:11px;color:var(--text-3);margin-top:3px}
+
+.dz-actions{display:flex;gap:8px;margin-top:12px}
+.btn{
+  height:34px;padding:0 16px;border-radius:var(--r-input);
+  border:1px solid var(--line);background:var(--glass-2);
+  color:var(--text);font-size:13px;cursor:pointer;
+  font-family:inherit;transition:.18s;
+  display:inline-flex;align-items:center;gap:6px;justify-content:center;
+}
+.btn:hover:not(:disabled){border-color:var(--line-2);background:var(--glass)}
+.btn.primary{
+  background:var(--accent);border-color:var(--accent);color:#fff;
+  min-width:112px;font-weight:500;
+}
+.btn.primary:hover:not(:disabled){filter:brightness(1.06)}
+.btn:disabled{opacity:.42;cursor:not-allowed}
+.btn.ghost{flex:1}
+.btn.sm{height:30px;padding:0 12px;font-size:12px}
+.btn.danger{color:var(--danger);border-color:var(--line-2)}
+
+.q-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+.q-item{
+  border:1px solid var(--line);border-radius:var(--r-input);
+  padding:10px 11px;background:var(--glass-2);
+}
+.q-top{display:flex;align-items:center;gap:8px}
+.q-name{
+  font-size:12px;flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.q-stat{font-size:11px;color:var(--text-3);white-space:nowrap}
+.q-stat.run{color:var(--accent)}
+.q-stat.done{color:var(--accent)}
+.q-stat.err{color:var(--danger)}
+.bar{height:3px;border-radius:2px;background:var(--line);margin-top:8px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .5s ease}
+.q-file{
+  width:26px;height:26px;border-radius:8px;flex-shrink:0;
+  display:grid;place-items:center;font-size:10px;
+  background:var(--glass);border:1px solid var(--line);
+  color:var(--text-3);overflow:hidden;
+}
+.q-file img{width:100%;height:100%;object-fit:cover;display:block}
+.hint{font-size:11px;color:var(--text-3);margin-top:10px;line-height:1.5}
+.notice{
+  grid-column:1/-1;display:flex;align-items:center;gap:9px;
+  padding:9px 14px;border-radius:var(--r-input);font-size:12px;
+  color:var(--warm);background:var(--warm-soft);border:1px solid var(--line);
+  line-height:1.5;
+}
+.notice svg{flex-shrink:0}
+.demo-note{
+  font-size:11px;color:var(--warm);background:var(--warm-soft);
+  border-radius:10px;padding:7px 10px;margin-bottom:12px;line-height:1.5;
+}
+
+.filters{display:flex;gap:5px;margin-left:auto;flex-wrap:wrap}
+.chip{
+  font-size:11px;padding:3px 10px;border-radius:999px;
+  border:1px solid var(--line);background:var(--glass-2);
+  color:var(--text-2);cursor:pointer;transition:.18s;white-space:nowrap;
+}
+.chip:hover{border-color:var(--line-2)}
+.chip.on{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:500}
+
+.repo-list{list-style:none;display:flex;flex-direction:column;gap:9px}
+.repo-item{
+  display:flex;gap:12px;align-items:flex-start;
+  border:1px solid var(--line);border-radius:var(--r-input);
+  padding:12px;background:var(--glass-2);
+  cursor:pointer;transition:.18s;
+}
+.repo-item:hover{border-color:var(--line-2);background:var(--glass);transform:translateY(-1px)}
+.thumb{
+  width:46px;height:46px;border-radius:12px;flex-shrink:0;
+  display:grid;place-items:center;overflow:hidden;
+  background:var(--accent-soft);color:var(--accent);
+  border:1px solid var(--line);
+}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.ri-main{flex:1;min-width:0}
+.ri-hd{display:flex;align-items:center;gap:7px;margin-bottom:3px}
+.ri-title{
+  font-size:13px;font-weight:500;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.tag{
+  font-size:10px;padding:1px 8px;border-radius:999px;flex-shrink:0;
+  border:1px solid transparent;
+}
+.tag.warm{background:var(--warm-soft);color:var(--warm)}
+.tag.accent{background:var(--accent-soft);color:var(--accent)}
+.tag.blue{background:var(--blue-soft);color:var(--blue)}
+.ri-sum{
+  font-size:12px;color:var(--text-2);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.ri-meta{font-size:11px;color:var(--text-3);margin-top:4px;display:flex;gap:10px}
+
+.empty{
+  text-align:center;padding:34px 16px;color:var(--text-3);font-size:12px;
+}
+.empty svg{margin-bottom:10px;opacity:.5}
+
+.mask{
+  position:fixed;inset:0;z-index:20;
+  background:rgba(30,26,20,.42);
+  backdrop-filter:blur(3px);
+  display:none;align-items:center;justify-content:center;
+  padding:24px;
+}
+.mask.on{display:flex}
+.modal{
+  width:min(940px,100%);max-height:88vh;
+  background:var(--bg);
+  border:1px solid var(--line);
+  border-radius:var(--r-card);
+  display:flex;flex-direction:column;overflow:hidden;
+}
+[data-theme="dark"] .modal{background:#1a1d18}
+.modal-hd{
+  display:flex;align-items:center;gap:10px;
+  padding:15px 18px;border-bottom:1px solid var(--line);
+}
+.modal-hd h2{font-size:15px;font-weight:500;flex:1;min-width:0;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.modal-body{
+  display:grid;grid-template-columns:320px minmax(0,1fr);
+  gap:0;overflow:hidden;flex:1;
+}
+.pane-preview{
+  border-right:1px solid var(--line);padding:16px;
+  overflow:auto;background:var(--glass-2);
+}
+.pane-preview .ph{
+  width:100%;border-radius:var(--r-input);border:1px solid var(--line);
+  background:var(--glass);display:grid;place-items:center;
+  color:var(--text-3);font-size:12px;overflow:hidden;
+  min-height:200px;
+}
+.pane-preview .ph img{width:100%;display:block}
+.pane-detail{padding:16px;overflow:auto}
+.tabs{display:flex;gap:5px;margin-bottom:14px}
+.tab{
+  font-size:12px;padding:5px 13px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--line);background:var(--glass-2);color:var(--text-2);
+  transition:.18s;
+}
+.tab.on{background:var(--accent-soft);border-color:transparent;color:var(--accent);font-weight:500}
+.field{margin-bottom:11px}
+.field label{display:block;font-size:11px;color:var(--text-3);margin-bottom:4px}
+.field input,.field textarea{
+  width:100%;padding:8px 11px;font-size:13px;
+  border-radius:var(--r-input);border:1px solid var(--line);
+  background:var(--glass-2);color:var(--text);
+  font-family:inherit;transition:.18s;resize:vertical;
+}
+.field input:focus,.field textarea:focus{
+  outline:none;border-color:var(--accent);
+  box-shadow:0 0 0 3px var(--accent-soft);
+}
+/* 核心字段与可选字段的分隔（仅订单等字段较多的类型出现） */
+.field-sep{
+  display:flex;align-items:center;gap:8px;
+  margin:16px 0 11px;font-size:11px;color:var(--text-3);
+}
+.field-sep::before,.field-sep::after{
+  content:"";height:1px;background:var(--line);flex:1;
+}
+.raw{
+  font-size:12.5px;line-height:1.85;color:var(--text-2);
+  white-space:pre-wrap;background:var(--glass-2);
+  border:1px solid var(--line);border-radius:var(--r-input);
+  padding:12px;font-family:ui-monospace,Menlo,Consolas,monospace;
+  max-height:420px;overflow:auto;
+}
+.modal-ft{
+  display:flex;gap:8px;justify-content:flex-end;
+  padding:13px 18px;border-top:1px solid var(--line);
+}
+.toast{
+  position:fixed;left:50%;bottom:34px;transform:translate(-50%,14px);
+  background:var(--text);color:var(--bg);
+  padding:9px 18px;border-radius:999px;font-size:13px;
+  opacity:0;pointer-events:none;transition:.25s;z-index:40;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media(max-width:1040px){
+  .wrap{grid-template-columns:1fr}
+  .modal-body{grid-template-columns:1fr}
+  .pane-preview{border-right:none;border-bottom:1px solid var(--line)}
+  .nav{display:none}
+}
+</style>
+</head>
+<body>
+<div class="bg-blobs"><span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span></div>
+
+<header class="topbar">
+  <div class="brand"><i>台</i><span>工作台</span><small>Workspace</small></div>
+  <nav class="nav">
+    <a>工作台</a><a>计划打卡</a><a>资金管理</a><a>每日发现</a><a>知识库</a><a class="on">识别</a><a>功能地图</a>
+  </nav>
+  <span class="spacer"></span>
+  <button class="icon-btn" id="themeBtn" title="切换主题">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+    </svg>
+  </button>
+</header>
+
+<main class="wrap">
+  <div class="page-hd">
+    <h1>识别</h1>
+    <p>导入图片或 PDF，离线识别文字，再用大模型结构化成字段存入识别仓库</p>
+  </div>
+
+  <div class="notice">
+    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/>
+    </svg>
+    <span>交互原型 · <b>本次改动：新增「订单」类型（13 个字段，前 5 个为核心）、「合同」类型补齐</b>。识别结果为演示数据，此文件没有后端；点「载入示例」→「开始识别」可走一遍流程，点仓库里的「京东订单」看新字段排布。</span>
+  </div>
+
+  <div class="col-left">
+    <section class="card">
+      <div class="card-hd">导入</div>
+      <div class="conn" id="conn" title="点击模拟连接状态">
+        <span class="dot"></span><span id="connText">Umi-OCR 已连接 · 127.0.0.1:1224</span>
+      </div>
+      <div class="dropzone" id="dropzone">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5-5 5 5"/><path d="M12 5v13"/>
+        </svg>
+        <div class="dz-title">拖入图片 / PDF</div>
+        <div class="dz-sub">或点击选择 · jpg png webp tif · pdf</div>
+      </div>
+      <div class="dz-actions">
+        <button class="btn primary" id="startBtn" disabled>开始识别</button>
+        <button class="btn ghost" id="demoBtn">载入示例</button>
+      </div>
+      <div class="hint">识别引擎为 Umi-OCR（本地离线），结构化由云端大模型完成。官方限制并发，任务将串行处理。</div>
+    </section>
+
+    <section class="card">
+      <div class="card-hd">识别队列 <span class="count" id="qCount">0</span></div>
+      <ul class="q-list" id="qList"></ul>
+    </section>
+  </div>
+
+  <div class="col-right">
+    <section class="card">
+      <div class="card-hd">
+        识别仓库 <span class="count" id="rCount">0</span>
+        <div class="filters" id="filters">
+          <span class="chip on" data-f="all">全部</span>
+          <span class="chip" data-f="bill">账单</span>
+          <span class="chip" data-f="order">订单</span>
+          <span class="chip" data-f="report">报告</span>
+          <span class="chip" data-f="card">名片</span>
+          <span class="chip" data-f="contract">合同</span>
+          <span class="chip" data-f="general">通用</span>
+        </div>
+      </div>
+      <ul class="repo-list" id="repoList"></ul>
+    </section>
+  </div>
+</main>
+
+<div class="mask" id="mask">
+  <div class="modal">
+    <div class="modal-hd">
+      <h2 id="mTitle"></h2>
+      <span class="tag" id="mTag"></span>
+      <button class="icon-btn" id="mClose" title="关闭">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"><path d="M18 6L6 18M6 6l12 12"/></svg>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="pane-preview">
+        <div class="ph" id="mPreview"></div>
+      </div>
+      <div class="pane-detail">
+        <div class="tabs">
+          <span class="tab on" data-t="fields">结构化字段</span>
+          <span class="tab" data-t="raw">识别原文</span>
+        </div>
+        <div id="mFields"></div>
+        <div id="mRaw" style="display:none"></div>
+      </div>
+    </div>
+    <div class="modal-ft">
+      <button class="btn danger sm" id="mDel">删除</button>
+      <button class="btn primary sm" id="mSave">保存修改</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TYPES = {
+  bill:    { label:'账单', cls:'warm',   fields:['日期','金额','商家','消费项目','支付方式'] },
+  // 订单：字段多（13 个），前 5 个为核心字段，其余为「有就抽、没有就留空」的可选字段
+  order:   { label:'订单', cls:'warm',   core:5, fields:[
+             '订单号','下单时间','订单金额','商品/服务','店铺/供应商',
+             '实付金额','运费','收货人','联系电话','收货地址','物流单号','支付方式','订单状态'
+           ] },
+  report:  { label:'报告', cls:'accent', fields:['标题','日期','来源','核心要点','结论'] },
+  card:    { label:'名片', cls:'blue',   fields:['姓名','职位','公司','电话','邮箱'] },
+  contract:{ label:'合同', cls:'accent', fields:['合同名称','甲方','乙方','签订日期','合同期限','核心条款'] },
+  general: { label:'通用', cls:'accent', fields:['标题','摘要','关键词','日期'] }
+}
+
+const SAMPLES = [
+  {
+    type:'order', name:'订单-20260912.pdf', ext:'PDF', title:'京东订单 · 2026-09-12',
+    sum:'2026-09-12 · ¥452.00 · 京东自营生鲜旗舰店',
+    fields:{
+      '订单号':'JD2026091288765432',
+      '下单时间':'2026-09-12 14:32',
+      '订单金额':'¥ 486.00',
+      '商品/服务':'A2 鲜牛奶 1L ×2；东北大米 5kg ×1；抽取式面巾纸 3层 ×3；有机西兰花 0.6kg ×1；蓝牙耳机 Pro ×1',
+      '店铺/供应商':'京东自营 · 生鲜旗舰店',
+      '实付金额':'¥ 452.00',
+      '运费':'¥ 6.00',
+      '收货人':'李 明',
+      '联系电话':'13800138000',
+      '收货地址':'北京市海淀区中关村大街 1 号 云图科技大厦 B 座 1801',
+      '物流单号':'JDVA00123456789',
+      '支付方式':'微信支付',
+      '订单状态':'已签收'
+    },
+    raw:'京东商城 · 订单详情\n\n订单号：JD2026091288765432\n下单时间：2026-09-12 14:32:07\n订单状态：已签收\n\n店铺：京东自营 · 生鲜旗舰店\n--------------------------------\nA2 鲜牛奶 1L            x2      ¥ 31.80\n东北大米 5kg            x1      ¥ 89.00\n抽取式面巾纸 3层        x3      ¥ 35.70\n有机西兰花 0.6kg        x1      ¥ 12.40\n京东自营电器 · 数码\n蓝牙耳机 Pro            x1     ¥ 317.10\n--------------------------------\n商品总额：                     ¥ 486.00\n运费：                           ¥ 6.00\n优惠券：                       -¥ 40.00\n实付金额：                     ¥ 452.00\n支付方式：微信支付\n--------------------------------\n收货人：李 明   13800138000\n收货地址：北京市海淀区中关村大街1号\n          云图科技大厦 B 座 1801\n物流公司：京东物流\n物流单号：JDVA00123456789'
+  },
+  {
+    type:'bill', name:'超市小票.jpg', ext:'IMG', title:'永辉超市购物小票',
+    sum:'2026-09-12 · ¥128.60 · 永辉超市',
+    fields:{'日期':'2026-09-12','金额':'128.60','商家':'永辉超市（朝阳店）','消费项目':'日用百货','支付方式':'微信支付'},
+    raw:'永辉超市\n========================\n日期：2026-09-12  14:32\n收银员：0421  机号：03\n------------------------\n抽取式面巾纸  x2    ¥ 25.80\nA2 鲜牛奶 1L   x1    ¥ 15.90\n有机西兰花 0.6kg     ¥ 12.40\n东北大米 5kg  x1     ¥ 45.00\n洗洁精 500ml  x1     ¥ 12.50\n保鲜袋 中号   x1     ¥ 17.00\n------------------------\n合计件数：7\n应收金额：      ¥ 128.60\n实收金额：      ¥ 128.60\n支付方式：微信支付\n========================\n谢谢惠顾，欢迎再次光临'
+  },
+  {
+    type:'report', name:'周报-第37周.pdf', ext:'PDF', title:'第 37 周工作周报',
+    sum:'2026-09-08 ~ 09-12 · 3 项要点',
+    fields:{'标题':'第 37 周工作周报','日期':'2026-09-12','来源':'项目组周会','核心要点':'① 识别模块完成原型评审\n② 知识库导入接口已联调通过\n③ 打卡统计口径统一为手动绑定','结论':'下周进入识别模块真实联调阶段'},
+    raw:'第 37 周工作周报\n\n一、本周进展\n1. 识别模块完成交互原型评审，确认采用「上传—识别—结构化—入库」四段式流程。\n2. 知识库导入接口完成前后端联调，同名同日期去重守卫已上线。\n3. 打卡统计口径统一为「手动绑定月计划到年计划」，独立月计划不再计入年度累计。\n\n二、问题与风险\n1. OCR 引擎对并发支持较弱，批量识别需串行排队。\n2. 结构化依赖大模型，需确认密钥配置与额度。\n\n三、下周计划\n1. 识别模块进入真实联调阶段。\n2. 完成识别仓库的字段自定义能力。'
+  },
+  {
+    type:'card', name:'名片-李明.jpg', ext:'IMG', title:'李明 · 名片',
+    sum:'产品总监 · 云图科技',
+    fields:{'姓名':'李明','职位':'产品总监','公司':'云图科技有限公司','电话':'138-0013-8000','邮箱':'liming@yuntu-tech.com'},
+    raw:'云图科技有限公司\nYUNTU TECHNOLOGY\n\n李  明\n产品总监 / Product Director\n\n手机：138-0013-8000\n邮箱：liming@yuntu-tech.com\n地址：北京市海淀区中关村大街 1 号\n网址：www.yuntu-tech.com'
+  },
+  {
+    type:'contract', name:'服务合同.pdf', ext:'PDF', title:'技术服务合同 · 星海数据',
+    sum:'云图科技 ↔ 星海数据 · 2026-09-15 起 12 个月',
+    fields:{
+      '合同名称':'数据处理与模型微调技术服务合同',
+      '甲方':'云图科技有限公司',
+      '乙方':'星海数据服务有限公司',
+      '签订日期':'2026-09-12',
+      '合同期限':'2026-09-15 至 2027-09-14（共 12 个月）',
+      '核心条款':'① 服务内容：数据清洗与模型微调；② 合同总价 180,000 元（含税）；③ 签订后 7 个工作日内支付 30% 预付款；④ 双方对商业秘密负保密义务'
+    },
+    raw:'技术服务合同\n\n合同编号：YT-2026-0912\n甲方（委托方）：云图科技有限公司\n乙方（服务方）：星海数据服务有限公司\n签订日期：2026-09-12\n合同期限：2026-09-15 至 2027-09-14（共 12 个月）\n\n第一条 服务内容\n乙方向甲方提供数据处理与模型微调服务，交付物包括清洗后数据集与可部署模型权重。\n\n第二条 合同价款\n本合同总价款为人民币 180,000 元（含税）。\n\n第三条 付款方式\n合同签订后 7 个工作日内，甲方支付 30% 预付款；验收合格后 15 个工作日内支付余款。\n\n第四条 保密条款\n双方对合作过程中知悉的商业秘密负有保密义务，保密期限自终止之日起三年。'
+  }
+]
+
+let seq = 0
+let queue = []
+let repo = []
+let running = false
+let filter = 'all'
+let activeId = null
+
+const $ = s => document.querySelector(s)
+const sleep = ms => new Promise(r => setTimeout(r, ms))
+
+function toast(msg){
+  const el = $('#toast')
+  el.textContent = msg
+  el.classList.add('on')
+  clearTimeout(el._t)
+  el._t = setTimeout(() => el.classList.remove('on'), 1900)
+}
+
+function renderQueue(){
+  const list = $('#qList')
+  $('#qCount').textContent = queue.length
+  if(!queue.length){
+    list.innerHTML = '<li class="empty" style="padding:20px 10px">队列为空，先导入文件</li>'
+    return
+  }
+  list.innerHTML = queue.map(it => {
+    const statMap = { idle:'排队中', ocr:'识别中', llm:'结构化中', done:'已完成', err:'失败' }
+    const barMap = { idle:0, ocr:45, llm:80, done:100, err:100 }
+    const cls = (it.status === 'ocr' || it.status === 'llm') ? 'run' : (it.status === 'done' ? 'done' : (it.status === 'err' ? 'err' : ''))
+    const thumb = it.thumb
+      ? '<div class="q-file"><img src="' + it.thumb + '"></div>'
+      : '<div class="q-file">' + it.ext + '</div>'
+    return '<li class="q-item">' +
+      '<div class="q-top">' + thumb +
+        '<span class="q-name">' + it.name + '</span>' +
+        '<span class="q-stat ' + cls + '">' + statMap[it.status] + '</span>' +
+      '</div>' +
+      '<div class="bar"><i style="width:' + barMap[it.status] + '%"></i></div>' +
+    '</li>'
+  }).join('')
+}
+
+function renderRepo(){
+  const list = $('#repoList')
+  const items = repo.filter(r => filter === 'all' || r.type === filter)
+  $('#rCount').textContent = repo.length
+  if(!items.length){
+    list.innerHTML = '<li class="empty">' +
+      '<svg width="38" height="38" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">' +
+      '<path d="M4 7V5a1 1 0 0 1 1-1h4l2 2h8a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1z"/></svg>' +
+      '<div>识别仓库还是空的</div><div style="margin-top:4px">导入文件并完成识别后，结果会存在这里</div></li>'
+    return
+  }
+  list.innerHTML = items.map(r => {
+    const t = TYPES[r.type]
+    const thumb = r.thumb
+      ? '<div class="thumb"><img src="' + r.thumb + '"></div>'
+      : '<div class="thumb" style="font-size:10px;font-weight:500">' + r.ext + '</div>'
+    return '<li class="repo-item" data-id="' + r.id + '">' + thumb +
+      '<div class="ri-main">' +
+        '<div class="ri-hd"><span class="ri-title">' + r.title + '</span><span class="tag ' + t.cls + '">' + t.label + '</span></div>' +
+        '<div class="ri-sum">' + r.sum + '</div>' +
+        '<div class="ri-meta"><span>' + r.time + '</span><span>' + r.fileCount + ' 个字段</span></div>' +
+      '</div>' +
+    '</li>'
+  }).join('')
+}
+
+function renderAll(){ renderQueue(); renderRepo() }
+
+function addFiles(files){
+  for(const f of files){
+    const isPdf = /\.pdf$/i.test(f.name) || f.type === 'application/pdf'
+    const item = {
+      id:'q' + (++seq),
+      name: f.name,
+      ext: isPdf ? 'PDF' : 'IMG',
+      kind: isPdf ? 'pdf' : 'image',
+      thumb: null,
+      status:'idle',
+      file: f
+    }
+    if(!isPdf && f.type && f.type.startsWith('image/')){
+      item.thumb = URL.createObjectURL(f)
+    }
+    queue.push(item)
+  }
+  $('#startBtn').disabled = false
+  renderQueue()
+  toast('已加入 ' + files.length + ' 个文件')
+}
+
+async function runQueue(){
+  if(running) return
+  const pending = queue.filter(i => i.status === 'idle')
+  if(!pending.length){ toast('没有待识别的文件'); return }
+  running = true
+  $('#startBtn').disabled = true
+  $('#demoBtn').disabled = true
+
+  for(const item of pending){
+    item.status = 'ocr'; renderQueue()
+    await sleep(1100)
+    item.status = 'llm'; renderQueue()
+    await sleep(1250)
+    const s = SAMPLES[repo.length % SAMPLES.length]
+    item.status = 'done'
+    const entry = {
+      id:'r' + (++seq),
+      type: s.type,
+      title: s.title + (repo.some(r => r.title === s.title) ? ' #2' : ''),
+      sum: s.sum,
+      fields: Object.assign({}, s.fields),
+      raw: s.raw,
+      thumb: item.thumb,
+      ext: item.ext,
+      kind: item.kind,
+      time: new Date().toLocaleString('zh-CN', {month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}),
+      fileCount: TYPES[s.type].fields.length
+    }
+    repo.unshift(entry)
+    renderAll()
+  }
+
+  running = false
+  $('#startBtn').disabled = queue.every(i => i.status !== 'idle')
+  $('#demoBtn').disabled = false
+  toast('识别完成')
+}
+
+function openDetail(id){
+  const r = repo.find(x => x.id === id)
+  if(!r) return
+  activeId = id
+  const t = TYPES[r.type]
+  $('#mTitle').textContent = r.title
+  $('#mTag').textContent = t.label
+  $('#mTag').className = 'tag ' + t.cls
+  $('#mPreview').innerHTML = r.thumb
+    ? '<img src="' + r.thumb + '">'
+    : '<div style="padding:44px 12px;text-align:center">' +
+      '<svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px">' +
+      '<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>' +
+      '<div>PDF 原文件</div><div style="margin-top:3px;opacity:.75">' + r.ext + ' 预览占位</div></div>'
+
+  $('#mFields').innerHTML = t.fields.map((f, i) => {
+    const v = r.fields[f] || ''
+    const long = v.length > 26 || v.includes('\n')
+    const sep = (t.core && i === t.core)
+      ? '<div class="field-sep">以下为可选字段 · 没识别到就留空</div>'
+      : ''
+    return sep + '<div class="field"><label>' + f + '</label>' +
+      (long
+        ? '<textarea rows="3" data-k="' + f + '">' + v + '</textarea>'
+        : '<input data-k="' + f + '" value="' + v.replace(/"/g,'&quot;') + '">') +
+    '</div>'
+  }).join('')
+
+  $('#mRaw').innerHTML = '<div class="raw">' + r.raw.replace(/</g,'&lt;') + '</div>'
+  switchTab('fields')
+  $('#mask').classList.add('on')
+}
+
+function switchTab(which){
+  document.querySelectorAll('.tab').forEach(x => x.classList.toggle('on', x.dataset.t === which))
+  $('#mFields').style.display = which === 'fields' ? '' : 'none'
+  $('#mRaw').style.display = which === 'raw' ? '' : 'none'
+}
+
+function closeDetail(){ $('#mask').classList.remove('on'); activeId = null }
+
+$('#startBtn').addEventListener('click', runQueue)
+
+$('#demoBtn').addEventListener('click', () => {
+  const names = [
+    {name:'订单-20260912.pdf', type:'application/pdf'},
+    {name:'超市小票.jpg', type:'image/jpeg'},
+    {name:'周报-第37周.pdf', type:'application/pdf'},
+    {name:'名片-李明.jpg', type:'image/jpeg'},
+    {name:'服务合同.pdf', type:'application/pdf'}
+  ].map(n => new File([new Blob(['x'])], n.name, {type:n.type}))
+  addFiles(names)
+})
+
+const dz = $('#dropzone')
+dz.addEventListener('click', () => {
+  const inp = document.createElement('input')
+  inp.type = 'file'
+  inp.multiple = true
+  inp.accept = 'image/*,.pdf'
+  inp.addEventListener('change', () => addFiles(inp.files))
+  inp.click()
+})
+;['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => {
+  e.preventDefault(); dz.classList.add('over')
+}))
+;['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => {
+  e.preventDefault(); dz.classList.remove('over')
+}))
+dz.addEventListener('drop', e => { if(e.dataTransfer.files.length) addFiles(e.dataTransfer.files) })
+
+$('#conn').addEventListener('click', () => {
+  const el = $('#conn')
+  el.classList.toggle('off')
+  const off = el.classList.contains('off')
+  $('#connText').textContent = off
+    ? 'Umi-OCR 未连接 · 请先启动 Umi-OCR 客户端'
+    : 'Umi-OCR 已连接 · 127.0.0.1:1224'
+  $('#startBtn').disabled = off || queue.every(i => i.status !== 'idle')
+  toast(off ? '已断开：识别前需先启动 Umi-OCR' : '已连接')
+})
+
+$('#filters').addEventListener('click', e => {
+  const c = e.target.closest('.chip')
+  if(!c) return
+  filter = c.dataset.f
+  document.querySelectorAll('#filters .chip').forEach(x => x.classList.toggle('on', x === c))
+  renderRepo()
+})
+
+$('#repoList').addEventListener('click', e => {
+  const it = e.target.closest('.repo-item')
+  if(it) openDetail(it.dataset.id)
+})
+
+$('#mClose').addEventListener('click', closeDetail)
+$('#mask').addEventListener('click', e => { if(e.target === $('#mask')) closeDetail() })
+document.addEventListener('keydown', e => { if(e.key === 'Escape') closeDetail() })
+
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => switchTab(t.dataset.t))
+})
+
+$('#mSave').addEventListener('click', () => {
+  const r = repo.find(x => x.id === activeId)
+  if(!r) return
+  document.querySelectorAll('#mFields [data-k]').forEach(el => { r.fields[el.dataset.k] = el.value })
+  r.sum = Object.values(r.fields).slice(0,3).filter(Boolean).join(' · ').replace(/\n/g,' ')
+  renderRepo()
+  toast('已保存到识别仓库')
+  closeDetail()
+})
+
+$('#mDel').addEventListener('click', () => {
+  const i = repo.findIndex(x => x.id === activeId)
+  if(i < 0) return
+  const t = repo[i].title
+  repo.splice(i, 1)
+  renderRepo()
+  closeDetail()
+  toast('已删除「' + t + '」')
+})
+
+$('#themeBtn').addEventListener('click', () => {
+  const cur = document.documentElement.getAttribute('data-theme')
+  document.documentElement.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark')
+})
+
+// 快捷入口（也供自测截图用）：
+//   #demo-order       直接看订单详情（13 字段 + 核心/可选分隔）
+//   #demo-order-dark  同上，深色主题
+//   #dark             仅切深色
+function seedDemo(type){
+  const s = SAMPLES.find(x => x.type === type)
+  if(!s) return
+  repo.push({
+    id:'r' + (++seq), type:s.type, title:s.title, sum:s.sum,
+    fields:Object.assign({}, s.fields), raw:s.raw, thumb:null,
+    ext:s.ext, kind: s.ext === 'PDF' ? 'pdf' : 'image',
+    time:new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}),
+    fileCount: TYPES[type].fields.length
+  })
+  renderAll()
+  openDetail(repo[0].id)
+}
+
+const HASH = location.hash.replace('#','')
+if(HASH.includes('dark')) document.documentElement.setAttribute('data-theme','dark')
+if(HASH.includes('order')) seedDemo('order')
+
+renderAll()
+</script>
+</body>
+</html>

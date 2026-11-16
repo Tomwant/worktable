@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第13期 · 租金占比</title>
+<style>
+:root{
+  --ink:#2f6b5e;
+  --ink-deep:#24544a;
+  --ink-soft:#e7f0ed;
+  --gold:#c9a961;
+  --gold-soft:#f7f1e4;
+  --gold-text:#8a6f2e;
+  --line:#e3e8e5;
+  --bg:#f4f8f6;
+  --card:#ffffff;
+  --text:#24332f;
+  --muted:#6c7f78;
+  --r:16px;
+  --gap:18px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.75;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:880px;margin:0 auto;padding:28px 18px 48px;}
+
+/* 头部 */
+.hero{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg,var(--ink-deep) 0%,var(--ink) 62%,#3f8574 100%);
+  border-radius:var(--r);
+  padding:30px 30px 26px;
+  color:#fff;
+  box-shadow:0 10px 28px rgba(36,84,74,.18);
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  right:-70px;top:-90px;
+  width:260px;height:260px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,169,97,.38),rgba(201,169,97,0) 70%);
+  pointer-events:none;
+}
+.issue{
+  display:inline-block;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.28);
+  color:#f6e9c9;
+  font-size:13px;
+  letter-spacing:.06em;
+  padding:4px 13px;
+  border-radius:999px;
+  margin-bottom:14px;
+}
+.hero h1{font-size:30px;line-height:1.3;margin:0 0 8px;font-weight:700;letter-spacing:.02em;}
+.hero .sub{font-size:16px;opacity:.92;margin:0 0 18px;font-weight:400;}
+.meta{display:flex;flex-wrap:wrap;gap:10px 24px;font-size:13px;opacity:.9;position:relative;z-index:1;}
+.meta span b{font-weight:600;color:#f6e9c9;}
+
+/* 卡片 */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  padding:24px 26px;
+  margin-top:var(--gap);
+  box-shadow:0 4px 16px rgba(47,107,94,.06);
+}
+.card h2{
+  font-size:20px;
+  margin:0 0 4px;
+  color:var(--ink-deep);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.card h2::before{
+  content:"";
+  width:5px;height:20px;
+  border-radius:3px;
+  background:linear-gradient(180deg,var(--gold),#e0c78c);
+  flex:0 0 auto;
+}
+.lead{color:var(--muted);font-size:14px;margin:0 0 18px;}
+p{margin:12px 0;}
+strong{color:var(--ink-deep);}
+
+/* 场景 */
+.scene{
+  background:linear-gradient(180deg,#fbfdfc,#f6faf8);
+  border-left:3px solid var(--gold);
+  border-radius:10px;
+  padding:16px 18px;
+}
+.scene .who{font-weight:700;color:var(--ink-deep);}
+
+/* 公式卡 */
+.formulas{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:16px;}
+.f{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px 16px;
+  background:#fdfefe;
+}
+.f .ft{font-size:14px;font-weight:700;color:var(--ink-deep);margin-bottom:6px;}
+.f .fx{font-size:14px;line-height:1.7;color:#334741;}
+.f .fd{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.6;}
+.eq{
+  display:block;
+  background:var(--ink-soft);
+  color:var(--ink-deep);
+  border-radius:8px;
+  padding:7px 10px;
+  margin:6px 0;
+  font-weight:600;
+  font-size:13.5px;
+}
+
+/* 算例 */
+.assume{
+  background:var(--gold-soft);
+  border-radius:10px;
+  padding:14px 16px;
+  font-size:14px;
+  color:#6f5c2c;
+  margin-bottom:18px;
+}
+.assume b{color:var(--gold-text);}
+.step{border-top:1px solid var(--line);padding-top:14px;margin-top:16px;}
+.step:first-of-type{border-top:none;margin-top:0;padding-top:0;}
+.step h3{font-size:15.5px;margin:0 0 8px;color:var(--ink-deep);}
+.step .num{
+  display:inline-block;
+  width:24px;height:24px;
+  line-height:24px;
+  text-align:center;
+  border-radius:50%;
+  background:var(--ink);
+  color:#fff;
+  font-size:12.5px;
+  margin-right:8px;
+}
+.calc{
+  font-size:14.5px;
+  background:#fbfcfb;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 14px;
+  margin:8px 0;
+}
+.calc div{margin:4px 0;}
+.calc .res{color:var(--ink-deep);font-weight:700;}
+.bars{margin:14px 0 4px;}
+.bar-row{display:flex;align-items:center;gap:10px;margin:9px 0;}
+.bar-label{width:150px;flex:0 0 auto;font-size:13px;color:#445851;}
+.bar-track{flex:1 1 auto;height:14px;background:#eef3f0;border-radius:999px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--ink),#69a996);}
+.bar-fill.warn{background:linear-gradient(90deg,var(--gold),#ddc389);}
+.concl{
+  background:var(--ink-soft);
+  border-radius:10px;
+  padding:14px 16px;
+  margin-top:16px;
+  font-size:14.5px;
+  color:var(--ink-deep);
+}
+.tie{
+  font-size:13.5px;
+  color:var(--muted);
+  border-top:1px dashed var(--line);
+  padding-top:12px;
+  margin-top:16px;
+}
+
+/* 红线 */
+.rules{counter-reset:rule;list-style:none;padding:0;margin:12px 0 0;}
+.rules li{
+  position:relative;
+  padding:12px 14px 12px 46px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  margin-bottom:10px;
+  font-size:14.5px;
+  background:#fdfefe;
+}
+.rules li::before{
+  counter-increment:rule;
+  content:counter(rule);
+  position:absolute;
+  left:13px;top:12px;
+  width:22px;height:22px;
+  line-height:22px;
+  text-align:center;
+  border-radius:6px;
+  background:var(--gold-soft);
+  color:var(--gold-text);
+  font-size:12.5px;
+  font-weight:700;
+}
+
+/* 自测题 */
+.quiz{
+  border:1px solid #e3e8e5;
+  border-radius:12px;
+  background:#fff;
+  margin-bottom:12px;
+  transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+.quiz:hover{
+  border-color:#2f6b5e;
+  box-shadow:0 6px 18px rgba(47,107,94,.12);
+  transform:translateY(-1px);
+}
+.quiz summary{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:14px 16px;
+  cursor:pointer;
+  user-select:none;
+  list-style:none;
+}
+.quiz summary::-webkit-details-marker{display:none;}
+.quiz summary::marker{content:"";}
+.q{flex:1 1 auto;font-size:15px;font-weight:600;line-height:1.6;}
+.peek{
+  flex:0 0 auto;
+  background:#f7f1e4;
+  color:#8a6f2e;
+  font-size:12.5px;
+  border-radius:999px;
+  padding:3px 11px 3px 9px;
+  white-space:nowrap;
+}
+.arw{display:inline-block;margin-left:5px;transition:transform .2s ease;}
+details[open] .peek{background:#e7f0ed;color:#2a5b50;}
+details[open] .peek .arw{transform:rotate(180deg);}
+.t-off{display:none;}
+details[open] .t-on{display:none;}
+details[open] .t-off{display:inline;}
+.ans{
+  border-top:1px dashed #e3e8e5;
+  padding:12px 16px 14px;
+  background:#fbfcfb;
+  font-size:14.5px;
+  line-height:1.8;
+  animation:fadeIn .25s ease;
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-4px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.ans .line{display:block;margin:3px 0;}
+
+/* 页脚 */
+.foot{
+  margin-top:24px;
+  padding:18px 20px;
+  border-radius:var(--r);
+  background:#eaf1ee;
+  color:#527068;
+  font-size:13px;
+}
+.foot .next{font-weight:700;color:var(--ink-deep);}
+
+@media (max-width:600px){
+  .wrap{padding:16px 12px 36px;}
+  .hero{padding:22px 18px 20px;}
+  .hero h1{font-size:24px;}
+  .hero .sub{font-size:14.5px;}
+  .card{padding:18px 16px;}
+  .card h2{font-size:18px;}
+  .bar-label{width:104px;font-size:12px;}
+  .formulas{grid-template-columns:1fr;}
+  .peek{font-size:12px;}
+  .q{font-size:14px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="issue">财务知识 · 第 13 期</span>
+    <h1>租金占比：这间铺到底贵不贵</h1>
+    <p class="sub">一家店每赚 100 元，有多少是替房东赚的？</p>
+    <div class="meta">
+      <span>日期：<b>2026-11-16</b></span>
+      <span>关键词：<b>租金占比 · 租售比 · 保本营业额 · 安全边际 · 选址测算</b></span>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="card">
+      <h2>先看一个真实场景</h2>
+      <p class="lead">同一条街上两个铺面，租金差一万，哪个更贵？</p>
+      <div class="scene">
+        <p><span class="who">李姐</span>想开一家烘焙店，看中同一商圈的两个铺面。A 铺月租 2 万，预估月营业额 20 万；B 铺月租 3 万，预估月营业额 36 万。她的直觉是："A 铺便宜一万，当然选 A。"</p>
+        <p>但她的财务顾问只问了一句：<strong>"你说的贵，是租金的绝对值，还是租金占营业额的比例？"</strong></p>
+        <p>如果一件事的代价要用"占你收入的多少"来衡量，那只看绝对金额就会误判——这也是多店经营者最容易踩的坑：把"月租 3 万"当成一家店贵，却说不清它到底贵不贵。</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>定义与公式</h2>
+      <p class="lead">租金占比（也叫租售比）衡量的是门店为"场地"付出的代价占收入的分量。它属于固定成本，卖不卖得动都要付，所以占比越高，经营的杠杆越重。</p>
+      <div class="formulas">
+
+        <div class="f">
+          <div class="ft">1. 租金占比（基础口径）</div>
+          <span class="eq">租金占比 = 月租金 ÷ 月营业收入 × 100%</span>
+          <div class="fd">回答"每赚 100 元，有多少交给房东"。适合快速粗算。</div>
+        </div>
+
+        <div class="f">
+          <div class="ft">2. 租金占比（全口径，决策用）</div>
+          <span class="eq">全口径租金占比 =（基础租金 + 物业费 + 推广费 + 空调加时费等固定场地支出）÷ 月营业收入 × 100%</span>
+          <div class="fd">凡是"跟场地绑定、不随销量变化"的支出都要进分子，否则会低估真实场地成本。</div>
+        </div>
+
+        <div class="f">
+          <div class="ft">3. 保本营业额</div>
+          <span class="eq">保本营业额 = 固定成本总额 ÷ 毛利率</span>
+          <div class="fd">固定成本总额里就包含租金。回答"每月至少做多少才不亏"。</div>
+        </div>
+
+        <div class="f">
+          <div class="ft">4. 安全边际率</div>
+          <span class="eq">安全边际率 =（预估营业额 − 保本营业额）÷ 预估营业额 × 100%</span>
+          <div class="fd">回答"离亏本还有多远"。只看租金占比会漏掉这一层。</div>
+        </div>
+
+        <div class="f">
+          <div class="ft">5. 租金容忍上限</div>
+          <span class="eq">租金容忍上限 = 目标租金占比红线 × 预估营业额</span>
+          <div class="fd">谈租前先算出"最多能接受多少"，谈判才有底线。</div>
+        </div>
+
+        <div class="f">
+          <div class="ft">6. 和坪效的关系</div>
+          <span class="eq">租金占比 ≈ 租金单价 ÷ 坪效</span>
+          <div class="fd">租金单价 = 每平方米月租；坪效 = 每平方米月营业额。面积在分子分母中抵消，所以高租金单价未必是高占比，关键看这个位置能不能产出高坪效。</div>
+        </div>
+
+      </div>
+      <div class="tie">往期呼应：本期承接第 04 期「固定成本与变动成本」和第 05 期「门店盈亏平衡点」——租金是典型的固定成本，保本公式里的固定成本就包含它。忘了公式可回看那两期，本期可独立看懂。</div>
+    </section>
+
+    <section class="card">
+      <h2>可直接套用的算例</h2>
+      <p class="lead">还是李姐的两间铺，我们一步步算到能拍板的结论。</p>
+
+      <div class="assume">
+        <b>已知条件：</b>烘焙店毛利率 60%（每 100 元营业额，食材成本 40 元，剩 60 元用来覆盖租金和各项费用）；除租金外，每月固定支出（人工、水电、设备摊销）合计 30,000 元。为便于演示，下面租金按"含物业"口径计算，营业额为不含税口径。<br>
+        <b>A 铺：</b>月租 20,000 元，预估月营业额 200,000 元。<b>B 铺：</b>月租 30,000 元，预估月营业额 360,000 元。
+      </div>
+
+      <div class="step">
+        <h3><span class="num">1</span>算租金占比——直觉第一次翻车</h3>
+        <div class="calc">
+          <div>租金占比 = 月租金 ÷ 月营业额 × 100%</div>
+          <div>A 铺 = 20,000 ÷ 200,000 × 100% = <span class="res">10.0%</span></div>
+          <div>B 铺 = 30,000 ÷ 360,000 × 100% ≈ <span class="res">8.3%</span></div>
+        </div>
+        <p>B 铺月租多 1 万元，租金占比却低了 1.7 个百分点。因为占比的分母（营业额）涨得比分子（租金）更快。<strong>绝对值贵，不等于占比高。</strong></p>
+        <div class="bars">
+          <div class="bar-row"><div class="bar-label">A 铺 · 10.0%</div><div class="bar-track"><div class="bar-fill" style="width:62.5%"></div></div></div>
+          <div class="bar-row"><div class="bar-label">B 铺 · 8.3%</div><div class="bar-track"><div class="bar-fill" style="width:51.9%"></div></div></div>
+          <div class="bar-row"><div class="bar-label">餐饮警戒线 15%</div><div class="bar-track"><div class="bar-fill warn" style="width:93.8%"></div></div></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h3><span class="num">2</span>算固定成本总额</h3>
+        <div class="calc">
+          <div>固定成本总额 = 租金 + 其他固定支出</div>
+          <div>A 铺 = 20,000 + 30,000 = <span class="res">50,000 元</span></div>
+          <div>B 铺 = 30,000 + 30,000 = <span class="res">60,000 元</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h3><span class="num">3</span>算保本营业额</h3>
+        <div class="calc">
+          <div>保本营业额 = 固定成本总额 ÷ 毛利率</div>
+          <div>A 铺 = 50,000 ÷ 60% ≈ <span class="res">83,333 元</span></div>
+          <div>B 铺 = 60,000 ÷ 60% = <span class="res">100,000 元</span></div>
+        </div>
+        <p>租金越高，每个月的保本门槛就越高。B 铺要比 A 铺多做约 1.67 万才能打平。</p>
+      </div>
+
+      <div class="step">
+        <h3><span class="num">4</span>算安全边际率</h3>
+        <div class="calc">
+          <div>安全边际率 =（预估营业额 − 保本营业额）÷ 预估营业额 × 100%</div>
+          <div>A 铺 =（200,000 − 83,333）÷ 200,000 × 100% = 116,667 ÷ 200,000 × 100% ≈ <span class="res">58.3%</span></div>
+          <div>B 铺 =（360,000 − 100,000）÷ 360,000 × 100% = 260,000 ÷ 360,000 × 100% ≈ <span class="res">72.2%</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h3><span class="num">5</span>压力测试：把营业额预估打 8 折</h3>
+        <p>选址时预估营业额几乎总是偏乐观。把它打 8 折再算一遍，才知道这间铺扛不扛得住。</p>
+        <div class="calc">
+          <div>A 铺：200,000 × 80% = 160,000 元；租金占比 = 20,000 ÷ 160,000 × 100% = <span class="res">12.5%</span>；安全边际率 =（160,000 − 83,333）÷ 160,000 ≈ <span class="res">47.9%</span></div>
+          <div>B 铺：360,000 × 80% = 288,000 元；租金占比 = 30,000 ÷ 288,000 × 100% ≈ <span class="res">10.4%</span>；安全边际率 =（288,000 − 100,000）÷ 288,000 ≈ <span class="res">65.3%</span></div>
+        </div>
+      </div>
+
+      <div class="concl">
+        <strong>结论：</strong>在打 8 折的压力下，B 铺租金占比 10.4% 仍低于 A 铺 12.5%，安全边际也更厚，财务上更稳。李姐的直觉反了。<br>
+        <strong>但别急着签：</strong>这套结论建立在"36 万营业额有把握"之上。如果 B 铺实际只做到 20 万，租金占比会立刻飙到 30,000 ÷ 200,000 = 15%，踩上危险线。所以租金占比是<strong>分母敏感</strong>的指标——占比低不代表安全，先验证营业额预估的可信度。
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>给经营者的判断标准与红线</h2>
+      <p class="lead">以下区间是经验参考，最终要用自己门店的毛利率来校准。</p>
+      <ol class="rules">
+        <li><strong>看区间：</strong>餐饮（毛利率约 60%–70%）全口径租金占比 10%–15% 算健康，超过 15% 就该警惕；零售/便利店毛利率低，宜控制在 5%–10%；服装、美妆大致 8%–12%。<strong>毛利率越低，能承受的租金占比越低</strong>——因为留给租金的毛利空间本就薄。</li>
+        <li><strong>统一口径：</strong>分子要含物业费、推广费、空调加时费、垃圾清运费等与场地绑定、不随销量变化的支出；分母用不含税营业收入，并取稳定期至少 3 个月的平均数，别拿开业首月的冲榜数字，否则占比会被人为压低。</li>
+        <li><strong>选址必做压力测试：</strong>谈租前把预估营业额打 7–8 折再算租金占比，打折后超过红线就放弃或继续压价；同时用"目标占比红线 × 打折后营业额"算出租金容忍上限，作为谈判底线。</li>
+        <li><strong>低占比不等于低风险：</strong>租金占比对分母极敏感，预估越乐观数字越漂亮。必须同时看保本营业额和安全边际率；<strong>安全边际率低于 30% 的店，租金再便宜也危险</strong>，因为稍有下滑就亏本。</li>
+        <li><strong>多店横向排名：</strong>每月把各店租金占比拉通排序，超过 15% 或环比上升 2 个百分点以上的店列入重点复盘——通常是营业额掉队，或租金条款到期涨价。这是多店管理者发现问题的第一张筛网。</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>今日自测题</h2>
+      <p class="lead">先自己算一遍，再点答案对一下。</p>
+
+      <details class="quiz">
+        <summary>
+          <span class="q">Q1：某店月租金（含物业）25,000 元，月不含税营业额 200,000 元。求租金占比，并按餐饮 12% 警戒线判断是否偏高。</span>
+          <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+        </summary>
+        <div class="ans">A1：租金占比 = 月租金 ÷ 月营业收入 × 100% = 25,000 ÷ 200,000 × 100% = 12.5%。<span class="line">结论：12.5% 已高于 12% 的警戒线，属于偏高，需要关注营业额是否下滑或租金是否有下调空间。</span></div>
+      </details>
+
+      <details class="quiz">
+        <summary>
+          <span class="q">Q2：某店毛利率 60%，每月固定成本合计 90,000 元（其中租金 30,000 元），实际月营业额 180,000 元。求：(1) 保本营业额；(2) 租金占比；(3) 安全边际率。</span>
+          <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+        </summary>
+        <div class="ans">A2：<span class="line">(1) 保本营业额 = 固定成本总额 ÷ 毛利率 = 90,000 ÷ 60% = 150,000 元。</span><span class="line">(2) 租金占比 = 30,000 ÷ 180,000 × 100% ≈ 16.7%，已超过 15% 的危险线。</span><span class="line">(3) 安全边际率 =（180,000 − 150,000）÷ 180,000 × 100% = 30,000 ÷ 180,000 × 100% ≈ 16.7%。</span><span class="line">结论：租金占比踩危险线，且安全边际率仅约 16.7%，远低于 30% 的底线——营业额掉 16.7% 就会亏本，这家店抗风险能力很弱，要重点处理租金或提升营业额。</span></div>
+      </details>
+
+      <details class="quiz">
+        <summary>
+          <span class="q">Q3（判断题）："A 铺月租 4 万，B 铺月租 3 万，所以 A 铺的租金占比一定更高。"这个说法对吗？</span>
+          <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+        </summary>
+        <div class="ans">A3：错。<span class="line">租金占比 = 租金 ÷ 营业额，是相对指标，同时取决于分子和分母。若 A 铺营业额 800,000 元、B 铺营业额 300,000 元：</span><span class="line">A 铺 = 40,000 ÷ 800,000 × 100% = 5%；B 铺 = 30,000 ÷ 300,000 × 100% = 10%。</span><span class="line">A 铺租金绝对值更高，占比反而更低。结论：租金绝对值高不代表租金占比高，判断"贵不贵"必须用营业额做分母。</span></div>
+      </details>
+
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <p>本期为单文件自包含讲义，公式与数字均可独立复算；判断题答案以浏览器原生折叠方式呈现，无需联网。</p>
+    <p class="next">下期预告：人工成本占比——租金和人工通常是一家店最大的两笔固定支出，讲完场地，下一个就讲人。</p>
+  </footer>
+
+</div>
+</body>
+</html>

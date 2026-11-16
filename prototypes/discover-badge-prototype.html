@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<title>每日发现 · 来源徽标原型</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+:root{
+  --bg1:#f4efe4; --bg2:#eaf1e7;
+  --surface:rgba(255,255,255,.58); --surface-2:rgba(255,255,255,.36); --surface-solid:#fffdf7;
+  --text:#33302a; --text-2:#7a746a; --text-3:#a8a094;
+  --line:rgba(255,255,255,.66); --line-2:rgba(80,60,30,.12); --line-3:rgba(80,60,30,.24);
+  --accent:#4a9e66; --accent-deep:#398a54; --accent-soft:rgba(74,158,102,.13);
+  --warm:#e09a66; --warm-soft:rgba(224,154,102,.16);
+  --danger:#cf6a57; --danger-soft:rgba(207,106,87,.14);
+  --blur:blur(20px) saturate(150%);
+  --r-input:14px; --r-card:22px; --r-top:26px;
+  --shadow:0 1px 2px rgba(80,60,30,.05),0 12px 36px -14px rgba(80,60,30,.22),inset 0 1px 0 rgba(255,255,255,.6);
+  --ease:cubic-bezier(.22,.9,.34,1);
+}
+[data-theme="dark"]{
+  --bg1:#151b17; --bg2:#101a1e;
+  --surface:rgba(255,255,255,.055); --surface-2:rgba(255,255,255,.05); --surface-solid:#1c2420;
+  --text:#e9ede8; --text-2:#b6c1ba; --text-3:#a9b5ae;
+  --line:rgba(255,255,255,.12); --line-2:rgba(255,255,255,.12); --line-3:rgba(255,255,255,.22);
+  --accent:#66d18d; --accent-deep:#4fc37c; --accent-soft:rgba(102,209,141,.15);
+  --warm:#efaa7c; --warm-soft:rgba(239,170,124,.18);
+  --danger:#f09595; --danger-soft:rgba(240,149,149,.16);
+  --shadow:0 1px 2px rgba(0,0,0,.3),0 16px 44px -16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;padding:28px 24px 60px;min-height:100vh;
+  font-family:'Noto Sans SC',-apple-system,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  color:var(--text);background:linear-gradient(135deg,var(--bg1),var(--bg2));
+  transition:background .5s ease,color .5s ease;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:920px;margin:0 auto}
+.toolbar{
+  display:flex;gap:10px;justify-content:flex-end;margin-bottom:22px;flex-wrap:wrap;
+}
+.tbtn{
+  height:34px;padding:0 14px;border-radius:var(--r-input);cursor:pointer;
+  background:var(--surface);border:1px solid var(--line-2);color:var(--text);
+  font-size:13px;font-family:inherit;backdrop-filter:var(--blur);
+  transition:border-color .2s var(--ease),background .2s var(--ease);
+}
+.tbtn:hover{border-color:var(--line-3)}
+.tbtn[aria-pressed="true"]{background:var(--accent-soft);border-color:var(--accent);color:var(--accent-deep)}
+
+.page-head{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;margin-bottom:20px;flex-wrap:wrap}
+.eyebrow{margin:0 0 4px;font-size:12px;letter-spacing:.12em;color:var(--text-3);text-transform:uppercase}
+h1{margin:0 0 6px;font-size:28px;line-height:1.25;font-weight:600}
+.sub{margin:0;font-size:14px;color:var(--text-2)}
+.primary{
+  height:38px;padding:0 18px;border-radius:var(--r-input);cursor:pointer;
+  background:var(--accent);color:#fff;border:0;font-size:14px;font-family:inherit;
+  box-shadow:0 6px 18px -8px rgba(74,158,102,.6);transition:background .2s var(--ease);
+}
+.primary:hover{background:var(--accent-deep)}
+
+.disc-list{display:grid;gap:14px}
+.disc-card{
+  padding:18px 20px;border-radius:var(--r-card);
+  background:var(--surface);border:1px solid var(--line);
+  box-shadow:var(--shadow);backdrop-filter:var(--blur);
+  transition:border-color .25s var(--ease),transform .25s var(--ease);
+}
+.disc-card:hover{border-color:var(--line-3);transform:translateY(-1px)}
+.disc-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
+.disc-head h3{margin:0;font-size:16px;font-weight:600;line-height:1.45;flex:1;min-width:0}
+.disc-actions{display:flex;align-items:center;gap:8px;flex-shrink:0}
+
+.badge-auto{
+  display:inline-flex;align-items:center;gap:4px;
+  padding:2px 9px;border-radius:999px;font-size:12px;line-height:18px;
+  color:var(--warm);background:var(--warm-soft);white-space:nowrap;
+  transition:opacity .2s var(--ease);
+}
+body.hide-badge .badge-auto{display:none}
+
+.date{font-size:12px;color:var(--text-3);white-space:nowrap}
+.ghost{
+  height:28px;padding:0 10px;border-radius:10px;cursor:pointer;
+  background:transparent;border:1px solid transparent;color:var(--text-2);
+  font-size:12px;font-family:inherit;transition:.2s var(--ease);
+}
+.ghost:hover{background:var(--surface-2);border-color:var(--line-2);color:var(--text)}
+.ghost.danger:hover{background:var(--danger-soft);border-color:var(--danger);color:var(--danger)}
+
+.meta-row{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--text-3);margin-bottom:10px}
+.meta-row a{color:var(--accent-deep);text-decoration:none}
+.content{margin:0;font-size:14px;line-height:1.75;color:var(--text-2);white-space:pre-wrap}
+.tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.chip{
+  padding:2px 9px;border-radius:999px;font-size:12px;
+  background:var(--accent-soft);color:var(--accent-deep);
+}
+
+.note{
+  margin-top:26px;padding:16px 18px;border-radius:16px;
+  background:var(--surface-2);border:1px dashed var(--line-2);
+  font-size:13px;line-height:1.8;color:var(--text-2);
+}
+.note b{color:var(--text);font-weight:500}
+.note code{
+  padding:1px 6px;border-radius:6px;background:var(--accent-soft);
+  color:var(--accent-deep);font-size:12px;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="toolbar">
+    <button class="tbtn" id="btnBadge" aria-pressed="true">⟳ 来源徽标：开</button>
+    <button class="tbtn" id="btnTheme">◐ 切深色</button>
+  </div>
+
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">每日发现</p>
+      <h1>每日发现</h1>
+      <p class="sub">那些偶然看见、值得被留下的商业灵感。</p>
+    </div>
+    <button class="primary">+ 记录新发现</button>
+  </div>
+
+  <div class="disc-list">
+    <article class="disc-card">
+      <div class="disc-head">
+        <h3>沉没成本：为什么你舍不得退那张已经看了一半的电影票</h3>
+        <div class="disc-actions">
+          <span class="badge-auto">⟳ 自动收录</span>
+          <small class="date">2026-10-22</small>
+          <button class="ghost">编辑</button>
+          <button class="ghost danger">删除</button>
+        </div>
+      </div>
+      <div class="meta-row"><span>来源：定时任务 · 金融概念</span></div>
+      <p class="content">老张花 80 块买了张电影票，看到一半发现是烂片。他想着"钱都花了"，硬是坐到了字幕滚完，结果赔进去两个小时的周末。那两个小时，才是真正的成本。</p>
+      <div class="tags"><span class="chip">#金融</span><span class="chip">#每日</span></div>
+    </article>
+
+    <article class="disc-card">
+      <div class="disc-head">
+        <h3>大数定律：赌场从不担心某个人赢钱</h3>
+        <div class="disc-actions">
+          <span class="badge-auto">⟳ 自动收录</span>
+          <small class="date">2026-10-22</small>
+          <button class="ghost">编辑</button>
+          <button class="ghost danger">删除</button>
+        </div>
+      </div>
+      <div class="meta-row"><span>来源：定时任务 · 概率学概念</span></div>
+      <p class="content">转盘赌 1 次，谁输谁赢都是运气。转 100 万次，庄家的胜率就锁死在 52.6%。赌场不需要运气，它只需要你多玩几把。</p>
+      <div class="tags"><span class="chip">#概率</span><span class="chip">#每日</span></div>
+    </article>
+
+    <article class="disc-card">
+      <div class="disc-head">
+        <h3>地铁口的早餐摊，为什么只卖三样东西</h3>
+        <div class="disc-actions">
+          <small class="date">2026-10-20</small>
+          <button class="ghost">编辑</button>
+          <button class="ghost danger">删除</button>
+        </div>
+      </div>
+      <div class="meta-row"><span>来源：手动记录</span></div>
+      <p class="content">早高峰 15 分钟内要出 200 份，SKU 每多一个，收银就慢 2 秒。三样东西是这个场景下的最优解，不是品类少，是时间被算进去了。</p>
+      <div class="tags"><span class="chip">#生意</span></div>
+    </article>
+  </div>
+
+  <div class="note">
+    <b>改动说明</b><br>
+    只在标题右侧加了一枚 <code>⟳ 自动收录</code> 胶囊，来自<strong>定时任务</strong>的记录才显示，手动记录的不显示。<br>
+    判定依据是 <code>source</code> 字段以「定时任务」开头，前端不需要新增字段。<br>
+    徽标用暖橙色（<code>--warm</code>），与绿色的分类标签区分开，不抢标题注意力。<br>
+    标题过长时徽标不换行、不压缩标题，极端窄窗下按钮组整体换到下一行。
+  </div>
+</div>
+
+<script>
+const btnBadge = document.getElementById('btnBadge')
+const btnTheme = document.getElementById('btnTheme')
+btnBadge.addEventListener('click', () => {
+  const hidden = document.body.classList.toggle('hide-badge')
+  btnBadge.setAttribute('aria-pressed', String(!hidden))
+  btnBadge.textContent = hidden ? '⟳ 来源徽标：关' : '⟳ 来源徽标：开'
+})
+btnTheme.addEventListener('click', () => {
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark'
+  document.documentElement.setAttribute('data-theme', dark ? 'light' : 'dark')
+  btnTheme.textContent = dark ? '◐ 切深色' : '◑ 切浅色'
+})
+</script>
+</body>
+</html>

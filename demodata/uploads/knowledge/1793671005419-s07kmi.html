@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第9期 · 强化学习探索与利用</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>第 9 期 · 强化学习中的探索与利用（ε-贪心 / 多臂老虎机）</h1>
+<blockquote>今日概念：<strong>探索-利用困境（Exploration–Exploitation Dilemma）</strong> 与 <strong>ε-贪心（ε-greedy）</strong> 算法。</blockquote>
+<blockquote>一句话：当你面对一堆"回报未知"的选项、且每个选择都消耗一次机会时，是该反复薅已知最好的那个（利用），还是匀出一部分机会去探明未知（探索）？这个权衡，是现代强化学习最底层的灵魂问题。</blockquote>
+<hr>
+<h2>一、故事引入：阿明的"三杯试验奶茶"</h2>
+<p>阿明在店里新上了三款试验饮品，代号 <strong>A、B、C</strong>。每款的真实好评率是固定的（比如分别是 10%、50%、90%），但<strong>谁也不知道</strong>——只有卖出去、收回评价，才能一点点逼近真相。</p>
+<p>规则很现实：</p>
+<ul>
+<li>每天阿明只能<strong>主推一款</strong>，卖出去的客人给好评（记 1）或差评（记 0）；</li>
+<li>推过的款会积累"经验均值"，但样本少时这个数字忽上忽下，不可全信；</li>
+<li>阿明总共只有有限的推广天数（比如 100 天），<strong>机会用尽就结束了</strong>。</li>
+</ul>
+<p>于是阿明陷入两难：</p>
+<ul>
+<li>如果<strong>只推第一天碰巧不错的 A</strong>，可能错过真正最好的 C；</li>
+<li>如果<strong>每天轮换着试</strong>，流量又被浪费在差款上，错过赚好评的窗口。</li>
+</ul>
+<p>这，就是强化学习的<strong>探索-利用困境</strong>。它最经典的玩具模型叫<strong>多臂老虎机（Multi-Armed Bandit，MAB）</strong>——想象赌场一排老虎机（"臂"），每台赢钱概率不同且未知，你手里只有有限枚硬币，该怎么拉，才能赚得最多？</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 多臂老虎机模型</h3>
+<ul>
+<li>有 <strong>K 个臂</strong>，臂 <code>i</code> 的回报是一个期望为 <strong>μᵢ</strong> 的随机变量（常用伯努利：好评=1、差评=0）。</li>
+<li>目标：在 <strong>T 步</strong>内最大化<strong>累积回报</strong>，等价于最小化<strong>累计遗憾（Regret）</strong>。</li>
+</ul>
+<h3>2. 遗憾（Regret）—— 衡量你"亏了多少"</h3>
+<p>最优臂是 <code>μ* = maxᵢ μᵢ</code>。累计遗憾定义为：</p>
+<blockquote><strong>R_T = T · μ* − Σ（每一步实际回报的期望）</strong></blockquote>
+<p>它回答一个问题：*"如果一开始就全押最优臂，能多赚多少？"* 强化学习算法好坏，往往就看 R_T 随 T 长得多快。</p>
+<h3>3. ε-贪心（ε-greedy）—— 最简也是最常用的策略</h3>
+<p>每次决策：</p>
+<ul>
+<li>以概率 <strong>1 − ε</strong> 选当前<strong>经验均值最高</strong>的臂 → <strong>利用</strong>；</li>
+<li>以概率 <strong>ε</strong> 从所有臂里<strong>随机</strong>挑一个 → <strong>探索</strong>。</li>
+</ul>
+<p>直觉：ε 就是"好奇心预算"。ε 太大→一直在瞎试；ε 太小→早早锁死在可能错的臂上。</p>
+<h3>4. 固定 ε 的毛病 &amp; 衰减 ε</h3>
+<ul>
+<li><strong>固定 ε</strong>：永远有 ε 概率在瞎探索，每步期望遗憾卡在一个正数上 → <strong>R_T 随 T 线性增长 O(T)</strong>，再久也回不了头。</li>
+<li><strong>衰减 ε</strong>（如 <code>ε_t = 1/t</code> 或 <code>c/log t</code>）：探索次数总量只 ≈ <code>ln T</code> 次，<strong>R_T 降到 O(log T)</strong>，利用阶段估计已足够准，遗憾增长被刹住。</li>
+</ul>
+<h3>5. 上置信界 UCB —— 比 ε-贪心更聪明</h3>
+<p>每次选：</p>
+<blockquote><strong>a_t = argmax （经验均值 μ̂_a + c · √(ln t / N_a)）</strong></blockquote>
+<p>第二项叫<strong>乐观Bonus</strong>：<code>N_a</code> 越小（越没试过），Bonus 越大，把"不确定"当作"可能更好"来乐观对待。它<strong>自动</strong>在探索与利用间切换——不用手调 ε。</p>
+<h3>6. 汤姆森采样（Thompson Sampling）</h3>
+<p>对每臂维护一个<strong>后验分布</strong>，每步从后验里<strong>采样</strong>一个值，取采样值最大的臂。它是 ε-贪心/UCB 的贝叶斯升级版，实践中遗憾下限最优、且实现极简（闭环第 2、8 期贝叶斯更新）。</p>
+<h3>7. 它闭环了哪些旧概念</h3>
+<ul>
+<li><strong>大数定律（第 6 期）</strong>：经验均值 μ̂ 随样本增多收敛到真值 μᵢ，这才有"利用"的底气。</li>
+<li><strong>伯努利与期望（第 9 期）</strong>：每臂回报就是伯努利试验，μᵢ 即期望。</li>
+<li><strong>期望决策（第 5 期）</strong>：静态"选一个最好的"是 Bandit 的特例。</li>
+<li><strong>马尔可夫链（第 12 期）</strong>：只有一个状态的 MDP，就是 Bandit；加上状态转移就升级成完整强化学习。</li>
+</ul>
+<hr>
+<h2>三、代表性题目（含完整解题思路与答案）</h2>
+<blockquote>下面四题把"探索-利用"从直觉掰成可算的数。先自己推一遍，再看答案。</blockquote>
+<h3>题目 1 · ε-贪心的基本功（选臂概率）</h3>
+<p>三臂 K=3，设 <strong>ε = 0.2</strong>。当前经验均值：<strong>Ā = 0.3，B̄ = 0.6，C̄ = 0.2</strong>。</p>
+<p><strong>问</strong>：第 t 步，每个臂被选中的概率各是多少？</p>
+<blockquote><strong>解题思路</strong>：ε-贪心下，"利用"以概率 <code>1−ε = 0.8</code> 锁定当前均值最高的臂（这里是 B）；"探索"以概率 <code>ε = 0.2</code> 在三个臂里<strong>均匀随机</strong>，即每个臂额外分到 <code>0.2/3</code>。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：</blockquote>
+<blockquote>- B 被选中概率 = 0.8（利用） + 0.2/3（探索）≈ <strong>0.8667</strong></blockquote>
+<blockquote>- A 被选中概率 = 0 + 0.2/3 ≈ <strong>0.0667</strong></blockquote>
+<blockquote>- C 被选中概率 = 0 + 0.2/3 ≈ <strong>0.0667</strong></blockquote>
+<blockquote></blockquote>
+<blockquote>关键提醒：探索是"全员均匀随机"，<strong>不是</strong>只探索没选过的臂——所以连当前最好的 B 也有 0.0667 概率在探索时被翻到。</blockquote>
+<hr>
+<h3>题目 2 · 遗憾到底怎么算（Regret 手算）</h3>
+<p>两臂：<strong>μ_A = 0.4，μ_B = 0.9</strong>，最优臂 μ* = 0.9。某策略在前 4 步<strong>全选 A</strong>，后 6 步<strong>全选 B</strong>，总步数 T = 10。</p>
+<p><strong>问</strong>：累计遗憾 R_T 是多少？</p>
+<blockquote><strong>解题思路</strong>：R_T = 最优臂的理论总期望 − 实际累积期望。最优臂全程拉 B 能拿 <code>10 × 0.9 = 9</code>。实际：前 4 步每步期望 0.4、后 6 步每步期望 0.9。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：</blockquote>
+<blockquote>- 实际累积 = 4 × 0.4 + 6 × 0.9 = 1.6 + 5.4 = <strong>7.0</strong></blockquote>
+<blockquote>- R_T = 9 − 7.0 = <strong>2.0</strong></blockquote>
+<blockquote></blockquote>
+<blockquote>换个算法（逐步遗憾求和）：前 4 步每步亏 <code>0.9 − 0.4 = 0.5</code> → 共 2.0；后 6 步选的就是最优臂，每步亏 0。合计仍是 <strong>2.0</strong>。这 2.0 就是"前 4 步瞎选 A 交的学费"。</blockquote>
+<hr>
+<h3>题目 3 · 固定 ε 为何会"线性翻车"（概念辨析）</h3>
+<p><strong>问</strong>：为什么说<strong>固定 ε</strong> 的累计遗憾随 T <strong>线性</strong>增长（O(T)），而<strong>衰减 ε</strong>（如 ε_t = 1/t）能把遗憾压到 <strong>O(log T)</strong>？给直观解释，不必推严格上下界。</p>
+<blockquote><strong>解题思路</strong>：抓住"探索是永不停止的固定概率事件"这一根。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：</blockquote>
+<blockquote>- <strong>固定 ε</strong>：每一步都有恰好 ε 的概率去随机探索，而随机时大概率（尤其臂差明显时）选到非最优臂，单步期望遗憾被锁在一个正数 <code>≥ ε·Δ</code>（Δ 是次优臂与最优臂的均值差）。于是 <code>R_T ≥ ε·Δ·T</code>，随 T <strong>线性</strong>增长——探索永不收敛，学费越交越多。</blockquote>
+<blockquote>- <strong>衰减 ε_t = 1/t</strong>：总探索次数 ≈ Σ(1/t) ~ <strong>ln T</strong>，即只在前 <code>ln T</code> 量级步数里认真试，之后几乎全利用。当样本够了，μ̂ 已逼近真值，利用阶段几乎不亏。于是遗憾 ≈ <strong>O(log T)</strong>。</blockquote>
+<blockquote>- 顺带辨析：<code>ε_t = c/√t</code> 衰减太慢，探索总量 ≈ √T 量级，遗憾量级介于两者之间、仍偏"亚线性但比 log 慢"；工程上 <code>1/t</code> 或 <code>c/(log t)</code> 更常用，保证收敛。</blockquote>
+<hr>
+<h3>题目 4 · UCB 的"乐观面对不确定性"（手算选臂）</h3>
+<p>四臂，当前步 <strong>t = 100</strong>（即 <code>ln t ≈ 4.605</code>）。各臂被选次数 <strong>N = (20, 30, 40, 10)</strong>，经验均值 <strong>μ̂ = (0.5, 0.7, 0.6, 0.8)</strong>。取 UCB 常数 <strong>c = 1</strong>。</p>
+<p><strong>问</strong>：计算每臂 UCB 值，并选出这一步该拉的臂。</p>
+<blockquote><strong>解题思路</strong>：UCB 值 = 经验均值 + 乐观 Bonus，Bonus = <code>c·√(ln t / N_a)</code>。N_a 越小，Bonus 越大——把"没试够"翻译成"可能更好"。逐臂代入公式。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>（取 <code>√4.605 ≈ 2.146</code>）：</blockquote>
+<blockquote>- A：0.5 + √(4.605/20) = 0.5 + √(0.2303) = 0.5 + 0.480 ≈ <strong>0.980</strong></blockquote>
+<blockquote>- B：0.7 + √(4.605/30) = 0.7 + √(0.1535) = 0.7 + 0.392 ≈ <strong>1.092</strong></blockquote>
+<blockquote>- C：0.6 + √(4.605/40) = 0.6 + √(0.1151) = 0.6 + 0.339 ≈ <strong>0.939</strong></blockquote>
+<blockquote>- D：0.8 + √(4.605/10) = 0.8 + √(0.4605) = 0.8 + 0.679 ≈ <strong>1.479</strong></blockquote>
+<blockquote></blockquote>
+<blockquote>这一步选 <strong>D 臂（UCB ≈ 1.479 最大）</strong>。</blockquote>
+<blockquote><strong>点睛</strong>：D 既经验均值最高（0.8）、又被试得最少（N=10，Bonus 最大），UCB 同时奖励了"看起来好"和"不确定"，这就是它比死板 ε-贪心聪明的地方——<strong>探索是定向的，而非撒胡椒面</strong>。</blockquote>
+<hr>
+<h2>四、明日预告</h2>
+<p>下期（第 10 期 / 概念序列第 30 项）：<strong>马尔可夫决策过程（MDP）与贝尔曼方程</strong>。</p>
+<p>把今天的"单状态老虎机"加上<strong>状态转移</strong>——喝了 A 今天高兴、明天更可能再来——就升级成完整的强化学习骨架。我们会讲：状态/动作/奖励/转移四件套、折扣回报 γ、价值函数 V(s) 与 Q(s,a)，以及把一切串起来的<strong>贝尔曼方程</strong>（闭环第 12 期马尔可夫链 → 决策版，第 5 期期望 → 动态版）。</p>
+<hr>
+<p>*本期归档于 <code>D:/spring-workbench/reports/probability/2026-11-03_第9期_强化学习探索与利用.md</code>，为该目录第 9 期（概念序列第 29 项）。故事、题目、解题思路与答案已写全。*</p></div></body></html>

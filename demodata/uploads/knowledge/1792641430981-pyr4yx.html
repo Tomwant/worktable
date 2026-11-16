@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第26期 · 边际效用</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 26 期</span>
+  <h1>今天的概念：<span class="tag">边际效用</span>（Marginal Utility）</h1>
+  <div class="date">2026年10月21日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 阿强的车库，和他那四辆车</h2>
+    <p>阿强刚毕业那年在城东上班，每天挤一个半小时公交，冬天手冻得握不住扶手，雨天被淋成落汤鸡。那年他咬牙买了人生<strong>第一辆车</strong>——一辆普通的代步小车。提车那天他绕着车转了三圈，第二天居然比平时早醒，因为"开车去上班"让他每天多睡半小时、下班能直接拐去超市。第一辆车的边际效用<strong>高到没法用钱衡量</strong>：它解决了出行自由，也顺手把通勤焦虑治好了。</p>
+    <p>三年后阿强升了职，手头宽裕，又添了辆 <strong>SUV</strong> 周末带家人露营。第二辆车效用也不错——但明显不如第一辆那么"救命"：平时通勤还是开那辆小车，SUV 多数时候停在楼下吃灰。到了<strong>第三、第四辆</strong>，他迷上了跑车收藏，一辆停地库、一辆停老家，一年开不了几次。麻烦跟着来了：保险、保养、车位费一个月好几千，还得操心刮蹭、电瓶亏电。第四辆到手那天，他并没多开心，反而发了条朋友圈："车太多也是一种负担。"</p>
+    <p>同样都是"<strong>多一辆车</strong>"，第一辆是雪中送炭，第四辆是雪上加霜——<strong>每多一个单位带来满足感，从极高一路掉到负数</strong>。这，就是边际效用递减。你身上也在天天上演：双十一囤的第三瓶洗发水、会员充值的第 N 张券、免费续杯喝到撑的最后一杯，道理一模一样。</p>
+    <div class="board">
+      <div class="row head"><span class="k">同样是"多一辆车"，边际效用天差地别</span><span class="v">第1辆 vs 第4辆</span></div>
+      <div class="row"><span class="k">第一辆车（代步）</span><span class="v">边际效用极高（解决出行+通勤焦虑）→ 愿付全年积蓄</span></div>
+      <div class="row"><span class="k">第二辆车（SUV）</span><span class="v">边际效用中（仅周末用，平时闲置）→ 还划算</span></div>
+      <div class="row"><span class="k">第三辆车（跑车）</span><span class="v">边际效用低（一年开几次，开销大）→ 已接近不值</span></div>
+      <div class="row"><span class="k">第四辆车（收藏）</span><span class="v">边际效用为负（养车焦虑&gt;快乐）→ 白送都嫌麻烦</span></div>
+    </div>
+    <p>看明白这一层，很多"想不通"的事就通了：为什么商家爱推"<strong>第二件半价</strong>"——因为第二件对你的效用已经变低，不降价你根本不买；为什么双十一囤的货最后全在角落吃灰；为什么有些人钱越多越不快乐——不是钱不好，是那"多出来的一块钱"能带来的额外满足，早就所剩无几了。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>边际效用</strong>，就是每"<strong>多消费一个单位</strong>"商品所带来的<strong>额外满足感</strong>。它的核心规律叫<strong>边际效用递减</strong>：随着你拥有或消费的数量增加，每多一个带来的满足感会<strong>逐渐减少，甚至变成负的</strong>。所以评判一样东西值不值钱，看的不是它"总共多重要"，而是"<strong>再多拿一个，还能让我多爽多少</strong>"。</p>
+    <div class="formula">边际效用(MU) = Δ总效用 / Δ消费数量　；　且 随数量↑，MU ↓（递减）</div>
+    <p>顺着这条规律，能推出一条最实用的消费法则：<strong>只有当"多一个带来的满足"还高于"为它付出的价格"时，这笔消费才划算</strong>；一旦边际效用跌破价格，再买就是纯粹的浪费。理性人不会在"已经够了"之后还不停手——懂得在"<strong>还想要但还没到负</strong>"的地方收手的人，单位快乐的性价比最高。这法则还能反过来帮你做投资：分批建仓、定投，本质也是边际思维——不在单一时点把子弹打光，让每一笔投入的"成本边际"尽量平滑。</p>
+    <p>🌰 换到你的钱包：剁手前先问一句"<strong>这多花的钱，真能让我多开心多少</strong>"——很多"凑单满减"囤回来的，正是边际效用早已很低的第 N 件；而把省下的钱投到高边际效用的地方（比如还债、学个技能、给家人一次旅行），幸福感远比第 4 辆车实在。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>看"多一个"不看"已经有"</strong>：东西值不值，由"再添一个能多爽多少"决定——所以第一辆车是命，第四辆车是债。</li>
+      <li><strong>边际效用递减</strong>：拥有越多，新增满足掉得越快，甚至会变负；聪明人懂得在"还想要但没到负"的地方收手。</li>
+      <li><strong>消费停在职效还高于价格处</strong>：当"再多花这笔钱带来的快乐"已低于"这笔钱本身"，就该停手——很多焦虑不是买不起，是买太多了。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：供需关系 —— 演唱会门票为何被黄牛炒上天？丰收的果农为何反而亏钱？价格背后那只"看不见的手"，全在供给与需求的拉锯里。</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="d462lO5Jc1YaiQRxnFKkv9">
+<head data-page-node-id="CpvkalHczfN7jB1vf8gm7M">
+<meta charset="UTF-8" data-page-node-id="PaoAkOAkWAYTdSWhk1Yv61">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="VIJOi3A3H0My893v5ZMmYQ">
+<title>输入框圆角修复 · 可交互原型</title>
+<style>
+  :root{
+    --bg1:#f4efe4; --bg2:#eaf1e7;
+    --surface:rgba(255,255,255,.58); --surface-2:rgba(255,255,255,.36);
+    --surface-solid:#fffdf7;
+    --text:#33302a; --text-2:#7a746a; --text-3:#a8a094;
+    --line:rgba(255,255,255,.66);
+    --accent:#4a9e66; --accent-deep:#398a54; --accent-soft:rgba(74,158,102,.13);
+    --input-border:rgba(80,60,30,.12); --input-border-hover:rgba(80,60,30,.24);
+    --input-bg:rgba(255,255,255,.6); --input-bg-focus:rgba(255,255,255,.92);
+    --shadow:0 1px 2px rgba(80,60,30,.05),0 12px 36px -14px rgba(80,60,30,.22),inset 0 1px 0 rgba(255,255,255,.6);
+    --radius:14px;
+    --ease:cubic-bezier(.22,.9,.34,1);
+  }
+  [data-theme="dark"]{
+    --bg1:#151b17; --bg2:#101a1e;
+    --surface:rgba(255,255,255,.055); --surface-2:rgba(255,255,255,.05);
+    --surface-solid:#1c2420;
+    --text:#e9ede8; --text-2:#9aa79f; --text-3:#5d6c64;
+    --line:rgba(255,255,255,.12);
+    --accent:#66d18d; --accent-deep:#4fc37c; --accent-soft:rgba(102,209,141,.15);
+    --input-border:rgba(255,255,255,.12); --input-border-hover:rgba(255,255,255,.22);
+    --input-bg:rgba(255,255,255,.06); --input-bg-focus:rgba(255,255,255,.10);
+    --shadow:0 1px 2px rgba(0,0,0,.3),0 16px 44px -16px rgba(0,0,0,.6),inset 0 1px 0 rgba(255,255,255,.06);
+  }
+
+  *{box-sizing:border-box}
+  body{
+    margin:0;min-height:100vh;
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+    color:var(--text);-webkit-font-smoothing:antialiased;
+    background:linear-gradient(135deg,var(--bg1),var(--bg2));
+    transition:color .4s,background .4s;
+    overflow-x:hidden;
+  }
+
+  /* 背景光斑 */
+  .blobs{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .blob{position:absolute;border-radius:50%;filter:blur(90px)}
+  .b1{width:540px;height:540px;left:-150px;top:-140px;background:#e6d7bd}
+  .b2{width:470px;height:470px;right:-130px;top:4%;background:#cfe4cd}
+  .b3{width:520px;height:520px;right:12%;bottom:-210px;background:#cfe1e6}
+  .b4{width:440px;height:440px;left:10%;bottom:-170px;background:#efd9c6}
+
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:32px 24px 60px}
+
+  /* 顶栏 */
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:24px}
+  .topbar h1{font-size:20px;font-weight:800;margin:0;letter-spacing:.3px}
+  .topbar p{margin:4px 0 0;font-size:13px;color:var(--text-2)}
+  .theme-btn{
+    display:inline-flex;align-items:center;gap:6px;padding:9px 16px;border-radius:100px;
+    background:var(--surface-2);border:1px solid var(--line);color:var(--text);
+    font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;backdrop-filter:blur(20px);
+  }
+  .theme-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+  @media(max-width:820px){.grid{grid-template-columns:1fr}}
+
+  .card{
+    background:var(--surface);backdrop-filter:blur(20px) saturate(150%);-webkit-backdrop-filter:blur(20px) saturate(150%);
+    border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:24px;
+  }
+  .card h2{font-size:15px;font-weight:700;margin:0 0 4px}
+  .card .sub{font-size:12px;color:var(--text-3);margin:0 0 18px}
+
+  /* 表单 */
+  .field{margin-bottom:16px}
+  .field label{display:block;font-size:12.5px;font-weight:600;color:var(--text-2);margin-bottom:6px}
+  .field label .tag{font-size:10px;color:var(--text-3);font-weight:500;margin-left:6px}
+
+  /* 统一输入控件：14px 圆角 + 软边 + 玻璃底 */
+  .input,.select,.textarea{
+    width:100%;font-family:inherit;font-size:13.5px;color:var(--text);
+    background:var(--input-bg);border:1px solid var(--input-border);border-radius:var(--radius);
+    padding:10px 14px;outline:none;font-variant-numeric:tabular-nums;
+    transition:border-color .2s,box-shadow .2s,background .2s;
+  }
+  .input:hover,.select:hover,.textarea:hover{border-color:var(--input-border-hover)}
+  .input:focus,.select:focus,.textarea:focus{
+    border-color:var(--accent);background:var(--input-bg-focus);
+    box-shadow:0 0 0 3px var(--accent-soft);
+  }
+  .input::placeholder,.textarea::placeholder{color:var(--text-3)}
+  .textarea{min-height:72px;resize:vertical;line-height:1.55}
+
+  /* 自定义下拉 */
+  .select{position:relative;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none}
+  .select .val{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .select.placeholder .val{color:var(--text-3)}
+  .select .arrow{width:14px;height:14px;flex-shrink:0;margin-left:8px;stroke:var(--text-3);fill:none;stroke-width:2.2;stroke-linecap:round;stroke-linejoin:round;transition:transform .2s var(--ease)}
+  .select.open .arrow{transform:rotate(180deg);stroke:var(--accent)}
+  .menu{
+    position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:50;list-style:none;margin:0;padding:6px;
+    border:1px solid var(--line);border-radius:14px;max-height:240px;overflow-y:auto;
+    background:var(--surface-solid);box-shadow:var(--shadow);
+    backdrop-filter:blur(20px);display:none;
+  }
+  .select.open .menu{display:block;animation:pop .16s var(--ease)}
+  @keyframes pop{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+  .menu li{padding:8px 10px;border-radius:9px;font-size:13px;cursor:pointer;transition:background .15s}
+  .menu li:hover{background:var(--accent-soft)}
+  .menu li.on{color:var(--accent-deep);font-weight:700}
+
+  /* 状态演示区 */
+  .states{display:flex;flex-direction:column;gap:14px}
+  .state-row{display:flex;align-items:center;gap:12px;font-size:12px;color:var(--text-2)}
+  .state-row .box{flex:1}
+  .state-row .lbl{width:110px;flex-shrink:0;text-align:right;font-weight:600}
+
+  .demo-focus{border-color:var(--accent);background:var(--input-bg-focus);box-shadow:0 0 0 3px var(--accent-soft)}
+  .demo-disabled{opacity:.55;cursor:not-allowed;background:var(--surface-2)}
+  .demo-error{border-color:#e07a5f;box-shadow:0 0 0 3px rgba(224,122,95,.14)}
+
+  .legend{margin-top:20px;padding-top:16px;border-top:1px dashed var(--line);font-size:12px;color:var(--text-3);line-height:1.8}
+  .legend b{color:var(--accent);font-weight:700}
+</style>
+</head>
+<body data-page-node-id="qN226Yv7VWVKDZFnf1ADUZ">
+<div class="blobs" data-page-node-id="SATN3gQVb0QJT2WDjdO4DH"><div class="blob b1" data-page-node-id="klb5gB9qCdteYnneNti6kM"></div><div class="blob b2" data-page-node-id="CdI6o4wSzGHr86Ylp3NELN"></div><div class="blob b3" data-page-node-id="0Z6R08Pq2iffVChzZrVeg6"></div><div class="blob b4" data-page-node-id="hFRzXuR5WBSmM5sDH7VIhC"></div></div>
+
+<div class="wrap" data-page-node-id="CxomXLlEnkQhYCsI1SaN7Z">
+  <div class="topbar" data-page-node-id="kRF3kUg69DKof7MDFQe8uK">
+    <div data-page-node-id="GiILvqCUBiSEX6FzTeoAmY">
+      <h1 data-page-node-id="MkCMRA8SqDiqQiSX85IzD6">输入框圆角修复 · 可交互原型</h1>
+      <p data-page-node-id="nQWcNDFHcnzrBqtK6Zi9vU">14px 圆角 + 软边 + 玻璃底 + 主色光晕　|　直接点、输入、悬停体验</p>
+    </div>
+    <button class="theme-btn" id="themeBtn" type="button" data-page-node-id="1SPh5llg8A1lrYDyldyV0C">🌙 切深色</button>
+  </div>
+
+  <div class="grid" data-page-node-id="aSmypsuGDCqNKQS7BbHQyd">
+    <!-- 左：可交互表单 -->
+    <div class="card" data-page-node-id="T0mM5HctYCpBr9NeTg2oHP">
+      <h2 data-page-node-id="nsPHkHat54jryyiGe6ziZv">记一笔</h2>
+      <p class="sub" data-page-node-id="UCz4fFyv2YMIutsyVxuA5L">真实交互：输入、下拉选择、悬停、聚焦都生效</p>
+
+      <div class="field" data-page-node-id="PDOXaH36DAPRvDbOjrJI6J">
+        <label data-page-node-id="C3Fr52VRDMwaT78vIPrB5V">金额 <span class="tag" data-page-node-id="eekdagIMlkGJX0Z2hCpkoJ">输入试试</span></label>
+        <input class="input" type="text" inputmode="decimal" placeholder="0.00" data-page-node-id="f5ZuMKOLufY5xn6HKV6n7S">
+      </div>
+
+      <div class="field" data-page-node-id="Dd8sOTtNKbgUYm4E5EFXUX">
+        <label data-page-node-id="spSPPH3UEsLAK0N5G3QWf4">类别 <span class="tag" data-page-node-id="QCXbLFZxmjxAeA18LWUuc2">点击展开下拉</span></label>
+        <div class="select placeholder" id="catSelect" tabindex="0" data-page-node-id="RumrbZTkCfjSykhW1ykdsw">
+          <span class="val" data-page-node-id="3d9emB0QzNVtc9rqXkSmPU">选择分类</span>
+          <svg class="arrow" viewBox="0 0 16 16" data-page-node-id="W3nBrBz6rq70DUW4gorote"><path d="M4 6l4 4 4-4" data-page-node-id="Y6kFsaqlscSFDXGXsZajsa"/></svg>
+          <ul class="menu" id="catMenu" data-page-node-id="onDCGNi67Hh1JKI2ohfCCV">
+            <li data-page-node-id="MUZfzQHkyGmiM2MuFHnhsB">餐饮</li><li data-page-node-id="Y815TAJs5ul7xMDPbRKQZQ">交通</li><li data-page-node-id="TwhhHuPBLStgVHxYy7DiRT">购物</li><li data-page-node-id="Y5hALvJPMp3PA3BLH4th6v">居住</li><li data-page-node-id="xoSADXGAaudqncOWgnaEPN">娱乐</li><li data-page-node-id="bPDpGSPkdBC6AQjYC2gj4P">医疗</li><li data-page-node-id="vu3rGEGkQYZXfRDWlWynIv">学习</li><li data-page-node-id="bk2ZcWndVK20uGXdDqQBA7">其他</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="field" data-page-node-id="TtDBiDLLfiQjahq0HPZDJK">
+        <label data-page-node-id="ntzSwEjHh9fHXcBnFGA6Zk">日期 <span class="tag" data-page-node-id="jWoHHr3b2GE5oxTOe2oomD">点击弹出日历</span></label>
+        <input class="input" type="date" value="2026-09-04" data-page-node-id="PEmK9ih0xWrw78lLJWqECa">
+      </div>
+
+      <div class="field" data-page-node-id="9p3tzheUgKgxInF6IT4KNE">
+        <label data-page-node-id="zIf8uSuX8x4c3rtLwpjokj">备注 <span class="tag" data-page-node-id="3uteJlEeSqa0OSmgYhd0FX">多行输入</span></label>
+        <textarea class="textarea" placeholder="写点什么…"></textarea>
+      </div>
+    </div>
+
+    <!-- 右：状态演示 -->
+    <div class="card" data-page-node-id="fqWkajG99B8eklw2VpEfOC">
+      <h2 data-page-node-id="UM6NPckGiq78O0DGzRQTXH">状态一览</h2>
+      <p class="sub" data-page-node-id="173y02s57aTPdrVQMWTWDK">每个控件该有的 6 种状态（悬停/聚焦请用鼠标试）</p>
+
+      <div class="states" data-page-node-id="2nJaIAP4fza3EUghAV10dD">
+        <div class="state-row" data-page-node-id="erhgtUdbwvtQAyw5k1pPTa"><span class="lbl" data-page-node-id="CQ9QSJtnVoN3CNoFtXktTk">默认</span><div class="box" data-page-node-id="AiqGnEM6nvMj8jbbBvwyzB"><input class="input" placeholder="默认态：软边 + 玻璃底" data-page-node-id="JnrKCLIFcjr4iyoxfCS7Kn"></div></div>
+        <div class="state-row" data-page-node-id="Y8pIbbOplIr6pK1dWeVEHd"><span class="lbl" data-page-node-id="Uygj8ch6I6SVFliSDf2889">悬停 hover</span><div class="box" data-page-node-id="DVoSvJc4uCc4ubscgFi21M"><input class="input" placeholder="鼠标放上来 → 边线加深" data-page-node-id="wFGaHhlbUuVjF4o8mM5sl5"></div></div>
+        <div class="state-row" data-page-node-id="8cpP7OmDA96gBuGSb2dcZY"><span class="lbl" data-page-node-id="IwnfsnvFKxBWGWvOgDLgtm">聚焦 focus</span><div class="box" data-page-node-id="2esZANukHNWZPy6NlEeSm4"><input class="input demo-focus" value="主色边 + 3px 光晕" data-page-node-id="kx6BpZxtQ4dldEpx0WPAO7"></div></div>
+        <div class="state-row" data-page-node-id="ul30EHJ418nJJOTmnfx3g3"><span class="lbl" data-page-node-id="RcsIZGdwYBhuJRajLVmnoo">禁用 disabled</span><div class="box" data-page-node-id="uZX8GMLC6XpSwIZIcGux7n"><input class="input demo-disabled" value="不可编辑" disabled data-page-node-id="jJUaszVTrHCXofmFdX7R3F"></div></div>
+        <div class="state-row" data-page-node-id="5CYB2eK9jN6VgzKG50VLgn"><span class="lbl" data-page-node-id="2LDftlOEWke9ktUjCVtDoL">错误 error</span><div class="box" data-page-node-id="GKsy2kdmLiLGu1k2ujz8ss"><input class="input demo-error" value="暖橙边提示" data-page-node-id="Qqv9onLW9d7sIV9rawQrLS"></div></div>
+        <div class="state-row" data-page-node-id="IcPwx8Tn3QVlS5NbJEVIZy"><span class="lbl" data-page-node-id="twyP0058yTHJSRKqFRuEaX">占位 placeholder</span><div class="box" data-page-node-id="FufeWbOUYWD6CXpnlHRSgd"><input class="input" placeholder="浅灰占位文字" data-page-node-id="9sF6EpIK6xGzqRKTqcJ2jK"></div></div>
+      </div>
+
+      <div class="legend" data-page-node-id="vDttVUF6AR54mNe4ikdCoU">
+        圆角 <b data-page-node-id="DiVF1oFqqV3pAFTPKYVzYE">14px</b> · 边框 <b data-page-node-id="LXxYZM3vC6GN6Kym9aVR34">rgba(80,60,30,.12)</b> 半透明软边 · 背景 <b data-page-node-id="Jc3CicJ6yWmR0OYRcxvVFN">rgba(255,255,255,.6)</b> 玻璃底<br data-page-node-id="DAs8oLG00hq0yxuvKHw7fc">
+        hover 边线加深 · focus 主色 <b data-page-node-id="YaHMFELAzaF7waTZrTTaYN">#4a9e66</b> 边 + <b data-page-node-id="5VXkEPQ42nyrOCgyfReyJW">0 0 0 3px</b> 光晕 · 深色主题同步切换
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // 自定义下拉交互
+  const select = document.getElementById('catSelect')
+  const menu = document.getElementById('catMenu')
+  const val = select.querySelector('.val')
+
+  select.addEventListener('click', (e) => {
+    e.stopPropagation()
+    select.classList.toggle('open')
+  })
+  menu.addEventListener('click', (e) => {
+    if (e.target.tagName === 'LI') {
+      val.textContent = e.target.textContent
+      select.classList.remove('placeholder')
+      menu.querySelectorAll('li').forEach(li => li.classList.toggle('on', li === e.target))
+      select.classList.remove('open')
+    }
+  })
+  document.addEventListener('click', () => select.classList.remove('open'))
+  select.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' || e.key === 'Enter') select.classList.remove('open')
+  })
+
+  // 主题切换
+  const themeBtn = document.getElementById('themeBtn')
+  let dark = false
+  themeBtn.addEventListener('click', () => {
+    dark = !dark
+    document.body.setAttribute('data-theme', dark ? 'dark' : '')
+    themeBtn.textContent = dark ? '☀️ 切浅色' : '🌙 切深色'
+  })
+</script>
+</body>
+</html>

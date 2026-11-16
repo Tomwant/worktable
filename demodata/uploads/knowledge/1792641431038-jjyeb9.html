@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第20期 · 最优停止与秘书问题</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>每日概率学 · 第 20 期</h1>
+<ul>
+<li><strong>日期</strong>：2026-10-22（周四）</li>
+<li><strong>今日概念</strong>：最优停止与秘书问题（Optimal Stopping &amp; The Secretary Problem）——前面 19 期我们大多在"算一个概率/期望"，但现实里很多决策是<strong>随时间流式到达</strong>的：面到第几个候选人该拍板？房价/股价"再等等会不会更低/更高"？手里一张美式期权何时行权最划算？这类问题的共同骨架是：<strong>机会一个接一个来，你只能当场接受或拒绝，拒绝后不可回头，且你永远不知道后面还有没有更好的</strong>。这种"看过即弃、只能选一次"的决策，藏在一条优美的最优停止曲线里——最经典的答案是 <strong>37% 法则（1/e 法则）</strong>。今天用"阿明面试 100 人如何不后悔"讲清：为什么最优策略几乎总是"先观察前 37%、再抓住第一个比前面都好的"，以及这条 1/e 线怎样贯通相亲、租房、卖房、期权行权。</li>
+<li><strong>一句话心智模型</strong>：<strong>最优停止 = 在"看过即弃、只能选一次"的时间线里，先花前 37% 的样本建一把"标尺"，再抓住第一个比标尺更好的——这条 1/e 线，是"想多看（信息）"与"怕溜走（机会）"拉扯出的最优妥协。</strong></li>
+</ul>
+<hr>
+<h2>一、故事引入：阿明的"面试 100 人怕后悔"</h2>
+<p>阿明的公司要招一个顶尖工程师，HR 排了 100 份简历，让他<strong>按顺序</strong>面试。规则残酷到不讲道理：</p>
+<ul>
+<li>面完一个人，必须<strong>当场</strong>决定——录用，后面的 99 个就再也看不了；拒绝，这个人就永远错过了。</li>
+<li>不能回头，不能"先都看看再比较"。</li>
+<li>必须选出<strong>恰好一个人</strong>。</li>
+</ul>
+<p>阿明慌了："前面面得好，怕后面有更好的；拖到后面，又怕前面最好的已经走了。我怎么才能不后悔？"</p>
+<p>大刘（刚聊完肥尾和 RMT）拍了拍他："这叫<strong>最优停止（optimal stopping）</strong>——你面对的是一条'看过即弃、只能选一次'的时间线，数学里有一整套理论告诉你<strong>何时该停手</strong>。"</p>
+<p>"那到底面到第几个该拍板？"</p>
+<p>"经典答案：<strong>先面前面约 37 个，只观察、不录用，把它们里最好的当'标尺'；从第 38 个起，谁第一个比前面所有 37 个都好，就当场录用。</strong>" 大刘在纸上写下一个神秘数字 $1/e\approx 0.368$，"面 100 人，就面到第 37 个开始认真选，这样选到全局最佳的概率最大，约 <strong>37%</strong>。"</p>
+<p>阿明震惊："凭什么恰好 37%？这不就是拍脑袋？"</p>
+<p>"因为它不是拍脑袋。"大刘笑，"这是在所有'先看再选'的策略里，<strong>能选到全局最佳的概率最大的那条线</strong>。更神的是——数学证明，无论你面 100 人还是 100 万人，这个分界比例都收敛到 <strong>1/e ≈ 36.8%</strong>，最大胜率也收敛到 1/e。它和人数几乎无关。"</p>
+<p>阿明若有所思："所以……我不是在赌运气，是在赌'最佳者没落在我观察期里、也没落在最后'？"</p>
+<p>"对。"大刘点头，"<strong>永远有失败的可能</strong>——最佳者可能恰好在前 37 个（被你当标尺浪费了），也可能恰好是最后一人（你一直等、等到被迫）。37% 是理论上能达到的最高胜率，不是 100%。但相比'随便面一个'（胜率 1%）或'一直等到最后才选'（胜率也才 1%），这已是几百倍的提升。"</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 什么是最优停止</h3>
+<p><strong>最优停止</strong>研究一类序贯决策：你面对一串随时间到达的、带随机性的"机会/观测"，每个机会你只能<strong>当场接受或拒绝</strong>，拒绝后<strong>不可回头</strong>，目标是最大化某个回报（选到最佳 / 期望收益最大）。</p>
+<p>它的三个核心要素：</p>
+<ul>
+<li><strong>顺序到达、即时决策、不可逆（no recall）</strong>：看到第 $t$ 个时，必须立刻决定，且不能反悔。</li>
+<li><strong>未来不确定</strong>：后面还有没有、有多好，你不知道（随机到达或随机质量）。</li>
+<li><strong>停止规则 + 决策规则</strong>："什么时候开始认真选" + "选谁"。</li>
+</ul>
+<p>核心张力只有一句话：<strong>信息（多看几个）vs 机会（看了就溜）</strong>。看得越多，你越知道"好"长什么样；但看得越多，好东西溜走的概率也越大。最优停止就是解这个拉扯。</p>
+<h3>2. 经典秘书问题（无信息版 / no-information）</h3>
+<p>最常被讲的设定：</p>
+<ul>
+<li>$n$ 个候选人，质量相互独立，是 $\{1,2,\dots,n\}$ 的<strong>一个随机排列</strong>（即"谁是最好的"完全随机、等可能）；</li>
+<li>你面试时<strong>只能看到相对排名</strong>（第 1 好、第 3 好……），看不到绝对分数（no-information）；</li>
+<li>必须选且只能选一个；</li>
+<li>目标 = <strong>选到全局最佳的概率最大</strong>。</li>
+</ul>
+<p><strong>策略（look-then-leap，看后跳 / 37% 法则）：</strong></p>
+<ol>
+<li>选一个分界点 $r$（$1\le r&lt;n$）。</li>
+<li>前 $r$ 个：<strong>全部拒绝</strong>，只记录其中最佳的排名，当作"标尺" $b^*$。</li>
+<li>从第 $r+1$ 个起：<strong>第一个</strong>排名严格优于 $b^*$（即优于前 $r$ 个所有人）的人，立即录用。</li>
+<li>若一直到最后都没出现，则只能录用最后一人（被迫）。</li>
+</ol>
+<p><strong>成功概率推导（这是 37% 的来历，值得自己推一遍）：</strong></p>
+<p>设全局最佳者出现在第 $i$ 位（$i&gt;r$）。要成功，必须满足：前 $i-1$ 个里的最佳者，落在前 $r$ 个观察期里（这样第 $i$ 个才会被"标尺"比下去、从而被录用）。这个概率恰为 $r/(i-1)$。又最佳者落在第 $i$ 位的概率是 $1/n$，于是：</p>
+<p>$$P(\text{赢})=\sum_{i=r+1}^{n}\frac{1}{n}\cdot\frac{r}{i-1}</p>
+<p>=\frac{r}{n}\sum_{i=r+1}^{n}\frac{1}{i-1}$$</p>
+<p>当 $n$ 很大，调和和 $\sum_{i=r+1}^{n}\frac{1}{i-1}\approx \ln n-\ln r=\ln\frac{n}{r}$，于是：</p>
+<p>$$P(\text{赢})\approx \frac{r}{n}\ln\frac{n}{r}$$</p>
+<p>令 $x=r/n$，则 $P\approx x\ln(1/x)=-x\ln x$。对 $x$ 求导：$-\ln x-1=0\Rightarrow x=1/e$。</p>
+<blockquote>💡 <strong>三个关键结论</strong>：</blockquote>
+<blockquote>① 最优拒绝比例 $r^*/n\to\mathbf{1/e\approx 0.368}$，<strong>与 $n$ 几乎无关</strong>（大数极限下）；</blockquote>
+<blockquote>② 最大胜率也 $\to\mathbf{1/e\approx 36.8\%}$——这是理论上限，不是 100%；</blockquote>
+<blockquote>③ 这是"无信息（只比相对排名）+ 强制选一人"的设定下的结果。设定一变，数字就变（见第 4 节）。</blockquote>
+<h3>3. 1/e 再次登场（闭环前面的概念）</h3>
+<ul>
+<li>🔗 <strong>第 6 期 大数定律 / 第 10 期 中心极限定理 / 第 16 期 熵</strong>：我们早已见过 $e$ 与 $\ln$——泊松的 $e^{-\lambda}$、正态的 $\sqrt{2\pi}$、熵的 $-\log_2 p$ 都以 $e$ 为底。今天 $1/e$ 作为"最优停止的不变量"再出现：它和"看过即弃、只能选一次"的结构<strong>深度绑定</strong>，是概率论里的"万有引力常数"家族成员。</li>
+<li>🔗 <strong>第 5 期 期望值与决策</strong>：第 5 期是<strong>单次静态</strong>决策（一个赌局选不选）；最优停止是<strong>动态序贯</strong>决策（边看边选）。后者是前者的时间展开版。</li>
+<li>🔗 <strong>第 6 期 大数定律（对照）</strong>：前 37% 本质是"用样本估计分布/基准"，但秘书问题里你<strong>不用任何分布</strong>——只用了"相对排名"这个极弱信息。这和第 6 期"用样本估总体"形成有趣对照：原来有时<strong>极少量信息（一个排名）就够做最优决策</strong>。</li>
+<li>🔗 <strong>第 8 期 蒙特霍尔（对照）</strong>：都是"信息揭示后如何决策"。但蒙特霍尔的信息来自<strong>主持人的动作</strong>（他刻意开羊门），秘书问题的信息来自<strong>你自己的观察序列</strong>（你自己面人）。信息来源不同，决策逻辑不同。</li>
+<li>🔗 <strong>第 19 期 重尾 / "再等等 vs 停手"</strong>：第 19 期讲"在肥尾世界，再等等会被一个极端值反噬，该早用分位数停手"；今天讲"很多时候再等等是对的——观察期就是主动'再等等'以建立标尺"。两种张力<strong>互补</strong>：何时该等、何时该停，取决于你手里的<strong>信息结构</strong>。</li>
+</ul>
+<h3>4. 变体与更狠的版本（开眼界）</h3>
+<p>经典秘书问题只是冰山一角。改一个设定，答案就变：</p>
+<ul>
+<li><strong>全信息版（cardinal / 知道绝对分数）</strong>：如果面试能打绝对分（如 0–100），且分数来自某已知分布，目标变成<strong>最大化期望分数</strong>（而非"选最佳概率"）。这时用<strong>反向归纳（backward induction）</strong>动态规划，阈值会<strong>更低</strong>（著名的"26% 法则"约在 0.26 处开始认真选），而且你可能接受"很强但非最佳"的人。胜率上限也可显著高于 1/e。</li>
+<li><strong>可空手而归 vs 强制选</strong>：经典版强制最后选一人（否则颗粒无收）。若允许"不选也行"，你就能 afford 等更久、只为真正顶尖的offer——阈值与胜率都会变（全信息最佳选择问题的胜率上限研究给出可到约 0.58，Dynkin 1963）。</li>
+<li><strong>目标放宽（接受前 10% 就好）</strong>：若你不是"非最佳不可"，而是"前 10% 就满意"，则观察期更短、满意度更高。完美主义（只要最佳）代价很高。</li>
+<li><strong>现实映射同一骨架</strong>：相亲/租房（看房看人）、卖房/卖资产（报价随机到达，何时 accept）、美式期权行权（何时 exercise）、停车（往前开多少空位再停）、缓存淘汰（近似在线算法）、临床试验何时停（序贯检验，Wald）。</li>
+</ul>
+<h3>5. 它撑起了哪些大事（开个眼界）</h3>
+<ul>
+<li><strong>招聘 / 相亲 / 租房</strong>：look-then-leap 是"别一上来就定、也别永远等"的数学依据。</li>
+<li><strong>金融</strong>：美式期权<strong>最优行权时机</strong>（exercise when underlying ≥ 继续持有的期望价值）、何时卖股票/房产（设"保留价 / reservation value"）。</li>
+<li><strong>计算机 / 算法</strong>：在线算法（online algorithms）的<strong>竞争比（competitive ratio）</strong>、缓存页面置换、最优停止是理论基石。</li>
+<li><strong>统计</strong>：序贯分析（sequential analysis）、序贯检验（Wald）、A/B 实验何时停。</li>
+<li><strong>运筹</strong>：库存订货点、最佳停车、最优退出时机。</li>
+</ul>
+<hr>
+<h2>三、代表性题目 / 故事（请你来总结 ✍️）</h2>
+<p>请试着回答：① 为什么"观察期"既不能太长也不能太短？② 37% 这个数为什么与总人数 $n$ 无关？③ 全信息版为何阈值更低、胜率更高？④ 卖房/期权这类"带绝对价格"的问题，和经典秘书问题差在哪？</p>
+<h3>题目 1 · 37% 法则的基本功（用公式算 $r$ 与胜率）</h3>
+<p>设 $n=100$，采用"前 $r$ 个观察、之后抓第一个更好者"的策略。</p>
+<blockquote>① 写出胜率公式 $P(r)=\frac{r}{n}\sum_{i=r+1}^{n}\frac{1}{i-1}$，并用近似 $P\approx \frac{r}{n}\ln\frac{n}{r}$ 说明为何 $r^*/n=1/e$ 时最大（提示：令 $x=r/n$，最大化 $-x\ln x$，导数 $-\ln x-1=0\Rightarrow x=1/e\approx0.368$）？</blockquote>
+<blockquote>② 代入 $r=37,n=100$，用调和数估算胜率（提示：$H_{99}\approx5.177,\ H_{36}\approx4.175$，差值 $\approx1.002$，$P\approx0.37\times1.002\approx\mathbf{0.371}$，即约 <strong>37.1%</strong>；这正是 $1/e$ 附近的数值兑现）？</blockquote>
+<blockquote>③ 若 $r$ 取极端值（比如 $r=1$ 一上来就选，或 $r=99$ 几乎等到最后），胜率退化成多少、为什么（提示：$r=1$ 时 $P=1/n=1\%$；$r=n-1$ 时 $P=(n-1)/n\cdot 1/(n-1)=1/n=1\%$；两端都塌回 $1/n$）？</blockquote>
+<blockquote>④ 这条 $1/e$ 线在 $n\to\infty$ 才精确；对有限 $n$ 最优 $r$ 是 $\approx n/e$ 取整，说明为什么"小样本要微调"（提示：离散取整 + 调和和边界修正，见题目 2）？</blockquote>
+<h3>题目 2 · 相亲 10 人（小 $n$ 的修正）</h3>
+<p>阿明只有 10 个相亲对象，按顺序见，规则同经典秘书问题（选最佳概率最大）。</p>
+<blockquote>① 列出 $r=2,3,4,5$ 时的胜率 $P(r)=\frac{r}{10}\sum_{i=r+1}^{10}\frac{1}{i-1}$，哪个最大（提示：手算 $r=3\approx0.399,\ r=4\approx0.438,\ r=5\approx0.423$；最优是 <strong>$r=4$</strong>，胜率约 <strong>43.8%</strong>）？</blockquote>
+<blockquote>② 为什么 $n=10$ 时最优胜率（≈43.8%）<strong>高于</strong> $1/e\approx36.8\%$（提示：小 $n$ 时离散取整与边界效应显著，$n/e\approx3.68$ 取 4 比取 3 更优；极限 $1/e$ 是大 $n$ 渐近值，小 $n$ 有"红利"）？</blockquote>
+<blockquote>③ $n=10$ 时若取 $r=4$，平均要"拒绝"几个才定（提示：观察期拒绝 4 个，第 5 个起才可能录用；若最佳在第 5–10 位且前面最佳在观察期，则录用——这正是 $r=4$ 策略的实战路径）？</blockquote>
+<blockquote>④ "小 $n$ 红利"随 $n$ 增大如何消失（提示：$n\to\infty$ 时 $P^*\to1/e$，红利趋零；越大越贴 37%）？</blockquote>
+<h3>题目 3 · 全信息版 &amp; 可空手（为什么阈值更低、胜率更高）</h3>
+<p>把设定改两刀：</p>
+<blockquote>① 若面试能打<strong>绝对分</strong>（0–100），目标改为"最大化<strong>期望分数</strong>"而非"选最佳概率"，最优策略的"开始认真选"阈值大约降到多少（提示：经典"<strong>26% 法则</strong>"——约在 $r\approx0.26n$ 处起设动态递增的保留价；因为你有更多信息和更软的目标，不必死等"绝对最佳"）？</blockquote>
+<blockquote>② 若还允许"<strong>空手而归</strong>"（不选也行），对"选到最佳"的胜率有何影响（提示：不必被迫选最后一人，可继续等真正顶尖者，胜率可<strong>显著高于</strong> 1/e；全信息最佳选择问题上界研究约 <strong>0.58</strong>，Dynkin 1963）？</blockquote>
+<blockquote>③ 全信息版为什么"可接受很强但非最佳"的人（提示：期望分数目标下，一个 95 分比赌后面出 100 分更稳；风险偏好从"全或无"变成"期望最大化"，故阈值更低、更敢下手）？</blockquote>
+<blockquote>④ 对比经典版，总结"信息多少"与"能不能空手"如何共同压低阈值（提示：信息↑→更早敢选；可空手→更敢等；两股力方向相反，但都让策略更灵活、胜率更优）？</blockquote>
+<h3>题目 4 · 卖房定价（把抽象映射到现实）</h3>
+<p>阿明卖房，未来 3 个月会陆续收到买家报价，每个报价他可<strong>接受或拒绝</strong>（拒绝=继续挂、等下一个，但市场可能变冷、报价可能更差），3 个月后是<strong>硬截止</strong>（必须卖或撤牌）。</p>
+<blockquote>① 这和第 20 期秘书问题差在哪（提示：报价是<strong>绝对价格</strong>且来自某分布=全信息版；且截止前可"空手"=可继续等；故用<strong>反向归纳 + 保留价</strong>而非纯 37% 排名规则）？</blockquote>
+<blockquote>② 什么是"保留价（reservation value）"？应该怎么定（提示：保留价 = "继续等下去的期望收益"；<strong>接受第一个 ≥ 保留价的报价</strong>；越接近截止，能等的时间越少，保留价应<strong>越往下调</strong>——最后一天保留价=最低可接受价）？</blockquote>
+<blockquote>③ 美式期权行权是同一骨架，行权条件是什么（提示：当标的现价 ≥ "继续持有的期望价值"时行权；等价地，保留价=继续持有价值，当前价值超过它就停（行权））？</blockquote>
+<blockquote>④ 若市场是<strong>肥尾</strong>（第 19 期）的，卖房/行权策略要怎么改（提示：报价可能出极端高价，保留价不能只用"平均值"——要用分位数/VaR 思路，且对极端高价更敏感；肥尾下"再等等"的回报分布本身就不对称）？</blockquote>
+<hr>
+<h2>四、提示（如需逐题完整推导，回复"揭晓答案"）</h2>
+<ul>
+<li><strong>题目 1（37% 基本功）</strong>：</li>
+<li>① 令 $x=r/n$，$P\approx x\ln(1/x)=-x\ln x$，$dP/dx=-\ln x-1$，令为 0 得 <strong>$x=1/e$</strong>；二阶导 $-1/x&lt;0$ 确为最大。</li>
+<li>② $P(37)=\frac{37}{100}(H_{99}-H_{36})\approx0.37\times(5.177-4.175)=0.37\times1.002\approx\mathbf{0.371}$（约 <strong>37.1%</strong>），正是 $1/e$ 的数值兑现。</li>
+<li>③ $r=1$：$P=1/n=1\%$（没观察就盲选）；$r=99$：$P=\frac{99}{100}\cdot\frac{1}{99}=1\%$（几乎等到最后、被迫选最后一人，最佳在前 99 的概率虽高但只剩最后一人可抓）。两端都塌回 <strong>$1/n$</strong>，说明"只观察"和"只等待"同样糟。</li>
+<li>④ 有限 $n$ 最优 $r^*=\mathrm{round}(n/e)$ 再做局部微调；$1/e$ 是 $n\to\infty$ 渐近极限，小 $n$ 有离散红利（见题目 2）。</li>
+</ul>
+<ul>
+<li><strong>题目 2（相亲 10 人）</strong>：</li>
+<li>① $P(3)\approx0.399,\ P(4)\approx0.438,\ P(5)\approx0.423$ → 最优 <strong>$r=4$</strong>，胜率约 <strong>43.8%</strong>。</li>
+<li>② 小 $n$ 时 $n/e\approx3.68$，取整取 4 比取 3 更优；离散边界效应让有限 $n$ 胜率<strong>高于</strong>渐近 $1/e$。</li>
+<li>③ 观察期固定拒绝前 4 个，第 5 个起才可能录用；最佳落第 5–10 位且前 4 含其前最佳时成功。</li>
+<li>④ $n\to\infty$ 时 $P^*\to1/e$，红利趋零，"37%" 越准。</li>
+</ul>
+<ul>
+<li><strong>题目 3（全信息 &amp; 可空手）</strong>：</li>
+<li>① 全信息 + 期望分数目标：开始认真选的阈值约 <strong>26%</strong>（$r\approx0.26n$），并用<strong>随时间递增的保留价</strong>（反向归纳）。</li>
+<li>② 允许空手：不必被迫选最后一人，可继续等顶尖者，选最佳胜率可<strong>显著高于</strong> 1/e（全信息最佳选择上界研究约 <strong>0.58</strong>）。</li>
+<li>③ 期望分数目标下，强但非最佳（如 95 分）比赌后面出 100 分更稳，故更早敢下手、阈值更低。</li>
+<li>④ 信息↑→更早敢选；可空手→更敢等；二者让策略更灵活、胜率更优，但方向相反需权衡。</li>
+</ul>
+<ul>
+<li><strong>题目 4（卖房/行权）</strong>：</li>
+<li>① 报价是绝对价格（全信息）+ 可空手（继续等），故用<strong>反向归纳 + 保留价</strong>，不是纯排名 37% 规则。</li>
+<li>② <strong>保留价 = 继续等待的期望收益</strong>；接受第一个 ≥ 保留价的报价；越近截止、可等时间越少，保留价<strong>下调</strong>（最后一天=最低可接受价）。</li>
+<li>③ 美式期权：当标的现价 ≥ 继续持有期望价值时行权（保留价=继续持有价值，超过即"停"=行权）。</li>
+<li>④ 肥尾下报价可能出极端高价，保留价不能只看均值，要用<strong>分位数/VaR</strong> 思路，且对极端高价更敏感（呼应第 19 期）。</li>
+</ul>
+<hr>
+<blockquote>📌 明日预告：第 21 期 <strong>随机图与渗流（六度分隔与"突然连通"的相变）——为什么朋友关系网会一夜之间从"孤岛"变成"全球互通"</strong>。今天我们讲了"何时该停手"；下期讲"何时该连通"：把 $n$ 个人随机连边，边的概率 $p$ 超过某个临界值 $p_c\sim (\ln n)/n$ 时，图会<strong>突然</strong>从一堆小碎片塌缩成一个囊括几乎所有人的"巨分量"——这叫<strong>渗流相变（percolation）</strong>，和六度分隔、疾病传播阈值、互联网健壮性都有关。我们将用"阿明班的微信群如何从死群变活群"讲清：为什么临界点是突变的、为什么"平均度数≈1"是分水岭。</blockquote></div></body></html>

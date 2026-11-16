@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<title>素材上限可编辑 · 原型</title>
+<style>
+  :root{
+    --bg:#fbf7f1; --surface:#ffffff; --surface-2:#fdfbf7; --surface-solid:#ffffff;
+    --line:rgba(255,255,255,.9); --line-2:rgba(80,60,30,.14); --line-3:rgba(80,60,30,.22);
+    --text:#3b3226; --text-2:#6f6555; --text-3:#a09684;
+    --accent:#4a9e66; --accent-soft:rgba(74,158,102,.12);
+    --danger:#c9544d; --danger-soft:rgba(201,84,77,.12);
+    --warm:#c9a961;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;padding:26px 28px 60px;background:
+      radial-gradient(60% 50% at 12% 0%,rgba(201,169,97,.16),transparent 70%),
+      radial-gradient(50% 44% at 92% 8%,rgba(74,158,102,.14),transparent 72%), var(--bg);
+    font:14px/1.55 "Microsoft YaHei","PingFang SC",system-ui,sans-serif;color:var(--text)}
+  .panel{background:rgba(255,255,255,.72);border:1px solid var(--line-2);border-radius:22px;
+    padding:16px 18px 18px;backdrop-filter:blur(12px);box-shadow:0 20px 40px -34px rgba(90,64,30,.6)}
+  .head{display:flex;align-items:center;gap:9px;margin-bottom:4px}
+  .face{width:36px;height:36px;border-radius:50%;flex:0 0 auto;overflow:hidden;
+    border:2px solid rgba(255,255,255,.9);box-shadow:0 5px 14px -10px rgba(86,58,140,.7),0 0 0 1px rgba(120,96,170,.12)}
+  .face img{width:100%;height:100%;object-fit:cover;display:block}
+  h2{margin:0;font-size:15px;font-weight:650}
+  .desc{font-size:11.5px;color:var(--text-3);margin:2px 0 14px 45px}
+  .hint{font-size:11.5px;color:var(--text-3)}
+
+  .asset-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(196px,1fr));gap:10px}
+  .asset{display:flex;align-items:center;gap:10px;position:relative;min-height:68px;
+    padding:9px 10px;border-radius:14px;text-align:left;background:var(--surface-2);
+    border:1px solid var(--line-2)}
+  .asset .thumb{width:48px;height:48px;border-radius:50%;overflow:hidden;flex:0 0 auto;
+    border:2px solid rgba(255,255,255,.9);box-shadow:0 5px 14px -10px rgba(86,58,140,.7),0 0 0 1px rgba(120,96,170,.12)}
+  .asset .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .asset .txt{display:flex;flex-direction:column;gap:2px;min-width:0;flex:1}
+  .asset .txt b{font-size:12.5px;font-weight:650;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .asset .txt small{font-size:11px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* 新增素材卡：内部拆两段，上传区 / 上限区互不干扰 */
+  .asset--add{flex-direction:column;justify-content:center;gap:3px;
+    border-style:dashed;border-color:var(--line-3);background:transparent;padding:8px 10px}
+  .add-btn{display:flex;flex-direction:column;align-items:center;gap:2px;width:100%;
+    border:0;background:transparent;color:var(--text-2);font:600 12px/1.4 inherit;
+    cursor:pointer;padding:2px 0 1px;border-radius:10px}
+  .add-btn:hover{color:var(--accent)}
+  .add-btn .plus{font-size:16px;font-weight:400;line-height:1}
+  .lim{display:flex;align-items:center;gap:2px;font-size:10px;color:var(--text-3);line-height:1;white-space:nowrap}
+  .lim .num{
+    display:inline-flex;align-items:baseline;padding:1px 3px;border-radius:5px;
+    color:var(--text-2);font-weight:650;font-variant-numeric:tabular-nums;
+    border-bottom:1px dashed var(--line-3);cursor:pointer;transition:.15s;
+  }
+  .lim .num:hover{color:var(--accent);border-bottom-color:var(--accent);background:var(--accent-soft)}
+  .lim input{
+    width:38px;padding:0 1px;font:650 10px/1.5 inherit;text-align:center;color:var(--text);
+    background:var(--surface-solid);border:1px solid var(--accent);border-radius:5px;
+    outline:none;font-variant-numeric:tabular-nums;-moz-appearance:textfield;
+    box-shadow:0 0 0 3px var(--accent-soft);
+  }
+  .lim input::-webkit-outer-spin-button,
+  .lim input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+  .lim.err input{border-color:var(--danger);box-shadow:0 0 0 3px var(--danger-soft)}
+  .lim .tick{position:absolute;right:7px;top:5px;color:var(--accent);font-size:9.5px;opacity:0;transition:.2s}
+  .lim .tick.on{opacity:1}
+  .lim .bad{color:var(--danger);font-size:9.5px}
+
+  .toast{margin-top:16px;display:flex;align-items:center;gap:8px;font-size:12px;color:var(--text-2);
+    background:var(--accent-soft);border:1px solid rgba(74,158,102,.3);border-radius:12px;padding:8px 12px;
+    opacity:0;transform:translateY(-4px);transition:.22s}
+  .toast.on{opacity:1;transform:none}
+  .toast b{color:var(--accent)}
+  .note{margin-top:22px;font-size:12px;color:var(--text-2);line-height:1.9}
+  .note code{background:rgba(80,60,30,.06);padding:1px 5px;border-radius:5px;font-size:11.5px}
+  .note li{margin:2px 0}
+</style>
+</head>
+<body>
+
+<div class="panel">
+  <div class="head">
+    <span class="face"><img src="https://api.dicebear.com/7.x/thumbs/svg?seed=asset" alt=""></span>
+    <div>
+      <h2>我的素材</h2>
+    </div>
+  </div>
+  <div class="desc">6 张内置 + 我上传的，点卡片可调圆形裁切</div>
+
+  <div class="asset-grid" id="grid"></div>
+
+  <div class="toast" id="toast"><span>✓</span><span>单张上限已改为 <b id="tnum">50</b> MB，马上生效</span></div>
+</div>
+
+<div class="note">
+  <b>这次要确认的几点：</b>
+  <ul>
+    <li>「单张 ≤ <code>50</code>MB」里的 50 是可点的：鼠标移上去变绿，点一下就地变成输入框，回车 / 点别处即保存，卡片不会跳去选图。</li>
+    <li>取值范围 1–200MB，超范围标红提示，不保存。</li>
+    <li>保存后卡片内出现「✓ 已保存」，同时浮一条提示；后端同步改，上传校验按新值走，刷新仍是新值。</li>
+    <li>上限同时管前端拦截（超了直接跳过并提示）和后端校验（绕过前端也拦得住）。</li>
+  </ul>
+</div>
+
+<script>
+const faces = [
+  ['托帕 · 户外', '1024×1024 · 用在 6 处', '#cfe3d4'],
+  ['双手合十 · 室内', '1024×1024 · 用在 4 处', '#e6dcc6'],
+  ['木槿昔 · 托下巴', '1024×1024 · 用在 2 处', '#dcd6e8'],
+  ['木槿昔 · 侧脸', '1024×1024 · 用在 2 处', '#e8d8d4'],
+  ['云落半夏', '1024×1024 · 用在 2 处', '#cfe0e8'],
+  ['薄荷特写', '1024×1024 · 用在 4 处', '#dbe8d2']
+]
+
+const grid = document.getElementById('grid')
+faces.forEach(([n, s, c]) => {
+  const a = document.createElement('article')
+  a.className = 'asset'
+  a.innerHTML = `<div class="thumb" style="background:${c}"></div>
+    <div class="txt"><b>${n}</b><small>${s}</small></div>`
+  grid.appendChild(a)
+})
+
+let limit = 50
+const add = document.createElement('div')
+add.className = 'asset asset--add'
+add.innerHTML = `
+  <button class="add-btn" type="button" id="pickBtn"><span class="plus">＋</span><span>新增素材</span></button>
+  <span class="lim" id="lim">
+    <span>png/jpg/webp ≤</span>
+    <span class="num" id="num" title="点击修改上限">${limit}</span>
+    <span>MB</span>
+    <span class="tick" id="tick">✓ 已保存</span>
+  </span>`
+grid.appendChild(add)
+
+const lim = document.getElementById('lim')
+const num = document.getElementById('num')
+const tick = document.getElementById('tick')
+
+num.addEventListener('click', () => {
+  if (lim.querySelector('input')) return
+  const inp = document.createElement('input')
+  inp.type = 'number'
+  inp.min = 1; inp.max = 200; inp.value = limit
+  lim.classList.remove('err')
+  num.replaceWith(inp)
+  inp.focus(); inp.select()
+
+  let done = false
+  const finish = commit => {
+    if (done) return
+    done = true
+    const v = Number(inp.value)
+    const bad = !Number.isFinite(v) || v < 1 || v > 200
+    if (commit && bad) {
+      // 非法值：不清场，标红提示，可继续改
+      done = false
+      lim.classList.add('err')
+      inp.focus(); inp.select()
+      return
+    }
+    if (!commit || bad) {
+      lim.classList.remove('err')
+      inp.replaceWith(num)
+      return
+    }
+    limit = Math.round(v)
+    num.textContent = limit
+    inp.replaceWith(num)
+    document.getElementById('tnum').textContent = limit
+    tick.classList.add('on')
+    document.getElementById('toast').classList.add('on')
+    setTimeout(() => tick.classList.remove('on'), 1600)
+    setTimeout(() => document.getElementById('toast').classList.remove('on'), 2600)
+  }
+
+  inp.addEventListener('keydown', e => {
+    if (e.key === 'Enter') finish(true)
+    if (e.key === 'Escape') finish(false)
+  })
+  inp.addEventListener('blur', () => finish(true))
+})
+
+document.getElementById('pickBtn').addEventListener('click', () => {
+  document.getElementById('toast').classList.remove('on')
+  alert('（原型）这里会打开选图窗口')
+})
+
+// 截图用：file.html#edit 直接进入编辑态；#saved 模拟保存成功
+if (location.hash === '#edit') num.click()
+if (location.hash === '#saved') {
+  num.click()
+  const i = lim.querySelector('input')
+  i.value = 80
+  i.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }))
+}
+</script>
+</body>
+</html>

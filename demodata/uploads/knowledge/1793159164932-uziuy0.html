@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第5期 · 随机梯度朗之万动力学SGLD</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>第 5 期 · 随机梯度朗之万动力学 SGLD（给 SGD 撒把热噪声，把优化变成"后验采样"）</h1>
+<h2>一、故事引入</h2>
+<p>阿明刚用 SGD 把神经网络的损失压到最低，捧着那个"最优参数点"兴冲冲跑去找大刘："看，我找到了全世界最好的 θ！"</p>
+<p>大刘没接茬，反手换了一批<strong>没见过的新数据</strong>喂进去——准确率掉了七个百分点。"你找到的只是这一个训练集上的最好点。换批数据，它就可能飘到别处。你给它一个<strong>点</strong>，却没告诉它这个点<strong>有多不确定</strong>。"</p>
+<p>阿明一愣："那怎么办？SGD 明明是顺着梯度一路滑到谷底的啊。"</p>
+<p>"对，<strong>普通 SGD 是'确定性下滑'——它只会停在一个点，给不出'我有多确定'</strong>，"大刘在白板上画了条带噪声的下滑轨迹，"但如果我<strong>给 SGD 加一把有讲究的热噪声</strong>，让它既顺着梯度坡往下走，又因为热运动在谷底里乱晃——晃得久了，它<strong>待在每个位置的停留频率</strong>，恰好就等于贝叶斯后验分布 p(θ|数据)。"</p>
+<p>"这就是<strong>随机梯度朗之万动力学（SGLD）</strong>：把'找一个点'的优化，变成'在后验里随机漫步、顺便收集样本'的采样。一个点 → 一整个分布，就这么来的。"</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 从朗之万方程说起（分子的热运动）</h3>
+<p>物理里，悬浮在液体中的小颗粒受两个力：① 指向低势能 −∇U 的"漂移"（往谷底滑）；② 液体分子撞击带来的<strong>布朗运动</strong>（随机踢一脚）。写成随机微分方程（SDE）：</p>
+<blockquote>dθ = −½ ∇U(θ) dt + dB_t ，其中 B_t 是标准布朗运动（dB_t ~ N(0, dt)）。</blockquote>
+<p>数学上能严格证明：这个过程的<strong>平稳分布（待久了停在 θ 的概率密度）</strong>恰好是</p>
+<blockquote>π(θ) ∝ exp(−U(θ))。</blockquote>
+<p>也就是说——<strong>只要把 U(θ) 取成"负对数后验"，朗之万方程的稳态就是后验本身</strong>。这就是"用物理采样贝叶斯"的核心。</p>
+<h3>2. 离散化 + 随机梯度 = SGLD</h3>
+<p>电脑要算就得离散。把 dt 换成步长 η（这里 η 同时扮演<strong>学习率</strong>和<strong>温度</strong>），用 mini-batch 算噪声梯度 g̃_t ≈ ∇U(θ_t)，得到 SGLD 更新式：</p>
+<blockquote><strong>θ_{t+1} = θ_t − (η/2)·g̃_t + √η · ξ_t ，其中 ξ_t ~ N(0, I) 独立同分布。</strong></blockquote>
+<p>注意这两个关键点（也是 SGLD 的"魔法"所在）：</p>
+<ul>
+<li><strong>漂移项是 O(η)</strong>：系数 η/2，随步长线性缩小；</li>
+<li><strong>噪声项是 O(√η)</strong>：标准差 √η、方差 η，比漂移项<strong>高一阶</strong>。</li>
+</ul>
+<p>这半阶之差不是凑巧——它来自<strong>涨落-耗散定理（fluctuation-dissipation theorem）</strong>：漂移（耗散，让你滑向谷底）和扩散（涨落，让你乱晃）必须按这个比例，才能让不变分布恰好是 exp(−U)，而不是某个被温度扭曲的分布。</p>
+<h3>3. 和 SGD（第 4 期）一字之差，天壤之别</h3>
+<p>普通 SGD：θ_{t+1} = θ_t − η·g̃_t（最多带点无关紧要的数值噪声）。它<strong>收敛到一个点</strong>——经验风险最小点，等价于后验的<strong>最大后验（MAP）</strong>，也就是最尖的那个谷底。</p>
+<p>SGLD 仅仅多了一个<strong>标定好的 √η·ξ</strong>，性质就全变了：</p>
+<ul>
+<li>它不再收敛到单点，而是<strong>在后验里持续采样</strong>；</li>
+<li>它天然偏向<strong>宽而浅的谷（flat minima）</strong>——因为宽谷"体积大"，在 exp(−U) 下被赋的概率更高；而宽谷对应的模型对数据扰动更鲁棒，<strong>泛化更好</strong>；</li>
+<li>收集 N 个样本做<strong>贝叶斯模型平均</strong>：预测分布 ≈ (1/N) Σ p(y|x, θ_i)，直接给出<strong>不确定性</strong>（置信区间），而不是一个毫无置信度的点预测。</li>
+</ul>
+<p>本质是：把第 4 期那个"噪声地板 ησ²/(2H)"里的噪声<strong>转正</strong>——之前它是收敛残差、是麻烦；在 SGLD 里它成了采样武器。</p>
+<h3>4. 闭环复习（它站在哪些上一期肩膀上）</h3>
+<ul>
+<li><strong>第 3 期 模拟退火</strong>：SA 用 Metropolis 接受准则 + 温度冷却，最后<strong>冷到 0 找一个好点</strong>；SGLD 是连续版朗之万，<strong>故意不让温度归零</strong>，好持续采样。一个要冷、一个不能太冷。</li>
+<li><strong>第 12 期 马尔可夫链</strong>：SGLD 迭代只依赖 θ_t（加上独立噪声），<strong>满足马尔可夫性质</strong>；其转移算子有不变测度 π=后验，满足第 12 期的"πP=π"。</li>
+<li><strong>第 14 期 随机游走 / 第 6 期 大数定律</strong>：噪声项本身就是随机游走；收集的样本做平均 → 蒙特卡洛估计后验期望（大数定律保证收敛）。</li>
+<li><strong>第 10 期 CLT / 第 16 期 熵 KL</strong>：样本均值误差按 1/√N（贝叶斯 CLT）；SGLD 的目标分布也可视为在最小化与真实后验的 KL（变分视角）。</li>
+</ul>
+<hr>
+<h2>三、今日题目（你来总结，答案见第四节）</h2>
+<blockquote><strong>题 1 · 平衡比例基本功</strong></blockquote>
+<blockquote>SGLD 的正确更新是 θ_{t+1} = θ_t − (η/2)g̃_t + <strong>√η</strong> ξ_t。若有人把噪声系数写成了 η（即 + η ξ_t，噪声标准差变成 η 而非 √η），当 η→0 时，迭代会收敛到什么分布？为什么这破坏了"采样后验"的目标？</blockquote>
+<blockquote><strong>题 2 · 尖谷还是宽谷</strong></blockquote>
+<blockquote>普通 SGD 最终停在 loss 曲面的哪类极小值？SGLD 的"热噪声"会把它推向尖谷还是宽谷？为什么这反而提升泛化？</blockquote>
+<blockquote><strong>题 3 · SGLD 是 MCMC（第 12 期视角）</strong></blockquote>
+<blockquote>(a) SGLD 迭代满足马尔可夫性质吗？为什么？</blockquote>
+<blockquote>(b) 若令 U(θ) = −log p(数据|θ) − log p(θ)（负对数后验），当 η→0 且迭代够久，θ 的样本分布趋于什么？这与第 12 期"平稳分布 πP=π"如何对应？</blockquote>
+<blockquote>(c) 用 SGLD 样本估计"新数据 x* 上的预测分布"，写出一个蒙特卡洛估计式。</blockquote>
+<blockquote><strong>题 4 · 与模拟退火对照（第 3 期）</strong></blockquote>
+<blockquote>(a) 如果把 SGLD 的温度 η_t 一路退火降到 0（很像第 3 期模拟退火冷却），最终得到后验样本还是单点？</blockquote>
+<blockquote>(b) 想"既采样又探索"，实践中 η 该怎么设？点出与模拟退火的根本区别。</blockquote>
+<hr>
+<h2>四、解题思路与答案（写全，可对照你的总结）</h2>
+<blockquote><strong>题 1 答案</strong></blockquote>
+<blockquote>若噪声标准差是 η（方差 η²，比正确的 √η 少了一半阶），则漂移 O(η) 与扩散 O(η) <strong>同阶</strong>。从连续时间极限看，其平稳分布形如 π ∝ exp(−U/η)——温度被"1/η"放大，当 η→0 时这个分布<strong>塌缩到 U 的最小点（MAP）</strong>，而不是展开成完整的后验 exp(−U)。</blockquote>
+<blockquote>核心结论：<strong>漂移 O(η) 与扩散 O(√η) 的半阶差，是涨落-耗散定理硬要求的比例</strong>。扩散必须比漂移高一阶，才能恰好抵消、使不变分布为 exp(−U)。把噪声错写成 η，噪声太少 → 温度塌陷 → 退化成 SGD 的"单点 MAP"，丢了整片后验。</blockquote>
+<blockquote><strong>题 2 答案</strong></blockquote>
+<blockquote>- 普通 SGD（无标定热噪声）收敛到经验风险最小点 = MAP，通常是<strong>尖谷</strong>（曲率大、loss 曲面很陡）。</blockquote>
+<blockquote>- SGLD 的 √η 热噪声在靠近谷底（梯度≈0）时仍按 √η 把参数推动；它<strong>倾向于花更多时间待在"宽而浅"的谷</strong>——因为宽谷在参数空间里"体积大"，在朗之万平稳分布 exp(−U) 下被赋更高概率（flat minima ↔ 低曲率 ↔ 高"熵"）。</blockquote>
+<blockquote>- 泛化提升：宽谷对应对训练数据扰动鲁棒的模型；把多个样本做贝叶斯平均的预测，比单点预测更稳、校准更好（不确定性真实可信）。</blockquote>
+<blockquote><strong>题 3 答案</strong></blockquote>
+<blockquote>(a) <strong>满足</strong>马尔可夫性质。θ_{t+1} 只依赖 θ_t 与当前独立的噪声 ξ_t、随机 mini-batch（g̃_t），与 θ_0…θ_{t−1} 的历史无关：P(θ_{t+1}|θ_t,…,θ_0) = P(θ_{t+1}|θ_t)。正是第 12 期讲的"未来只取决于现在"。</blockquote>
+<blockquote>(b) 趋于<strong>后验 p(θ|数据) ∝ exp(−U(θ))</strong>。SGLD 链是 MCMC 的一种（随机梯度版 unadjusted Langevin）；其转移算子 P_η 的不变测度随 η→0 逼近 π=p(θ|D)，满足 π = πP_η（即第 12 期 πP=π）；若链各态历经，经验分布 (1/T)Σδ_{θ_t} → π。</blockquote>
+<blockquote>(c) 预测分布 p(y*|x*,D) = ∫ p(y*|x*,θ) p(θ|D)dθ ≈ <strong>(1/N) Σ_{i=1}^N p(y*|x*, θ_i)</strong>，θ_i 取 burn-in 之后收敛期的样本。把"点预测"升级成"分布预测"，顺带给出置信区间。</blockquote>
+<blockquote><strong>题 4 答案</strong></blockquote>
+<blockquote>(a) 若保持正确缩放（噪声 std = √η_t）但让 η_t → 0，噪声方差也→0，链最终<strong>冻结不动</strong>——实际等效于停在 MAP 附近的一个点，<strong>失去采样能力</strong>。所以"彻底冷却"会把 SGLD 变回 SGD / 模拟退火。</blockquote>
+<blockquote>(b) 实践上：要么保持一个<strong>固定的小 η &gt; 0</strong> 让链在平稳态持续采样（η 越小越接近真后验，但混合越慢）；要么"预热后恒温"。<strong>根本区别</strong>：模拟退火的目标是"找一个好点"，所以收尾要冷却到 0；SGLD 的目标是"采样一个分布"，所以必须让温度 T = η 保持 &gt; 0。一个要冷、一个不能冷——这正是第 3 期"温度=探索开关"与 SGLD"温度=采样引擎"的角色反转。</blockquote>
+<hr>
+<h2>五、明日预告</h2>
+<p>下一期（第 6 期）：<strong>变分推断与 KL 散度（用"找一个好分布"近似后验）</strong>。我们会把第 16 期埋下的 KL 散度正式用起来——既然 SGLD 是"硬采样"后验，那能不能"直接猜一个简单分布、逼它靠向后验"？这正是变分贝叶斯的思想，也是现代大模型里把贝叶斯塞进大网络的工程化钥匙。</p></div></body></html>

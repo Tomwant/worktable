@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第02期 · 收入与成本</title>
+<style>
+  :root{
+    --green:#2f6b5e;
+    --green-soft:#e7f0ed;
+    --gold:#c9a961;
+    --gold-soft:#f7f1e4;
+    --ink:#1f2a26;
+    --muted:#5f6b66;
+    --line:#e3e8e5;
+    --bg:#f5f7f6;
+    --card:#ffffff;
+    --r:16px;
+    --shadow:0 6px 24px rgba(47,107,94,.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.75;
+    padding:28px 16px 56px;
+  }
+  .wrap{max-width:820px;margin:0 auto;}
+
+  /* 头部 */
+  .head{
+    background:linear-gradient(135deg,var(--green) 0%,#3c7e70 100%);
+    color:#fff;
+    border-radius:var(--r);
+    padding:30px 28px;
+    box-shadow:var(--shadow);
+    position:relative;
+    overflow:hidden;
+  }
+  .head::after{
+    content:"";
+    position:absolute;right:-40px;top:-40px;
+    width:160px;height:160px;border-radius:50%;
+    background:radial-gradient(circle,rgba(201,169,97,.35),transparent 70%);
+  }
+  .issue{
+    display:inline-block;
+    background:rgba(201,169,97,.92);
+    color:#3a2f12;
+    font-size:13px;font-weight:700;
+    padding:4px 12px;border-radius:999px;
+    letter-spacing:1px;
+  }
+  .head h1{font-size:30px;margin:14px 0 6px;letter-spacing:1px;}
+  .head .sub{font-size:15px;opacity:.92;}
+  .meta{
+    margin-top:18px;display:flex;flex-wrap:wrap;gap:8px;
+    position:relative;z-index:1;
+  }
+  .meta span{
+    background:rgba(255,255,255,.14);
+    border:1px solid rgba(255,255,255,.25);
+    font-size:12.5px;padding:4px 10px;border-radius:8px;
+  }
+
+  /* 卡片 */
+  .card{
+    background:var(--card);
+    border-radius:var(--r);
+    padding:26px 24px;
+    margin-top:20px;
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .card-title{
+    display:flex;align-items:center;gap:10px;
+    font-size:19px;font-weight:700;color:var(--green);
+    margin-bottom:14px;
+  }
+  .card-title .no{
+    width:30px;height:30px;flex:none;
+    background:var(--green-soft);color:var(--green);
+    border-radius:9px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:700;
+  }
+  .card-title .tag{
+    margin-left:auto;font-size:12px;font-weight:600;
+    color:var(--gold);background:var(--gold-soft);
+    padding:3px 10px;border-radius:999px;
+  }
+
+  p{color:var(--ink);margin:10px 0;font-size:15px;}
+  .muted{color:var(--muted);font-size:14px;}
+
+  /* 场景框 */
+  .scene{
+    background:var(--green-soft);
+    border-left:4px solid var(--green);
+    border-radius:10px;
+    padding:16px 18px;
+    margin:14px 0;
+  }
+  .scene b{color:var(--green);}
+
+  /* 公式卡 */
+  .formula{
+    background:linear-gradient(135deg,#fbfcfb,#f3f7f5);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:14px 16px;
+    margin:12px 0;
+  }
+  .formula .fname{font-weight:700;color:var(--green);font-size:14.5px;margin-bottom:4px;}
+  .formula .fbody{font-size:15px;color:var(--ink);}
+  .formula .fbody em{font-style:normal;color:var(--gold);font-weight:700;}
+
+  /* 算例表 */
+  table{width:100%;border-collapse:collapse;margin:14px 0;font-size:14.5px;}
+  th,td{border:1px solid var(--line);padding:10px 12px;text-align:left;}
+  th{background:var(--green-soft);color:var(--green);font-weight:700;}
+  td.num{text-align:right;font-variant-numeric:tabular-nums;}
+  tr.hl td{background:var(--gold-soft);font-weight:700;color:#3a2f12;}
+  .note{
+    background:var(--gold-soft);
+    border-radius:10px;padding:14px 16px;margin:14px 0;
+    font-size:14.5px;color:#3a2f12;
+  }
+  .note b{color:var(--green);}
+
+  /* 红线列表 */
+  .rule{
+    display:flex;gap:12px;align-items:flex-start;
+    padding:12px 14px;border-radius:12px;
+    background:#fff;border:1px solid var(--line);
+    margin:10px 0;
+  }
+  .rule .dot{
+    flex:none;width:26px;height:26px;border-radius:50%;
+    background:var(--green);color:#fff;font-weight:700;font-size:13px;
+    display:flex;align-items:center;justify-content:center;margin-top:2px;
+  }
+  .rule .rt{font-weight:700;color:var(--ink);}
+  .rule .rd{color:var(--muted);font-size:14px;margin-top:2px;}
+
+  /* 自测 */
+  /* 自测题折叠：原生 details，不依赖 JS（沙箱预览里也能点开） */
+  details.qz{border:1px solid #e3e8e5;border-radius:12px;background:#fff;margin:0 0 12px;overflow:hidden;transition:border-color .18s,box-shadow .18s;}
+  details.qz:hover{border-color:#cfdcd6;box-shadow:0 3px 12px rgba(47,107,94,.07);}
+  details.qz[open]{border-color:#cfe0d9;box-shadow:0 3px 14px rgba(47,107,94,.08);}
+  details.qz summary{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;list-style:none;user-select:none;}
+  details.qz summary::-webkit-details-marker{display:none;}
+  details.qz summary::before,details.qz summary::after{content:"" !important;display:none !important;}
+  details.qz summary::marker{content:"";}
+  details.qz .qt{flex:1 1 auto;font-weight:700;font-size:15px;line-height:1.6;color:#1f2a26;}
+  details.qz .peek{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:#8a6f2e;background:#f7f1e4;border-radius:999px;padding:3px 11px 3px 9px;margin-top:1px;transition:background .18s,color .18s;}
+  details.qz:hover .peek{background:#f2e8d2;}
+  details.qz[open] .peek{background:#e7f0ed;color:#2a5b50;}
+  details.qz .peek .arw{font-size:10px;line-height:1;transition:transform .2s;}
+  details.qz[open] .peek .arw{transform:rotate(180deg);}
+  details.qz .peek .t-off{display:none;}
+  details.qz[open] .peek .t-on{display:none;}
+  details.qz[open] .peek .t-off{display:inline;}
+  details.qz .qa{border-top:1px dashed #e3e8e5;padding:12px 16px 14px;background:#fbfcfb;font-size:14.5px;line-height:1.75;color:#1f2a26;animation:qzfade .2s ease-out;}
+  details.qz .qa b{color:#2f6b5e;}
+  details.qz .qa span:not([class]){color:#5f6b66;font-size:13.5px;}
+  @keyframes qzfade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .qz-lead{font-size:13.5px;color:#5f6b66;margin:-6px 0 14px;}
+
+  .foot{
+    margin-top:26px;text-align:center;
+    color:var(--muted);font-size:13px;line-height:1.8;
+  }
+  .foot .line{width:60px;height:3px;background:var(--gold);border-radius:2px;margin:0 auto 12px;}
+
+  @media (max-width:600px){
+    body{padding:18px 10px 40px;}
+    .head{padding:24px 18px;}
+    .head h1{font-size:24px;}
+    .card{padding:20px 15px;}
+    th,td{padding:8px 9px;font-size:13px;}
+    .meta span{font-size:11px;}
+    table{font-size:13px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 头部 -->
+  <div class="head">
+    <span class="issue">第 02 期</span>
+    <h1>收入与成本</h1>
+    <div class="sub">门店经营的第一对基本功 —— 先分清钱从哪来、花到哪去</div>
+    <div class="meta">
+      <span>日期：2026-10-31</span>
+      <span>关键词：收入确认 · 成本分类 · 门店核算口径 · 多店对比</span>
+    </div>
+  </div>
+
+  <!-- 1. 场景 -->
+  <div class="card">
+    <div class="card-title"><span class="no">1</span>先把问题摆出来<span class="tag">真实门店场景</span></div>
+    <div class="scene">
+      <p>小王管着 3 家奶茶店。月底看收银系统，每家"今日营业额"都挺高，他心里美滋滋。可一算利润，却薄得可怜，养团队都吃力。</p>
+      <p>他到底错在哪？他把 <b>顾客扫码付的钱</b> 直接当成"收入"，把 <b>进货花出去的钱</b> 直接当成"成本"。但他漏了三件事：</p>
+      <p>① 有退款、有平台满减折扣，流水不等于真收到的钱；<br>
+      ② 进了货没卖掉的，还在仓库里，不能算"花掉的成本"；<br>
+      ③ 房租、人工、水电这些大头，根本没算进"成本"里。</p>
+      <p>这一期，我们就把 <b>收入</b> 和 <b>成本</b> 这对基本功讲透。</p>
+    </div>
+  </div>
+
+  <!-- 2. 定义与公式 -->
+  <div class="card">
+    <div class="card-title"><span class="no">2</span>定义与公式卡片<span class="tag">先记准再算</span></div>
+
+    <p><b>收入（营业收入）</b>：门店在经营中，因卖出商品或提供服务而获得的经济利益流入。关键不是"收到多少钱"，而是"本期内真正赚到、且已扣掉退款折扣的净额"。</p>
+    <div class="formula">
+      <div class="fname">营业收入</div>
+      <div class="fbody">营业收入 = <em>销售流水（GMV）</em> − <em>退款</em> − <em>折扣折让</em></div>
+    </div>
+
+    <p><b>成本</b>：为取得收入而消耗的资源。门店成本分两层——</p>
+    <p>① <b>营业成本</b>：已卖出商品对应的成本（奶茶店的食材/原料、零售店的商品进货价）。<br>
+    ② <b>期间费用</b>：不直接对应某一杯奶茶的固定开支，如房租、人工、水电、营销、折旧。</p>
+
+    <div class="formula">
+      <div class="fname">已售商品成本（营业成本）</div>
+      <div class="fbody">已售成本 = <em>期初库存</em> + <em>本期进货</em> − <em>期末库存</em></div>
+    </div>
+    <div class="formula">
+      <div class="fname">总费用</div>
+      <div class="fbody">总费用 = <em>房租</em> + <em>人工</em> + <em>水电</em> + <em>营销/佣金</em> + <em>其他</em></div>
+    </div>
+    <div class="formula">
+      <div class="fname">毛利 与 营业利润（呼应第 01 期）</div>
+      <div class="fbody">毛利 = <em>营业收入</em> − <em>营业成本</em><br>
+      营业利润 = <em>营业收入</em> − <em>营业成本</em> − <em>总费用</em></div>
+    </div>
+    <p class="muted">一句话记忆：收入是"净赚进来的"，成本要分"卖掉的"和"养店的"两块，利润 = 收入 − 两块成本。</p>
+  </div>
+
+  <!-- 3. 算例 -->
+  <div class="card">
+    <div class="card-title"><span class="no">3</span>一份能跟着算的示例<span class="tag">数字都算对</span></div>
+    <p>以小王旗下 <b>门店 A（社区奶茶店）</b> 某月数据为例：</p>
+    <table>
+      <tr><th>项目</th><th>金额（元）</th><th>说明</th></tr>
+      <tr><td>销售流水（GMV）</td><td class="num">120,000</td><td>顾客支付总额</td></tr>
+      <tr><td>退款</td><td class="num">2,000</td><td>做错/不满意退的</td></tr>
+      <tr><td>折扣折让</td><td class="num">3,000</td><td>平台满减、会员折扣</td></tr>
+      <tr><td>期初原料库存</td><td class="num">8,000</td><td>上月剩的</td></tr>
+      <tr><td>本期进货</td><td class="num">40,000</td><td>这个月买的料</td></tr>
+      <tr><td>期末原料库存</td><td class="num">6,000</td><td>月底盘点剩的</td></tr>
+      <tr><td>房租</td><td class="num">10,000</td><td>月固定</td></tr>
+      <tr><td>人工</td><td class="num">18,000</td><td>店长+店员</td></tr>
+      <tr><td>水电</td><td class="num">2,000</td><td>—</td></tr>
+      <tr><td>营销/平台佣金</td><td class="num">4,000</td><td>—</td></tr>
+    </table>
+
+    <p><b>第一步：算营业收入</b></p>
+    <div class="formula"><div class="fbody">营业收入 = 120,000 − 2,000 − 3,000 = <em>115,000 元</em></div></div>
+
+    <p><b>第二步：算已售商品成本（不是进货额！）</b></p>
+    <div class="formula"><div class="fbody">已售成本 = 8,000 + 40,000 − 6,000 = <em>42,000 元</em></div></div>
+
+    <p><b>第三步：算毛利（呼应第 01 期毛利率）</b></p>
+    <div class="formula"><div class="fbody">毛利 = 115,000 − 42,000 = <em>73,000 元</em><br>毛利率 = 73,000 ÷ 115,000 × 100% ≈ <em>63.5%</em></div></div>
+
+    <p><b>第四步：算总费用与营业利润</b></p>
+    <div class="formula"><div class="fbody">总费用 = 10,000 + 18,000 + 2,000 + 4,000 = <em>34,000 元</em><br>营业利润 = 115,000 − 42,000 − 34,000 = <em>39,000 元</em></div></div>
+
+    <div class="note">
+      <b>小王原来怎么算的？</b> 他直接用流水 120,000 当收入、用进货 40,000 当成本，得出毛利 80,000 元 —— 比真实的 73,000 元 <b>虚高了近 1 万</b>。根子就在：没扣退款折扣、没用"已售成本"、更没算房租人工。<b>用错口径，利润就会自己骗自己。</b>
+    </div>
+  </div>
+
+  <!-- 4. 判断标准/红线 -->
+  <div class="card">
+    <div class="card-title"><span class="no">4</span>给经营者的判断标准与红线<span class="tag">照着自查</span></div>
+
+    <div class="rule"><div class="dot">1</div><div><div class="rt">收入只用"净额"，别用流水自我安慰</div><div class="rd">经营分析一律用扣掉退款、折扣后的净收入。GMV 看着热闹，却会掩盖真实经营，是新手最容易被骗的高数。</div></div></div>
+
+    <div class="rule"><div class="dot">2</div><div><div class="rt">算毛利必须用"已售成本"，不是"进货额"</div><div class="rd">进货多 ≠ 成本高。没卖掉的还在库存里，公式：期初 + 进货 − 期末。月度盘点填"期末库存"这一步不能偷懒。</div></div></div>
+
+    <div class="rule"><div class="dot">3</div><div><div class="rt">费用要算全，警惕漏掉"人工"和"平台佣金"</div><div class="rd">房租、人工、水电、营销、折旧，任何一项漏算，利润都虚高。新手最常漏的就是人工和线上平台抽成。</div></div></div>
+
+    <div class="rule"><div class="dot">4</div><div><div class="rt">多店对比必须同一口径</div><div class="rd">A 店和 B 店要用同一套算法（同样扣退款、同样算已售成本），否则两家的"利润"没有可比性，管多店就失去意义。</div></div></div>
+
+    <div class="rule"><div class="dot">5</div><div><div class="rt">先收的钱不一定是收入（预收账款）</div><div class="rd">顾客办充值卡先付的钱，服务还没提供，那是"负债"不是收入。这笔会在后面"现金流与利润的区别"专题细讲。</div></div></div>
+  </div>
+
+  <!-- 5. 自测题 -->
+  <div class="card">
+    <div class="card-title"><span class="no">5</span>今日自测题</div>
+    <p class="qz-lead">先自己算一遍，再点答案对一下。</p>
+
+    <details class="qz">
+      <summary>
+        <span class="qt">Q1：门店本月收银流水 100,000 元，退款 1,000 元，折扣 4,000 元，营业收入是多少？</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="qa">A1：95,000 元。<span>（100,000 − 1,000 − 4,000）</span></div>
+    </details>
+
+    <details class="qz">
+      <summary>
+        <span class="qt">Q2：期初库存 5,000 元，本期进货 30,000 元，期末库存 7,000 元，本月已售商品成本是多少？</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="qa">A2：28,000 元。<span>（5,000 + 30,000 − 7,000，不是 30,000）</span></div>
+    </details>
+
+    <details class="qz">
+      <summary>
+        <span class="qt">Q3（判断）：顾客办了 2,000 元充值卡，本月只消费了 500 元，本月收入应记多少？为什么？</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="qa">A3：记 500 元收入。<span>其余 1,500 元是"预收账款"（负债），等顾客真正消费、服务发生时再确认收入，不能一次全算进本月收入。</span></div>
+    </details>
+
+    <p class="muted">三题都答对，说明"收入与成本"的口径已经立住了。下期我们顺着利润往下拆 —— 聊聊「净利率」，看看毛利到净利中间到底被什么吃掉了。</p>
+  </div>
+
+  <!-- 脚注 -->
+  <div class="foot">
+    <div class="line"></div>
+    财务知识 · 第 02 期 · 收入与成本<br>
+    本篇为门店经营微型讲义，独立成篇，可单独阅读；与第 01 期《毛利与毛利率》前后呼应。<br>
+    数据均为示例，落地请以各门店真实账目为准。
+  </div>
+
+</div>
+</body>
+</html>

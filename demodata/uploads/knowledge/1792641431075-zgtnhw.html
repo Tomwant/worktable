@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美股每日新闻简报 · 2026-10-05</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#ffffff; --line:#e3e6ea; --text:#1a1d21; --sub:#5b6470;
+    --up:#d32029; --down:#0f8a4a; --accent:#1f5fd6; --warn:#b8620a; --chip:#eef2f7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--text);font-family:"PingFang SC","Microsoft YaHei","Helvetica Neue",Arial,sans-serif;line-height:1.7;padding:28px 16px}
+  .wrap{max-width:940px;margin:0 auto}
+  header{background:linear-gradient(135deg,#1f2a44,#2f4a8c);color:#fff;border-radius:14px;padding:28px 30px;margin-bottom:22px}
+  header h1{font-size:26px;font-weight:700;letter-spacing:.5px}
+  header .meta{margin-top:8px;font-size:13px;opacity:.85}
+  .tag{display:inline-block;background:rgba(255,255,255,.16);border-radius:20px;padding:2px 12px;font-size:12px;margin-right:6px;margin-top:10px}
+  section{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:22px 26px;margin-bottom:18px}
+  h2{font-size:18px;margin-bottom:14px;padding-left:10px;border-left:4px solid var(--accent);line-height:1.3}
+  h3{font-size:15px;margin:16px 0 8px;color:#2b3440}
+  p{font-size:14px;color:#2b3440;margin-bottom:8px}
+  ul{margin:6px 0 6px 20px}
+  li{font-size:14px;margin-bottom:4px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+  th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
+  th{background:#f0f3f7;font-weight:600;color:#3a4451;font-size:13px}
+  td.num{text-align:right;font-variant-numeric:tabular-nums}
+  .up{color:var(--up);font-weight:600}
+  .down{color:var(--down);font-weight:600}
+  .flat{color:var(--sub)}
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:8px}
+  .kv{background:#f8fafc;border:1px solid var(--line);border-radius:9px;padding:12px 14px}
+  .kv .k{font-size:12px;color:var(--sub)}
+  .kv .v{font-size:19px;font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+  .kv .c{font-size:12px;margin-top:2px}
+  .note{background:#fff8ec;border-left:3px solid var(--warn);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .alert{background:#fdeeee;border-left:3px solid var(--up);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .good{background:#eefaf3;border-left:3px solid var(--down);padding:10px 14px;border-radius:0 8px 8px 0;font-size:13.5px;margin:12px 0}
+  .hl{background:linear-gradient(180deg,transparent 62%,#ffe9a8 62%);font-weight:600}
+  .chip{display:inline-block;background:var(--chip);color:#3a4451;border-radius:6px;padding:2px 9px;font-size:12px;margin:2px 4px 2px 0}
+  .tm{display:inline-block;min-width:74px;color:var(--accent);font-weight:600;font-variant-numeric:tabular-nums}
+  .star{color:var(--up);font-weight:700}
+  footer{text-align:center;color:var(--sub);font-size:12px;padding:16px 0 8px}
+  .lvl{display:inline-block;font-size:11px;border-radius:4px;padding:1px 7px;margin-right:6px;color:#fff}
+  .l1{background:#d32029}.l2{background:#d97b08}.l3{background:#2f7fbf}
+  .src{font-size:12px;color:var(--sub);margin-top:4px}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>美股每日新闻简报</h1>
+  <div class="meta">2026年10月5日（周一）· 覆盖纳斯达克、标普500、道琼斯 · 数据截至北京时间 09:11（对应美东 10/4 周日晚；最新完整交易日为美东 10/2 周五收盘；10/5 美股今晚 21:30 开盘，盘前指数期货走高）</div>
+  <div>
+    <span class="tag">非农爆冷 2.9万</span>
+    <span class="tag">纳指100收盘新高</span>
+    <span class="tag">10Y 周线五连升至 5.28%</span>
+    <span class="tag">油价回落后再反弹</span>
+    <span class="tag">FOMC纪要周三登场</span>
+    <span class="tag">霍尔木兹暂不重开</span>
+    <span class="tag">OPEC+ 11月小幅增产</span>
+  </div>
+</header>
+
+<section>
+  <h2>一、市场速览（10/2 周五收盘 · 最新完整交易日）</h2>
+  <p>周五美股<span class="hl">三大指数集体收涨，纳指盘中一度刷新历史纪录</span>。直接催化是盘前公布的 9 月非农远弱于预期——新增仅 2.9 万（预期约 9 万），市场据此将美联储 10 月加息概率从一周前的约 70% 骤降至约 22%，长端美债由升转稳、风险资产全面反弹。纳指 100 指数收涨 1% 报 30,817.93，成功录得<strong>收盘与盘中双重新高</strong>（盘中 31,017.52），刷新 9/22 纪录；纳指综合一度升约 1.8% 至 27,353.68，逼近但未破收盘纪录。VIX 回落至 15.40（-6.03%），市场恐慌显著缓和。</p>
+  <p>从全周看，三大指数分化明显：道指累跌 <strong>1.26%</strong>、标普 500 累跌 <strong>0.27%</strong>、纳指综合累涨 <strong>0.45%</strong>、纳指 100 累涨 <strong>0.65%</strong>（三大指数均连涨三周）。标普 500 年内累计上涨约 <strong>12.8%</strong>，距 8 月中旬历史高点仅约 1%。<strong>内部结构仍高度集中于少数大型科技/AI 股</strong>——9 月约四分之三成分股实际上录得下跌，本周上涨仍由英伟达、半导体与 AI 链主导。</p>
+
+  <table>
+    <tr><th>指数 / 标的</th><th class="num">收盘</th><th class="num">日涨跌</th><th class="num">备注</th></tr>
+    <tr><td>道琼斯工业指数</td><td class="num">51,176.96</td><td class="num up">+0.49% / +250.40</td><td class="num flat">全周 -1.26%</td></tr>
+    <tr><td>标普 500 指数</td><td class="num">7,722.72</td><td class="num up">+0.73% / +56.27</td><td class="num flat">全周 -0.27%；年内 +12.8%</td></tr>
+    <tr><td>纳斯达克综合指数</td><td class="num">27,190.86</td><td class="num up">+1.19% / +319.27</td><td class="num flat">盘中 27,353.68 逼近纪录；全周 +0.45%</td></tr>
+    <tr><td>纳斯达克 100</td><td class="num">30,817.93</td><td class="num up">+1.00% / 新收盘高</td><td class="num flat">盘中 31,017.52 新高；全周 +0.65%</td></tr>
+    <tr><td>罗素 2000（小盘）</td><td class="num">2,832.90</td><td class="num up">+0.94% / +26.27</td><td class="num flat">小盘温和修复</td></tr>
+    <tr><td>费城半导体指数 (SOX)</td><td class="num flat">—</td><td class="num up">+2.40%</td><td class="num flat">30 只成分股仅 4 家下跌</td></tr>
+    <tr><td>纳斯达克中国金龙指数</td><td class="num flat">—</td><td class="num down">-2.09%</td><td class="num down">全周 -2.97%，中概逆市走弱</td></tr>
+  </table>
+
+  <div class="grid">
+    <div class="kv"><div class="k">10年期美债收益率</div><div class="v">5.28%</div><div class="c up">+约4bp；周线五连升（+12bp），创 2024/4 来最长连涨</div></div>
+    <div class="kv"><div class="k">30年期美债收益率</div><div class="v">近 5.65%</div><div class="c up">10/1 触及 2002 年来最高</div></div>
+    <div class="kv"><div class="k">2年期美债收益率</div><div class="v">4.82%~4.83%</div><div class="c down">-约2bp，为 8 月来首周下跌</div></div>
+    <div class="kv"><div class="k">美元指数 DXY</div><div class="v">约 101.1</div><div class="c down">非农后美元走弱，兑欧元/日元均跌</div></div>
+    <div class="kv"><div class="k">WTI 原油（11月）</div><div class="v">$91.26</div><div class="c down">-1.78%，G7 释储压低油价</div></div>
+    <div class="kv"><div class="k">布伦特原油（12月）</div><div class="v">$102.70</div><div class="c up">+0.45%，周末重回 102 上方</div></div>
+    <div class="kv"><div class="k">伦敦现货黄金</div><div class="v">$4,139</div><div class="c down">-0.91%，美债高企+美元压制</div></div>
+    <div class="kv"><div class="k">比特币 BTC</div><div class="v">$84,338</div><div class="c down">-0.26%；周末反弹至 8.6 万 +2%</div></div>
+    <div class="kv"><div class="k">VIX 恐慌指数</div><div class="v">15.40</div><div class="c down">-6.03%，近月低波动区间</div></div>
+    <div class="kv"><div class="k">CME 10月加息概率</div><div class="v">约 22%</div><div class="c down">一周前约 70%；非农后骤降</div></div>
+  </div>
+
+  <div class="note"><strong>口径提示（多源并列）：</strong>①道指收盘 <strong>51,176.96（+0.49%）</strong>（财联社/东方财富、Vista）为主流口径；Reuters 报 <strong>51,097.30（+0.34%）</strong>，差异源于成分股取整与尾盘成交，本文取前者。②黄金现货收盘 <strong>$4,139（-0.91%，新浪）</strong> / <strong>$4,132.65（-1.08%，Reuters）</strong> / <strong>$4,171.70（-0.73%，Vista）</strong> 三套，方向一致（跌）、幅度口径不一。③油价周五收盘分歧：WTI <strong>$90.83（-2.15%，Reuters）</strong> vs <strong>$91.26（-1.78%，新浪）</strong> vs <strong>$91.44（-1.54%，Vista）</strong>；布油 <strong>$101.37（-0.92%，Reuters）</strong> vs <strong>$102.70（+0.45%，新浪）</strong>。④布油周涨跌幅严重矛盾：新浪「周线 +5.44%」vs 东方财富「12月合约本周累跌 -1.98%」——属合约月份与起算日口径差异（前者取近月现货、后者取 12 月合约），已并列标注、不取单一值。</div>
+</section>
+
+<section>
+  <h2>二、六大核心驱动事件</h2>
+
+  <h3><span class="lvl l1">1</span>非农爆冷：9 月仅增 2.9 万，失业率升至 4.2%，加息预期被"浇灭"</h3>
+  <p>这是<span class="hl">本周乃至本月最关键的市场转折变量</span>。9 月非农新增仅 <strong>2.9 万</strong>（预期约 8.4 万—9 万；8 月下修至 +13.3 万），为 2021 年以来最低月度增幅之一；失业率由 4.1% 升至 <strong>4.2%</strong>；平均时薪 <strong>+0.1%</strong> 环比、<strong>+3.0%</strong> 同比（工资增速放缓）；且前两个月合计下修 <strong>6 万</strong>。市场解读为"既不太热也不太冷"，芝商所 FedWatch 显示 10 月加息概率由一周前约 70% 骤降至 <strong>约 22%</strong>，12 月加息概率同步回落。掉期市场仍押注未来 12 个月累计加息约 3 次（每次 25bp），说明"长期高利率"叙事未根本逆转。</p>
+
+  <h3><span class="lvl l1">2</span>纳指 100 收盘新高，科技/AI 再成唯一主线</h3>
+  <ul>
+    <li><strong>英伟达</strong>收涨 <strong>+1.34%</strong> 报 $233.95，盘中 $237.88 <strong>刷新 5/14 以来盘中纪录</strong>；盘后宣布 DGX SPARK 64GB（本月起发售、$4,999，本地可跑最高 1000 亿参数模型，10/23 上市）。</li>
+    <li><strong>费半指数 +2.40%</strong>，30 只成分股仅 4 家下跌：ARM <strong>+5.18%</strong>、博通 <strong>+3.35%</strong>、ASML <strong>+3.25%</strong>、AMD <strong>+2.95%</strong>、泛林 +2.17%、应用材料 +2.03%。</li>
+    <li><strong>光通信</strong>整体走强：AAOI <strong>+7.71%</strong>、Coherent <strong>+5.59%</strong>、CRDO <strong>+4.03%</strong>、Lumentum <strong>+3.79%</strong>、LYTE（光子学 ETF）+3.09%。</li>
+    <li><strong>存储剧烈分化</strong>：西部数据 <strong>-10.22%</strong>、希捷 <strong>-10.21%</strong>（东芝称 2027 财年硬盘产能翻倍，供给担忧）；闪迪 -3.79%、美光 -2.05%、SK 海力士 +0.84%。</li>
+    <li><strong>七巨头</strong>：特斯拉 <strong>+4.65%</strong>（Q3 交付 48.65 万辆、超预期 46.38 万）、苹果 +1.02%、谷歌 +1.62%、微软 +0.92%、亚马逊 +1.33%、Meta +0.30%、SpaceX +7.35%。</li>
+  </ul>
+
+  <h3><span class="lvl l1">3</span>全球债市抛售：10Y 周线五连升至 5.28%，30Y 近 5.65%，英债破 6%</h3>
+  <p>本轮全球债券抛售由<strong>能源涨价 + AI 资本开支融资需求 + 经济韧性 + 财政赤字</strong>四重因素共振驱动。10/1 当日 10Y 一度触 <strong>5.34%</strong>（2002 年来最高），30Y 近 <strong>5.65%</strong>（2002 年来最高）；第三季度 10Y 累计升 <strong>87bp</strong>，为 <strong>1994 年来最大单季涨幅</strong>。跨市场传染明显：英国 30Y 国债收益率破 <strong>6%</strong>（1998 年来首次）、法国 OAT 触及 18 年新高、法德利差扩至 2012 年 6 月来最宽。债券波动率指标升至六个月高位。<strong>本周 10Y（周三）与 30Y 标售将检验长债需求</strong>——摩根大通、PIMCO 等仍提示"接刀过早"，亦有资金开始左侧布局、认为抛售接近尾声。</p>
+
+  <h3><span class="lvl l1">4</span>油价过山车：G7 释储压低油价 → 周末霍尔木兹"暂不重开" + OPEC+ 温和增产，布油重回 102</h3>
+  <ul>
+    <li><strong>周五回落</strong>：马克龙称 G7 决定释放柴油与原油储备（至多 1 亿桶、4 个月内完成；法国提案欧洲释 5000 万桶柴油 + IEA 成员释 5000 万桶原油），WTI 跌至约 $91、布油约 $102。</li>
+    <li><strong>周末反弹</strong>：10/4 伊朗议会议长卡利巴夫明确"在满足七项条件前，霍尔木兹海峡绝不开放"，美伊仍陷僵局；布油重回 <strong>102—103 美元</strong>。</li>
+    <li><strong>OPEC+ 10/5 会议</strong>：同意 11 月仅小幅增产 <strong>13.7 万桶/日</strong>，缓解"超大规模增产"担忧，周一油价开盘走高（WTI +1.2% 报约 $61.6 亚洲电子盘 / 美盘近月约 $92）。</li>
+    <li><strong>结构性错配</strong>：中东原油流量已恢复至战前约 98%，但<strong>成品油（柴油/航煤）出口仅约 58%</strong>，柴油零售仍在历史高位（美国约 $6.40/加仑）。沙特两处石油设施周末遭胡塞武装袭击。</li>
+  </ul>
+
+  <h3><span class="lvl l1">5</span>中东局势：霍尔木兹"暂不重开"，三艘油轮遇袭，美军第三航母待命</h3>
+  <p>美伊冲突进入第 219 天。10/4 伊朗方面重申在满足其"七项条件"（基于伊斯兰堡谅解备忘录）前不会重开霍尔木兹；自 10/1 以来<strong>至少三艘油轮在海峡附近遭袭</strong>。特朗普此前已公开拒绝伊朗"7 天重开海峡"方案，并称冲突可能"选举后立即结束"、届时油价将"暴跌"；美军<strong>第三航母打击群 + 近万兵力</strong>预计 11 月底前抵中东，10/3 国安团队于戴维营召开数小时伊朗议题会议。能源部长 Wright 在 10/4 节目中坚称柴油/汽油价格将在选举日前回落。市场对此呈"二元"定价：若谈判缓和则油价下行、利好通胀与风险资产；若升级则油价冲高、压制估值。</p>
+
+  <h3><span class="lvl l2">6</span>本周焦点：FOMC 纪要（周三）定调政策路径，ISM 服务业（周一）检验非农疲弱是否成趋势</h3>
+  <ul>
+    <li><strong>周三 10/7（北京 10/8 02:00）9 月 FOMC 会议纪要</strong>是全周最重要事件——9/16 会议加息 25bp 至 3.75%—4.00%（2023 年来首次），纪要将揭示委员对通胀、能源价格与后续加息门槛的分歧；非农后市场已不再押注 10 月加息，重点转向"是否仍处新一轮紧缩周期"。</li>
+    <li><strong>周一 10/5 ISM 服务业 PMI</strong>（预期 55.1、前值 55.4）：检验非农疲软是偶发还是趋势，尤其就业与价格支付分项。</li>
+    <li><strong>长端美债拍卖</strong>：周三 10Y 标售（前次 4.83%、投标倍数 2.7）是检验全球长债需求的关键窗口。</li>
+    <li><strong>财报季预热</strong>：百事（10/8）、达美航空（10/9）率先披露；大型银行 10/13 起密集登场。市场预计标普 500 三季度盈利同比 +30%+，门槛已被大幅抬高。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>三、板块与个股</h2>
+  <h3>科技 / AI（最强主线）</h3>
+  <ul>
+    <li>英伟达 $233.95（+1.34%，盘中 $237.88 纪录）；DGX SPARK 64GB 发布（10/23 上市、$4,999）。</li>
+    <li>ARM +5.18%、博通 +3.35%、ASML +3.25%、AMD +2.95%、应用材料 +2.03%。</li>
+    <li>光通信：AAOI +7.71%、Coherent +5.59%、CRDO +4.03%、Lumentum +3.79%。</li>
+    <li>存储分化：西数 -10.22%、希捷 -10.21%（东芝扩产）、美光 -2.05%；AI 光模块与 HBM 仍受追捧。</li>
+    <li><strong>周末催化</strong>：OpenAI 与 AMD 签署芯片协议（利好 AMD/AI 算力）；特朗普 10/4 宣布成立"超级智能特别工作组"；美股拟自 12 月起迈向近全天候交易；FTC 正调查 OpenAI/Anthropic，Anthropic 酝酿 11 月 IPO。</li>
+  </ul>
+  <h3>汽车 / 其他</h3>
+  <ul>
+    <li>特斯拉 +4.65%：Q3 全球交付 486,532 辆，超分析师预期 463,761 辆，核心业务趋稳信号。</li>
+    <li>SpaceX +7.35%、PlanetLabs +8.43%、RocketLab +4.91%（太空概念普涨）。</li>
+    <li>中概金龙 -2.09%（全周 -2.97%）：阿里 -1.49%、京东 -2.24%、百度 -1.48%、理想 -3.87%、富途 -4%。</li>
+  </ul>
+</section>
+
+<section>
+  <h2>四、盘前 / 周末最新动态（周一 10/5 开盘前瞻）</h2>
+  <div class="good"><strong>指数期货走高：</strong>截至北京时间 10/5 早间，三大股指期货全线上扬——道指期货约 +0.20%、标普 500 期货约 +0.32%、<strong>纳指期货约 +0.31%~+0.70%</strong> 领涨（不同快照时点），延续周五非农后的风险偏好修复。亚洲电子盘油价周一高开（WTI +1.2% 报约 $61.6 亚洲基准 / 美近月约 $92、布油 +1.2% 报约 $65.3 亚洲 / 美近月约 $102）。现货黄金重回 $4,140 上方、白银 +0.7%；比特币日内涨近 2% 升破 $8.6 万。</div>
+  <p>今日（周一 10/5，美东 10/5）晚间将公布：标普全球 9 月服务业 PMI 终值（预期 58.7）、<strong>ISM 9 月服务业 PMI（22:00 北京，预期 55.1、前值 55.4）</strong>。服务业就业与价格支付分项将决定市场如何解读上周五的非农疲弱。</p>
+  <div class="alert"><strong>注意：</strong>本简报最新完整交易日仍为美东 10/2 周五收盘；10/5 美股于北京时间今晚 21:30 开盘，盘前期指与亚洲电子盘仅反映周日—周一早间的情绪，<strong>不构成对开盘的确定性预测</strong>，须以实际开盘为准。</div>
+</section>
+
+<section>
+  <h2>五、本周关键日程（美东时间，北京 +12h）</h2>
+  <table>
+    <tr><th>日期（美东）</th><th>事件</th><th>北京时刻</th></tr>
+    <tr><td>周一 10/5</td><td>标普全球服务业 PMI 终值（58.7）；<strong>ISM 服务业 PMI（预期 55.1）</strong></td><td>21:45 / 22:00</td></tr>
+    <tr><td>周二 10/6</td><td>8 月贸易帐（预期 -$95.2B）；ADP 周度就业；RCM/TIPP 乐观指数；<strong>鲍曼讲话</strong>；亚马逊 Prime Big Deal Days（10/6—7）</td><td>20:30 起</td></tr>
+    <tr><td>周三 10/7</td><td>原油库存；<strong>10Y 国债标售</strong>（前 4.83%/2.7x）；<strong>9 月 FOMC 会议纪要</strong>（14:00 ET）；消费者信贷；APLD / Levi 财报</td><td>标售 01:01 / 纪要 <span class="tm">10/8 02:00</span></td></tr>
+    <tr><td>周四 10/8</td><td><strong>百事 PEP 财报</strong>；<strong>沃勒讲话</strong>；初请失业金；8 月批发库存</td><td>盘前 / 20:30</td></tr>
+    <tr><td>周五 10/9</td><td><strong>密歇根大学 10 月消费者信心初值</strong>（9 月终值仅 48.1，历史低位）；<strong>达美航空 DAL 财报</strong></td><td>22:00</td></tr>
+    <tr style="background:#fafbfc"><td>本周</td><td><span class="chip">无 CPI / PPI</span> 下次通胀数据为 10/14 美国 9 月 CPI；<span class="chip">下次 FOMC 10/27—28</span>（北京时间 10/29 02:00，无 SEP 点阵图）</td><td>—</td></tr>
+  </table>
+  <div class="good"><strong>季节性参考：</strong>历史数据显示标普 500 四季度平均回报约 +4.2%，中期选举年份平均 +6.4%（Reuters）。但今年受 10Y 破 5%、油价高位、中东不稳三重压制，Q4 难度高于往年；若"就业降温 + 利率回落"组合兑现，年末仍有可观行情空间。</div>
+</section>
+
+<section>
+  <h2>六、风险提示</h2>
+  <ul>
+    <li><strong>高利率环境</strong>：10Y 仍处 5.28%、30Y 近 5.65%，长端利率是压制高估值成长股的核心变量；本周 10Y/30Y 标售若需求疲弱，收益率或再冲 5.3%—5.4%，重演 10/1 估值压缩。</li>
+    <li><strong>油价与地缘</strong>：霍尔木兹"暂不重开" + 三艘油轮遇袭 + 美军第三航母待命，OPEC+ 仅温和增产，布油 102—103 上方风险溢价未消；若谈判破裂，油价或再逼前期高位、推升通胀预期。</li>
+    <li><strong>美伊谈判二元风险</strong>：特朗普称"选举后冲突或立即结束、油价将暴跌"，但戴维营会议暗示军事选项仍在台面，短期消息面波动极大。</li>
+    <li><strong>财报季门槛高</strong>：市场预期标普 500 三季度盈利同比 +30%+，不仅需要"超预期"，更需强劲指引；AI 资本开支若下修，高估值 AI 链面临重定价。</li>
+    <li><strong>市场集中度风险</strong>：9 月约四分之三标普成分股下跌，指数上涨高度依赖少数 Mega-cap/AI 股，广度极差隐含脆弱性。</li>
+    <li><strong>政府关门数据缺口</strong>：美国联邦政府部分停摆，部分官方数据延迟/取消（如 9 月非农 BLS 原定周五发布被取消、改由 ADP 等替代参考），数据可信度与节奏需持续跟踪。</li>
+  </ul>
+  <div class="src">主要信源：财联社/东方财富、Reuters、新浪财经、华尔街见闻、Trading Economics、FXEmpire、Vista Partners、Summa Money、Toutiao/财联社环球下周看点、澎湃新闻、Aastocks、Sina 财经早餐（2026-10-05）等。部分指标跨源存在口径差异，本文已并列标注。</div>
+</section>
+
+<footer>本报告由自动化任务生成，仅供市场研究与学习交流，不构成任何投资建议。市场有风险，投资需谨慎。<br>生成时间：2026-10-05 09:11（GMT+8）</footer>
+
+</div>
+</body>
+</html>

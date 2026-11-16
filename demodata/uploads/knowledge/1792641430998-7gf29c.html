@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第5期 · 期望值与决策</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>每日概率学 · 第 5 期</h1>
+<ul>
+<li><strong>日期</strong>：2026-09-19（周六）</li>
+<li><strong>今日概念</strong>：期望值与决策（Expected Value &amp; Decision Making）——"把不确定的未来，折算成一个可以比较的'平均身价'"</li>
+<li><strong>一句话心智模型</strong>：一个选择若可能产生若干结果 x₁, x₂, …，各自概率为 p₁, p₂, …，那它的<strong>期望值</strong>就是 <code>E = Σ xᵢ·pᵢ</code>——按概率加权后的"长期平均回报"。比较不同选择的 E，是理性决策的基准线。</li>
+</ul>
+<hr>
+<h2>一、故事引入：阿明的"稳拿 100 还是赌一把"</h2>
+<p>阿明在朋友聚会上被主持人拉上台，面前摆着两个信封，只能选一个：</p>
+<ul>
+<li><strong>信封 A</strong>：拉开就稳稳拿到 <strong>100 元</strong>，一分不少。</li>
+<li><strong>信封 B</strong>：50% 拿到 <strong>250 元</strong>，50% 拿到 <strong>0 元</strong>（当场空气）。</li>
+</ul>
+<p>大刘在台下算得飞快：</p>
+<blockquote>"B 的期望值 = 0.5×250 + 0.5×0 = <strong>125 元</strong>。A 只有 100 元。所以 B 的'平均身价'更高，闭眼选 B！"</blockquote>
+<p>阿明却一把抓过 A："落袋为安，我就要这 100。"</p>
+<p>全场哄笑。可大刘的算法真的错了吗？</p>
+<p>回到后台，阿明解释：</p>
+<blockquote>"大刘算的<strong>期望值</strong>没错——如果这游戏能玩一万次，选 B 平均每次赚 125，确实比 A 的 100 强。但今晚我只玩<strong>这一次</strong>。选 B 有整整一半的可能一分钱没有，而 A 是确定的 100。我的 100 元'睡前的踏实感'，比那多出来的 25 元期望更值钱。"</blockquote>
+<p>大刘愣住："所以期望值不是'该选谁'的唯一标准？"</p>
+<p>"对。"阿明在纸上写下：</p>
+<blockquote>"<strong>期望值是决策的'基准线'，不是'唯一答案'。</strong> 它告诉你哪个选项在'重复很多次'时更划算；但面对<strong>一次性、输不起</strong>的赌局，你还得加上'风险偏好'和'钱的效用'——这正是期望值与决策的全部张力。"</blockquote>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 期望值的定义</h3>
+<p>设随机变量 X 可能取值 x₁, x₂, …, xₙ，对应概率 p₁, p₂, …, pₙ（Σpᵢ = 1），则</p>
+<p>```</p>
+<p>E(X) = x₁·p₁ + x₂·p₂ + … + xₙ·pₙ</p>
+<p>```</p>
+<p>直观读法：<strong>把每个结果乘以它发生的可能性，再加总</strong>——这就是"如果同样的事发生无数次，你平均每次能拿到的数"。</p>
+<h3>2. 决策怎么用期望值</h3>
+<ul>
+<li>面对多个互斥选择，先分别算出各自的 E；</li>
+<li><strong>纯粹的风险中性决策者</strong>：永远选 E 最大的那个；</li>
+<li>但现实里，决策还要考虑：</li>
+<li><strong>风险偏好</strong>：同样是"期望 125 vs 确定 100"，风险厌恶者选 100，风险偏好者选 125；</li>
+<li><strong>效用递减</strong>：对穷人，100 元和 250 元的"幸福感差距"远大于两倍；对富豪则相反——所以边际效用不是线性的；</li>
+<li><strong>能否重复</strong>：一次性、输不起的赌局，期望值权重下降；可重复、能分散的，期望值权重上升。</li>
+</ul>
+<h3>3. 两个经典延伸</h3>
+<ul>
+<li><strong>公平价格</strong>：一个游戏的"公平门票" = 它的期望收益。门票高于期望，长期必亏（如彩票、赌场）；低于期望，长期必赚。</li>
+<li><strong>保险悖论</strong>：预期损失往往小于保费（纯期望上"不划算"），人们仍买——因为<strong>避免了'小概率大亏损'毁灭性打击</strong>，这本身就是效用上的正收益。</li>
+</ul>
+<h3>4. 方差：期望之外的"颠簸程度"</h3>
+<p>只看 E 会忽略风险。两个选择 E 相同，但一个结果很稳、一个大起大落，风险厌恶者会挑更稳的那个。衡量这种"颠簸"的指标叫<strong>方差/标准差</strong>（下期不作重点，留个印象）。</p>
+<p>💡 一句话心法：<strong>期望值是把"不确定的未来"折算成"长期平均的现在"。它是理性决策的起跑线，但不是终点——一次性、输不起的局，还要为'踏实感'和'边际效用'留出余地。</strong></p>
+<hr>
+<h2>三、代表性题目 / 故事（请你来总结 ✍️）</h2>
+<p>请试着写出：① 列出每个可能的结果与对应概率；② 用 <code>E = Σ xᵢ·pᵢ</code> 算出期望值；③ 判断"该不该做这个选择"，并说明你依据的是纯期望，还是也考虑了风险/效用。</p>
+<h3>题目 1 · 骰子抽奖摊</h3>
+<p>集市上有个摊子：付 <strong>10 元</strong>玩一次，掷一枚公平骰子，<strong>掷出 6 点</strong>可得 <strong>50 元</strong>，其余情况得 0。</p>
+<blockquote>玩一次的"期望净收益"是多少？这摊子定价 10 元，从纯期望看值不值得玩？它的"公平门票"应该是多少？</blockquote>
+<h3>题目 2 · 两个创业项目（综合）</h3>
+<p>阿珍手里有 100 万可投一个项目：</p>
+<ul>
+<li><strong>项目甲</strong>：稳赚不赔，一年净赚 <strong>20 万</strong>（确定）。</li>
+<li><strong>项目乙</strong>：60% 概率大赚 <strong>50 万</strong>，40% 概率亏损 <strong>30 万</strong>（即净赚 -30 万）。</li>
+</ul>
+<blockquote>两个项目的期望收益各是多少？若只看期望，该投哪个？但乙有 40% 可能亏掉 30 万——若这 100 万是阿珍全部身家、亏了就活不下去，你的建议会变吗？</blockquote>
+<h3>题目 3 · 彩票的"理性困局"（生活化）</h3>
+<p>某彩票 2 元一张，规则：1000 张里恰有 1 张中奖，奖金 <strong>1000 元</strong>，其余 999 张血本无归。</p>
+<blockquote>单张彩票的期望收益是多少？期望净收益呢？从纯期望看该不该买？可现实中买彩票的人为什么络绎不绝——用本期"效用/风险偏好"的视角试着解释一句。</blockquote>
+<hr>
+<h2>四、提示（如需逐题完整推导，回复"揭晓答案"）</h2>
+<ul>
+<li><strong>题目 1</strong>：结果只有两种——"掷 6（概率 1/6）得 50"、"其余（概率 5/6）得 0"。</li>
+</ul>
+<p>期望毛收益 = 1/6×50 + 5/6×0 = <strong>≈ 8.33 元</strong>。</p>
+<p>期望净收益 = 8.33 − 10 = <strong>≈ −1.67 元</strong>（长期必亏）。</p>
+<p>公平门票 = 期望毛收益 ≈ <strong>8.33 元</strong>；定价 10 元 &gt; 8.33，故纯期望上<strong>不值得玩</strong>。</p>
+<ul>
+<li>心法：门票高于"公平价"就是庄家抽水；赌场和彩票永远站在这一侧。</li>
+</ul>
+<ul>
+<li><strong>题目 2</strong>：E(甲) = <strong>20 万</strong>（确定）。</li>
+</ul>
+<p>E(乙) = 0.6×50 + 0.4×(−30) = 30 − 12 = <strong>18 万</strong>。</p>
+<p>纯期望上甲（20 万）略高于乙（18 万）且零风险；但若把"全部身家、输不起"加进来，乙 40% 亏 30 万的风险被放大，理性建议更偏向甲——除非阿珍是强风险偏好者且能承受归零。</p>
+<ul>
+<li>心法：期望相近时，"能不能重复、亏了会不会出局"往往比那 2 万差值更关键。</li>
+</ul>
+<ul>
+<li><strong>题目 3</strong>：期望毛收益 = 1/1000×1000 + 999/1000×0 = <strong>1 元</strong>。</li>
+</ul>
+<p>期望净收益 = 1 − 2 = <strong>−1 元</strong>（纯期望必亏）。</p>
+<p>为何仍有人买？因为对大多数人，<strong>2 元几乎无感</strong>（边际效用极低），却换来"中 1000 元"的想象与希望——这种"小钱博大梦"的心理效用，超过了 −1 元的期望亏损。</p>
+<ul>
+<li>心法：期望为负 ≠ 没人买；当"投入的痛感"远小于"中奖的遐想"时，效用函数就偏离了线性。</li>
+</ul>
+<hr>
+<blockquote>📌 明日预告：第 6 期 <strong>大数定律与赌徒谬误</strong>——为什么"抛硬币连出 5 次正面后，第 6 次更可能是反面"是个流传甚广的错觉？长期频率如何收敛到概率，又为何救不了你这一把。</blockquote></div></body></html>

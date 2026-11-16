@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第16期 · 熵与信息论</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>每日概率学 · 第 16 期</h1>
+<ul>
+<li><strong>日期</strong>：2026-10-17（周六）</li>
+<li><strong>今日概念</strong>：熵与信息论（Entropy &amp; Information Theory）——前 15 期我们一直在"研究随机本身"：随机量长啥样（第 9 期）、很多个加起来变正态（第 10 期 CLT）、随机事件怎么在时间轴上冒出来（第 13 期）、醉汉怎么靠抛硬币走路（第 14 期）、甚至反过来"用随机当算盘"（第 15 期蒙特卡洛）。但有个根本问题一直没回答：<strong>一团随机、一份不确定性，到底"含多少信息"？</strong> 为什么"抛硬币"比"必出正面"更有信息量？香农（Claude Shannon，1948）用一条极简公式 $H=-\sum p\log_2 p$ 把"不确定性"量化成了"比特（bit）"，从此<strong>数据压缩、通信信道、密码强度、机器学习损失函数</strong>全有了统一的度量尺。今天我们就把这条"随机值几个钱（比特）"的学问讲透。</li>
+<li><strong>一句话心智模型</strong>：<strong>熵 = 一份随机里平均"藏着的惊喜量"。</strong> 自信息 $I(x)=-\log_2 P(x)$：越罕见的事件，越出乎意料，信息量越大（必出正面 = 0 比特）。香农熵 $H(X)=E[I(X)]=-\sum p_i\log_2 p_i$：随机变量的"平均不确定性"，也是无损压缩它的<strong>理论最低平均比特数</strong>（信源编码定理）。衍生三件套：① 条件熵 $H(Y|X)$（知道 X 后 Y 还剩多少谜团）；② 互信息 $I(X;Y)=H(X)-H(X|Y)$（X 能帮 Y 消掉多少不确定，对称、非负、独立时为 0）；③ KL 散度 / 交叉熵（用错概率表的代价，正是机器学习交叉熵损失的本源）。最大熵原理：只知部分约束时，选熵最大的分布最不冒险。</li>
+</ul>
+<hr>
+<h2>一、故事引入：阿明的"二十问"翻车记</h2>
+<p>阿明和大刘玩"二十问"：大刘心里想一种水果，阿明只能问"是 / 否"问题，要尽快猜中。</p>
+<p>一开始阿明傻乎乎地从"是苹果吗？是香蕉吗？……"一个个问，运气差要问七八次。大刘笑他："你不会先问'是不是苹果或香蕉'这种能把可能性<strong>劈成两半</strong>的问题吗？"</p>
+<p>阿明一琢磨：手头有袋水果，苹果占一半、香蕉四分之一、橙子和榴莲各八分之一。"要最少问题猜中，应该先问'是不是苹果或香蕉'（正好劈掉一半），剩下再劈一半……"</p>
+<p>突然他悟了："每个'是不是'就是 <strong>1 bit</strong>（是 / 否两种答案 = 一个二进制位）。要猜中一种概率为 $p$ 的水果，最少得花约 $-\log_2 p$ 个问题。越罕见的水果，越'出乎意料'，要的问题越多——也就是<strong>信息量越大</strong>！"</p>
+<p>"那平均下来，每个水果要几个问题？"大刘媳妇在旁边补刀。</p>
+<p>阿明一算，发现这个数正好等于<strong>香农信息熵 $H$</strong>："平均 $-\sum p_i\log_2 p_i$ 个问题。而且我还发现两件事——</p>
+<p>第一，如果水果袋被'做手脚'，某一种必出（比如永远只可能苹果），那根本不用问，<strong>熵 = 0</strong>，因为没有任何不确定性，也就没有任何信息。</p>
+<p>第二，如果大刘愿意给个提示'它是红色的'，要的问题就变少——少掉的那部分，就是'颜色'告诉我的<strong>互信息</strong>。这和密码、压缩、甚至机器学习是一回事。"</p>
+<p>大刘："……你这哪是玩游戏，是在给香农写情书。"</p>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 自信息：一个事件"有多出乎意料"</h3>
+<p>对单个结果 $x$，它的<strong>自信息</strong>（self-information）定义为：</p>
+<p>$$I(x) = -\log_2 P(x)$$</p>
+<p>单位叫<strong>比特（bit）</strong>，前提是底数取 2（若取自然常数 $e$，单位叫 nat）。</p>
+<ul>
+<li>$P(x)=1$（必然发生）→ $I(x)=0$：确定事件零信息，"说了等于没说"。</li>
+<li>$P(x)=1/2$（抛硬币）→ $I(x)=1$ bit。</li>
+<li>$P(x)=1/8$ → $I(x)=3$ bit。</li>
+<li><strong>反直觉但关键</strong>：越罕见、越出乎意料的事件，自信息越大。一条"太阳从东边升起"的新闻是 0 比特；一条"太阳从西边升起"的新闻是天量比特——<strong>惊喜才有信息量</strong>。</li>
+</ul>
+<blockquote>💡 心法：信息 = 消除不确定性的量。已经确定的事，再"发生"一次也不带来任何新信息。</blockquote>
+<h3>2. 信息熵：平均不确定性 = 最小平均编码长度</h3>
+<p>把所有结果的自信息按概率加权求平均，得到随机变量的<strong>信息熵</strong>（Shannon entropy）：</p>
+<p>$$H(X) = E[I(X)] = -\sum_{i} p_i \log_2 p_i$$</p>
+<p>它的两个等价身份：</p>
+<ul>
+<li><strong>身份 A（不确定性）</strong>：$H(X)$ 是"这个随机变量平均有多难猜"。</li>
+<li><strong>身份 B（编码下限 / 信源编码定理）</strong>：无损压缩一串 $X$ 的符号，平均每个符号<strong>最少</strong>需要 $H(X)$ 比特——可以任意逼近，但绝不可能更少。这正是故事里"平均最少问题数"。</li>
+</ul>
+<blockquote>💡 直觉校验：故事里苹果 1/2、香蕉 1/4、橙子 1/8、榴莲 1/8，则 $H = 0.5\cdot1 + 0.25\cdot2 + 0.125\cdot3 + 0.125\cdot3 = \mathbf{1.75}$ bit——平均每个水果只需约 1.75 个 yes/no 问题就能锁定。</blockquote>
+<h3>3. 最大熵：均匀 = 最不确定 = 信息上限</h3>
+<ul>
+<li>在给定支撑集（可能结果个数）上，<strong>均匀分布熵最大</strong>。$n$ 个等可能结果 → $H=\log_2 n$。</li>
+<li><strong>退化分布</strong>（某结果概率 = 1，其余 = 0）→ $H=0$：确定 = 无不确定性 = 无信息。</li>
+<li>二点分布 $H_2(p)=-p\log_2 p-(1-p)\log_2(1-p)$ 在 $p=0.5$ 处取最大（=1 bit），两端趋于 0（接第 3 期"伯努利"）。</li>
+</ul>
+<p><strong>最大熵原理（Maximum Entropy）</strong>：当我们只知道部分约束（例如"均值是多少"），却要猜分布时，<strong>选熵最大的那个最保守、最不冒险</strong>——因为它不偷偷假设任何额外的结构。这和第 4 期（在已知划分下做最稳妥加权）、第 12 期（马尔可夫平稳分布作为"长期最自然状态"）的"不确定时别乱加戏"哲学一脉相承。</p>
+<h3>4. 条件熵与互信息：知道 X 后，Y 还剩多少谜团</h3>
+<p>现实里变量之间常有关系，于是引入"联合"与"条件"：</p>
+<ul>
+<li><strong>联合熵</strong>：$H(X,Y)=-\sum_{x,y} p(x,y)\log_2 p(x,y)$（同时猜中 X 和 Y 的平均难度）。</li>
+<li><strong>条件熵</strong>：$H(Y|X)=H(X,Y)-H(X)$，含义是"<strong>已知 X 之后，Y 还剩多少不确定性</strong>"。</li>
+<li><strong>互信息（Mutual Information）</strong>：</li>
+</ul>
+<p>$$I(X;Y)=H(X)-H(X|Y)=H(Y)-H(Y|X)=H(X)+H(Y)-H(X,Y)$$</p>
+<p>它的性质与直觉：</p>
+<ul>
+<li><strong>对称</strong>（$I(X;Y)=I(Y;X)$）、<strong>非负</strong>（$I\ge 0$）。</li>
+<li><strong>$I(X;Y)=0$ 当且仅当 X 与 Y 独立</strong>（接第 3 期"独立"：一点忙都帮不上）。</li>
+<li>通信里，$I(X;Y)$ = 每传一个符号，接收端<strong>实际获得多少有效比特</strong>——信道容量的核心。</li>
+</ul>
+<blockquote>💡 信息链式法则：$H(X,Y)=H(X)+H(Y|X)$。把"一起的不确定性"拆成"先猜 X，再在已知 X 下猜 Y"。</blockquote>
+<h3>5. KL 散度与交叉熵：用错概率表的代价（接机器学习）</h3>
+<p>假设你以为真实分布是 $Q$，但真实是 $P$。你会按 $Q$ 去编码 / 建模，于是付出额外代价：</p>
+<ul>
+<li><strong>KL 散度（相对熵）</strong>：</li>
+</ul>
+<p>$$D_{\text{KL}}(P\parallel Q)=\sum_x p(x)\log_2\frac{p(x)}{q(x)}$$</p>
+<p>含义：用 $Q$ 当"真实是 $P$"的编码 / 模型时，平均每个符号<strong>多花</strong>的比特。由吉布斯不等式知 $D_{\text{KL}}\ge 0$，仅当 $P=Q$ 时为 0；<strong>不对称</strong>（不是真正的距离，没有三角不等式）。</p>
+<ul>
+<li><strong>交叉熵</strong>：</li>
+</ul>
+<p>$$H(P,Q)=H(P)+D_{\text{KL}}(P\parallel Q)=-\sum_x p(x)\log_2 q(x)$$</p>
+<p>含义：用 $Q$ 编码 $P$ 的<strong>实际平均码长</strong>（永远 ≥ 最优码长 $H(P)$）。</p>
+<p><strong>机器学习的桥梁</strong>：分类任务里，真实标签是 one-hot 分布 $P$（如"猫"=1，其余=0），模型输出预测分布 $Q$。单样本交叉熵损失 $=H(P,Q)=-\log_2 q_{\text{true}}$。最小化交叉熵 = 最小化 KL 散度（因为 $H(P)$ 是常数）。——这就是为什么"交叉熵损失"是分类模型的标配，它本质上就是在逼模型的概率表 $Q$ 去贴近真实 $P$。</p>
+<h3>6. 它撑起了哪些大事（开个眼界）</h3>
+<ul>
+<li><strong>数据压缩</strong>：ZIP、MP3、PNG、H.265 全都靠"熵编码"（霍夫曼 / 算术编码）逼近 $H(X)$ 这个下限。</li>
+<li><strong>通信</strong>：香农信道容量 $C=\max I(X;Y)$——一条线每秒最多能可靠传多少比特（接第 6 期"噪声中的规律"）。</li>
+<li><strong>密码学</strong>：密钥的"不可预测性"就是它的熵；低熵密码 = 可被暴力猜中。</li>
+<li><strong>机器学习</strong>：决策树用"信息增益"$=I(\text{特征};\text{类别})$ 选分裂点；语言模型的"困惑度"$=2^{H}$ 衡量语言有多难预测。</li>
+<li><strong>统计物理</strong>：玻尔兹曼熵 $S=k\ln W$ 与香农熵同宗——宏观态的"混乱度"正是微观态分布的熵。</li>
+</ul>
+<hr>
+<h2>三、代表性题目 / 故事（请你来总结 ✍️）</h2>
+<p>请试着回答：① 为什么"越罕见的信息量越大"？② 熵的两种身份（不确定性 / 编码下限）为什么是同一件事？③ 互信息 $I(X;Y)$ 和"X、Y 独立"是什么关系？④ 交叉熵损失为什么等于"用错概率表的代价"？</p>
+<h3>题目 1 · 猜水果（自信息 + 熵 + 霍夫曼编码）</h3>
+<p>袋中有四种水果，概率分别为：苹果 $1/2$、香蕉 $1/4$、橙子 $1/8$、榴莲 $1/8$。阿明用"是 / 否"问题猜大刘想的是哪种。</p>
+<blockquote>① 每种水果的"自信息"各是多少 bit？哪个信息量最大？</blockquote>
+<blockquote>② 这个分布的熵 $H$ 是多少？（提示：直接代 $-\sum p_i\log_2 p_i$，会得到 1.75 bit）</blockquote>
+<blockquote>③ 用霍夫曼编码思想，给四种水果分配不等长码（常见者短码、罕见者长码），最短平均码长是多少？它和 ② 的熵什么关系？（提示：因为概率都是 $1/2^k$ 的"二进"分布，平均码长恰等于熵）</blockquote>
+<blockquote>④ 若大刘"永远只可能苹果"（退化分布），熵是多少？这说明什么？</blockquote>
+<h3>题目 2 · 阿明的嘈杂电报线（条件熵 / 互信息，接通信）</h3>
+<p>阿明要每天通过一条会出错的电报线，把团子（第 12 期那只猫）的心情（开心 / 冷淡，各 $1/2$）告诉大刘。线路有 <strong>10%</strong> 概率把 0 翻成 1、1 翻成 0（二元对称信道 BSC）。</p>
+<blockquote>① 收到信号 $Y$ 后，大刘对原始心情 $X$ 还残留多少不确定性？即 $H(X|Y)=?$（提示：$H(X|Y)=H_2(0.1)$，二元熵 $H_2(p)=-p\log_2 p-(1-p)\log_2(1-p)$）</blockquote>
+<blockquote>② 这条线每传一个符号，实际传递了多少"有效信息"？即 $I(X;Y)=?$（提示：$I=H(X)-H(X|Y)=1-H_2(0.1)$）</blockquote>
+<blockquote>③ 若把错误率降到 <strong>1%</strong>，$I$ 变大还是变小？直观解释（线路越干净，原始信息保留越多）。</blockquote>
+<blockquote>④ 用一条公式把 $H(X)$、$H(Y)$、$H(X,Y)$、$I(X;Y)$ 串起来。</blockquote>
+<h3>题目 3 · 最大熵与"最诚实的骰子"</h3>
+<blockquote>① 一个六面骰，哪种概率分配让"平均不确定性"最大？是多少 bit？（提示：均匀 → $\log_2 6$）</blockquote>
+<blockquote>② 若作弊让某面必出（退化分布），熵是多少？说明什么？</blockquote>
+<blockquote>③ 二点分布 $H_2(p)=-p\log_2 p-(1-p)\log_2(1-p)$，它在 $p$ 取何值时最大？为什么对称地落在 0.5？</blockquote>
+<blockquote>④ 直觉上，为什么"均匀 = 最不确定 = 熵最大"，而"确定 = 熵为 0"？这和"信息量"如何自洽？</blockquote>
+<h3>题目 4 · 用错概率表会怎样（KL 散度 / 交叉熵，接机器学习）</h3>
+<p>阿明给团子的心情编了码，但他<strong>记错了分布</strong>：真实是 开心 $0.8$ / 冷淡 $0.2$（记作 $P$），他却按 开心 $0.5$ / 冷淡 $0.5$（记作 $Q$）来编码（用了"均匀"的错码表）。</p>
+<blockquote>① 阿明的平均码长（交叉熵 $H(P,Q)$）是多少 bit？（提示：按 $Q$ 编码，用 $P$ 加权：$-0.8\log_2 0.5 -0.2\log_2 0.5$）</blockquote>
+<blockquote>② 最优平均码长（熵 $H(P)$）是多少 bit？（提示：$-0.8\log_2 0.8 -0.2\log_2 0.2$）</blockquote>
+<blockquote>③ 两者之差是什么？即 KL 散度 $D_{\text{KL}}(P\parallel Q)=?$ 它衡量什么？</blockquote>
+<blockquote>④ 这和教育机器学习里常见的"交叉熵损失"有什么关系？（提示：模型输出 $Q$ 当预测分布，真实标签 $P$ 是 one-hot，单样本 loss $=-\log_2 q_{\text{true}}$；平均就是交叉熵，最小化它 = 最小化 KL 散度）</blockquote>
+<hr>
+<h2>四、提示（如需逐题完整推导，回复"揭晓答案"）</h2>
+<ul>
+<li><strong>题目 1（猜水果）</strong>：</li>
+<li>① 自信息 $I=-\log_2 p$：苹果 $\log_2 2=1$ bit；香蕉 $\log_2 4=2$ bit；橙子 $\log_2 8=3$ bit；榴莲 $3$ bit。<strong>榴莲、橙子信息量最大</strong>（最罕见）。</li>
+<li>② $H=0.5\cdot1+0.25\cdot2+0.125\cdot3+0.125\cdot3=0.5+0.5+0.375+0.375=\mathbf{1.75}$ bit。</li>
+<li>③ 霍夫曼码：苹果=<code>0</code>、香蕉=<code>10</code>、橙子=<code>110</code>、榴莲=<code>111</code>；平均码长 $=0.5\cdot1+0.25\cdot2+0.125\cdot3+0.125\cdot3=\mathbf{1.75}$ bit，<strong>恰等于熵</strong>（因为概率都是 $1/2^k$，码长 $-\log_2 p_i$ 正好是整数，无"取整浪费"）。一般分布平均码长 $\ge H$，这里取到等号。</li>
+<li>④ 退化分布（苹果必出）：$H=-1\cdot\log_2 1=0$。说明"完全确定 = 零不确定性 = 零信息"，也无需任何问题 / 比特来传达。</li>
+</ul>
+<ul>
+<li><strong>题目 2（嘈杂电报线）</strong>：</li>
+<li>① 二元熵 $H_2(0.1)=-0.1\log_2 0.1-0.9\log_2 0.9\approx0.3322+0.1368=\mathbf{0.469}$ bit，故 $H(X|Y)=0.469$ bit（收到信号后仍残留的不确定性）。</li>
+<li>② $I(X;Y)=H(X)-H(X|Y)=1-0.469=\mathbf{0.531}$ bit（每符号实际传到的有效信息）。</li>
+<li>③ 错误率降到 1%：$H_2(0.01)\approx0.0808$，$I=1-0.0808=\mathbf{0.919}$ bit，<strong>变大</strong>——线路越干净，原始信息保留越多，极限（0% 错误）时 $I\to 1$ bit。</li>
+<li>④ $I(X;Y)=H(X)+H(Y)-H(X,Y)$，等价地 $I=H(X)-H(X|Y)=H(Y)-H(Y|X)$；且 $H(X,Y)=H(X)+H(Y|X)$。</li>
+</ul>
+<ul>
+<li><strong>题目 3（最大熵）</strong>：</li>
+<li>① 均匀分布熵最大：$H=\log_2 6\approx\mathbf{2.585}$ bit。</li>
+<li>② 退化分布 $H=\mathbf{0}$（某面必出，毫无不确定）。</li>
+<li>③ 二点熵 $H_2(p)$ 在 $\mathbf{p=0.5}$ 处最大（=1 bit）；因关于 0.5 对称且两端 $p\to0,1$ 时趋于 0，导数在 0.5 处为零。</li>
+<li>④ "均匀"时每种结果都同样可能，你最无从预测 = 最不确定 = 熵最大；"确定"时结果写死，无不确定 = 熵 0。二者自洽：信息量衡量"消除的不确定性"，没有不确定可消除，自然零信息。</li>
+</ul>
+<ul>
+<li><strong>题目 4（KL / 交叉熵）</strong>：</li>
+<li>① 交叉熵 $H(P,Q)=-0.8\log_2 0.5-0.2\log_2 0.5=0.8\cdot1+0.2\cdot1=\mathbf{1.0}$ bit（用错码表，平均每个符号多花了比特）。</li>
+<li>② 熵 $H(P)=-0.8\log_2 0.8-0.2\log_2 0.2\approx0.8\cdot0.3219+0.2\cdot2.3219=\mathbf{0.7219}$ bit（最优码长）。</li>
+<li>③ 差即 KL 散度 $D_{\text{KL}}(P\parallel Q)=H(P,Q)-H(P)=1.0-0.7219=\mathbf{0.2781}$ bit（也可直接算 $0.8\log_2(0.8/0.5)+0.2\log_2(0.2/0.5)$）。它衡量"用 $Q$ 近似 $P$ 多付出的平均比特"，非负、不对称。</li>
+<li>④ 分类模型输出 $Q$、真实标签 one-hot $P$：单样本交叉熵损失 $=-\log_2 q_{\text{true}}$（即 $-p\log_2 q$ 中唯一样本类非零）。平均损失 $=H(P,Q)$；因 $H(P)$ 是常数，<strong>最小化交叉熵 = 最小化 KL 散度</strong>——逼模型概率表贴近真相，正是今天这整套"用错概率表的代价"在 ML 里的落地。</li>
+</ul>
+<hr>
+<blockquote>📌 明日预告：第 17 期 <strong>大偏差理论（Large Deviations）——小概率事件到底有多小？</strong> 今天我们知道"越罕见的信息量越大"，自信息 $-\log p$ 正是衡量"罕见度"的标尺。但真要问"连抛 100 次硬币全正面"这种极小概率到底按什么指数速度趋于 0、抛多少次才会以可观概率撞上一次，就得请出大偏差理论（速率函数 $I(x)$、Cramér 定理）。它把第 6 期"大数定律只看典型值"补成了"连极端尾巴都有精确算式"，是风险量化、保险、稀有事件模拟的底层武器。</blockquote></div></body></html>

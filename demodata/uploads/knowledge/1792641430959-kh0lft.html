@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第17期 · 复利</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #dcb98e;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 17 期</span>
+  <h1>今天的概念：<span class="tag">复利</span>（Compound Interest）</h1>
+  <div class="date">2026年10月7日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 小美和小琳的"十年之约"：同样的钱，差在哪？</h2>
+    <p>小美和小琳是大学同学，毕业后都进了同一家公司，月薪一样，也都想攒养老钱。两人做了个约定：<strong>每人每月从工资里雷打不动拿出 ¥1,000 做投资</strong>，年化收益就按稳健的 <strong>8%</strong> 算。</p>
+    <p>唯一的不同是<strong>开始的时间</strong>：</p>
+    <ul class="points" style="box-shadow:none;border:none;padding:4px 28px 4px 28px;margin-bottom:10px;">
+      <li><strong>小美</strong>：22 岁一工作就开始，投到 32 岁就"封仓"不投了（只投 10 年，本金共 <strong>12 万</strong>）。</li>
+      <li><strong>小琳</strong>：觉得 22 岁还年轻、钱不多，拖到 32 岁才开始，一直投到 60 岁（投 28 年，本金共 <strong>33.6 万</strong>）。</li>
+    </ul>
+    <p>到 60 岁退休那天，她们一起打开账户，结果让小琳沉默了——</p>
+    <div class="board">
+      <div class="row head"><span class="k">对比项</span><span class="v">小美（早开始）</span><span class="v">小琳（晚开始）</span></div>
+      <div class="row"><span class="k">累计投入本金</span><span class="v">¥12 万</span><span class="v">¥33.6 万</span></div>
+      <div class="row"><span class="k">投资年限</span><span class="v">10 年（但滚了 38 年）</span><span class="v">28 年</span></div>
+      <div class="row"><span class="k">60 岁时账户</span><span class="v">≈ ¥170 万</span><span class="v">≈ ¥125 万</span></div>
+      <div class="row"><span class="k">差额</span><span class="v">多赚约 ¥45 万</span><span class="v">少赚约 ¥45 万</span></div>
+    </div>
+    <p>小美<strong>少投了 21.6 万本金，最后却多出了约 45 万</strong>。她做对的事只有一件：<em>让钱早一点开始"自己生钱"</em>。那笔钱替她多打工了 28 年——这就是<strong>复利</strong>最温柔也最残忍的地方：它奖励早起的人，毫不留情。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>复利（Compound Interest）</strong>，简单说就是<strong>"利滚利"</strong>——每一期的收益并回本金，下一期连本带利一起生息。它的威力不在利率，而在<strong>时间</strong>。</p>
+    <div class="formula">期末金额 = 本金 × (1 + 利率) ^ 时间</div>
+    <p>注意那个<strong>指数（^时间）</strong>。线性增长是条直线，复利增长却是条<strong>越来越陡的曲线</strong>：前几年你几乎无感，后面它"啪"地把你甩出去老远。小美赢，不是因为她投得多，而是她的钱<strong>多滚了 28 年</strong>——时间替她把那 12 万悄悄放大成了 170 万。</p>
+    <p>🌰 换到你的钱包：这不是鸡汤，是数学。哪怕每月只投 <code>¥500</code>，从 25 岁开始和从 35 岁开始，退休时的差距可能就是"一套首付"vs"勉强够花"。更扎心的是——<strong>复利的另一面是债务</strong>：信用卡只还最低额、网贷利滚利，同样的公式会把你往反方向压垮。所以记住：复利是柄双刃剑，站对方向（资产）它帮你，站错方向（负债）它吃你。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>复利最大的变量是"时间"，不是利率</strong>：小美少投 21.6 万本金，却因早开始 10 年、让钱多滚 28 年，最终反多赚约 45 万。越早开始，曲线越陡，"晚一点"的代价远比你以为的大。</li>
+      <li><strong>复利的敌人是"中途下车"和"太晚开始"</strong>：它前慢后快，最需要的是不中断、不挪用。每月 ¥500 从 25 岁起投，往往胜过 35 岁才猛攒——持续 + 早起，胜过偶尔一大笔。</li>
+      <li><strong>复利是双刃剑：资产帮你、负债吃你</strong>：公式对存款和债务一样生效。定投、早还高息债是站在对的刃口；信用卡最低还款、网贷利滚利则是被反噬。先看方向，再谈收益。</li>
+    </ul>
+  </div>
+
+  <div class="next">第 18 期将回到序列的开头第二篇，聊聊「机会成本」（Opportunity Cost）—— 你以为"免费"的选择，其实最贵：为什么看免费电影、用公司纸笔、做自己不擅长却"不用花钱"的事，反而会悄悄亏掉一笔看不见的钱？</div>
+</div>
+</body>
+</html>

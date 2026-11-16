@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美股每日新闻简报 · 2026-11-02</title>
+<style>
+  :root{
+    --bg:#f5f6f8; --card:#ffffff; --ink:#1f2329; --sub:#5b6775;
+    --line:#e3e7ec; --accent:#2b6cb0; --red:#d73027; --green:#1a7f37;
+    --amber:#b7791f; --soft:#f0f4f8;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    line-height:1.65; font-size:15px;
+  }
+  .wrap{max-width:960px; margin:0 auto; padding:24px 18px 60px;}
+  header{
+    background:linear-gradient(135deg,#2b6cb0,#1a4971); color:#fff;
+    border-radius:14px; padding:26px 28px; margin-bottom:22px;
+  }
+  header h1{margin:0 0 6px; font-size:24px; letter-spacing:.5px;}
+  header .meta{font-size:13px; opacity:.92;}
+  header .tag{display:inline-block; background:rgba(255,255,255,.18);
+    border-radius:6px; padding:2px 10px; margin-right:8px; font-size:12px;}
+  h2{font-size:19px; margin:30px 0 14px; padding-left:11px;
+    border-left:5px solid var(--accent);}
+  h3{font-size:16px; margin:18px 0 8px; color:#2c3e50;}
+  .card{background:var(--card); border:1px solid var(--line);
+    border-radius:12px; padding:18px 20px; margin-bottom:16px;}
+  .grid{display:grid; gap:12px;}
+  .g4{grid-template-columns:repeat(4,1fr);}
+  .g3{grid-template-columns:repeat(3,1fr);}
+  .g2{grid-template-columns:repeat(2,1fr);}
+  @media(max-width:720px){.g4,.g3,.g2{grid-template-columns:1fr 1fr;}}
+  .idx{border:1px solid var(--line); border-radius:10px; padding:12px;
+    background:var(--soft);}
+  .idx .name{font-size:13px; color:var(--sub);}
+  .idx .val{font-size:20px; font-weight:700; margin:2px 0;}
+  .idx .chg{font-size:13px; font-weight:600;}
+  .up{color:var(--red);} .down{color:var(--green);}
+  .note{font-size:12.5px; color:var(--sub); margin-top:6px;}
+  table{width:100%; border-collapse:collapse; font-size:14px; margin-top:6px;}
+  th,td{padding:8px 10px; border-bottom:1px solid var(--line); text-align:right;}
+  th:first-child,td:first-child{text-align:left;}
+  thead th{background:var(--soft); color:#33414f; font-weight:600;}
+  .evt{border-left:4px solid var(--accent); padding:10px 14px;
+    background:var(--soft); border-radius:0 10px 10px 0; margin-bottom:12px;}
+  .evt .t{font-weight:700; font-size:15px; margin-bottom:3px;}
+  .evt .b{font-size:13.5px; color:#33414f;}
+  .pill{display:inline-block; font-size:12px; padding:1px 8px; border-radius:20px;
+    background:#e8f0fb; color:#2b6cb0; margin-left:6px;}
+  ul{margin:6px 0 6px 0; padding-left:20px;}
+  li{margin:3px 0;}
+  .risk li{color:#7a3b1d;}
+  .footer{font-size:12px; color:var(--sub); text-align:center;
+    margin-top:30px; border-top:1px solid var(--line); padding-top:14px;}
+  .src{font-size:12px; color:#788596; margin-top:4px;}
+  .cal{width:100%; border-collapse:collapse; font-size:13.5px;}
+  .cal td,.cal th{padding:7px 9px; border-bottom:1px solid var(--line); vertical-align:top;}
+  .cal td:first-child{font-weight:600; color:#2c3e50; white-space:nowrap;}
+  .warnbox{background:#fff8e6; border:1px solid #f0dca8; border-radius:10px;
+    padding:12px 16px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="meta"><span class="tag">每日美股简报</span><span class="tag">纳斯达克 · 标普500 · 道琼斯</span></div>
+  <h1>美股每日新闻简报</h1>
+  <div class="meta">日期：2026 年 11 月 2 日（周一）｜最新完整交易日：美东 10 月 30 日（周五）收盘，北京时间 10/31 04:00</div>
+  <div class="meta">核心主线：AI"回报焦虑"引爆周五科技雪崩（纳指 -2.86%、费半 -7.2%、英特尔 -28% 创 52 年第二大单日跌幅）&rarr; 周一亚股期货补跌（日经 225 期货 -1.28%）；本周聚焦"选举 + 非农 + 苹果财报"三重变量，油价高位（布油 12 月 117.64）与币安史上最大黑客案（63 亿美元）共同压制风险偏好</div>
+</header>
+
+<!-- 一、市场速览 -->
+<h2>一、市场速览</h2>
+<div class="card">
+  <h3>1. 美股核心指数收盘（美东 10/30 周五）</h3>
+  <div class="grid g4">
+    <div class="idx"><div class="name">道琼斯工业</div><div class="val">51,770.31</div><div class="chg down">-569.25 (-1.09%)</div></div>
+    <div class="idx"><div class="name">标普 500</div><div class="val">7,580.07</div><div class="chg down">-140.32 (-1.82%)</div></div>
+    <div class="idx"><div class="name">纳斯达克综合</div><div class="val">25,437.00</div><div class="chg down">-747.72 (-2.86%)</div></div>
+    <div class="idx"><div class="name">费城半导体</div><div class="val">-7.2%</div><div class="chg down">芯片全线重挫</div></div>
+  </div>
+  <div class="note">三大指数周五集体重挫，纳指跌 2.86% 录得 6 月 5 日以来最大单日跌幅；纳指 100 跌 3.46% 报 28,384.85（盘中一度进入技术性回调），罗素 2000 跌 1.66% 报 2,811.84。VIX 收 19.42（+12.91%），盘中触及 4 月以来最高。<b>周度（10/24–10/30）：</b>道指约 -0.85%、标普约 -0.57%、纳指约 -2.00%，标普与纳指连续第三周下跌。<b>月度（10 月）：</b>道指 +1.70%、标普 -0.93%、纳指 -5.3%（2025 年 3 月以来最差单月）。<b>年内（截至 10/30）：</b>标普 +10.73%、纳指 +9.44%、道指 +7.71%。</div>
+  <div class="src">信源：新华社 / 中新经纬 / 财联社 / 南方+ / 中国新闻网 / 华尔街见闻早餐 / 金十数据 / edgeconsultancykw（US Market Wrap 10/30 官方多资产快照）</div>
+</div>
+
+<div class="card">
+  <h3>2. 其他市场与大类资产（美东 10/30 收盘）</h3>
+  <table>
+    <thead><tr><th>资产</th><th>最新</th><th>涨跌</th><th>口径说明</th></tr></thead>
+    <tbody>
+      <tr><td>美国 10 年期国债收益率</td><td>~4.93%</td><td class="down">-1bp（全月 -35bp）</td><td>避险买盘令收益率创一个多月新低；华尔街见闻 4.93% / 腾讯 4.925% / 金十 4.934%</td></tr>
+      <tr><td>美国 2 年期国债收益率</td><td>~4.59%</td><td class="down">-1bp（全月 -30bp）</td><td>腾讯 4.583% / 金十 4.598%，短端同向下行</td></tr>
+      <tr><td>美国 30 年期国债收益率</td><td>5.31%</td><td class="up">+0.7bp</td><td>长端仍处 24 年高位（腾讯 5.307%）</td></tr>
+      <tr><td>美元指数 DXY</td><td>~101.96–101.97</td><td>基本持平</td><td>金十 -0.08% 报 101.96 / 腾讯 +0.08% 报 101.97，方向分歧；美元三连跌至一周低位</td></tr>
+      <tr><td>WTI 原油（12 月）</td><td>$104.12/桶</td><td class="up">+2.08%</td><td>主口径（华尔街见闻/腾讯）；全周 +0.82%、10 月 +15.15%；金十近月 102.05（+0.14%）为不同合约</td></tr>
+      <tr><td>布伦特原油（12 月）</td><td>$117.64/桶</td><td class="up">+2.40%</td><td>主口径（华尔街见闻/腾讯）；全周 +0.79%、10 月 +13.63%；金十近月 111.75（+0.53%）为不同合约</td></tr>
+      <tr><td>COMEX 黄金</td><td>$3,884.90/盎司</td><td class="down">-3.63%（周 -2.71% / 月 -6.49%）</td><td>现货金 ~3,875.55（-3.63%，一年新低，2008 年来最差 10 月）；避险资金转向美债而非黄金</td></tr>
+      <tr><td>COMEX 白银</td><td>$49.13/盎司</td><td class="down">-6.20%（周 -8.66% / 月 -18.31%）</td><td>近 11 个月首破 50 美元；贵金属同步重挫</td></tr>
+      <tr><td>比特币 BTC</td><td>~$76,815</td><td class="down">-4.89%</td><td>风险偏好回落；周末币安遭史上最大黑客案（63 亿美元）进一步重创 crypto</td></tr>
+      <tr><td>VIX 恐慌指数</td><td>19.42</td><td class="up">+12.91%</td><td>CBOE 收盘，盘中触及 4 月以来最高，反映月末 + 选举前避险升温</td></tr>
+    </tbody>
+  </table>
+  <div class="note">跨资产逻辑：油价涨超 2% + 美债 10Y 仍近 5% + 美元窄幅，反映"地缘溢价 + 12 月加息 + 通胀黏性"三重定价；黄金/白银本周大幅回落（-2.71% / -8.66%），主因 AI/科技股暴跌引发流动性收紧、避险资金转向美债而非黄金。原油以 12 月合约结算价为主口径（WTI 104.12 / 布油 117.64，与 10/29 收盘 102.00 / 114.88 连贯），金十近月 102.05 / 111.75 已并列标注为不同合约口径。</div>
+</div>
+
+<!-- 二、六大核心驱动事件 -->
+<h2>二、本周六大核心驱动事件（11/2–11/6）</h2>
+
+<div class="evt"><div class="t">① AI"回报焦虑"蔓延，周一亚股面临补跌 <span class="pill">叙事主线</span></div>
+<div class="b">周五科技股暴跌引发全球 AI 担忧：纳指 -2.86%、费半 -7.2%、纳指 100 盘中进入技术性回调（一度跌 3.5%），英特尔创 52 年来第二大单日跌幅（-28%）。Bloomberg 11/1 称"Asian stocks set to fall as tech rout fuels AI fears"，周一亚股期货走低——日经 225 期货 -1.28%、日韩股指期货指向下跌、澳洲基本持平；亚洲早盘布油约 111.60（-1.7%）、黄金反弹 +0.6% 报约 3,900。交易员为更大波动做准备：VIX 盘中触及 4 月来最高，看跌期权需求大增。部分投资者开始寻找买入机会，但"AI 憧憬→实绩"叙事切换尚未结束。</div></div>
+
+<div class="evt"><div class="t">② 苹果财报（今晚 11/2 盘后）定调"七巨头"韧性 <span class="pill">财报第一枪</span></div>
+<div class="b">苹果为"科技七巨头"中年内最强（累计 +28%），市值约 5.03 万亿逼近/反超英伟达，且其与纳指 100 相关性连续两月为负（科贝西信）。机构预期 FY2026 Q4 营收 1,133.22 亿（+10.60%）、EPS 1.979（+6.97%）；高盛上调 12 个月目标价至 390 美元（买入），预计 iPhone 营收同比 +15%（量减价增，均价 +20%）。但美银将苹果移出"最佳投资建议名单"，担忧 iPhone 分阶段上市及零部件成本上涨压制毛利率。苹果成败将直接影响市场对防御性科技龙头的承接信心。</div></div>
+
+<div class="evt"><div class="t">③ 中期选举（11/3）本周最大政治变量 <span class="pill">政治风险</span></div>
+<div class="b">11 月 3 日美国中期选举正式投票，民主党大概率重夺众议院、参议院归属存变数。选举结果直接定价 AI 监管、数据中心审批与财政刺激政策——若蓝潮大胜掌控参众两院，AI 监管（能耗/环保审查、算力审批门槛）收紧预期升温、科技股短期或快速下修；若符合"分裂国会"预期则利空出尽。特朗普称若民主党赢国会或成"否决先生"。历史统计（《股票交易者年鉴》）：中期选举年 11 月为纳指表现最佳月份（平均 +3.5%），1934 年以来道指在选举日前後 8 个交易日平均 +2.8%。</div></div>
+
+<div class="evt"><div class="t">④ 非农（11/6）定 12 月加息预期 <span class="pill">利率定价</span></div>
+<div class="b">市场共识预期 10 月非农新增 5.5 万（9 月仅 2.9 万）、失业率 4.2%。当前呈现"经济强、就业弱"矛盾：Q3 GDP 年化 +3.4%（快于 Q2 的 2.2%），但就业增长偏弱。数据将直接重塑 12 月加息定价——CME FedWatch 显示 12 月加息 25bp 概率约 82%–90%（10 月会议"鹰派暂停"后未消）。美联储 10 月维持 3.75%–4.00% 不变、10:2 票（Cook + 哈马克主张加息），沃什拒绝前瞻指引并宣布 2027–28 减少议息频次。整周形成"ADP（11/4）— 失业金（11/5）— 非农（11/6）"完整就业观测链。</div></div>
+
+<div class="evt"><div class="t">⑤ 油价 / 地缘：霍尔木兹油轮触雷、美伊拉锯、胡塞袭沙特 <span class="pill">通胀风险</span></div>
+<div class="b">周末布油当月连续约 113.40、WTI 约 102.95；12 月合约仍守 117.64 / 104.12。霍尔木兹海峡两艘超级油轮触雷（涉逾 450 万桶原油），Kpler 复航读数仅 10 艘（未达 20 艘硬指标），胡塞袭沙特炼厂/机场、美能源部紧急交换最多 40 万桶 SPR。美伊外交拉锯（美方经阿曼/卡塔尔试探重启谈判，伊朗坚持七条件未回应），市场担忧选后美对伊恢复打击。OPEC+ 11 月维持配额不变、12 月政策待定。油价高位直接削弱美联储去通胀前景、强化加息预期——这是贯穿全周的通胀主线。</div></div>
+
+<div class="evt"><div class="t">⑥ 美债避险 + 利率：10Y 创月内大反弹后回落 <span class="pill">资金流向</span></div>
+<div class="b">10 月美债大反弹，10Y 全月 –35bp 至约 4.93%、2Y –30bp 至约 4.59%；周五避险买盘令收益率创一个多月新低，但曲线仍熊陡（2s10s 约 38bp）。美元三连跌至约 101.96，离岸人民币四年来首次盘中涨破 6.65（连涨四月）。投资者仍认为未来数月加息可能性大于降息——AI 暴跌引发的避险买盘相对有限，反映利率上行预期根深蒂固。本周古尔斯比（11/2 晚）等美联储官员讲话值得关注。</div></div>
+
+<!-- 三、板块与个股 -->
+<h2>三、板块与个股</h2>
+<div class="card">
+  <h3>1. 标普 500 十一大板块（10/30：6 涨 5 跌）</h3>
+  <div class="grid g2">
+    <div><h3>逆势上涨（防御 + 能源）</h3>
+      <ul>
+        <li>能源 <span class="up">+1.91%</span>（油价涨超 2%）</li>
+        <li>必需消费 <span class="up">+1.38%</span></li>
+        <li>公用事业 <span class="up">+0.64%</span></li>
+        <li>医疗保健 <span class="up">+0.43%</span></li>
+        <li>房地产 <span class="up">+0.15%</span>、材料 <span class="up">+0.04%</span></li>
+      </ul>
+    </div>
+    <div><h3>领跌</h3>
+      <ul>
+        <li>科技 <span class="down">-4.24%</span>（芯片重挫拖累）</li>
+        <li>工业 <span class="down">-1.57%</span></li>
+        <li>通信服务 <span class="down">-1.11%</span></li>
+        <li>金融 <span class="down">-0.74%</span></li>
+        <li>可选消费 <span class="down">-0.86%</span></li>
+      </ul>
+    </div>
+  </div>
+  <div class="note">板块结构清晰呈现"防御 + 能源"抱团、科技/成长出清的特征，与 AI"憧憬→实绩"叙事切换一致；10 月全月能源与必需消费板块均涨超 10%，非 AI 板块普遍累涨。</div>
+</div>
+
+<div class="card">
+  <h3>2. 大型科技 / 七巨头（集体下跌，市值座次生变）</h3>
+  <div class="grid g2">
+    <div><h3>七巨头多数下跌（10/30）</h3>
+      <ul>
+        <li>苹果 <span class="down">-1.23%</span></li>
+        <li>英伟达 <span class="down">-4.22%</span>（市值单日缩水约 2,170 亿美元）</li>
+        <li>微软 <span class="down">-1.54%</span></li>
+        <li>谷歌-A <span class="down">-1.40%</span> / 谷歌-C <span class="down">-1.79%</span></li>
+        <li>亚马逊 <span class="down">-1.41%</span></li>
+        <li>特斯拉 <span class="down">-0.87%</span></li>
+        <li>Meta <span class="down">-1.53%</span></li>
+        <li>SpaceX <span class="down">-6.39%</span></li>
+      </ul>
+    </div>
+    <div><h3>市值座次</h3>
+      <ul>
+        <li>苹果收盘市值约 <b>5.03 万亿美元</b>，重新成为全球市值最高公司</li>
+        <li>英伟达收盘市值约 <b>4.93 万亿美元</b>，苹果时隔数月再度反超</li>
+        <li>博通 <span class="down">-5.48%</span>、礼来 <span class="up">+3.19%</span></li>
+      </ul>
+      <div class="note">来源：财联社、南方+（市值数据）。市值随股价实时变动，以收盘口径为参考。注：谷歌 -12.64% 的史诗级暴跌发生在周四（10/29）盘后财报，周五仅小幅跟跌。</div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <h3>3. 半导体 / 存储 / 光通信（全线重挫，本期最大输家）</h3>
+  <div class="grid g2">
+    <div><h3>半导体（费半 -7.2%）</h3>
+      <ul>
+        <li>英特尔 <span class="down">-28%+</span>（52 年来第二大单日跌幅，仅次于 1974/7/5 的 -29.9%）</li>
+        <li>高通 <span class="down">-11%+</span>、AMD/超威半导体 <span class="down">-10%+</span></li>
+        <li>迈威尔科技 <span class="down">-10%+</span>、ARM <span class="down">-10%</span></li>
+        <li>博通 <span class="down">-5.48%</span>、台积电 <span class="down">-5.95%</span></li>
+      </ul>
+    </div>
+    <div><h3>存储 & 光通信</h3>
+      <ul>
+        <li>闪迪 <span class="down">-13.47%</span>、希捷 <span class="down">-7.98%</span></li>
+        <li>SK 海力士 <span class="down">-7.95%</span>、西部数据 <span class="down">-7.41%</span></li>
+        <li>美光 <span class="down">-5%+</span>、慧荣 <span class="down">-8.39%</span></li>
+        <li>光通信：Tower 半导体 -11.41%、Coherent -11.34%、迈威尔 -10.05%、Lumentum -8.57%</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note">英特尔因 PC 需求指引失望（CFO 称 PC 放缓至少持续到明年上半年）成为本轮"震中"；闪迪虽业绩超预期并宣布 1 拆 8，但年内累涨约 460%、消费营收环比降 29%，市场担忧高毛利难持续，仍重挫 13.47%。</div>
+</div>
+
+<div class="card">
+  <h3>4. 防御板块（逆势）与中概股</h3>
+  <div class="grid g2">
+    <div><h3>能源 / 医药（逆势）</h3>
+      <ul>
+        <li>能源：埃克森美孚 <span class="up">+2%+</span>、康菲石油 <span class="up">+2%+</span>、雪佛龙 <span class="up">+1%+</span>、西方石油 <span class="up">+1%+</span></li>
+        <li>医药：礼来 <span class="up">+3.19%</span>（减重药 Zepbound/Mounjaro 需求强劲、上调全年指引）、默克 <span class="up">+2%+</span>、辉瑞 <span class="up">+1%+</span>、安进 <span class="up">+1%+</span></li>
+      </ul>
+    </div>
+    <div><h3>中概（随大盘承压）</h3>
+      <ul>
+        <li>金龙指数近期随美股走弱（10/29 微涨 0.2%、10/23 -0.84%）；10/30 个股分化</li>
+        <li>上涨：携程、网易、京东、贝壳、华住、BOSS 直聘等小幅走高</li>
+        <li>下跌：百度、富途、蔚来、理想、阿里、拼多多等走弱；半导体中概（盛美、禾赛、万国数据）跌幅更深</li>
+        <li>周末阿里千问 APP 公测首周下载破千万，周一盘前阿里 ADR 一度涨近 4%</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 四、周末与周一盘前最新动态 -->
+<h2>四、周末与周一盘前最新动态</h2>
+<div class="card">
+  <div class="grid g2">
+    <div><h3>盘前与亚盘（北京时间 11/2 早）</h3>
+      <ul>
+        <li>美股期货基本持平、纳指期货微涨：财联社报纳指期货 +0.36%；implied-open 隐含开盘 标普 7,581.86（+0.02%）/ 道指 51,727.93（-0.08%）/ 纳指 100 28,402.81（+0.06%）</li>
+        <li>亚洲补跌压力：日经 225 期货 -1.28%、日韩股指期货指向下跌、澳洲开盘走低；恒指 23,294.42（持平，尚未开盘）</li>
+        <li>周一早盘布油约 111.60（-1.7%）、黄金反弹 +0.6% 报约 3,900 美元/盎司</li>
+        <li>今日美股 22:30（北京时间）开盘，北美 11/1 起进入冬令时，交易与数据发布时间延后 1 小时</li>
+      </ul>
+    </div>
+    <div><h3>周末重大事件</h3>
+      <ul>
+        <li><b>币安遭史上最大黑客攻击</b>：据金十，约 63 亿美元资产被转走，已暂停全部充值与提现并承诺承担损失；比特币盘中跌破 7.7 万美元、较周四高位跌近 7%</li>
+        <li><b>英伟达展示下一代 CPO（共封装光学）方案</b>，称已拿到原型样品</li>
+        <li><b>Marvell 据称磋商收购 Lumentum</b>，"芯片 + 光学"闭环引发光通信"赢家通吃"担忧</li>
+        <li><b>中国央行</b>：继续实施适度宽松的货币政策，综合运用多种工具保持流动性充裕；中国与瑞士签署自贸协定升级议定书</li>
+        <li><b>Kimi K3.1 Pro 发布</b>：3 万亿参数、100 万上下文，开源与顶级闭源差距骤缩</li>
+        <li>特朗普称若民主党赢得国会多数或成"否决先生"；以色列总统呼吁避免再次大选</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note">盘前期货仅反映周末–周一早间情绪，不构成开盘预测；今日（11/2 周一）美股尚未开盘，最新完整交易日仍为美东 10/30 周五收盘。北美冬令时后，ISM 制造业 PMI 等数据延至北京时间 23:00 发布。</div>
+</div>
+
+<!-- 五、其他市场 -->
+<h2>五、其他市场</h2>
+<div class="card">
+  <div class="grid g3">
+    <div><h3>欧洲（10/30 收盘，涨跌不一）</h3>
+      <ul>
+        <li>英国 FTSE 100：10,729.78 <span class="up">+0.07%</span></li>
+        <li>法国 CAC 40：7,969.42 <span class="down">-0.01%</span>（基本平）</li>
+        <li>德国 DAX：25,818.21 <span class="down">-0.85%</span></li>
+        <li>欧洲 STOXX 600：646.75 <span class="down">-0.36%</span>（全周 +1.73%、10 月 +1.87%）</li>
+      </ul>
+    </div>
+    <div><h3>亚太（10/30 早间收盘）</h3>
+      <ul>
+        <li>日经 225：64,659.47 <span class="up">+1.1%</span></li>
+        <li>东证指数：4,003.28 <span class="up">+0.3%</span></li>
+        <li>韩国首尔综指：5,937.66 <span class="down">-1.2%</span></li>
+        <li>三星电子 <span class="down">-4%</span></li>
+      </ul>
+    </div>
+    <div><h3>A 股 / 汇率（A 股 10/30 收盘）</h3>
+      <ul>
+        <li>上证指数：3,599.02 <span class="down">-1.44%</span></li>
+        <li>深证成指：10,833.78 <span class="down">-2.73%</span></li>
+        <li>创业板指：2,413.63 <span class="down">-4.13%</span></li>
+        <li>离岸人民币 6.65 附近（四年来首次盘中涨破 6.65）</li>
+      </ul>
+    </div>
+  </div>
+  <div class="note">A 股 10/30 成长赛道继续回踩、半导体/游戏板块领跌，与美股科技出清共振；离岸人民币升破 6.65 创四年新高。亚太（日韩）数据为 10/30 早间收盘，因北京时点在美东周五收盘前，仅作参考；周一亚股期货已明显走弱（见第四节）。</div>
+</div>
+
+<!-- 六、本周关键日程 -->
+<h2>六、本周关键日程（美东时间 11/2–11/6，已含冬令时调整）</h2>
+<div class="card">
+  <table class="cal">
+    <thead><tr><th>日期</th><th>重点事件</th><th>财报 / 其他</th></tr></thead>
+    <tbody>
+      <tr><td>周一 11/2</td><td>美国 10 月 ISM 制造业 PMI（23:00 北京）、标普全球制造业 PMI 终值、9 月营建支出；欧元区/英法德 10 月制造业 PMI 终值；美联储古尔斯比讲话</td><td><b>苹果 AAPL</b> 盘后发布 FY2026 Q4 财报（AI 财报第一枪）；Palantir、万豪、Vertex、安森美、Roku 等</td></tr>
+      <tr><td>周二 11/3</td><td><b>美国中期选举正式投票</b>（民主党大概率夺回众议院、参议院归属存变数）；澳洲联储加息 25bp 至 4.85%；9 月 JOLTS 职位空缺、工厂订单</td><td><b>AMD</b> 发布 FY2026 Q3 财报；Shopify、辉瑞、安进、伊顿、Arista、Booking</td></tr>
+      <tr><td>周三 11/4</td><td>美国 10 月 ADP 私营就业（非农前瞻）；欧元区 10 月 CPI；EIA / API 原油库存；美国财政部季度再融资公告</td><td><b>高通 QCOM</b> 发布 FY2026 Q4 财报；Arm、AppLovin、DoorDash、麦当劳、Uber、诺和诺德</td></tr>
+      <tr><td>周四 11/5</td><td>初请 / 续请失业金 + 挑战者裁员；<b>英国央行议息（大概率加息 25bp 至 4%，7 个月来首次）</b>；日本央行公布会议纪要；三季度非农生产率初值</td><td>康菲石油、索尼、Cloudflare、Airbnb、Lumentum</td></tr>
+      <tr><td>周五 11/6</td><td><b>美国 10 月非农就业、失业率、薪资增速压轴</b>（验证美联储"暂停加息"逻辑的核心窗口）；11 月密歇根大学消费者信心初值</td><td>Moderna、Humana、Vistra</td></tr>
+      <tr><td>后续</td><td>Anthropic 计划约 11/16 当周完成 IPO 路演与定价；英伟达 11/17 发布 FY2027 Q3 财报；台积电 11/10 公布 10 月营业额；11/10 美国 10 月 CPI</td><td>—</td></tr>
+    </tbody>
+  </table>
+  <div class="note">本周共有约 755 家市值 20 亿美元以上公司发布财报，周三（11/4）最密集（约 240 家）。11/3 中期选举是最大政治变量：选举结果直接定价 AI 监管、数据中心审批与财政刺激；基准情景"分裂国会"易走出利空出尽，蓝潮大胜则 AI 监管收紧预期升温。整周形成"ADP—失业金—非农"完整就业观测链，是 12 月加息定价的核心博弈。</div>
+</div>
+
+<!-- 七、风险提示 -->
+<h2>七、风险提示</h2>
+<div class="card risk">
+  <div class="warnbox">
+  <ul>
+    <li><b>AI 业绩兑现压力：</b>本周苹果、AMD、Palantir、高通等百余家集中披露，高预期下"容错率"极低；Alphabet、英特尔、亚马逊已接连爆雷，任何 AI 龙头业绩/指引不及预期都可能触发流动性连锁回调，"AI 憧憬→实绩"叙事切换尚未结束。费半 10 月已跌 8.7%，守 200 日均线（约 10,766）关键位。</li>
+    <li><b>中期选举（11/3）：</b>最大政治变量。若蓝潮大胜掌控参众两院，AI 监管（能耗/环保审查、算力审批门槛）收紧预期升温、科技股短期下修；若结果符合"分裂国会"预期则利空出尽。选举落地前政策不确定性压制风险偏好。</li>
+    <li><b>非农与利率（11/6）：</b>10 月非农新增预期 5.5 万（9 月仅 2.9 万），数据将直接重塑 12 月加息定价（当前 CME 12 月加息概率约 82%–90%）；"经济强、就业弱"矛盾加大预期分歧。</li>
+    <li><b>油价与地缘：</b>霍尔木兹油轮触雷、胡塞袭沙特、美伊外交拉锯、选后美国或对伊恢复军事打击；布油 12 月 117.64 / WTI 104.12 上方，地缘溢价随时反复，直接削弱去通胀前景、推升加息预期。</li>
+    <li><b>加密外溢（币安黑客）：</b>据金十，币安遭史上最大规模黑客攻击（约 63 亿美元资产被转走、暂停充提），比特币跌破 7.7 万美元；若事态扩大，或拖累 crypto 概念股（Coinbase 将于本周发布财报）并冲击风险偏好。</li>
+    <li><b>黄金 / 避险资产：</b>本周 COMEX 金 -2.71%、银 -8.66%，AI/科技回调引发流动性收紧、避险资金转向美债而非黄金；仅当地缘升级 + 就业大幅走弱共振时才有望打开上行空间。</li>
+    <li><b>板块极端分化：</b>指数重挫中能源/防御逆势、芯片/科技崩塌，个股事件风险（英特尔 -28%、闪迪 -13%）极高；中概受风险偏好拖累、半导体中概跌幅更深。波动率（VIX 19.42、盘中 4 月来最高）仍处上行通道。</li>
+  </ul>
+  </div>
+  <div class="note">数据口径提示：原油以 12 月合约结算价为主口径（WTI 104.12 / 布油 117.64，与 10/29 收盘 102.00 / 114.88 连贯；华尔街见闻/腾讯一致），金十近月 102.05 / 111.75 已并列标注为不同合约；黄金采 COMEX 金 3,884.90（周 -2.71%），现货金约 3,875.55（一年新低）并列；美债 10Y ~4.93% / 2Y ~4.59% 取华尔街见闻/腾讯/金十三源一致区间；指数点位以"美东月日 + 官方指数 feed + 跨源一致性"交叉校验为准，已剔除 tickerdaily 等 2024 水平虚构行情源。本周（10/24–10/30）涨跌幅为按 10/23 与 10/30 收盘测算值。本简报仅供信息参考，不构成投资建议。</div>
+</div>
+
+<div class="footer">
+  美股每日新闻简报 · 2026-11-02 ｜ 生成于自动化任务 ｜ 数据区间：美东 2026-10-30 收盘（北京时间 10/31 04:00）+ 周末/周一盘前动态<br>
+  主要信源：新华社 / 中新经纬 / 财联社 / 南方+ / 中国新闻网 / 中国证券网 / 华尔街见闻早餐 / 金十数据 / 汇通网 / ifnews / 腾讯证券 / Bloomberg / edgeconsultancykw（US Market Wrap）
+</div>
+
+</div>
+</body>
+</html>

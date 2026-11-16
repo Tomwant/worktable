@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第2期 · 信息级联与羊群效应</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+</style></head><body><div class="wrap"><h1>第 2 期 · 信息级联与羊群效应（Information Cascades &amp; Herding）</h1>
+<blockquote>日期：2026-10-24</blockquote>
+<blockquote>本系列定位：每天一个概率学概念，先用故事把直觉带进来，再给几道代表性题目供你<strong>自己总结</strong>；完整解题思路附在文末，写完再回来对照。</blockquote>
+<blockquote>概念序列：第 21 项「随机图与渗流」→ 本期第 22 项「信息级联与羊群效应」。</blockquote>
+<hr>
+<h2>一、故事引入：阿明的"神秘奶茶"盲测</h2>
+<p>阿明研发了一款新品奶茶，纠结到底用<strong>配方甲</strong>还是<strong>配方乙</strong>。市场真实更受欢迎的是其中某一个，但他并不知道。于是他请来 10 位好友，<strong>依次盲尝、并当众宣布自己选甲还是选乙</strong>（一旦喊出口不能改）。</p>
+<p>规则很关键：</p>
+<ul>
+<li>每个人先<strong>私下</strong>抽一张"口味卡"——红卡偏向甲、蓝卡偏向乙，卡片指对真实赢家的概率是 <strong>q = 2/3</strong>（比瞎猜准一点，但不是绝对）。</li>
+<li>每个人<strong>听得到前面所有人宣布的结果</strong>，但<strong>看不到别人的卡片</strong>，也听不到别人的理由。</li>
+</ul>
+<p><strong>阿强</strong>第一个抽到红卡 → 喊"甲"。</p>
+<p><strong>阿珍</strong>第二个抽到红卡 → 喊"甲"。</p>
+<p>现在轮到<strong>阿明（第三个）</strong>。他私下抽到的是一张<strong>蓝卡</strong>（指向乙）！可他看到前两个人都喊了甲。他心里一算：前面两人异口同声选甲，这本身已经传递了大量信息——"两个独立信号都指向甲"。于是阿明<strong>也跟着喊甲，把自己的蓝卡扔到一边</strong>。</p>
+<p>这就是<strong>信息级联的起点</strong>：从第三个人起，只要前面同声，后面所有人都会照搬前面的公开选择，<strong>哪怕自己的私有信号完全相反</strong>。故事里哪怕后面 100 个人都抽到蓝卡，只要最开始那两位同色，全队都会喊甲。</p>
+<blockquote>想一想：阿明明明抽到了"相反"的卡片，为什么理性上却该跟甲？他丢掉的那张蓝卡，到底还有没有价值？</blockquote>
+<hr>
+<h2>二、概念讲解</h2>
+<h3>1. 什么是信息级联</h3>
+<p><strong>信息级联（informational cascade）</strong>：当后面的人观察到前面人的公开行动后，发现自己的私有信息已经<strong>改变不了最优决策</strong>，于是放弃私有信号、完全照搬前面行动的现象。群体表现出"羊群"，但每个人<strong>都是理性地</strong>在做贝叶斯更新——这叫<strong>理性从众</strong>。</p>
+<p>注意区分两种"跟风"：</p>
+<ul>
+<li><strong>信息级联（理性）</strong>：你真以为"前面的人更懂"，因为他们公开的行为暴露了一部分信息。</li>
+<li><strong>声誉从众（非信息）</strong>：你其实知道别人可能也瞎跟，但怕显得无知或异类而附和（阿施线段实验、会议里没人敢反对）。</li>
+</ul>
+<p>本期只讲第一种——它最反直觉：明明人人理性，群体却可能集体翻车。</p>
+<h3>2. 贝叶斯机理：公开行动是私有信号的"有损聚合"</h3>
+<p>设先验 P(甲对)=P(乙对)=1/2，卡片准确率 q=2/3。</p>
+<p>前两个人<strong>都喊甲</strong>传递了什么？用贝叶斯算 P(甲对 | 前两人选甲)：</p>
+<ul>
+<li>若甲真对，两人都抽到红（喊甲）的概率 = q²；</li>
+<li>若乙真对，两人都抽到红（喊错）的概率 = (1−q)²。</li>
+</ul>
+<blockquote>P(甲对 | 前两人选甲) = q² / [ q² + (1−q)² ]</blockquote>
+<blockquote>= (4/9) / (4/9 + 1/9) = 4/5 = <strong>0.8</strong></blockquote>
+<p>也就是说，光看前两个人的公开选择，甲的后验已经从 0.5 升到了 0.8。第三个人即使自己抽到蓝卡（指向乙），把这张私人证据再乘进去，甲的后验仍<strong>高于 0.5</strong>（具体算法见第四节题 1），于是理性地选甲。</p>
+<p><strong>核心洞察</strong>：公开行动 = 私有信号的"压缩包"，它丢掉了"为什么"，只留下"选了啥"，但承载的信息量仍可能大于你手里的单张卡片。级联的根因正是——<strong>信号私有、只见行动</strong>。</p>
+<h3>3. 级联的"脆弱"与"顽固"</h3>
+<ul>
+<li><strong>顽固</strong>：一旦级联启动，会一直持续，因为后面每个人算出来都该跟。哪怕连续 100 个蓝卡，只要开局两位同色，全跟甲，没人纠错。</li>
+<li><strong>脆弱（可被打破）</strong>：只要有人<strong>公开自己的私有信号</strong>（不只喊结果），或信号精度突变、出现权威新信息、允许改口重估，级联立刻瓦解。</li>
+<li><strong>错误代价</strong>：级联一旦朝错误方向启动，群体最终选错的概率高得惊人（经典结论见题 2）。</li>
+</ul>
+<h3>4. 闭环前面几期</h3>
+<ul>
+<li>接<strong>第 2 期贝叶斯定理</strong>：级联本质就是"把别人的公开行动当新证据做后验更新"。</li>
+<li>接<strong>第 12 期马尔可夫链</strong>：级联可看作进入了一个"吸收态"——一旦跟从，再也出不去。</li>
+<li>对照<strong>第 8 期蒙特霍尔</strong>：主持人"故意不开车"也是一种信息注入；级联是"别人无意间泄露的信息"。</li>
+<li>对照<strong>第 20 期最优停止</strong>：前面讲"何时该自己停手判断"，本期讲"何时该放弃自己的判断去跟"——一对反向张力。</li>
+</ul>
+<hr>
+<h2>三、代表性题目（你来总结，写完后看第四节对照）</h2>
+<blockquote><strong>题 1（级联起点）</strong>：把卡片准确率降到 q = 0.6（只比瞎猜准一点）。前两人都喊甲，第三个人抽到的却是<strong>指向乙</strong>的信号。他是该跟甲，还是该信自己的卡片？请写出后验概率。</blockquote>
+<blockquote><strong>题 2（级联的错误率）</strong>：在 BHW 经典模型（先验 1/2、q = 2/3）下，信息级联一旦启动，群体最终选择方向<strong>错误</strong>的概率大约是多少？为什么理性个体也会把大家带沟里？</blockquote>
+<blockquote><strong>题 3（破级联）</strong>：如果规则改成——每个人不仅当众喊"甲/乙"，还要<strong>亮出自己的卡片颜色</strong>（红/蓝），级联还会发生吗？为什么？</blockquote>
+<blockquote><strong>题 4（现实映射）</strong>：下面哪些更接近"信息级联"（理性从众），哪些更接近"声誉从众"？各举一个你身边的例子：① 早起跟风买某只基金，因为"前面的人都赚了"；② 会上明知方案有漏洞却无人反对；③ 看论文引用量判断该读哪篇；④ 直播间抢购。</blockquote>
+<hr>
+<h2>四、完整解题思路（含答案）</h2>
+<blockquote><strong>题 1 解答</strong></blockquote>
+<blockquote>先算"前两人都选甲"给甲的后验：</blockquote>
+<blockquote>P(甲 | 前两人甲) = q² / [q² + (1−q)²]</blockquote>
+<blockquote>= 0.36 / (0.36 + 0.16) = 0.36 / 0.52 ≈ <strong>0.6923</strong>。</blockquote>
+<blockquote></blockquote>
+<blockquote>第三个人自己抽到蓝卡（指向乙）。把这条私人证据乘进去：</blockquote>
+<blockquote>- 若甲真对，他抽到蓝（错卡）的概率 = 1−q = 0.4；</blockquote>
+<blockquote>- 若乙真对，他抽到蓝（对卡）的概率 = q = 0.6。</blockquote>
+<blockquote></blockquote>
+<blockquote>复合后验：</blockquote>
+<blockquote>P(甲 | 前两人甲，且自己蓝)</blockquote>
+<blockquote>= [0.6923 × 0.4] / [0.6923 × 0.4 + (1−0.6923) × 0.6]</blockquote>
+<blockquote>= 0.2769 / (0.2769 + 0.1846)</blockquote>
+<blockquote>= 0.2769 / 0.4615 ≈ <strong>0.60</strong>。</blockquote>
+<blockquote></blockquote>
+<blockquote>结论：即便自己的证据相反、信号精度也只有 0.6，聚合的前两人信息仍占上风（0.60 &gt; 0.5），理性选择是<strong>跟甲</strong>。这正是级联的起点——<strong>公开行动承载的信息量 &gt; 单张私有卡</strong>。</blockquote>
+<blockquote><strong>题 2 解答</strong></blockquote>
+<blockquote>BHW（Bikhchandani–Hirshleifer–Welch, 1992） landmark 结论：当 q = 2/3、先验 1/2 时，信息级联<strong>几乎必然会发生</strong>（n 足够大），而级联一旦启动，群体最终选择方向<strong>错误</strong>的概率约为 <strong>1/3</strong>（正确方向约 2/3）。</blockquote>
+<blockquote></blockquote>
+<blockquote>直觉拆分：级联始于"前两个同色信号"。同色既可能来自真信号同向（概率 q² = 4/9），也可能来自假信号同向（概率 (1−q)² = 1/9）。在"启动即同色"的条件下，方向错的概率 = (1/9) / (5/9) = 1/5；但更长的链里级联可能在更晚才启动，综合下来经典结果为<strong>错误级联 ≈ 1/3</strong>。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>为什么理性个体带沟里</strong>：每个人都在正确做贝叶斯，但信息通过"公开行动"有损传递，早期一两个同色信号就把后验推过 0.5，之后所有人被锁死，私有反例信号再也无法改变公开结论。个体理性 → 集体非理性。</blockquote>
+<blockquote><strong>题 3 解答</strong></blockquote>
+<blockquote>级联<strong>不会发生</strong>。原因：一旦每个人亮出卡片颜色，所有人的决策就基于<strong>全部私有信号 + 自己的信号</strong>的完整证据，相当于"少数服从多数 / 贝叶斯聚合全体信息"，不再依赖"只看别人选了啥"。</blockquote>
+<blockquote></blockquote>
+<blockquote>关键区别：<strong>公开行动是信息的"有损压缩"（只显结果不显理由）</strong>，级联的根因正是信号私有 + 只见行动。信息充分披露后，每个人判断依据完整，级联失去土壤。</blockquote>
+<blockquote>现实启示：匿名可复核投票、公开原始数据、可审计方法、要求"说出你的依据"——都能打破信息级联。</blockquote>
+<blockquote><strong>题 4 解答（参考框架）</strong></blockquote>
+<blockquote>- <strong>信息级联（理性，基于他人行动推断信息）</strong>：① 跟风买基金（"前面都赚了"= 用他人行为推断标的优劣）；③ 看引用量选论文（用引用量推断质量）。</blockquote>
+<blockquote>- <strong>声誉从众（怕显得异类/无知）</strong>：② 会上无人反对（明知有漏洞也附和，阿施实验原型）。</blockquote>
+<blockquote>- <strong>两者叠加</strong>：④ 直播间抢购——既"看别人抢以为好"（信息），又"怕错过/怕显得不懂"（声誉）。</blockquote>
+<blockquote>区分口诀：信息级联里你<strong>真以为别人更懂</strong>；声誉从众里你<strong>知道别人可能也瞎跟，但不敢出头</strong>。</blockquote>
+<hr>
+<h2>五、明日预告</h2>
+<p><strong>第 3 期（概念第 23 项）：模拟退火与随机优化</strong></p>
+<p>——为什么"偶尔故意走错路"反而能跳出局部最优、找到全局最优？Metropolis 准则、退火温度，以及它和本期"级联被困住"的反向关系：级联是过早锁死，退火是故意不锁死。</p></div></body></html>

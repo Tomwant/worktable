@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>财务知识 · 第01期 · 毛利与毛利率</title>
+<style>
+  :root{
+    --green:#2f6b5e;
+    --green-deep:#1f4d43;
+    --green-soft:#eaf1ee;
+    --gold:#c9a961;
+    --gold-soft:#faf4e6;
+    --ink:#1f2a26;
+    --ink-2:#43544c;
+    --muted:#6b7a73;
+    --line:#e3e8e4;
+    --paper:#ffffff;
+    --bg:#f4f6f4;
+    --warn:#b4534a;
+    --warn-soft:#fbeeec;
+    --r:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    font-size:15px;
+    line-height:1.75;
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:780px;margin:0 auto;padding:28px 18px 56px}
+
+  /* ---------- 头部 ---------- */
+  .hero{
+    background:linear-gradient(135deg,var(--green) 0%,var(--green-deep) 100%);
+    border-radius:20px;
+    padding:30px 28px 26px;
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;right:-70px;top:-70px;
+    width:220px;height:220px;border-radius:50%;
+    background:radial-gradient(closest-side,rgba(201,169,97,.42),rgba(201,169,97,0));
+  }
+  .kicker{
+    display:inline-flex;align-items:center;gap:8px;
+    font-size:12px;letter-spacing:.14em;font-weight:600;
+    color:#f6e9c9;
+    background:rgba(255,255,255,.12);
+    border:1px solid rgba(255,255,255,.18);
+    border-radius:99px;padding:5px 13px;
+  }
+  .hero h1{
+    margin:16px 0 6px;
+    font-size:29px;line-height:1.32;font-weight:700;letter-spacing:.01em;
+  }
+  .hero .sub{margin:0;font-size:14px;color:rgba(255,255,255,.82);line-height:1.7;max-width:560px}
+  .meta{
+    margin-top:20px;display:flex;flex-wrap:wrap;gap:8px;
+  }
+  .meta span{
+    font-size:12px;color:rgba(255,255,255,.9);
+    background:rgba(255,255,255,.1);
+    border-radius:8px;padding:4px 10px;
+  }
+
+  /* ---------- 卡片 ---------- */
+  .card{
+    background:var(--paper);
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    padding:22px 24px;
+    margin-top:16px;
+    box-shadow:0 10px 26px -22px rgba(31,77,67,.55);
+  }
+  .card > h2{
+    margin:0 0 4px;
+    font-size:17px;font-weight:700;color:var(--green-deep);
+    display:flex;align-items:center;gap:9px;
+  }
+  .card > h2 .no{
+    flex:0 0 auto;width:22px;height:22px;border-radius:7px;
+    background:var(--green-soft);color:var(--green);
+    font-size:12px;font-weight:700;
+    display:inline-flex;align-items:center;justify-content:center;
+  }
+  .card > .lead{margin:2px 0 16px;font-size:12.5px;color:var(--muted)}
+  .card p{margin:0 0 12px;color:var(--ink-2)}
+  .card p:last-child{margin-bottom:0}
+  strong{color:var(--ink);font-weight:650}
+  .hi{background:linear-gradient(transparent 62%,rgba(201,169,97,.36) 0);font-weight:650;color:var(--ink)}
+
+  /* ---------- 公式 ---------- */
+  .formula{
+    background:var(--green-soft);
+    border-left:3px solid var(--green);
+    border-radius:0 12px 12px 0;
+    padding:14px 16px;
+    margin:14px 0;
+    font-size:14.5px;font-weight:600;color:var(--green-deep);
+    line-height:1.9;
+  }
+  .formula em{font-style:normal;color:var(--gold);font-weight:700;padding:0 2px}
+  .note{
+    font-size:12.5px;color:var(--muted);
+    background:#f7f9f8;border:1px dashed var(--line);
+    border-radius:10px;padding:10px 13px;margin:12px 0 0;
+  }
+
+  /* ---------- 拆解条 ---------- */
+  .split{margin:16px 0 4px}
+  .split-row{display:flex;align-items:center;gap:12px;margin-bottom:9px}
+  .split-row .lb{
+    flex:0 0 96px;font-size:12.5px;color:var(--muted);text-align:right;
+  }
+  .split-row .track{
+    flex:1;height:22px;border-radius:7px;background:#f2f5f3;overflow:hidden;display:flex;
+  }
+  .split-row .track i{display:block;height:100%}
+  .split-row .val{
+    flex:0 0 118px;font-size:12.5px;color:var(--ink-2);
+    font-variant-numeric:tabular-nums;
+  }
+  .c-food{background:linear-gradient(180deg,#3f8375,#2f6b5e)}
+  .c-gross{background:linear-gradient(180deg,#dcbe86,#c9a961)}
+  .c-rent{background:#9fb3ab}
+  .c-labor{background:#7d968c}
+  .c-other{background:#cdd8d3}
+
+  /* ---------- 表格 ---------- */
+  .tbl{width:100%;border-collapse:collapse;margin:14px 0 0;font-size:13.5px}
+  .tbl th,.tbl td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:left}
+  .tbl th{
+    font-size:12px;font-weight:600;color:var(--muted);
+    background:#f8faf9;border-bottom:1px solid var(--line);
+  }
+  .tbl td.num{text-align:right;font-variant-numeric:tabular-nums;color:var(--ink)}
+  .tbl tr:last-child td{border-bottom:none}
+  .tbl tr.sum td{background:var(--gold-soft);font-weight:700;color:var(--ink)}
+  .tbl tr.sum td.num{color:var(--green-deep)}
+
+  /* ---------- 红线 ---------- */
+  .rules{list-style:none;margin:6px 0 0;padding:0;counter-reset:r}
+  .rules li{
+    position:relative;padding:12px 14px 12px 44px;
+    border:1px solid var(--line);border-radius:12px;margin-bottom:9px;
+    font-size:14px;color:var(--ink-2);
+  }
+  .rules li::before{
+    counter-increment:r;content:counter(r);
+    position:absolute;left:13px;top:13px;
+    width:20px;height:20px;border-radius:50%;
+    background:var(--gold-soft);color:#a5842f;
+    font-size:11.5px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .rules li b{color:var(--ink)}
+
+  /* ---------- 警示 ---------- */
+  .trap{
+    background:var(--warn-soft);
+    border:1px solid #f0d8d4;
+    border-radius:12px;padding:14px 16px;margin:12px 0 0;
+  }
+  .trap h4{margin:0 0 8px;font-size:13.5px;color:var(--warn)}
+  .trap ul{margin:0;padding-left:18px}
+  .trap li{font-size:13.5px;color:var(--ink-2);margin-bottom:6px}
+  .trap li:last-child{margin-bottom:0}
+
+  /* ---------- 自测 ---------- */
+  .quiz{background:#f8faf9;border-radius:12px;padding:16px;margin-top:12px}
+  .quiz .q{font-size:14px;color:var(--ink);margin-bottom:10px}
+  details{border-top:1px dashed var(--line);padding-top:10px}
+  summary{
+    cursor:pointer;font-size:13px;font-weight:650;color:var(--green);
+    list-style:none;display:inline-flex;align-items:center;gap:6px;
+  }
+  summary::-webkit-details-marker{display:none}
+  summary::before{content:"▸";font-size:11px;transition:transform .15s}
+  details[open] summary::before{transform:rotate(90deg)}
+  .ans{margin-top:10px;font-size:13.5px;color:var(--ink-2);line-height:1.85}
+  .ans .step{display:block;padding:3px 0}
+  .ans b{color:var(--green-deep)}
+
+  /* ---------- 关联 / 脚注 ---------- */
+  .next{
+    display:flex;align-items:center;gap:12px;
+    background:var(--paper);border:1px solid var(--line);
+    border-radius:14px;padding:15px 18px;margin-top:16px;
+  }
+  .next .tag{
+    flex:0 0 auto;font-size:11.5px;font-weight:700;color:#a5842f;
+    background:var(--gold-soft);border-radius:99px;padding:4px 11px;
+  }
+  .next p{margin:0;font-size:13px;color:var(--muted)}
+  .next p b{color:var(--ink)}
+  footer{
+    margin-top:26px;text-align:center;
+    font-size:11.5px;color:#9aa8a1;line-height:1.9;
+  }
+
+  @media (max-width:600px){
+    .wrap{padding:16px 12px 40px}
+    .hero{padding:24px 18px;border-radius:16px}
+    .hero h1{font-size:23px}
+    .card{padding:18px 16px}
+    .split-row{flex-wrap:wrap;gap:6px}
+    .split-row .lb{flex:0 0 100%;text-align:left}
+    .split-row .val{flex:0 0 100%;font-size:12px}
+    .tbl{font-size:12.5px}
+    .tbl th,.tbl td{padding:8px 6px}
+    .next{flex-direction:column;align-items:flex-start;gap:8px}
+  }
+
+  /* 自测题折叠：原生 details，不依赖 JS（沙箱预览里也能点开） */
+  details.qz{border:1px solid #e3e8e5;border-radius:12px;background:#fff;margin:0 0 12px;overflow:hidden;transition:border-color .18s,box-shadow .18s;}
+  details.qz:hover{border-color:#cfdcd6;box-shadow:0 3px 12px rgba(47,107,94,.07);}
+  details.qz[open]{border-color:#cfe0d9;box-shadow:0 3px 14px rgba(47,107,94,.08);}
+  details.qz summary{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;cursor:pointer;list-style:none;user-select:none;}
+  details.qz summary::-webkit-details-marker{display:none;}
+  details.qz summary::before,details.qz summary::after{content:"" !important;display:none !important;}
+  details.qz summary::marker{content:"";}
+  details.qz .qt{flex:1 1 auto;font-weight:700;font-size:15px;line-height:1.6;color:#1f2a26;}
+  details.qz .peek{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:600;color:#8a6f2e;background:#f7f1e4;border-radius:999px;padding:3px 11px 3px 9px;margin-top:1px;transition:background .18s,color .18s;}
+  details.qz:hover .peek{background:#f2e8d2;}
+  details.qz[open] .peek{background:#e7f0ed;color:#2a5b50;}
+  details.qz .peek .arw{font-size:10px;line-height:1;transition:transform .2s;}
+  details.qz[open] .peek .arw{transform:rotate(180deg);}
+  details.qz .peek .t-off{display:none;}
+  details.qz[open] .peek .t-on{display:none;}
+  details.qz[open] .peek .t-off{display:inline;}
+  details.qz .qa{border-top:1px dashed #e3e8e5;padding:12px 16px 14px;background:#fbfcfb;font-size:14.5px;line-height:1.75;color:#1f2a26;animation:qzfade .2s ease-out;}
+  details.qz .qa b{color:#2f6b5e;}
+  details.qz .qa span:not([class]){color:#5f6b66;font-size:13.5px;}
+  details.qz .qa .step{display:block;margin:4px 0;}
+  @keyframes qzfade{from{opacity:0;transform:translateY(-3px);}to{opacity:1;transform:none;}}
+  .qz-lead{font-size:13.5px;color:#5f6b66;margin:-6px 0 14px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="kicker">财务知识 · 第 01 期</span>
+    <h1>毛利与毛利率：<br>流水好看，为什么年底不见钱</h1>
+    <p class="sub">你手上几家店都在赚钱地转，月底流水一加总挺好看，可真要拿钱出来扩张、还贷、发年终，账上总是紧。这一期把「毛利」这件事算清楚——它是流水和利润之间那道最容易漏掉的坎。</p>
+    <div class="meta">
+      <span>2026-10-29</span>
+      <span>关键词：毛利 / 毛利率 / 食材成本率</span>
+      <span>阅读约 8 分钟</span>
+    </div>
+  </header>
+
+  <!-- 1 场景 -->
+  <section class="card">
+    <h2><span class="no">1</span>先把场景摆出来</h2>
+    <p class="lead">这是多店经营者最常遇到的一类困惑</p>
+    <p>老周有三家面馆。上个月三家店流水加起来 <strong>86 万</strong>，比去年同期还涨了 9%。他很高兴，觉得该有十几万利润进账。</p>
+    <p>结果财务把账一算：扣掉食材 34 万、房租 13 万、人工 21 万、水电杂费 5 万、外卖平台抽佣 6 万，最后剩下 <span class="hi">7 万</span>。</p>
+    <p>老周的第一反应是「怎么才这么点」。第二反应是「是不是哪个店亏了，我得找出来」。</p>
+    <p>问题就出在这里：他手上一直看的是<strong>流水</strong>，而流水既不是毛利，更不是利润。三个数在一张表上挨着，但含义差着好几层。<strong>要判断一家店「赚不赚钱」，第一刀该切在毛利上，而不是流水上。</strong></p>
+  </section>
+
+  <!-- 2 定义与公式 -->
+  <section class="card">
+    <h2><span class="no">2</span>定义与公式：三个数，一层比一层狠</h2>
+    <p class="lead">先把口径钉死，后面所有判断都靠它</p>
+
+    <div class="formula">
+      毛利 = 营业额 − 食材成本（直接成本）<br>
+      毛利率 = 毛利 ÷ 营业额 × 100%<br>
+      净利 = 毛利 − 房租 − 人工 − 水电 − 平台佣金 − 折旧 − 税费
+    </div>
+
+    <p>关键在「食材成本」这个减项的范围。它<strong>只包括随卖出去的东西直接消耗掉的部分</strong>：原料、辅料、酒水饮料、包装耗材。</p>
+
+    <div class="note">
+      <strong>一句话记法：</strong>关店一天，这笔钱就不用花——那它就是食材成本（变动成本）。关店也要照付——那是费用（固定成本），不进毛利。
+    </div>
+
+    <p>所以房租、人工、水电、平台佣金<strong>都不能塞进食材成本</strong>。把它们混进毛利里，毛利率会被算得偏低，你会误判菜品定价，做出一堆「明明很赚钱却不敢涨价」的决定。</p>
+  </section>
+
+  <!-- 3 算例 -->
+  <section class="card">
+    <h2><span class="no">3</span>算一遍：从 30 万流水走到净利</h2>
+    <p class="lead">拿一家单店当样本，数字可以对照你自己的店替换</p>
+
+    <div class="split">
+      <div class="split-row">
+        <span class="lb">营业额</span>
+        <span class="track">
+          <i class="c-food" style="width:38%"></i>
+          <i class="c-rent" style="width:13.3%"></i>
+          <i class="c-labor" style="width:20%"></i>
+          <i class="c-other" style="width:15%"></i>
+          <i class="c-gross" style="width:13.7%"></i>
+        </span>
+        <span class="val">300,000</span>
+      </div>
+      <div class="split-row">
+        <span class="lb">食材成本</span>
+        <span class="track"><i class="c-food" style="width:38%"></i></span>
+        <span class="val">114,000 · 38.0%</span>
+      </div>
+      <div class="split-row">
+        <span class="lb">毛利</span>
+        <span class="track"><i class="c-gross" style="width:62%"></i></span>
+        <span class="val">186,000 · 62.0%</span>
+      </div>
+    </div>
+
+    <table class="tbl">
+      <thead>
+        <tr><th>项目</th><th style="text-align:right">金额（元）</th><th style="text-align:right">占营业额</th><th>性质</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>营业额</td><td class="num">300,000</td><td class="num">100.0%</td><td>—</td></tr>
+        <tr><td>食材成本</td><td class="num">114,000</td><td class="num">38.0%</td><td>变动</td></tr>
+        <tr class="sum"><td>毛利</td><td class="num">186,000</td><td class="num">62.0%</td><td>—</td></tr>
+        <tr><td>房租</td><td class="num">40,000</td><td class="num">13.3%</td><td>固定</td></tr>
+        <tr><td>人工（含社保）</td><td class="num">60,000</td><td class="num">20.0%</td><td>半固定</td></tr>
+        <tr><td>水电燃气</td><td class="num">8,000</td><td class="num">2.7%</td><td>半固定</td></tr>
+        <tr><td>平台佣金与推广</td><td class="num">30,000</td><td class="num">10.0%</td><td>变动</td></tr>
+        <tr><td>折旧、杂费、损耗</td><td class="num">7,000</td><td class="num">2.3%</td><td>固定</td></tr>
+        <tr class="sum"><td>净利</td><td class="num">41,000</td><td class="num">13.7%</td><td>—</td></tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:14px">这张表最该被记住的不是 62%，而是最后那个落差：<strong>毛利率 62%，净利率只有 13.7%，中间那 48 个百分点全是费用。</strong>流水 30 万听着很多，真正能拿走的只有 4 万出头。</p>
+  </section>
+
+  <!-- 4 杠杆 -->
+  <section class="card">
+    <h2><span class="no">4</span>最反直觉的一条：毛利率掉 1 个点，净利掉 7 个点</h2>
+    <p class="lead">这是多店经营者最需要建立的直觉</p>
+    <p>还是上面这家店。假设食材涨价，毛利率从 62% 掉到 61%——只掉 1 个点，看上去无关紧要。</p>
+    <p>但营业额还是 30 万，其他费用一分没少：</p>
+    <div class="formula">
+      毛利减少额 = 300,000 × 1% = <em>3,000 元</em><br>
+      净利变化 = 41,000 → 38,000，跌幅 <em>7.3%</em>
+    </div>
+    <p>原因很简单：毛利要先去填那 48 个百分点的固定费用，剩下的才是净利。<strong>分母小，所以毛利的任何一点波动都会被放大到净利上。</strong></p>
+    <p>反过来也成立：把食材成本率从 38% 压到 37%，净利能涨 7%。这解释了为什么成熟连锁都在死磕采购价和出成率——那 1 个点，抵得上多做 5% 的流水。</p>
+  </section>
+
+  <!-- 5 三条失真 -->
+  <section class="card">
+    <h2><span class="no">5</span>三种情况会让毛利率算错</h2>
+    <p class="lead">算错的毛利率比没有更危险，因为它会让你做出自信的错误决定</p>
+    <div class="trap">
+      <h4>看到这三种信号，先去核账再谈经营</h4>
+      <ul>
+        <li><b>库存没盘。</b>本期食材成本 = 期初库存 + 本期采购 − 期末库存。期末不盘、或盘个大概，成本就是估出来的，毛利率自然飘。</li>
+        <li><b>赠菜、员工餐、试吃没计入成本。</b>这些东西卖出去收 0 元，但原料是真花了的。漏记会让毛利率虚高，看着很美。</li>
+        <li><b>折扣没还原。</b>满减、代金券、团购套餐，如果按原价算营业额、按实收算成本，毛利率会被算高。营业额一律按<strong>实收</strong>算。</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 6 判断标准 -->
+  <section class="card">
+    <h2><span class="no">6</span>拿什么标准去判断</h2>
+    <p class="lead">下面是经验参考区间，不是硬指标，先用来定位异常再细查</p>
+    <ol class="rules">
+      <li><b>正餐 / 中餐：毛利率 58%–65% 属正常。</b>低于 55% 先查采购价与出成率；高于 70% 要怀疑是不是成本没记全。</li>
+      <li><b>快餐 / 简餐：55%–62%。</b>品类标准化程度高，毛利率应更稳定，波动超过 2 个点必有原因。</li>
+      <li><b>火锅 / 烧烤：60%–68%。</b>生鲜占比高，损耗敏感，毛利率对盘点准确度依赖最大。</li>
+      <li><b>饮品 / 咖啡：65%–75%。</b>原料成本占比低，真正的杀手是人工与租金，别盯着毛利率自我安慰。</li>
+      <li><b>连续三个月下滑、且累计超过 2 个点：必须启动专项核查。</b>同时对比同品类门店，单店异常优先怀疑盘点与损耗，多店同时下滑优先怀疑采购涨价。</li>
+    </ol>
+    <div class="note">
+      <strong>红线提醒：</strong>毛利率高不代表赚钱。一家毛利率 70%、但房租占比 22% 的店，可能比毛利率 60%、房租占比 10% 的店活得更难。永远要把毛利率和费用率一起看。
+    </div>
+  </section>
+
+  <!-- 7 自测 -->
+  <section class="card">
+    <h2><span class="no">7</span>今日自测</h2>
+    <p class="qz-lead">算一遍比读十遍有用 —— 先自己算，再点答案对一下。</p>
+    <details class="qz">
+      <summary>
+        <span class="qt">某店月营业额 <b>24 万</b>（实收），食材成本 <b>9.6 万</b>，房租 <b>3.2 万</b>，人工 <b>5.6 万</b>，水电 <b>0.6 万</b>，其他杂费 <b>0.4 万</b>。<br>
+        问一：毛利率与净利率各是多少？<br>
+        问二：若食材涨价导致食材成本率上升 2 个百分点，净利下降多少百分比？</span>
+        <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+      </summary>
+      <div class="qa">
+        <span class="step"><b>问一：</b>毛利 = 24 − 9.6 = 14.4 万 → 毛利率 = 14.4 ÷ 24 = <b>60%</b></span>
+        <span class="step">净利 = 14.4 − 3.2 − 5.6 − 0.6 − 0.4 = 4.6 万 → 净利率 = 4.6 ÷ 24 ≈ <b>19.2%</b></span>
+        <span class="step"><b>问二：</b>成本率 +2 个点 = 24 × 2% = 0.48 万，其他费用不变</span>
+        <span class="step">净利 4.6 → 4.12 万，跌幅 = 0.48 ÷ 4.6 ≈ <b>10.4%</b></span>
+        <span class="step">结论：毛利率掉 2 个点，净利掉一成。这就是第 4 节说的杠杆。</span>
+      </div>
+    </details>
+  </section>
+
+  <div class="next">
+    <span class="tag">下一期</span>
+    <p><b>第 02 期 · 门店盈亏平衡点</b>　一个月要做多少流水才能不亏？把房租、人工这些固定费用除以毛利率，就得到一个可以直接贴在店里的数字。</p>
+  </div>
+
+  <footer>
+    财务知识 · 第 01 期 · 2026-10-29<br>
+    本系列面向多店经营的财务入门，每期一个知识点，公式可直接套用。
+  </footer>
+
+</div>
+</body>
+</html>

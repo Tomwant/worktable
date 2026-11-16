@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日金融概念 · 第10期 · 边际效用</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board .row{display:flex;justify-content:space-between;gap:12px;border-bottom:1px dashed #e9c9a6;padding:8px 0;}
+  .board .row:last-child{border-bottom:none;}
+  .board .row .k{font-weight:600;white-space:nowrap;}
+  .board .row .v{text-align:right;}
+  .board .head{font-weight:700;border-bottom:2px solid #e0b489;padding-bottom:8px;margin-bottom:4px;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:17px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <span class="badge">每日金融概念 · 第 10 期</span>
+  <h1>今天的概念：<span class="tag">边际效用</span>（Marginal Utility）</h1>
+  <div class="date">2026年9月19日 · 用一个故事讲清它</div>
+
+  <div class="story">
+    <h2>📖 老王的一杯水，和翠花的钻石</h2>
+    <p>老王在沙漠里迷路了三天，快渴死了。这时有人递来一杯水——他一口闷下，那叫一个爽，觉得这杯水<strong>比什么都金贵</strong>，宁愿用全部家当去换。第二杯、第三杯，还好喝，但爽感已经明显下降。等递到第十杯，他直摆手："真喝不下了，<strong>白给我都不要</strong>。"同样一杯水，<strong>第一杯是救命，第十杯是负担</strong>。</p>
+    <p>反过来看翠花：她家从不缺水，超市里一瓶水只卖 <strong>2 块钱</strong>，便宜得没人当回事；可一枚钻石要十几万，人人抢着买。这就怪了——水明明是命根子，钻石只是装饰，<strong>凭什么水便宜、钻石贵</strong>？答案不在"总效用"，而在"<strong>边际效用</strong>"：你已经拥有的水够多了，<strong>再多得到那一杯的用处几乎为零</strong>；而钻石极少，<strong>再多得到一颗的用处极高</strong>。价格不是由"总重要程度"决定的，而是由"<strong>再多一个，能带来多少额外满足</strong>"决定的。</p>
+    <p>这规律天天发生在你身上：烈日下连喝三瓶可乐，第一瓶透心凉（爽爆），第二瓶一般，第三瓶想吐；老板给你加薪，月薪从 <strong>3000 涨到 13000</strong>，<strong>多出来的 1 万块救急又改善生活，幸福感飙升</strong>；可月薪从 <strong>30 万涨到 31 万</strong>，<strong>多这 1 万你几乎无感</strong>。同一张钞票，在穷人手里"边际效用"高得吓人，在富人手里低得可以忽略。</p>
+    <div class="board">
+      <div class="row head"><span class="k">同样的东西，位置不同，边际效用天差地别</span><span class="v">第一杯 vs 第十杯</span></div>
+      <div class="row"><span class="k">沙漠第一杯水</span><span class="v">边际效用极高（救命）→ 愿付一切去换</span></div>
+      <div class="row"><span class="k">沙漠第十杯水</span><span class="v">边际效用为负（灌不下）→ 白给也不要</span></div>
+      <div class="row"><span class="k">水（总量充足）</span><span class="v">总效用巨大，但边际效用≈0 → 价格低</span></div>
+      <div class="row"><span class="k">钻石（总量稀缺）</span><span class="v">总效用有限，但边际效用极高 → 价格高</span></div>
+      <div class="row"><span class="k">加薪 1 万（穷人）</span><span class="v">边际效用高 → 幸福感猛增</span></div>
+      <div class="row"><span class="k">加薪 1 万（富人）</span><span class="v">边际效用低 → 几乎无感</span></div>
+    </div>
+    <p>看明白这一层，很多"想不通"的事就通了：为什么商家爱搞"<strong>第二件半价</strong>"——因为第二件对你的效用已经变低，不降价你根本不买；为什么水贱钻石贵；为什么同样一笔钱，落在不同人手里分量完全不同。</p>
+  </div>
+
+  <div class="story">
+    <h2>💡 故事里的金融道理</h2>
+    <p><strong>边际效用</strong>，就是每"<strong>多消费一个单位</strong>"商品所带来的<strong>额外满足感</strong>。它的核心规律叫<strong>边际效用递减</strong>：随着你拥有或消费的数量增加，每多一个带来的满足感会<strong>逐渐减少，甚至变成负的</strong>。所以评判一样东西值不值钱，看的不是它"总共多重要"，而是"再多拿一个，还能让我多爽多少"。</p>
+    <div class="formula">边际效用(MU) = Δ总效用 / Δ消费数量　；　且 随数量↑，MU ↓（递减）</div>
+    <p>顺着这条规律能推出一整套经济学骨架：<strong>价格由边际效用决定，而非总效用</strong>，这解开了"水与钻石悖论"。再进一步，理性人会做"<strong>消费者均衡</strong>"——把有限的钱分配到各种东西上，直到<strong>每块钱花在不同商品上得到的边际效用相等</strong>，总满足最大。这也解释了无数现象：商家用"<strong>价格歧视</strong>"（学生票、会员价、首单券）给不同人定不同价，本质就是捕捉你不同的边际效用；而"<strong>钱对穷人更值钱</strong>"这条结论，直接支撑了累进税、慈善与财富再分配的伦理——把一元从富人转到穷人，社会总幸福是增加的。</p>
+    <p>🌰 换到你的钱包：吃东西别硬撑到第十二个饺子；剁手前先问一句"<strong>这多花的钱，真能让我多开心多少</strong>"——很多"凑单满减"囤回来的，正是边际效用早已很低的第 N 件。理性不是不花钱，而是让<strong>每一块钱的边际效用尽量拉平</strong>：该花在刀刃（高边际效用）上的别省，早已边际效用归零的就收手。</p>
+  </div>
+
+  <div class="points">
+    <h2>✅ 今天记住三点</h2>
+    <ul>
+      <li><strong>看"多一个"而非"总共"</strong>：价值与价格由边际效用决定，不是总效用——所以水贱钻石贵，第十杯水不如第一杯。</li>
+      <li><strong>边际效用递减</strong>：吃饱了再吃、赚够了再赚，额外满足快速下滑；懂得在"还想要"时就收手的人，单位快乐的性价比最高。</li>
+      <li><strong>钱对穷人更"值钱"</strong>：同等一元，边际效用随财富增加而下降，这是再分配能提升社会总幸福的理论根基，也提醒我们钱要花在刀刃上。</li>
+    </ul>
+  </div>
+
+  <div class="next">下期预告：供需关系 —— 为什么演唱会门票被黄牛炒到天价？为什么丰收的果农反而赚不到钱？价格背后那只"看不见的手"，全藏在供给与需求的拉锯里。</div>
+</div>
+</body>
+</html>

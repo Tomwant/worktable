@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="QdFk6tK569FsFvyMgXXAhq">
+<head data-page-node-id="oMYdgU8jHaIq0yPZBEpr4d">
+<meta charset="UTF-8" data-page-node-id="l0vtraLccJAxg3oJ6yY7v8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="io8Q5So6CIpd8XJ6FolpJG">
+<title>每日金融概念 · 第01期 · 复利</title>
+<style>
+  :root{
+    --bg:#fffdf7; --card:#ffffff; --ink:#2b2b2b; --sub:#6b6b6b;
+    --accent:#c8772e; --accent-soft:#fbe9d6; --line:#eee2cf;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg); color:var(--ink); line-height:1.8; padding:32px 16px;
+  }
+  .wrap{max-width:720px;margin:0 auto;}
+  .badge{
+    display:inline-block;background:var(--accent-soft);color:var(--accent);
+    font-size:13px;font-weight:600;padding:4px 12px;border-radius:999px;margin-bottom:14px;
+  }
+  h1{font-size:28px;line-height:1.35;margin-bottom:6px;}
+  .tag{color:var(--accent);font-weight:700;}
+  .date{color:var(--sub);font-size:14px;margin-bottom:24px;}
+  .story{
+    background:var(--card);border:1px solid var(--line);border-radius:16px;
+    padding:26px 28px;margin-bottom:22px;box-shadow:0 6px 22px rgba(200,119,46,.06);
+  }
+  .story h2{font-size:19px;margin-bottom:12px;color:var(--accent);}
+  .story p{margin-bottom:12px;}
+  .board{
+    background:var(--accent-soft);border-radius:12px;padding:16px 18px;
+    margin:14px 0;font-variant-numeric:tabular-nums;
+  }
+  .board div{display:flex;justify-content:space-between;border-bottom:1px dashed #e9c9a6;padding:5px 0;}
+  .board div:last-child{border-bottom:none;font-weight:700;}
+  code{
+    background:#f4f4f4;border-radius:6px;padding:2px 8px;font-size:15px;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .formula{
+    text-align:center;background:#2b2b2b;color:#fff;border-radius:12px;
+    padding:18px;font-size:18px;letter-spacing:.5px;margin:16px 0;
+    font-family:"SFMono-Regular",Consolas,monospace;
+  }
+  .points{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:24px 28px;}
+  .points h2{font-size:19px;margin-bottom:14px;}
+  .points li{margin:0 0 12px 4px;padding-left:6px;list-style:none;position:relative;}
+  .points li::before{content:"✓";color:var(--accent);font-weight:700;position:absolute;left:-22px;}
+  .next{
+    margin-top:22px;text-align:center;color:var(--sub);font-size:14px;
+    border-top:1px dashed var(--line);padding-top:16px;
+  }
+</style>
+</head>
+<body data-page-node-id="GbHgEFboRjJ0CR8MD3IS90">
+<div class="wrap" data-page-node-id="fnQLWwgeLARpQn5V3EmbVz">
+  <span class="badge" data-page-node-id="luVtLn7HoyW5fNkPA1EwSb">每日金融概念 · 第 01 期</span>
+  <h1 data-page-node-id="7zqcP5omBTMQ9J87xfiPv6">今天的概念：<span class="tag" data-page-node-id="mGrnyviE94LvwgyioYgNhp">复利</span>（Compound Interest）</h1>
+  <div class="date" data-page-node-id="tgshhRxkNxunb4ihbIBdn6">2026年9月9日 · 用一个故事讲清它</div>
+
+  <div class="story" data-page-node-id="OgBvEJblAWvJhRcFJvggKp">
+    <h2 data-page-node-id="iN5nd7IiO1LFIy8mfQbZMA">📖 国王、棋盘与"微不足道"的赏赐</h2>
+    <p data-page-node-id="7kboZgCC1cXJfAE7pXpyGk">很久以前，有一位印度国王酷爱下棋。当匠人西萨·班·达依尔造出令他爱不释手的棋盘时，国王大喜："你要什么赏赐？黄金、土地、城堡，尽管开口。"</p>
+    <p data-page-node-id="GlWmR8QjZmZYl1fD2HKkYG">西萨恭敬地鞠了一躬，说出在国王听来<strong data-page-node-id="k5A6Ky41A0OCeorEMlFbf8">小得可笑</strong>的请求：</p>
+    <p style="background:#fbe9d6;border-radius:10px;padding:14px 16px;" data-page-node-id="Z5zTzBluFyFDiC3JvWQbFC">"陛下，请在棋盘第一格放 1 粒麦子，第二格 2 粒，第三格 4 粒，每一格都比前一格<strong data-page-node-id="Ot7BNK4mE4GVZpH0kK42ti">多一倍</strong>。赏我全部 64 格上的麦子就好。"</p>
+    <p data-page-node-id="XHNiw02dDmEHym7mgZsJFY">国王笑了："就这么点要求？"立刻命人照办。可当侍从开始放麦子，麻烦来了——</p>
+    <div class="board" data-page-node-id="eeIzrnT4x5HWjQbECMKcXl">
+      <div data-page-node-id="NVWHeEMeDhrDkUuvHDxMD6"><span data-page-node-id="pwv1DeUYnEWamJ6U1fSTF6">第 1 格</span><span data-page-node-id="pSz2aCYnm2HhuzkmCjKdlF">1 粒</span></div>
+      <div data-page-node-id="kgqWOqAt7HHG27DD48hV58"><span data-page-node-id="TwY7C0dzX73EBf3AkM6PjF">第 10 格</span><span data-page-node-id="CvrAi9gDXjd6SY2umSCgF5">512 粒（一小撮）</span></div>
+      <div data-page-node-id="NoyNhhr16ylejEUm9oSS1q"><span data-page-node-id="NhB8zpCnOf3prW7kUet4p3">第 20 格</span><span data-page-node-id="KxrNUWlZHCxoaprStNuRWa">约 100 万粒</span></div>
+      <div data-page-node-id="1xrCK2HxT7fUol01LCvR4h"><span data-page-node-id="kI8wLY64BOmQ8xhMH4ED7X">第 30 格</span><span data-page-node-id="GQ3BBrmGCSKzeXVKE8UpXe">约 10 亿粒</span></div>
+      <div data-page-node-id="qCwpZGzSEJieczBIBEjdFN"><span data-page-node-id="K7MYYuDi92oe7gHSs9SnKA">第 40 格</span><span data-page-node-id="mFxZ4ipZV0rc3ICdfGO87L">约 1 万亿粒</span></div>
+      <div data-page-node-id="pKWwsD6SJvNtQ5RdquwGXY"><span data-page-node-id="rJo58CJduyNdMg5mTveYWx">第 64 格</span><span data-page-node-id="rV4mNxORzZxIOjDPeqk6cv">约 9.2×10¹⁸ 粒</span></div>
+    </div>
+    <p data-page-node-id="sfiPsTwOaDFE9eoprSxgcr">全印度的麦子加起来，都不够填满这个棋盘。国王这才明白：自己答应了一笔根本付不起的"小赏赐"。</p>
+  </div>
+
+  <div class="story" data-page-node-id="XIbnv9P4FWdDGiBJUHFi39">
+    <h2 data-page-node-id="TEn32vQ78q0S5JXJIFHLnD">💡 故事里的金融道理</h2>
+    <p data-page-node-id="s7cx29sFXgp45Xz6UiTGkT">西萨要的，就是<strong data-page-node-id="A8AElKWtuoN5llTjWZAIlx">复利</strong>——把每一期的"利息"也并入本金，下一期连本带利一起生息。</p>
+    <div class="formula" data-page-node-id="F93WWkaIYtZqsFSJLCNJDb">期末金额 = 本金 × (1 + 利率) ^ 时间</div>
+    <p data-page-node-id="ACmvVQmNIjwkriRUH4Kyk6">关键在于那个<strong data-page-node-id="QFlgFAMWEFyMAXGduCFZ3x">指数（^时间）</strong>。线性增长是一条直线，复利增长是一条越来越陡的曲线——前些年你几乎感觉不到，后些年它"啪"地一下把你甩出去老远。</p>
+    <p data-page-node-id="YqCzMLYT8Gt1vpygkKE1Jp">🌰 换到你的钱包：每天存 <code data-page-node-id="zfwOxDlZW1aySxWmLJr0HN">¥0.01</code> 并每天翻倍，第 30 天就是约 <strong data-page-node-id="vBESJB0SF3BKiRQFZx6Pub">¥500 万</strong>。放到现实投资里，每月定投 ¥1,000、年化 8%、坚持 30 年，本金只投了 36 万，最终却可能变成 <strong data-page-node-id="lMJCfmkTs31QdmXOSvgJMg">约 ¥150 万</strong>——多出来的 100 多万，全是时间施的魔法。</p>
+  </div>
+
+  <div class="points" data-page-node-id="GmXXHpD0EzzhDTVfQNPVhV">
+    <h2 data-page-node-id="9YeFXDsEzwXu70IKTFe7GH">✅ 今天记住三点</h2>
+    <ul data-page-node-id="pfyzz3KWlwias7ZBHBLy5y">
+      <li data-page-node-id="VV1iKurb9L3v2RfqgqdCH7"><strong data-page-node-id="avHzQq3elbauosfhVqDJ3P">复利需要时间</strong>：它最大的敌人是"中途下车"。越早开始，曲线越陡。</li>
+      <li data-page-node-id="IWqmt2ZGPYAZwW1FbnECKC"><strong data-page-node-id="EEle08yGhn9PQ4wXul4ZlF">复利的另一面是债务</strong>：信用卡最低还款、网贷利滚利，同样会把你压垮——公式对负债一样生效。</li>
+      <li data-page-node-id="P6Vk28Cw1bC1JutE11jirQ"><strong data-page-node-id="GW9Nck4JkLkmVInn79kGVU">别小看"微小但持续"</strong>：每天一点，远胜偶尔一大笔，因为时间站在持续者这边。</li>
+    </ul>
+  </div>
+
+  <div class="next" data-page-node-id="viCt0cJqSbQsDIGgAufpeN">下期预告：机会成本 —— 你以为"免费"的选择，其实最贵。</div>
+</div>
+</body>
+</html>

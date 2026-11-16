@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>表单间距/格式统一规范 · 现状 vs 统一后</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Noto Sans SC',-apple-system,'Segoe UI','Microsoft YaHei',sans-serif;
+       background:#0e120f;color:#e9ede8;padding:24px 22px 60px}
+  h1{font-size:17px;margin:0 0 4px}
+  .sub{color:#9dab9f;font-size:12.5px;line-height:1.7;margin:0 0 18px}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+  @media(max-width:940px){.grid{grid-template-columns:1fr}}
+  .col>h2{font-size:13px;font-weight:700;margin:0 0 10px;display:flex;align-items:center;gap:8px}
+  .tag{font-size:11px;font-weight:700;padding:3px 9px;border-radius:100px}
+  .tag.bad{background:rgba(207,106,87,.16);color:#f09595;border:1px solid rgba(207,106,87,.3)}
+  .tag.good{background:rgba(102,209,141,.16);color:#66d18d;border:1px solid rgba(102,209,141,.3)}
+
+  .stage{position:relative;border-radius:22px;padding:16px 18px 20px;overflow:hidden;
+         background:linear-gradient(135deg,#151b17,#101a1e);border:1px solid rgba(255,255,255,.12);
+         box-shadow:0 1px 2px rgba(0,0,0,.3),0 16px 44px -16px rgba(0,0,0,.6);margin-bottom:18px}
+  .stage::before{content:'';position:absolute;inset:0;pointer-events:none;
+         background:radial-gradient(300px circle at 80% 25%,rgba(32,64,48,.6),transparent 62%)}
+  .card{position:relative;z-index:1;background:rgba(255,255,255,.055);backdrop-filter:blur(20px) saturate(150%);
+        border:1px solid rgba(255,255,255,.12);border-radius:22px;padding:16px}
+  .card+.card{margin-top:16px}
+  .card h3{font-size:13px;font-weight:700;margin:0 0 12px;color:#c9d3cc}
+  .card h3 small{font-weight:500;color:#8d9a92;margin-left:6px}
+
+  /* —— 控件标准：高 34 / 圆角 14 / 玻璃底 —— */
+  .ctl{height:34px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+       display:flex;align-items:center;padding:0 12px;font-size:13.5px;color:#e9ede8;min-width:0}
+  .ctl.ph{color:#9aa79f}
+  .ctl .arw{margin-left:auto;color:#a9b5ae;font-size:10px}
+  .ta{height:64px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);
+      padding:9px 12px;font-size:13.5px;color:#9aa79f}
+  .btn{height:34px;border-radius:14px;background:linear-gradient(135deg,#66d18d,#4fc37c);color:#0e120f;
+       font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 16px;min-width:132px}
+  .btn.full{width:100%}
+
+  /* 现状：零散 margin，节奏不齐 */
+  .before .full{margin-bottom:10px}
+  .before .row2{display:grid;grid-template-columns:1fr 2fr;gap:10px}
+  .before .tgt{margin-top:4px;display:grid;grid-template-columns:1fr auto;gap:10px}
+  .before .row2>*,.before .tgt>*{min-width:0}
+
+  /* 统一后：父级 flex gap 统一控制 */
+  .after .form{display:flex;flex-direction:column;gap:10px}
+  .after .row2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:10px}
+  .after .row2.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .after .tgt{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+  .after .form>*{margin:0}
+
+  /* 红框标注（现状问题处） */
+  .mark{outline:2px solid rgba(224,90,70,.75);outline-offset:4px;border-radius:16px}
+  .pin{position:relative}
+  .pin::after{content:attr(data-n);position:absolute;top:-9px;right:-9px;background:#e05a46;color:#fff;
+      font-size:10px;font-weight:700;width:17px;height:17px;border-radius:50%;display:grid;place-items:center}
+  .note{font-size:11.5px;color:#9dab9f;line-height:1.75;margin-top:8px}
+  .legend{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:14px;
+          padding:14px 16px;margin-top:24px;font-size:12.5px;line-height:1.9;color:#c2ccc5}
+  .legend b{color:#66d18d}
+  .k{font-family:ui-monospace,Consolas,monospace;font-size:11.5px;color:#66d18d;background:rgba(102,209,141,.12);
+     padding:1px 6px;border-radius:6px}
+</style>
+</head>
+<body>
+  <h1>表单格式统一规范 · 现状 vs 统一后</h1>
+  <p class="sub">红框 = 现在不一致的地方；右栏为按「组件标准」统一后的效果。改动只涉及间距、列宽比例、按钮形态，不动字段与逻辑。</p>
+
+  <div class="grid">
+    <!-- ============ 现状 ============ -->
+    <div class="col before">
+      <h2><span class="tag bad">现状</span> 间距/列宽/按钮都不齐</h2>
+      <div class="stage">
+        <div class="card">
+          <h3>年计划<small>2026 年</small></h3>
+          <label class="full ctl ph">年度目标，如：读完 24 本书</label>
+          <div class="row2 mark pin" data-n="1">
+            <div class="ctl ph">选择分类<span class="arw">▾</span></div>
+            <div class="ctl ph">写一句目标说明</div>
+          </div>
+          <div class="tgt mark pin" data-n="2">
+            <div class="ctl ph">年度目标次数（可选，如 24 本书 = 24）</div>
+            <div class="btn">+ 新增年计划</div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>月计划<small>9 月</small></h3>
+          <label class="full ctl ph">本月想推进什么？</label>
+          <div class="row2 mark pin" data-n="3">
+            <div class="ctl ph">独立（不关联年度）<span class="arw">▾</span></div>
+            <div class="ctl ph">选择分类<span class="arw">▾</span></div>
+          </div>
+          <label class="full ta" style="display:block">计划目标描述</label>
+          <div class="mark pin" data-n="4"><div class="btn full">+ 新增月计划</div></div>
+        </div>
+      </div>
+      <p class="note">① 两列比例 1fr:2fr，但月计划把「分类」放到宽列 → 被拉宽<br>
+        ② 这一行上边距只有 4px，与上面 10px 不一致<br>
+        ③ 同样 1fr:2fr 却装了「年计划下拉 + 分类」两个短控件<br>
+        ④ 提交按钮整行全宽，与年计划卡的右侧小按钮不统一</p>
+    </div>
+
+    <!-- ============ 统一后 ============ -->
+    <div class="col after">
+      <h2><span class="tag good">统一后</span> 一套组件标准</h2>
+      <div class="stage">
+        <div class="card">
+          <h3>年计划<small>2026 年</small></h3>
+          <div class="form">
+            <label class="ctl ph">年度目标，如：读完 24 本书</label>
+            <div class="row2">
+              <div class="ctl ph">选择分类<span class="arw">▾</span></div>
+              <div class="ctl ph">写一句目标说明</div>
+            </div>
+            <div class="tgt">
+              <div class="ctl ph">年度目标次数（可选，如 24 本书 = 24）</div>
+              <div class="btn">+ 新增年计划</div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <h3>月计划<small>9 月</small></h3>
+          <div class="form">
+            <label class="ctl ph">本月想推进什么？</label>
+            <div class="row2 even">
+              <div class="ctl ph">选择分类<span class="arw">▾</span></div>
+              <div class="ctl ph">独立（不关联年度）<span class="arw">▾</span></div>
+            </div>
+            <div class="ta">计划目标描述</div>
+            <div class="tgt">
+              <div></div>
+              <div class="btn">+ 新增月计划</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <p class="note">① 所有表单行统一由父级 <span class="k">gap:10px</span> 控制，不再零散 margin<br>
+        ② 两列行统一 <span class="k">1fr : 2fr</span>（短控件 : 长文本）；两个短控件用 <span class="k">1fr : 1fr</span> 等宽<br>
+        ③ 表单顺序统一为「名称 → 短控件行 → 长文本 → 提交」<br>
+        ④ 提交按钮统一「右对齐、同尺寸 pill」（高 34 / 圆角 14 / 最小宽 132）</p>
+    </div>
+  </div>
+
+  <div class="legend">
+    <b>拟定的组件标准（会写进 :root 与通用类，全站表单共用）：</b><br>
+    · 间距令牌 <span class="k">--gap-form:10px</span>：表单<b>行间距 = 列间距 = 10px</b>，唯一来源；<br>
+    · 表单容器 <span class="k">.plan-form</span>：<span class="k">display:flex;flex-direction:column;gap:var(--gap-form)</span>，子元素一律 <span class="k">margin:0</span>；<br>
+    · 两列行 <span class="k">.row2</span> = <span class="k">1fr 2fr</span>（短控件 + 长文本）；两个同类短控件加 <span class="k">.even</span> = <span class="k">1fr 1fr</span>；<br>
+    · 提交行 <span class="k">.tgt-add</span> = <span class="k">1fr auto</span>，按钮统一右对齐同尺寸；<br>
+    · 控件尺寸统一：输入/下拉 高 34 / 圆角 14；主按钮 高 34 / 圆角 14 / 最小宽 132。
+  </div>
+</body>
+</html>
