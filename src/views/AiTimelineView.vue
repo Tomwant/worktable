@@ -63,6 +63,45 @@ async function load() {
   }
 }
 
+// ===== 检查更新 =====
+// 后端每分钟会自己扫一遍产出目录，这个按钮解决的是「刚生成完不想等」。
+// 结果必须落成文字：本机扫描一百多毫秒就完，按钮转一下复原，和「点了没反应」长得一样。
+const checking = ref(false)
+const checkResult = ref(null)
+const latestDate = computed(() => (items.value.length ? items.value[0].date : ''))
+const staleDays = computed(() => (latestDate.value ? Math.max(0, dayDiff(latestDate.value)) : 0))
+
+async function checkNow() {
+  if (checking.value) return
+  checking.value = true
+  checkResult.value = null
+  const at = new Date().toTimeString().slice(0, 8)
+  const t0 = Date.now()
+  try {
+    const r = await api('/api/ai-events/sync', { method: 'POST' })
+    const rest = 620 - (Date.now() - t0)          // 最小可视时长，别让动效一闪而过
+    if (rest > 0) await new Promise(x => setTimeout(x, rest))
+    const files = Number(r?.files || 0)
+    const imported = Number(r?.imported || 0)
+    const bad = Array.isArray(r?.errors) ? r.errors.length : 0
+    // 注意 files 是「这次真正处理过的文件数」，文件没变化就是 0，
+    // 所以不能说「扫描 0 份文件」——那会让人以为目录是空的。
+    const tail = bad ? ` · ${bad} 个文件出错` : ''
+    if (r?.demo) {
+      checkResult.value = { ok: true, text: `${at} 演示版数据是构建时的固定快照，没有可检查的产出目录` }
+    } else if (imported) {
+      checkResult.value = { ok: !bad, text: `${at} 已检查 · 新增 ${imported} 条${files ? `（${files} 份文件）` : ''}${tail}` }
+      await load()
+    } else {
+      checkResult.value = { ok: !bad, text: `${at} 已检查 · 产出目录没有新内容${tail}` }
+    }
+  } catch (err) {
+    checkResult.value = { ok: false, text: `${at} 检查失败：${err?.message || '请求没通'}` }
+  } finally {
+    checking.value = false
+  }
+}
+
 // ===== 筛选状态 =====
 const range = ref(365)            // 90 / 365 / 'all'
 const fModel = ref('all')
@@ -205,12 +244,23 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
         <h1>五个模型，一条时间线</h1>
         <p>从今天往前倒着读。每条只回答三件事：这天更新了什么、具体能做到什么、从哪个官网查到的。</p>
       </div>
-      <div class="ai-range">
-        <button :class="{ on: range === 90 }" @click="range = 90">近 90 天</button>
-        <button :class="{ on: range === 365 }" @click="range = 365">近一年</button>
-        <button :class="{ on: range === 'all' }" @click="range = 'all'">全部</button>
+      <div class="ai-head-right">
+        <button class="task-entry" :class="{ stale: staleDays >= 3 }" :disabled="checking" @click="checkNow">
+          <i v-if="checking" class="spin"></i>
+          <span v-else class="dot"></span>{{ checking ? '检查中…' : '检查更新' }}<b v-if="staleDays >= 3">· {{ staleDays }} 天没新内容</b>
+        </button>
+        <div class="ai-range">
+          <button :class="{ on: range === 90 }" @click="range = 90">近 90 天</button>
+          <button :class="{ on: range === 365 }" @click="range = 365">近一年</button>
+          <button :class="{ on: range === 'all' }" @click="range = 'all'">全部</button>
+        </div>
       </div>
     </div>
+
+    <!-- 检查结果：说清「几点查的、扫了几份、有没有新东西」，只写「检查完成」等于没说 -->
+    <p v-if="checkResult" class="ai-check" :class="{ bad: !checkResult.ok }">
+      <span class="mk">{{ checkResult.ok ? '✓' : '!' }}</span>{{ checkResult.text }}
+    </p>
 
     <!-- 五个数字：只放能直接判断「值不值得往下读」的指标 -->
     <div class="ai-stats">
@@ -373,6 +423,25 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
 }
 
 /* ===== 顶部区间切换 ===== */
+/* 页头右侧：检查更新 + 时间区间，一组按钮对齐同一行 */
+.ai-head-right{display:flex;gap:9px;align-items:center;align-self:flex-end;flex-wrap:wrap}
+/* 检查中把绿点换成转子：告诉用户「正在查」，别让他以为按钮没反应 */
+.ai-head-right .task-entry .spin{
+  width:9px;height:9px;border-radius:50%;flex:0 0 auto;
+  border:1.6px solid var(--line-3);border-top-color:var(--accent);
+  animation:ai-spin .7s linear infinite;
+}
+.ai-head-right .task-entry:disabled{cursor:progress;opacity:.72}
+.ai-head-right .task-entry:disabled:hover{border-color:var(--line-2);background:var(--surface);color:var(--text-2)}
+@keyframes ai-spin{to{transform:rotate(360deg)}}
+/* 检查结果：一行小字，紧贴页头，说完就完，不占版面 */
+.ai-check{display:flex;align-items:center;gap:7px;margin:-6px 0 0;font-size:12px;color:var(--text-2)}
+.ai-check .mk{
+  width:16px;height:16px;border-radius:50%;display:grid;place-items:center;flex:0 0 auto;
+  font-size:10px;font-weight:700;background:var(--accent-soft);color:var(--accent-deep);
+}
+.ai-check.bad .mk{background:var(--danger-soft);color:var(--danger)}
+[data-theme="dark"] .ai-check .mk{color:var(--accent)}
 .ai-range{
   display:inline-flex;padding:3px;border:1px solid var(--c-line);border-radius:999px;
   background:var(--surface);align-self:flex-end;
@@ -586,6 +655,7 @@ onUnmounted(() => window.removeEventListener('keydown', onKey))
 
 @media (max-width:820px){
   .ai-stats .stat{flex:1 1 calc(50% - 6px);min-width:0}
+  .ai-head-right{align-self:flex-start;align-items:flex-start}
   .ai-range{align-self:flex-start}
   .ai-filters{position:static;background:none;backdrop-filter:none;border-bottom:none;padding:0;margin:0}
   .ev{grid-template-columns:56px 26px minmax(0,1fr)}

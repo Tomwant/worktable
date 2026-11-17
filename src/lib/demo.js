@@ -364,6 +364,12 @@ async function handleWrite(path, method, body) {
     }
   }
 
+  // 检查更新：演示版没有本机产出目录可扫，回一个明确的 demo 标记，
+  // 让前端提示「快照是固定的」，而不是假装检查过或者报错
+  if (a === 'ai-events' && b === 'sync') {
+    return { ok: true, demo: true, files: 0, imported: 0, skipped: 0, errors: [] }
+  }
+
   if (a === 'ai-events') {
     await ensureAi()
     if (method === 'POST') {
