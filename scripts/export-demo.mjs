@@ -2,12 +2,19 @@
 //
 // 用法：
 //   1. 先起后端（npm run dev:api）和 MySQL
-//   2. node scripts/export-demo.mjs
-//   3. 产出 public/demo/bundle.json + public/uploads/knowledge/*.html
+//   2. npm run export:demo
+//   3. 产出 demodata/demo/*.json + demodata/uploads/knowledge/*.html
+//
+// 为什么拆成 5 个文件（不要合并回一个 bundle.json）：
+//   GitHub Pages 从国内访问约 30–50 KB/s，131 份报告的正文合计约 1.4MB（gzip 后 538KB），
+//   单个 bundle 实测首次要等 40 秒以上，页面长时间空白。拆开后首屏只拉 core.json（约 25KB），
+//   知识库正文、AI 时间线、公司详情都等真正进到那个页面才拉。
 //
 // 设计要点：
 //   · 知识库排序（按系列分期）依赖 MySQL 的 SUBSTRING_INDEX，前端复刻不了 ——
 //     所以直接让后端以 sort=series 全量返回，把排好的顺序原样落盘。演示层只做切片和关键词过滤。
+//   · 列表只带 200 字摘要（字段名仍叫 content，列表卡片的两行摘要逻辑不用改）；
+//     完整正文单独放 knowledge-full.json，进知识库后空闲时预取，点「阅读全文」时已经就位。
 //   · attachmentUrl 从 `/uploads/...` 改写成 `uploads/...` 相对路径：
 //     GitHub Pages 是子路径部署（/repo/），绝对路径会 404 到根域。
 //   · 只导出 GET 能拿到的数据，写接口一律不进快照。
@@ -19,9 +26,12 @@ import { fileURLToPath } from 'node:url'
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), '..')
 const BASE = process.env.DEMO_API_BASE || 'http://127.0.0.1:3001'
 // 放 public/ 之外：否则正式版构建也会把真实数据打进 dist
-const OUT_DIR = join(ROOT, 'demodata', 'demo')
+const DEMO_DIR = join(ROOT, 'demodata', 'demo')
 const KB_SRC = join(ROOT, 'server', 'uploads', 'knowledge')
 const KB_DST = join(ROOT, 'demodata', 'uploads', 'knowledge')
+
+// 列表摘要保留多少字：卡片只显示两行，200 字足够，且能让按关键词搜正文时仍然命中
+const SUMMARY_CHARS = 200
 
 const get = async path => {
   const res = await fetch(BASE + path)
@@ -31,6 +41,14 @@ const get = async path => {
 
 // 子路径部署：绝对路径改相对
 const rel = url => (typeof url === 'string' && url.startsWith('/') ? url.slice(1) : url)
+
+const write = (name, data) => {
+  const p = join(DEMO_DIR, name)
+  const json = JSON.stringify(data)
+  writeFileSync(p, json)
+  console.log(`[export] ${name.padEnd(22)} ${(json.length / 1024).toFixed(1).padStart(8)} KB`)
+  return json.length
+}
 
 const main = async () => {
   console.log(`[export] 数据源 ${BASE}`)
@@ -62,11 +80,22 @@ const main = async () => {
     const next = await get(`/api/knowledge?page=${p}&pageSize=${KB_PAGE}&sort=series`)
     kbRaw.push(...(next.items || []))
   }
-  const kbItems = kbRaw.map(it => ({ ...it, attachmentUrl: rel(it.attachmentUrl) }))
-  console.log(`[export] 知识库 ${kbItems.length} 条（totalAll=${first.totalAll}，${totalPages} 页）`)
-  if (kbItems.length !== first.totalAll) {
-    console.warn(`[export] 警告：抓取条数(${kbItems.length}) 与 totalAll(${first.totalAll}) 不一致`)
+  console.log(`[export] 知识库 ${kbRaw.length} 条（totalAll=${first.totalAll}，${totalPages} 页）`)
+  if (kbRaw.length !== first.totalAll) {
+    console.warn(`[export] 警告：抓取条数(${kbRaw.length}) 与 totalAll(${first.totalAll}) 不一致`)
   }
+
+  // 列表条目：正文换成摘要，其余字段原样
+  const kbList = kbRaw.map(it => {
+    const content = typeof it.content === 'string' ? it.content : ''
+    return {
+      ...it,
+      attachmentUrl: rel(it.attachmentUrl),
+      content: content.slice(0, SUMMARY_CHARS),
+      // 演示层据此判断「正文还没取全」，点开大窗时可以等预取完成
+      truncated: content.length > SUMMARY_CHARS
+    }
+  })
 
   // 好公司：列表 + 逐家详情（fin/kline 都在详情里）
   const companies = await get('/api/companies')
@@ -74,13 +103,14 @@ const main = async () => {
   const details = {}
   for (const c of list) {
     const d = await get(`/api/companies/${encodeURIComponent(c.ticker)}`)
-    const item = d.item || d
-    // 详情里的链接/官网保持原样；只有本地静态资源需要改相对路径
-    details[c.ticker] = item
+    details[c.ticker] = d.item || d
   }
   console.log(`[export] 好公司 ${list.length} 家`)
 
-  const bundle = {
+  mkdirSync(DEMO_DIR, { recursive: true })
+
+  // ---- 1. 首屏数据：只放首页/打卡/资金/想法要用的，越小越好 ----
+  write('core.json', {
     exportedAt: new Date().toISOString(),
     appConfig,
     state,
@@ -89,21 +119,60 @@ const main = async () => {
     discovers,
     ideas,
     assets,
-    aiEvents,
     evalOverview,
     evalRuns,
     feedsStatus,
     companies: list,
-    companyDetails: details,
-    // facets 由演示层按全量现算，这里只存条目
-    knowledge: kbItems
+    // 首页「知识沉淀 N 条」用它，避免为了一个数字先拉整份知识库
+    knowledgeCount: kbRaw.length,
+    aiEventsCount: (aiEvents.items || []).length
+  })
+
+  // ---- 2. 知识库列表（含 200 字摘要）----
+  write('knowledge.json', {
+    exportedAt: new Date().toISOString(),
+    items: kbList
+  })
+
+  // ---- 3. 知识库完整正文：按列表顺序分片，每片 30 条 ----
+  // 为什么分片：全文合计 1.2MB，国内拉 github.io 要 10 秒上下。
+  // 分片后点开任意一条只需拉它所在那一片（约 240KB / gzip 90KB，两三秒），
+  // 进知识库页先预取第 0 片，覆盖前 30 条（前三页）通常就够了。
+  const SHARD_SIZE = 30
+  const shardCount = Math.max(1, Math.ceil(kbRaw.length / SHARD_SIZE))
+  for (let i = 0; i < shardCount; i++) {
+    const slice = kbRaw.slice(i * SHARD_SIZE, (i + 1) * SHARD_SIZE)
+    const bodies = {}
+    for (const it of slice) {
+      const content = typeof it.content === 'string' ? it.content : ''
+      if (content) bodies[String(it.id)] = content
+    }
+    write(`knowledge-full-${i}.json`, {
+      exportedAt: new Date().toISOString(),
+      from: i * SHARD_SIZE,
+      to: Math.min((i + 1) * SHARD_SIZE, kbRaw.length),
+      bodies
+    })
+  }
+  console.log(`[export] 正文分片 ${shardCount} 个（每片 ${SHARD_SIZE} 条）`)
+  // 旧版本的单文件，留着会白白多占 1.2MB 仓库体积
+  if (existsSync(join(DEMO_DIR, 'knowledge-full.json'))) {
+    rmSync(join(DEMO_DIR, 'knowledge-full.json'), { force: true })
+    console.log('[export] 已清理旧的 knowledge-full.json')
   }
 
-  mkdirSync(OUT_DIR, { recursive: true })
-  const bundlePath = join(OUT_DIR, 'bundle.json')
-  const json = JSON.stringify(bundle)
-  writeFileSync(bundlePath, json)
-  console.log(`[export] bundle.json  ${(json.length / 1024).toFixed(0)} KB`)
+  // ---- 4. AI 时间线 ----
+  write('ai-events.json', {
+    exportedAt: new Date().toISOString(),
+    items: aiEvents.items || [],
+    baseline: aiEvents.baseline || []
+  })
+
+  // ---- 5. 公司详情（点开某家才拉）----
+  write('company-details.json', {
+    exportedAt: new Date().toISOString(),
+    items: details
+  })
 
   // 知识库报告 HTML：整目录同步（先清空避免残留已删除的报告）
   if (existsSync(KB_SRC)) {
@@ -111,9 +180,8 @@ const main = async () => {
     mkdirSync(KB_DST, { recursive: true })
     let copied = 0
     for (const f of readdirSync(KB_SRC)) {
-      const src = join(KB_SRC, f)
       if (!f.endsWith('.html')) continue
-      copyFileSync(src, join(KB_DST, f))
+      copyFileSync(join(KB_SRC, f), join(KB_DST, f))
       copied++
     }
     console.log(`[export] 拷贝报告 HTML ${copied} 个 -> demodata/uploads/knowledge/`)

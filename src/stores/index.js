@@ -2,7 +2,7 @@
 // 这是 App.vue 拆分出的 store，6 个 view 共用
 import { computed, reactive, ref } from 'vue'
 import { API_BASE, api } from '../lib/api.js'
-import { DEMO, demoState } from '../lib/demo.js'
+import { DEMO, demoState, demoCounts, ensureFullBody } from '../lib/demo.js'
 import { toast, notify } from '../lib/toast.js'
 import { fmt, dateLabel } from '../lib/format.js'
 
@@ -164,6 +164,11 @@ export function loadKnowledgePage(params = {}) {
 export function fetchKnowledgeOne(id) {
   return api(`/api/knowledge/${encodeURIComponent(id)}`)
 }
+// 演示版列表只带 200 字摘要（完整正文是单独一个文件，进页面后后台预取），
+// 点「阅读全文」前先等它补齐；正式版列表本来就有完整正文，原样返回。
+export function ensureKnowledgeFull(item) {
+  return DEMO ? ensureFullBody(item) : Promise.resolve(item)
+}
 // 知识打卡独立落库：返回当天完整 items，前端拿它覆盖本地，避免「本地有、库里没有」
 export function saveKnowledgeCheck(payload) {
   return api('/api/checkins/knowledge', { method: 'POST', body: payload })
@@ -250,7 +255,12 @@ export async function initApi() {
     try {
       const remote = await demoState()
       if (!hasData(db) && hasData(remote)) Object.assign(db, remote)
-      await loadKnowledgePage({ page: 1 })
+      // 知识库列表延后到进「知识库」页再拉：131 份报告的正文合计约 1.4MB，
+      // 从国内拉 github.io 要几十秒，放首屏会让首页一直空着。
+      // 这里只先填总数，首页「知识沉淀 N 条」照常正确。
+      const counts = await demoCounts()
+      knowledgePager.totalAll = counts.knowledge
+      knowledgePager.total = counts.knowledge
       await loadDiscovers()
     } catch { notify('演示数据加载失败，页面可能不完整，刷新试试') }
     bootstrapDone = true

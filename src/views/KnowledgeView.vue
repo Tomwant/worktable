@@ -1,6 +1,6 @@
 <script setup>
 // 知识库：支持导入「定时任务产出的 HTML 报告」（图文混合），并以沙箱 iframe 预览原报告
-import { API_BASE, importKnowledge, deleteKnowledge, loadKnowledgePage, knowledgePager, notify } from '../stores/index.js'
+import { API_BASE, importKnowledge, deleteKnowledge, loadKnowledgePage, knowledgePager, notify, ensureKnowledgeFull } from '../stores/index.js'
 import { allSources, allTags, filters, readIds, toggleKnowledgeCheck } from '../stores/domain.js'
 import AppCard from '../components/AppCard.vue'
 import AppEmpty from '../components/AppEmpty.vue'
@@ -113,6 +113,16 @@ function openFull(k) {
   fullSegs.value = splitBody(k.content)   // 断段只在真的要显示时才做
   full.value = k
   fullShow.value = true
+  // 演示版的列表只带摘要（正文单独一个文件、进页面后后台预取），
+  // 这里先开窗再补齐正文：truncated 已为 false（正式版恒为 false）时是空操作，不影响原有逻辑。
+  if (k.truncated) {
+    ensureKnowledgeFull(k).then(item => {
+      // 不要用 full.value === k 判断：ref 装对象会被包成响应式代理，跟原对象永远不相等，
+      // 回填就永远不执行。按 id 比才是可靠的。
+      const cur = full.value
+      if (cur && String(cur.id) === String(item.id)) fullSegs.value = splitBody(item.content || '')
+    }).catch(() => { /* 取不到就保持摘要，不打断阅读 */ })
+  }
 }
 function fromFull() {
   const k = full.value
