@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>金融概念 第45期 · 资产配置</title>
+<style>
+  :root{
+    --ink:#1a1f36;
+    --ink-2:#4a5168;
+    --ink-3:#7b8199;
+    --bg:#f5f6fb;
+    --card:#ffffff;
+    --line:#e8eaf2;
+    --accent:#3a4cc0;
+    --accent-2:#8a5cf6;
+    --grad:linear-gradient(135deg,#3a4cc0 0%,#8a5cf6 100%);
+    --accent-soft:#eef0ff;
+    --purple-soft:#f3edff;
+    --green:#0f9d6e;
+    --green-soft:#e6f7f0;
+    --red:#d64545;
+    --amber:#d9860b;
+    --amber-soft:#fff5e4;
+    --r-card:16px;
+    --r-sm:10px;
+    --gap:20px;
+    --pad-card:28px;
+    --shadow:0 10px 30px rgba(58,76,192,.08);
+    --shadow-sm:0 2px 10px rgba(26,31,54,.05);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.8;
+    font-size:16px;
+    padding:32px 18px 60px;
+  }
+  .wrap{max-width:860px;margin:0 auto;}
+
+  /* ===== 头部 ===== */
+  .hero{
+    position:relative;
+    background:var(--grad);
+    border-radius:var(--r-card);
+    padding:38px 34px 32px;
+    color:#fff;
+    box-shadow:0 16px 40px rgba(58,76,192,.22);
+    overflow:hidden;
+  }
+  .hero::after{
+    content:"";
+    position:absolute;
+    right:-60px;top:-70px;
+    width:240px;height:240px;
+    border-radius:50%;
+    background:rgba(255,255,255,.10);
+  }
+  .hero::before{
+    content:"";
+    position:absolute;
+    right:60px;bottom:-110px;
+    width:220px;height:220px;
+    border-radius:50%;
+    background:rgba(255,255,255,.07);
+  }
+  .hero > *{position:relative;z-index:1;}
+  .badge{
+    display:inline-block;
+    font-size:13px;
+    letter-spacing:1px;
+    background:rgba(255,255,255,.18);
+    border:1px solid rgba(255,255,255,.35);
+    padding:5px 14px;
+    border-radius:999px;
+    margin-bottom:18px;
+  }
+  .hero h1{
+    font-size:34px;
+    line-height:1.3;
+    margin-bottom:10px;
+    letter-spacing:1px;
+  }
+  .hero .sub{
+    font-size:16px;
+    opacity:.92;
+    margin-bottom:22px;
+    max-width:600px;
+  }
+  .meta{
+    display:flex;
+    flex-wrap:wrap;
+    gap:14px 26px;
+    font-size:13.5px;
+    opacity:.9;
+    padding-top:18px;
+    border-top:1px solid rgba(255,255,255,.25);
+  }
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+  .chip{
+    font-size:12.5px;
+    background:rgba(255,255,255,.16);
+    border-radius:6px;
+    padding:3px 10px;
+  }
+
+  /* ===== 卡片通用 ===== */
+  .card{
+    background:var(--card);
+    border-radius:var(--r-card);
+    padding:var(--pad-card);
+    margin-top:var(--gap);
+    box-shadow:var(--shadow);
+    border:1px solid var(--line);
+  }
+  .card-hd{
+    display:flex;
+    align-items:flex-start;
+    gap:14px;
+    margin-bottom:18px;
+  }
+  .num{
+    flex:0 0 auto;
+    width:34px;height:34px;
+    border-radius:10px;
+    background:var(--accent-soft);
+    color:var(--accent);
+    font-weight:700;
+    font-size:15px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .card-hd h2{
+    font-size:21px;
+    line-height:1.4;
+    color:var(--ink);
+  }
+  .card-hd .hint{
+    font-size:13.5px;
+    color:var(--ink-3);
+    font-weight:400;
+    margin-top:2px;
+  }
+  p{margin:12px 0;color:var(--ink-2);}
+  strong{color:var(--ink);}
+
+  /* ===== 故事 ===== */
+  .story p{font-size:16px;}
+  .quote{
+    background:var(--accent-soft);
+    border-left:4px solid var(--accent);
+    border-radius:0 var(--r-sm) var(--r-sm) 0;
+    padding:16px 20px;
+    margin:20px 0;
+    color:var(--ink);
+    font-size:16.5px;
+  }
+  .turn{
+    background:var(--purple-soft);
+    border-radius:var(--r-sm);
+    padding:14px 18px;
+    margin-top:18px;
+    color:#5b3a9e;
+    font-size:15px;
+  }
+
+  /* ===== 概念卡 ===== */
+  .def{
+    background:linear-gradient(135deg,#f7f8ff,#f3f0ff);
+    border:1px solid #e5e7fb;
+    border-radius:var(--r-sm);
+    padding:22px;
+    margin-bottom:18px;
+  }
+  .def .label{
+    font-size:12.5px;
+    letter-spacing:1px;
+    color:var(--accent);
+    font-weight:700;
+    margin-bottom:8px;
+  }
+  .def .body{font-size:16.5px;color:var(--ink);line-height:1.85;}
+  .kv{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;}
+  .kv > div{
+    background:#fff;
+    border:1px solid var(--line);
+    border-radius:var(--r-sm);
+    padding:14px 16px;
+  }
+  .kv .k{font-size:12.5px;color:var(--ink-3);margin-bottom:4px;}
+  .kv .v{font-size:14.5px;color:var(--ink);font-weight:600;}
+  .formula{
+    margin-top:16px;
+    background:#1a1f36;
+    color:#e8ecff;
+    border-radius:var(--r-sm);
+    padding:16px 20px;
+    font-size:15px;
+    line-height:1.9;
+  }
+  .formula .hl{color:#a9b8ff;font-weight:700;}
+
+  /* ===== 可视化 ===== */
+  .viz{
+    background:#fafbff;
+    border:1px dashed #d9dcf0;
+    border-radius:var(--r-sm);
+    padding:22px;
+    margin-top:20px;
+  }
+  .viz-title{
+    font-size:13px;color:var(--ink-3);
+    letter-spacing:.5px;margin-bottom:16px;font-weight:600;
+  }
+  /* 球队阵容 */
+  .team{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;}
+  .pos{
+    border-radius:12px;
+    padding:16px 12px;
+    text-align:center;
+    color:#fff;
+    box-shadow:var(--shadow-sm);
+  }
+  .pos .role{font-size:19px;font-weight:700;margin-bottom:6px;}
+  .pos .asset{font-size:14px;opacity:.95;margin-bottom:8px;}
+  .pos .trait{font-size:12px;line-height:1.6;opacity:.9;}
+  .pos.f{background:linear-gradient(135deg,#e05a5a,#c23b6b);}
+  .pos.m{background:linear-gradient(135deg,#3a4cc0,#5a6ee0);}
+  .pos.d{background:linear-gradient(135deg,#0f9d6e,#12a88a);}
+  .pos.g{background:linear-gradient(135deg,#d9860b,#e0a52a);}
+  /* 堆叠条 */
+  .bar{
+    display:flex;
+    height:38px;
+    border-radius:8px;
+    overflow:hidden;
+    box-shadow:var(--shadow-sm);
+    margin:6px 0 10px;
+  }
+  .seg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
+  .s-stock{background:linear-gradient(135deg,#e05a5a,#c23b6b);}
+  .s-bond{background:linear-gradient(135deg,#3a4cc0,#5a6ee0);}
+  .s-cash{background:linear-gradient(135deg,#d9860b,#e0a52a);}
+  .s-alt{background:linear-gradient(135deg,#0f9d6e,#12a88a);}
+  .legend{display:flex;flex-wrap:wrap;gap:8px 18px;font-size:13px;color:var(--ink-2);}
+  .legend span{display:inline-flex;align-items:center;gap:6px;}
+  .dot{width:11px;height:11px;border-radius:3px;display:inline-block;}
+  /* 生命周期 */
+  .life{margin-top:8px;}
+  .life-row{display:flex;align-items:center;gap:12px;margin:12px 0;}
+  .life-row .age{flex:0 0 58px;font-size:13.5px;color:var(--ink-2);font-weight:600;}
+  .life-bar{flex:1;display:flex;height:26px;border-radius:6px;overflow:hidden;background:#eef0f6;}
+  .life-bar .a{background:linear-gradient(135deg,#e05a5a,#c23b6b);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;}
+  .life-bar .b{background:linear-gradient(135deg,#3a4cc0,#5a6ee0);display:flex;align-items:center;justify-content:center;color:#fff;font-size:12px;font-weight:700;}
+  /* 贡献条 */
+  .contrib{margin-top:6px;}
+  .c-row{display:flex;align-items:center;gap:12px;margin:10px 0;}
+  .c-row .cl{flex:0 0 120px;font-size:13.5px;color:var(--ink-2);}
+  .c-track{flex:1;background:#eef0f6;border-radius:6px;height:22px;overflow:hidden;}
+  .c-fill{height:100%;border-radius:6px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;color:#fff;font-size:12px;font-weight:700;}
+  .note{font-size:12.5px;color:var(--ink-3);margin-top:12px;line-height:1.7;}
+
+  /* ===== 案例 ===== */
+  .case{
+    border:1px solid var(--line);
+    border-radius:var(--r-sm);
+    padding:18px 20px;
+    margin-top:14px;
+    background:#fff;
+  }
+  .case h3{
+    font-size:16.5px;color:var(--accent);margin-bottom:8px;
+    display:flex;align-items:center;gap:9px;
+  }
+  .case h3 .tag{
+    font-size:11px;background:var(--accent-soft);color:var(--accent);
+    padding:2px 9px;border-radius:999px;font-weight:600;
+  }
+  .case p{font-size:15px;margin:8px 0;}
+
+  /* ===== 关联 ===== */
+  .links{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;}
+  .link{
+    background:#fafbff;
+    border:1px solid var(--line);
+    border-radius:var(--r-sm);
+    padding:14px 16px;
+  }
+  .link .t{font-size:14.5px;font-weight:700;color:var(--ink);margin-bottom:5px;}
+  .link .t em{font-style:normal;font-size:11.5px;color:var(--accent);font-weight:600;margin-left:6px;}
+  .link .d{font-size:13px;color:var(--ink-2);line-height:1.7;}
+
+  /* ===== 启示清单 ===== */
+  ol.tips{list-style:none;counter-reset:tip;}
+  ol.tips li{
+    position:relative;
+    padding:12px 0 12px 42px;
+    border-bottom:1px solid var(--line);
+    font-size:15px;
+    color:var(--ink-2);
+    counter-increment:tip;
+  }
+  ol.tips li:last-child{border-bottom:none;}
+  ol.tips li::before{
+    content:counter(tip);
+    position:absolute;left:0;top:12px;
+    width:26px;height:26px;
+    background:var(--grad);
+    color:#fff;border-radius:8px;
+    font-size:13px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+  }
+  ol.tips li strong{color:var(--ink);}
+
+  /* ===== 思考题 ===== */
+  .think{
+    background:linear-gradient(135deg,#fff8ec,#fff3f7);
+    border:1px solid #f4e2c8;
+    border-radius:var(--r-card);
+    padding:26px 28px;
+    margin-top:var(--gap);
+    box-shadow:var(--shadow-sm);
+  }
+  .think .q-hd{
+    font-size:13px;letter-spacing:1px;color:var(--amber);font-weight:700;margin-bottom:12px;
+  }
+  .think .q{font-size:17px;color:var(--ink);line-height:1.85;font-weight:600;}
+  .think .q-sub{font-size:14.5px;color:var(--ink-2);margin-top:14px;line-height:1.8;}
+
+  /* ===== 脚注 ===== */
+  .foot{
+    text-align:center;
+    color:var(--ink-3);
+    font-size:12.5px;
+    margin-top:34px;
+    line-height:1.9;
+  }
+  .foot .rule{width:48px;height:3px;background:var(--grad);border-radius:3px;margin:0 auto 16px;}
+
+  /* ===== 响应式 ===== */
+  @media (max-width:600px){
+    body{padding:16px 12px 40px;font-size:15px;}
+    .hero{padding:28px 22px 24px;border-radius:14px;}
+    .hero h1{font-size:26px;}
+    .hero .sub{font-size:14.5px;}
+    .meta{gap:10px 18px;font-size:12.5px;}
+    .card{padding:22px 18px;border-radius:14px;}
+    .card-hd h2{font-size:19px;}
+    .kv{grid-template-columns:1fr;}
+    .team{grid-template-columns:repeat(2,1fr);}
+    .links{grid-template-columns:1fr;}
+    .c-row .cl{flex:0 0 84px;font-size:12.5px;}
+    .seg{font-size:11px;}
+    .life-row .age{flex:0 0 46px;font-size:12px;}
+    .formula{font-size:13.5px;}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- 头部 -->
+  <header class="hero">
+    <span class="badge">金融概念 · 第 45 期</span>
+    <h1>资产配置：把钱排成一支球队</h1>
+    <p class="sub">为什么决定你长期收益的，往往不是买了哪只股票，而是钱在大类资产之间怎么分。</p>
+    <div class="chips">
+      <span class="chip">资产配置</span>
+      <span class="chip">大类资产</span>
+      <span class="chip">再平衡</span>
+      <span class="chip">风险预算</span>
+    </div>
+    <div class="meta">
+      <span>日期：2026-11-17</span>
+      <span>系列：金融概念故事集</span>
+      <span>阅读时长：约 8 分钟</span>
+    </div>
+  </header>
+
+  <!-- 1. 故事 -->
+  <section class="card story">
+    <div class="card-hd">
+      <div class="num">01</div>
+      <div><h2>故事：老周的养老钱与一支球队</h2><div class="hint">先别急着记定义，看一个退休老人的顿悟</div></div>
+    </div>
+    <p>老周退休那年，攒下了一笔八十万的养老钱。他不是什么金融高手，只是一个看了三十年球的老球迷。钱一到账，三个人找上门来。</p>
+    <p>老股民老张拍着胸脯："全买股票！长期看股票收益最高，别的都是浪费。"银行工作的老李摇头："全存定期，稳当，睡觉踏实。"做实业的老王压低声音："全投我朋友的厂，两年翻倍，机会难得。"</p>
+    <p>三个人说的都有道理，老周反而更糊涂了。周末他看球，看到一支常年夺冠的球队，忽然愣住了——他想起这支球队里有前锋、中场、后卫、门将，从来没有人会问"我们要不全部改成前锋吧？"</p>
+    <div class="quote">"一支全是前锋的球队，进球多，可后防线一空，对手进得更多；一支全是后卫的球队，牢不可破，却永远赢不了球。冠军靠的不是某个位置最强，而是各个位置的配比刚刚好。"</div>
+    <p>老周一下子想通了自己的养老钱：它也是一支球队，需要有人进球，也需要有人守门。</p>
+    <ul style="list-style:none;margin:14px 0;">
+      <li style="padding:6px 0;color:var(--ink-2);font-size:15.5px;">— <strong>股票是前锋</strong>：进球（收益）能力最强，但也最容易受伤、状态起伏大；</li>
+      <li style="padding:6px 0;color:var(--ink-2);font-size:15.5px;">— <strong>债券是中场</strong>：不追求一脚定胜负，稳定地传接球，提供可预期的票息；</li>
+      <li style="padding:6px 0;color:var(--ink-2);font-size:15.5px;">— <strong>现金是门将</strong>：几乎不进球，但关键时刻能扑出那记救命球——应急、机会、意外；</li>
+      <li style="padding:6px 0;color:var(--ink-2);font-size:15.5px;">— <strong>黄金、房产等是替补奇兵</strong>：平时不上场，某些特定局面下能派上用场。</li>
+    </ul>
+    <p>于是老周没有去猜哪只股票会涨，也没有去赌哪个行业会火。他先排"阵容"：股票四成、债券四成、现金一成半、黄金半成。至于具体买哪只股票、哪只基金，那都是排好阵容之后才轮到的"选球员"问题。</p>
+    <div class="turn">这就是<strong>资产配置</strong>。它的核心提醒是：先在"大类"层面把钱安排好，再谈具体品种。顺序一旦颠倒，努力常常白费。</div>
+
+    <div class="viz">
+      <div class="viz-title">老周的"球队阵容"示意图</div>
+      <div class="team">
+        <div class="pos f"><div class="role">前锋</div><div class="asset">股票 40%</div><div class="trait">进攻主力<br>高波动</div></div>
+        <div class="pos m"><div class="role">中场</div><div class="asset">债券 40%</div><div class="trait">稳定传接<br>票息来源</div></div>
+        <div class="pos g"><div class="role">门将</div><div class="asset">现金 15%</div><div class="trait">最后防线<br>应急流动性</div></div>
+        <div class="pos d"><div class="role">奇兵</div><div class="asset">黄金 5%</div><div class="trait">特定局面<br>对冲风险</div></div>
+      </div>
+      <div class="bar" style="margin-top:20px;">
+        <div class="seg s-stock" style="width:40%;">40%</div>
+        <div class="seg s-bond" style="width:40%;">40%</div>
+        <div class="seg s-cash" style="width:15%;">15%</div>
+        <div class="seg s-alt" style="width:5%;">5%</div>
+      </div>
+      <div class="legend">
+        <span><i class="dot s-stock"></i>股票</span>
+        <span><i class="dot s-bond"></i>债券</span>
+        <span><i class="dot s-cash"></i>现金</span>
+        <span><i class="dot s-alt"></i>黄金等另类</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. 概念卡 -->
+  <section class="card">
+    <div class="card-hd">
+      <div class="num">02</div>
+      <div><h2>概念卡片：什么是资产配置</h2><div class="hint">一句话定义 + 关键要素 + 一个常被误读的数字</div></div>
+    </div>
+    <div class="def">
+      <div class="label">定义</div>
+      <div class="body">资产配置，是指投资者根据自己的<strong>风险承受能力、投资目标和投资期限</strong>，把资金在股票、债券、现金、另类资产等大类资产之间，按一定比例进行分配，并在过程中动态调整的过程。</div>
+    </div>
+    <div class="kv">
+      <div><div class="k">配置的三个决定变量</div><div class="v">目标 · 期限 · 承受力</div></div>
+      <div><div class="k">配置的动作</div><div class="v">分配权重 + 定期再平衡</div></div>
+      <div><div class="k">最经典的起点模型</div><div class="v">股债 60/40</div></div>
+      <div><div class="k">自动化版本</div><div class="v">目标日期基金（随年龄调仓）</div></div>
+    </div>
+    <div class="formula">
+      组合预期回报 ≈ <span class="hl">Σ（各类资产权重 × 该类资产预期回报）</span><br>
+      组合风险并不等于各资产风险的简单相加 —— 它还取决于资产之间的<span class="hl">相关性</span>。<br>
+      所以配置不只是"分多少钱"，更是"分多少风险"。
+    </div>
+    <p style="margin-top:18px;">金融研究里有一个广为流传的说法：<strong>资产配置解释了组合业绩差异的九成左右</strong>。它来自布林森（Brinson）等人在 1986 年对养老金组合的研究——不同基金之间的收益差别，绝大部分可以由"它们把钱放在哪几类资产上"来解释，而不是由"它们精挑细选了哪只证券"或"何时进出场"来解释。</p>
+    <p>需要严谨补一句：这里的"九成"指的是对组合间业绩<strong>差异（统计上的变异）</strong>的解释比例，不是说你每一次投资都有九成收益靠配置。但它传递的方向是对的——<strong>先配大类，再选品种，顺序比技巧更重要。</strong></p>
+    <div class="contrib viz">
+      <div class="viz-title">通俗理解：业绩差异的主要来源（示意，非精确数值）</div>
+      <div class="c-row"><div class="cl">资产配置</div><div class="c-track"><div class="c-fill" style="width:90%;background:linear-gradient(135deg,#3a4cc0,#8a5cf6);">约九成</div></div></div>
+      <div class="c-row"><div class="cl">证券选择</div><div class="c-track"><div class="c-fill" style="width:8%;background:linear-gradient(135deg,#0f9d6e,#12a88a);"></div></div></div>
+      <div class="c-row"><div class="cl">择时进出</div><div class="c-track"><div class="c-fill" style="width:4%;background:linear-gradient(135deg,#d9860b,#e0a52a);"></div></div></div>
+      <div class="note">注：条形为概念性示意，用于表达"配置是主导因素"这一研究方向，不代表任何具体组合的精确分解。</div>
+    </div>
+  </section>
+
+  <!-- 3. 案例 -->
+  <section class="card">
+    <div class="card-hd">
+      <div class="num">03</div>
+      <div><h2>真实案例：配置如何决定命运</h2><div class="hint">从顶级捐赠基金到普通人的养老金</div></div>
+    </div>
+
+    <div class="case">
+      <h3><span class="tag">机构</span>耶鲁模式：大卫·斯文森的"另类"赌注</h3>
+      <p>上世纪八十年代，耶鲁大学捐赠基金请来大卫·斯文森（David Swensen）掌舵。当时多数大学捐赠基金把大部分钱放在美国股票和债券上。斯文森却做了一个大胆的配置调整：大幅降低传统股债比例，把资金分配到私募股权、对冲基金、实物资产等"另类"类别，并强调分散与长期。</p>
+      <p>此后多年，耶鲁捐赠基金取得了显著超越同类机构和传统股债组合的长期回报，"耶鲁模式"被全球机构效仿。它的启示不是"人人去买私募"，而是——<strong>当一个投资者敢于在配置层面跳出常规、并坚持纪律，长期结果可以被显著改变。</strong></p>
+    </div>
+
+    <div class="case">
+      <h3><span class="tag">危机</span>2008 年：股债"负相关"的假设被打破</h3>
+      <p>传统的 60/40 组合依赖一个前提：股票跌的时候债券通常涨，互相抵消。但在 2008 年金融危机的某些阶段，股票大跌，连信用债也跟着跌，"避险"失效了。许多自以为分散的机构同时蒙受损失。</p>
+      <p>这催生了更精细的思路，比如"风险平价"（桥水基金的"全天候"策略是代表）：不再按<strong>金额</strong>平均分配（60/40），而是让每类资产对组合的<strong>风险贡献</strong>尽量均衡，并主动考虑不同宏观环境（增长/通胀的升降）下的表现。教训是：<strong>配置不是背一个固定公式，而要理解资产之间的相关性会变。</strong></p>
+    </div>
+
+    <div class="case">
+      <h3><span class="tag">个人</span>目标日期基金：随年龄自动"换阵容"</h3>
+      <p>很多养老金计划默认投资"目标日期基金"——比如"2055 基金"供年轻人选择。它的规则很简单：你越年轻，股票比例越高（比如 85%）；随着退休日期临近，逐年自动降低股票、提高债券和现金（比如降到 30%）。</p>
+      <p>背后的逻辑正是资产配置：年轻时你的"人力资本"丰厚、投资期限长，能承受股票波动去换长期回报；临近退休，本金的安全性优先，就要把"阵容"从进攻转向防守。这是一套把生命周期写进配置的自动化方案。</p>
+    </div>
+
+    <div class="viz">
+      <div class="viz-title">生命周期配置示意：股票占比随年龄递减</div>
+      <div class="life">
+        <div class="life-row"><div class="age">30 岁</div><div class="life-bar"><div class="a" style="width:85%;">股票 85%</div><div class="b" style="width:15%;">15%</div></div></div>
+        <div class="life-row"><div class="age">45 岁</div><div class="life-bar"><div class="a" style="width:60%;">股票 60%</div><div class="b" style="width:40%;">40%</div></div></div>
+        <div class="life-row"><div class="age">60 岁</div><div class="life-bar"><div class="a" style="width:30%;">股票 30%</div><div class="b" style="width:70%;">债券现金 70%</div></div></div>
+      </div>
+      <div class="note">比例为示意，实际配置应结合个人养老金、储蓄、负债与风险偏好。一个粗略的经验起点是"股票比例 ≈ 100 − 年龄"。</div>
+    </div>
+  </section>
+
+  <!-- 4. 关联 -->
+  <section class="card">
+    <div class="card-hd">
+      <div class="num">04</div>
+      <div><h2>与已学概念的关联</h2><div class="hint">资产配置不是孤立的概念，它是很多概念的"顶层框架"</div></div>
+    </div>
+    <div class="links">
+      <div class="link"><div class="t">分散投资 <em>第40期</em></div><div class="d">分散是配置的手段，配置是分散的顶层设计。分散回答"要不要分"，配置回答"各分多少"。</div></div>
+      <div class="link"><div class="t">风险与回报 <em>第42期</em></div><div class="d">配置本质是在风险—回报光谱上排布资金；各类资产的权重共同决定了组合的预期回报与波动。</div></div>
+      <div class="link"><div class="t">流动性 <em>第44期</em></div><div class="d">配置里的现金那一档就是流动性储备，用来应对急用，避免被迫在低点卖出其他资产。</div></div>
+      <div class="link"><div class="t">机会成本 <em>第38期</em></div><div class="d">给某类资产多配一点，就意味着少配另一类。每一个权重取舍，都是一次机会成本的权衡。</div></div>
+      <div class="link"><div class="t">沉没成本 <em>第43期</em></div><div class="d">再平衡时，别因为"这只我买贵了舍不得卖"而拒绝调仓——已发生的盈亏不该左右下一步决策。</div></div>
+      <div class="link"><div class="t">羊群效应 <em>第29期</em></div><div class="d">市场狂热时追涨杀跌会打乱既定配置。一份写下来并坚持的配置纪律，是对抗羊群的工具。</div></div>
+      <div class="link"><div class="t">复利 <em>第37期</em></div><div class="d">合理的配置让你控制回撤、留在市场里，活得久、不下牌桌，才有资格慢慢享受复利。</div></div>
+      <div class="link"><div class="t">通货膨胀 <em>第39期</em></div><div class="d">配置必须盯住实际收益。现金留太多虽然安稳，却可能被通胀悄悄侵蚀购买力。</div></div>
+    </div>
+  </section>
+
+  <!-- 5. 启示 -->
+  <section class="card">
+    <div class="card-hd">
+      <div class="num">05</div>
+      <div><h2>给普通投资者的启示清单</h2><div class="hint">把概念变成可以照做的动作</div></div>
+    </div>
+    <ol class="tips">
+      <li><strong>先定配置，再选产品。</strong>先回答"股票债券现金各多少"，再回答"买哪只基金"，顺序颠倒会让努力大打折扣。</li>
+      <li><strong>用"能承受多大回撤"倒推股票比例。</strong>问自己：如果组合一年跌三成，我睡得着吗？睡不着就该降低进攻仓位，可用"100 − 年龄"作粗略起点。</li>
+      <li><strong>留出应急门将。</strong>先备好 6—12 个月生活开支的现金或货币基金，再谈投资，避免在急用钱时被迫低位卖出。</li>
+      <li><strong>别把同源资产当分散。</strong>自住房、本地银行股、家乡的生意，可能都押注同一个经济周期——看起来分散，实则一损俱损。</li>
+      <li><strong>定期再平衡，机械执行。</strong>每半年或一年看一看，涨多的减一点、跌多的补一点，把配置拉回目标比例，同时克制追涨杀跌的情绪。</li>
+      <li><strong>配置随人生阶段调整。</strong>越临近用钱的目标（买房、养老、子女教育），越要降低风险资产比重；目标遥远则可以更进取。</li>
+      <li><strong>把成本也算进配置。</strong>管理费、申赎费、税收会长期拖累回报，低费率的宽基指数常适合作为核心仓位。</li>
+      <li><strong>别忘了你最大的资产。</strong>年轻人的人力资本（未来赚钱能力）本身就是一类"资产"——它丰厚且期限长时，组合里可以更敢于承担波动。</li>
+    </ol>
+  </section>
+
+  <!-- 6. 思考题 -->
+  <section class="think">
+    <div class="q-hd">今日思考题</div>
+    <div class="q">假如你有 50 万元：其中 10 万元一年后要用于付房子首付，其余 40 万元打算放 15 年不动。请画出你的"球队阵容"——四类资产各配多少？为什么这样排？</div>
+    <div class="q-sub">再往深处想一步：如果一年后股市恰好下跌 30%，你的配置会怎样保护（或伤害）那笔必须按时拿出来的首付？这道题的答案，会让你真正理解"配置不只是追求收益，更是安排每一笔钱该承担什么角色"。</div>
+  </section>
+
+  <footer class="foot">
+    <div class="rule"></div>
+    金融概念故事集 · 第 45 期 · 资产配置<br>
+    本文为知识科普，所有案例与数据仅为说明概念，不构成任何投资建议。<br>
+    生成日期：2026-11-17
+  </footer>
+
+</div>
+</body>
+</html>

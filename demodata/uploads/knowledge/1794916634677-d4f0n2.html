@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第19期 · 因果推断与混杂</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+details.qz{margin:12px 0;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+details.qz summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;font-weight:700;color:var(--ink);transition:background .16s}
+details.qz summary:hover{background:#fdf8f0}
+details.qz summary::-webkit-details-marker{display:none}
+details.qz summary::marker{content:""}
+details.qz summary::after{content:"看答案 ▾";margin-left:auto;flex:0 0 auto;font-size:12px;font-weight:600;color:#8a5a1e;background:#faf0e2;border-radius:999px;padding:2px 10px;white-space:nowrap}
+details.qz[open] summary{background:#fdfaf4;border-bottom:1px dashed var(--line)}
+details.qz[open] summary::after{content:"收起 ▴";background:#f2e6d4}
+details.qz > *:not(summary){padding-left:14px;padding-right:14px}
+details.qz > *:not(summary):last-child{padding-bottom:12px}
+details.qz blockquote:empty{display:none}
+</style></head><body><div class="wrap"><h1>第 19 期 · 因果推断与混杂：相关 ≠ 因果，怎么才算「真的是它干的」</h1>
+<blockquote><strong>一句话</strong>：第 11 期我们说过「相关不等于因果」，但只说了「别信」；这一期回答更难的那一半——<strong>那到底什么时候可以信？</strong> 概率只能告诉你 P(Y|X)：看到 X 时 Y 有多常见。可你真正想知道的是 P(Y|do(X))：<strong>人为把 X 掰到某个值，Y 会怎么变</strong>。这两个数一旦被混杂变量搅在一起，能差出好几倍——冰淇淋卖得越多溺水越多，可禁止冰淇淋救不了任何人。</blockquote>
+<hr>
+<h2>一、故事：阿明的「冰淇淋杀人案」</h2>
+<p>阿明刷到一条数据可视化：某个城市<strong>冰淇淋销量</strong>和<strong>溺水人数</strong>的曲线几乎重合，相关系数高得吓人。他一拍大腿：「破了！吃冰淇淋会让人溺水！建议夏天禁售。」</p>
+<p>大刘差点把茶喷出来：「按你这逻辑，消防车越多的地方火灾损失越大——所以该禁消防车？」</p>
+<p>阿明挠头：「那这两个数明明一起涨啊，怎么就不是因果？」</p>
+<p>大刘画了张图：</p>
+<blockquote>夏天高温 T → 冰淇淋销量 ↑；夏天高温 T → 下水游泳的人 ↑ → 溺水 ↑。</blockquote>
+<blockquote>冰淇淋和溺水之间<strong>没有箭头</strong>，它们只是共同原因 T 的两个结果。T 就是<strong>混杂变量</strong>——它同时影响「原因」和「结果」，把两个本来无关的东西绑成了同涨同跌。</blockquote>
+<p>阿明：「所以相关只是『一起出现』，因果是『我动它，它跟着动』？」</p>
+<p>大刘：「说到点子上了。而且这里藏着一个概率上的坑：<strong>你观测到的 P(溺水 | 冰淇淋多)，跟干预出来的 P(溺水 | do(冰淇淋多)) 根本不是一回事</strong>。前者是被高温污染过的观察，后者才是『我真的让人多吃冰淇淋』的效果。整门因果推断，就是想尽办法从前者里把后者还原出来。」</p>
+<p>阿明：「那怎么还原？多收点数据？」</p>
+<p>大刘：「数据再多也没用——<strong>偏差不会被样本量治好</strong>（第 6 期大数定律只会让你更精确地收敛到错误的数）。得靠设计：要么做实验随机化，要么在观察数据里用因果图把混杂『调』掉。来，我给你拆。」</p>
+<hr>
+<h2>二、概念：从「看见」到「干预」</h2>
+<h3>1. 相关的三种来源</h3>
+<p>两个变量 X、Y 相关，背后只可能是三种结构：</p>
+<ul>
+<li><strong>因果</strong>：X → Y（真的它干的）；</li>
+<li><strong>混杂</strong>：X ← U → Y（共同原因 U 把它们绑在一起，冰淇淋案）；</li>
+<li><strong>巧合</strong>：样本量小或多次比较撞出来的偶然相关（第 10 期标准误、第 19 期重尾下更容易撞鬼）。</li>
+</ul>
+<p>只有第一种值得叫「因果效应」。后两种都是<strong>虚假相关</strong>（spurious correlation）。</p>
+<h3>2. 概率的语言：P(Y|X) 与 P(Y|do(X)) 是两码事</h3>
+<ul>
+<li><strong>P(Y|X=x)</strong>：在<strong>观察到</strong> X=x 的人群里，Y 的比例。这是条件概率，第 2 期贝叶斯那一套。</li>
+<li><strong>P(Y|do(X=x))</strong>：<strong>人为把</strong> X 固定到 x（像做实验那样），Y 会变成的分布。这是干预分布，贝叶斯概率本身表达不了它。</li>
+</ul>
+<p>关键差别在于： conditioning（观察）会<strong>顺带告诉你 U 的信息</strong>，因为 U 影响了 X；而 do 操作<strong>切断 X 的父母</strong>，让 X 不再携带 U 的信息。一句话：</p>
+<blockquote><strong>观察是「我看到谁选了 X」，干预是「我逼所有人选 X」。</strong> 前者 X 身上写着混杂的痕迹，后者把痕迹擦掉了。</blockquote>
+<h3>3. 混杂与后门路径：该调谁，不该调谁</h3>
+<ul>
+<li><strong>混杂变量（confounder）</strong>：同时指向原因和结果的共同原因。它打开了一条从 X 绕到 Y 的<strong>后门路径</strong> X ← U → Y，必须<strong>阻断</strong>（控制/分层/匹配）它。</li>
+<li><strong>对撞变量（collider）</strong>：同时被 X 和 Y（或它们的原因）指向的变量 X → C ← Y。<strong>不要控制它</strong>——控制 C 反而会打开一条原本关闭的路径，凭空造出相关（伯克森悖论，题目 2）。</li>
+<li><strong>中介变量（mediator）</strong>：X → M → Y，位于因果路径<strong>中间</strong>。想测 X 对 Y 的<strong>总效应</strong>时不能控制它，否则把效应拦腰截断（题目 4）。</li>
+</ul>
+<p>这就是因果推断最反直觉的地方：<strong>不是「控制得越多越严谨」，而是「控制错了会制造偏差」</strong>。第 11 期说相关≠因果，这里补上后半句：连「控制变量」都得挑着控制。</p>
+<h3>4. 两个经典翻车现场</h3>
+<ul>
+<li><strong>辛普森悖论</strong>：每一组里 A 都优于 B，可把组合并后 B 反而优于 A。原因是组间样本量分配被混杂变量扭曲（题目 1 手算）。</li>
+<li><strong>伯克森悖论 / 选择偏倚</strong>：在「被筛选进样本」的人里，两个本来独立的变量会呈现虚假相关——因为筛选条件往往是对撞点（题目 2）。</li>
+</ul>
+<h3>5. RCT 为什么是黄金标准</h3>
+<p>随机对照试验把 X（处理）用随机硬币决定，于是 X 与所有潜在混杂 U <strong>独立</strong>：</p>
+<blockquote>随机化 ⇒ X ⊥ U ⇒ 后门路径 X ← U → Y 被物理切断 ⇒ <strong>P(Y|do(X)) = P(Y|X)_试验组对照之差</strong>。</blockquote>
+<p>随机不是为了让样本「看起来平衡」，而是从机制上让 X 不再携带 U 的信息——这正对应第 8 期「信息动作」：随机化是一个<strong>抹掉信息</strong>的操作。观察性研究没有这枚硬币，就得靠<strong>后门调整公式</strong>手工还原：</p>
+<blockquote><strong>P(Y=1|do(X=x)) = Σ_u P(Y=1 | X=x, U=u) · P(U=u)</strong></blockquote>
+<p>即「按混杂分层、各层算条件概率、再按总体权重加回去」——这是第 4 期全概率公式在因果问题上的重生。</p>
+<h3>6. 闭环地图</h3>
+<ul>
+<li><strong>第 11 期相关/协方差</strong>：「相关≠因果」的深化——本期给出判定因果的结构条件与可操作工具。</li>
+<li><strong>第 2 期贝叶斯</strong>：P(Y|X) 是观察条件概率，do 是它表达不了的干预量；后门调整公式沿用全概率/加权的老肌肉。</li>
+<li><strong>第 4 期全概率公式</strong>：后门调整 = 对混杂分层再加权求和，形式完全一致。</li>
+<li><strong>第 6 期大数定律</strong>：样本量治不了系统偏差，只会更精确地错下去。</li>
+<li><strong>第 10 期标准误 / 第 19 期重尾</strong>：巧合相关的来源，多重比较下更容易撞出假因果。</li>
+<li><strong>第 8 期信息动作</strong>：随机化 = 主动抹掉 X 携带的混杂信息。</li>
+<li><strong>第 18 期 AI 裁判</strong>：RLAIF 里「裁判偏差被放大」本质也是一种混杂/对撞问题——本期给它一个正式的因果语言。</li>
+</ul>
+<h3>7. 应用版图</h3>
+<p>医学（观察性研究 vs RCT、真实世界证据）、流行病学（吸烟与肺癌之争）、计量经济（工具变量/双重差分/断点回归）、推荐系统（点击提升是因果还是选择偏差）、A/B 测试（随机化的工业级实践）、司法与政策评估（自然实验）。</p>
+<hr>
+<h2>三、四道代表题（你先总结，再点开对答案）</h2>
+<details class="qz">
+<summary>题目 1 · 辛普森悖论手算：为什么合并后结论翻车</summary>
+<blockquote><strong>解题思路</strong>：某肾结石疗法对比（虚构整数化数据）。<strong>小结石</strong>：A 法 81/87 治愈，B 法 234/270；<strong>大结石</strong>：A 法 192/263，B 法 55/80。</blockquote>
+<blockquote>- 小结石组：A = 81/87 ≈ <strong>93.1%</strong>，B = 234/270 ≈ <strong>86.7%</strong> → A 优。</blockquote>
+<blockquote>- 大结石组：A = 192/263 ≈ <strong>73.0%</strong>，B = 55/80 ≈ <strong>68.8%</strong> → A 优。</blockquote>
+<blockquote>- 合计：A = (81+192)/(87+263) = 273/350 = <strong>78.0%</strong>；B = (234+55)/(270+80) = 289/350 ≈ <strong>82.6%</strong> → 竟是 B 优！</blockquote>
+<blockquote>- 原因：结石大小是<strong>混杂变量</strong>——它既影响选哪种疗法（A 多用于难治的大结石，87 vs 263），又影响治愈率（大结石本身难治）。合并时两法的病例构成不同，权重被扭曲。</blockquote>
+<blockquote>- 正解：按结石大小<strong>分层比较</strong>（都在层内比），A 才是更有效的——分层的 P(Y|X,U) 加总要用统一标准，不能让 U 的分布差偷改权重。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：分层看 A 在小结石（93.1% vs 86.7%）和大结石（73.0% vs 68.8%）都更好；合计却是 B（82.6% vs 78.0%）胜出，即辛普森悖论。混杂变量（结石大小）扭曲了两组的病例构成。正确做法是控制混杂、在层内比较，而不是看合并数字（闭环第 4 期全概率加权、第 11 期相关≠因果）。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 2 · 对撞变量悖论：越筛选越离谱</summary>
+<blockquote><strong>解题思路</strong>：设「才华 T」与「运气 L」在人群中<strong>完全独立</strong>，各取高/低（好/坏）且概率均为 0.5。两者共同提高「成功 S」的概率：P(S=1|T高,L好)=0.9、P(S=1|T高,L坏)=0.6、P(S=1|T低,L好)=0.6、P(S=1|T低,L坏)=0.1。四种组合先验各 0.25。</blockquote>
+<blockquote>- P(S=1) = 0.25×(0.9+0.6+0.6+0.1) = 0.25×2.2 = <strong>0.55</strong>。</blockquote>
+<blockquote>- 在成功者中 P(T高|S=1) = (0.225+0.15)/0.55 = 0.375/0.55 ≈ <strong>0.682</strong>（0.225=0.25×0.9，0.15=0.25×0.6）。</blockquote>
+<blockquote>- 再知道运气好：P(T高|L好,S=1) = 0.225/(0.225+0.15) = 0.6；知道运气坏：P(T高|L坏,S=1) = 0.15/(0.15+0.025) ≈ <strong>0.857</strong>。</blockquote>
+<blockquote>- 于是：成功者里「运气好的人才华反而更可能低」（0.6 &lt; 0.682），「运气坏的人才华更可能高」（0.857）——才华与运气呈<strong>负相关</strong>。可在总体中它们原本独立！</blockquote>
+<blockquote>- 机理：S 是 T 与 L 的<strong>对撞点</strong> T → S ← L。一旦条件化于 S=1（只看成功者），就等于把这条原本封闭的路径打通，凭空造出相关。这就是伯克森悖论、「成功人士都不靠运气」错觉的来源。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：总体中 T、L 独立；条件于成功 S=1 后，才华与运气出现负相关（P(T高|L好,S=1)≈0.6，P(T高|L坏,S=1)≈0.857 &lt;→&gt;）。教训：<strong>对撞变量不能控制</strong>——筛选样本本身就是一种条件化，会制造虚假相关（闭环第 11 期、题目 4 的「控制谁」）。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 3 · do-算子手算：观察相关被混杂夸大了多少</summary>
+<blockquote><strong>解题思路</strong>：因果图 X ← U → Y（U 是混杂，占人口一半 U=1/0）。设 P(X=1|U=1)=0.8，P(X=1|U=0)=0.2；各层里 X 对 Y 的真实效应都是 +0.2：P(Y=1|X=1,U=1)=0.9、P(Y=1|X=0,U=1)=0.7；P(Y=1|X=1,U=0)=0.4、P(Y=1|X=0,U=0)=0.2。</blockquote>
+<blockquote>- <strong>观察到的相关</strong>：P(X=1)=0.5×0.8+0.5×0.2=0.5；P(Y=1,X=1)=0.5×0.8×0.9+0.5×0.2×0.4=0.36+0.04=0.40 → P(Y=1|X=1)=0.40/0.5=<strong>0.8</strong>。同理 P(Y=1,X=0)=0.5×0.2×0.7+0.5×0.8×0.2=0.07+0.08=0.15 → P(Y=1|X=0)=0.15/0.5=<strong>0.3</strong>。观察差 = 0.8−0.3 = <strong>0.5</strong>。</blockquote>
+<blockquote>- <strong>真实因果效应</strong>：P(Y=1|do(X=1))=0.5×0.9+0.5×0.4=<strong>0.65</strong>；P(Y=1|do(X=0))=0.5×0.7+0.5×0.2=<strong>0.45</strong>；差 = <strong>0.2</strong>（与每层设定一致）。</blockquote>
+<blockquote>- 后门调整公式验证：P(Y=1|do(X=1))=Σ_u P(Y=1|X=1,u)P(u)=0.5×0.9+0.5×0.4=0.65 ✓。</blockquote>
+<blockquote>- 对比：观察差 0.5 是真实因果 0.2 的 <strong>2.5 倍</strong>——混杂把效应夸大了。X=1 的人里 U=1 占比高（0.4/0.5=80%），是 U 本身在抬 Y。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：观察相关 P(Y=1|X=1)−P(Y=1|X=0)=<strong>0.5</strong>，真实因果 P(Y=1|do(X=1))−P(Y=1|do(X=0))=<strong>0.2</strong>，观察值是因果值的 2.5 倍；用后门调整公式可正确还原 0.65/0.45。看 P(Y|X) 会把混杂的功劳错记到 X 头上（闭环第 4 期全概率、第 2 期条件概率）。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 4 · 该控制谁：混杂、中介、对撞一次分清</summary>
+<blockquote><strong>解题思路</strong>：研究「教育年限 E 对收入 Y 的因果效应」。已知结构：① 家庭背景 B → E 且 B → Y；② E → 技能 S → Y；③ 样本只包含「名牌大学校友」，而是否入样 Q 同时受 E 和天赋 T 影响（E → Q ← T，且 T → Y）。逐个判断：</blockquote>
+<blockquote>- <strong>B 是混杂变量</strong>（B → E、B → Y，打开后门 E ← B → Y）→ <strong>必须控制</strong>（分层/回归/匹配）。</blockquote>
+<blockquote>- <strong>S 是中介变量</strong>（E → S → Y 在因果路径上）→ 测<strong>总效应</strong>时<strong>不能控制</strong>，否则截断 E→Y 的路径，低估教育回报；只有想测「教育中不经技能的部分」时才控制。</blockquote>
+<blockquote>- <strong>Q 是对撞变量</strong>（E → Q ← T），且「样本里都是校友」= 条件化于 Q=1 → 会打通 E ← Q ← T → Y，凭空制造 E 与 T 的负相关，<strong>加剧偏差</strong>。正确做法是扩大样本到全体、或显式校正选择机制，而不是在已筛选样本里继续控制 Q。</blockquote>
+<blockquote>- 口诀：<strong>混杂要控、中介别控（测总效应时）、对撞躲着走</strong>。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：控制 B（混杂，闭后门）；不控制 S（中介，否则低估总效应）；不能条件化于 Q / 已筛选校友样本（对撞，会引入选择偏倚），应扩充样本或校正选择机制。核心原则：不是控制越多越好，而是按因果结构挑着控制——混杂要控、中介别控、对撞躲着走（闭环第 11 期、题目 2 伯克森悖论、第 18 期裁判偏差）。</blockquote>
+</details>
+<hr>
+<h2>四、明日预告</h2>
+<p><strong>第 20 期（概念序列第 40 项）：潜在结果与倾向得分——观察数据里怎么「模拟」一场随机试验</strong></p>
+<p>这一期我们用因果图 + do-算子把「相关」和「因果」切开，也看到 RCT 靠随机化从机制上切断混杂。但现实里很多问题根本没法做实验（不能逼人吸烟）。下一期学第二套语言：<strong>潜在结果 / 反事实框架</strong>——每个人有「接受处理」和「不接受」两个潜在结局，因果效应就是二者之差，而我们永远只能看到其中一个。再看<strong>倾向得分匹配</strong>怎么在观察数据里模拟随机分组，以及它为什么也会踩到对撞变量的雷。两套管法（do-演算 ↔ 潜在结果）其实是同一座桥的两面，下期我们把它们对上。</p></div></body></html>

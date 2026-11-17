@@ -29,6 +29,10 @@ const inboxPollMs = Number(process.env.DISCOVER_POLL_MS || 60000)
 // 原来是 5 分钟，但任务本身带 8 分钟左右的随机延迟，两者叠加会让「任务写完 → 工作台能看到」拖到 15 分钟。
 // 每个目录只做 readdir + stat（用 mtime 判重，不读正文），1 分钟的代价可以忽略。
 const outputPollMs = Number(process.env.OUTPUT_POLL_MS || 60000)
+// AI 大事的文件投放目录：定时任务只往这里写 JSON，后端扫进来入库。
+// 为什么不让任务直接调 POST /api/ai-events：任务跑的那一刻服务未必开着，直连就白跑一次；
+// 写文件不会丢，服务起来后补进去即可（和知识库那批报告一个思路）。
+const aiEventDir = path.resolve(process.env.AI_EVENT_DIR || path.join(process.env.REPORT_DIR || 'D:/spring-workbench/reports', 'ai-events'))
 
 
 // ===== 启动初始化：连接 MySQL、建库、建表（带可读错误提示与可选重试，防止环境未就绪时裸崩溃） =====
@@ -828,6 +832,59 @@ const syncOutputs = async () => {
   }
   return stat
 }
+
+// ===== AI 大事：文件投放 → 入库 =====
+// 用 app_meta 记「文件名 -> mtime」，同一份文件只处理一次。
+// 为什么必须判重：每分钟重扫会把用户在界面上改过的标题/权重/标签又刷回文件里的旧值。
+// 想强制重导某份文件：POST /api/ai-events/sync?force=1
+const syncAiEventFiles = async ({ force = false } = {}) => {
+  const stat = { files: 0, imported: 0, skipped: 0, errors: [] }
+  let names
+  try { names = await fsp.readdir(aiEventDir) } catch { return stat }   // 目录还没建：静默跳过，不报错
+  const conn = await pool.getConnection()
+  try {
+    for (const name of names.sort()) {
+      if (!/\.json$/i.test(name)) continue
+      const filePath = path.join(aiEventDir, name)
+      let mtime = 0
+      try { mtime = Math.floor((await fsp.stat(filePath)).mtimeMs) } catch { continue }
+      const metaKey = `ai_imp:${name}`.slice(0, 64)
+      const [[seen]] = await conn.execute('SELECT v FROM app_meta WHERE k = ? LIMIT 1', [metaKey])
+      if (!force && seen && String(seen.v) === String(mtime)) continue
+      let events
+      try {
+        const raw = JSON.parse(await fsp.readFile(filePath, 'utf8'))
+        events = Array.isArray(raw) ? raw : (raw.events || [])
+      } catch (error) {
+        stat.errors.push(`${name}：JSON 解析失败（${error.message}）`)
+        continue
+      }
+      for (const e of events) {
+        try {
+          await upsertAiEvent(conn, { ...e, origin: e.origin || 'auto' }, e.checkedAt)
+          stat.imported++
+        } catch (error) {
+          stat.skipped++
+          stat.errors.push(`${name}：${e?.version || '(缺版本名)'} — ${error.message}`)
+        }
+      }
+      stat.files++
+      await conn.execute(
+        'INSERT INTO app_meta (k, v, create_time) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE v = VALUES(v)',
+        [metaKey, String(mtime), Date.now()]
+      )
+    }
+  } finally { conn.release() }
+  if (stat.files || stat.errors.length) {
+    console.log(`[AI 时间线] 文件入库：${stat.files} 个文件 / ${stat.imported} 条${stat.skipped ? `，跳过 ${stat.skipped} 条` : ''}`)
+    for (const e of stat.errors.slice(0, 5)) console.error(`[AI 时间线] ${e}`)
+  }
+  return stat
+}
+
+app.post('/api/ai-events/sync', async (req, res, next) => {
+  try { res.json({ ok: true, ...(await syncAiEventFiles({ force: req.query.force === '1' })) }) } catch (error) { next(error) }
+})
 
 app.post('/api/knowledge/sync', async (_req, res, next) => {
   try { res.json({ ok: true, ...(await syncOutputs()) }) } catch (error) { next(error) }
@@ -1914,6 +1971,10 @@ app.listen(port, () => {
   const sync = () => syncOutputs().catch(error => console.error(`[知识库] 产出同步异常：${error.message}`))
   sync()
   if (outputPollMs > 0) setInterval(sync, outputPollMs).unref()
+  // AI 大事：与知识库同一个节奏扫。任务只写文件，这里负责落库，服务重启也不会漏。
+  const aiSync = () => syncAiEventFiles().catch(error => console.error(`[AI 时间线] 文件同步异常：${error.message}`))
+  aiSync()
+  if (outputPollMs > 0) setInterval(aiSync, outputPollMs).unref()
 
   // 好公司行情：美股收盘对应北京时间凌晨，这里在 6:30 之后自动刷一次。
   // 用内存记日期保证一天只刷一次；服务重启后当天会再刷一次，代价是多几个请求，

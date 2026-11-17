@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>概率学概念 第18期 · 自奖励模型与AI反馈</title>
+<style>
+:root{--bg:#fffdf7;--ink:#2b2b2b;--sub:#6b6b6b;--accent:#c8772e;--line:#eee2cf}
+*{box-sizing:border-box}
+body{margin:0;padding:28px 18px;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif;line-height:1.85;font-size:15px}
+.wrap{max-width:760px;margin:0 auto}
+h1{font-size:25px;line-height:1.35;margin:0 0 12px}
+h2{font-size:19px;margin:26px 0 10px;padding-left:10px;border-left:3px solid var(--accent)}
+h3{font-size:16px;margin:20px 0 8px}
+p{margin:10px 0}
+ul,ol{margin:10px 0;padding-left:22px}
+li{margin:5px 0}
+blockquote{margin:12px 0;padding:10px 14px;background:#fff;border-left:3px solid var(--line);color:var(--sub)}
+hr{border:0;border-top:1px solid var(--line);margin:24px 0}
+code{background:#f4ece0;padding:1px 5px;border-radius:4px;font-size:13px}
+strong{color:#8a4b12}
+details.qz{margin:12px 0;border:1px solid var(--line);border-radius:10px;background:#fff;overflow:hidden}
+details.qz summary{display:flex;align-items:center;gap:10px;padding:11px 14px;cursor:pointer;list-style:none;user-select:none;font-weight:700;color:var(--ink);transition:background .16s}
+details.qz summary:hover{background:#fdf8f0}
+details.qz summary::-webkit-details-marker{display:none}
+details.qz summary::marker{content:""}
+details.qz summary::after{content:"看答案 ▾";margin-left:auto;flex:0 0 auto;font-size:12px;font-weight:600;color:#8a5a1e;background:#faf0e2;border-radius:999px;padding:2px 10px;white-space:nowrap}
+details.qz[open] summary{background:#fdfaf4;border-bottom:1px dashed var(--line)}
+details.qz[open] summary::after{content:"收起 ▴";background:#f2e6d4}
+details.qz > *:not(summary){padding-left:14px;padding-right:14px}
+details.qz > *:not(summary):last-child{padding-bottom:12px}
+details.qz blockquote:empty{display:none}
+</style></head><body><div class="wrap"><h1>第 18 期 · 自奖励模型与 AI 反馈：当裁判也是模型自己</h1>
+<blockquote><strong>一句话</strong>：第 17 期我们让模型「自己生成、自己跟自己打」（SPIN），但裁判的标签还是「真实数据 vs 自编回答」硬凑出来的。这一期走得更远——<strong>连打分的人也换成模型</strong>：用 LLM 当裁判给回答排序（LLM-as-a-Judge），再把分数喂回训练（RLAIF / 自奖励模型）。于是整条链里再没有「外部人类」这一环。问题来了：一把<strong>自己磨自己、还用来量自己</strong>的尺子，凭什么会越量越准，而不是越量越歪？答案藏在概率里——裁判本质是一个<strong>带噪声的观测</strong>，而自我提升是一场<strong>带漂移的统计循环</strong>。</blockquote>
+<hr>
+<h2>一、故事：阿明想请个「不要工资的裁判」</h2>
+<p>阿明把第 17 期的迭代 DPO 跑顺之后，又开始算账了：「每轮都要找人标偏好对，太贵太慢。既然模型已经能自己生成回答了，干脆<strong>让模型自己给回答打分</strong>，用分数排名当作偏好对，不就省了人工？」</p>
+<p>他拍脑袋搭了个流水线：对同一个问题让模型生成 8 个回答 → 再让模型给这 8 个回答逐个打分 → 取最高分当赢家、最低分当输家 → 拿这对去跑 DPO（第 16 期），一轮轮滚。</p>
+<p>头几轮效果喜人，模型回答肉眼可见地变好。阿明正得意，大刘丢来三个问题：</p>
+<blockquote>大刘：「第一，<strong>你这个裁判准不准？</strong> 它给回答打分，跟人类的品味对得上吗？ second，我发现它特别爱给<strong>长回答</strong>打高分，还偏爱<strong>放在第一个位置</strong>的那个——这还叫打分吗，这叫偏心。第三，也是最要命的：<strong>你在用裁判的分数，去训练这个裁判自己</strong>。它既当运动员又当裁判，会不会互相喂好处，一起往歪了跑？」</blockquote>
+<p>阿明愣住：「那……这不成闭环空转了吗？」</p>
+<p>大刘摆摆手：「别急。这里头有个反直觉的好消息：研究发现，模型<strong>当裁判的能力也会跟着一起涨</strong>——生成越强，评判越准；评判越准，训练信号越干净，生成又更强。这是个正飞轮。但它确实有翻车条件，得用概率看清楚。」</p>
+<p>阿明：「那我们从哪儿下手？」</p>
+<p>大刘：「先把裁判当成一个<strong>会犯错的测量仪器</strong>看。你第 7、8 期学过隐藏状态和观测噪声——真实的回答质量是<strong>藏着的</strong>，裁判打的分数是<strong>带噪的观测</strong>。整件事的玄机，就在这层噪声是<strong>随机的</strong>还是<strong>有偏的</strong>。」</p>
+<hr>
+<h2>二、概念：把「AI 裁判」拆成一台带噪仪器</h2>
+<h3>1. RLAIF：把人类反馈这一环替换掉</h3>
+<p>先把链条摆清楚（对照第 15 期 RLHF）：</p>
+<ul>
+<li><strong>RLHF（第 15 期）</strong>：人类标注偏好对 → 训练奖励模型 RM → PPO 强化学习。</li>
+<li><strong>RLAIF（Reinforcement Learning from AI Feedback）</strong>：让 <strong>AI 裁判</strong>产出偏好对或打分 → 训练 RM（或直接进 DPO）→ 强化学习。</li>
+<li><strong>自奖励模型（Self-Rewarding LM）</strong>：更进一步，生成回答的和打分的是<strong>同一个模型</strong>，自己给自己出偏好对，再迭代训练。</li>
+</ul>
+<p>好处很直接：<strong>可扩展、便宜、7×24 不停</strong>，还能给人类反馈做预标注。代价也很直接：<strong>裁判的偏差会被整条训练链放大</strong>——人类裁判的噪声是随机的、有限的，模型裁判的偏差却是<strong>系统性的、可自我强化的</strong>。</p>
+<h3>2. LLM-as-a-Judge：分数 = 真实质量 + 噪声</h3>
+<p>关键的概率建模（闭环第 7 期 HMM 的隐藏状态、第 8 期卡尔曼滤波的观测噪声）：</p>
+<blockquote>设一条回答的<strong>真实质量</strong>为隐藏变量 $q$，裁判给出的分数为观测量 $s$：</blockquote>
+<blockquote><strong>s = q + ε</strong>，其中 ε 是裁判误差。</blockquote>
+<p>误差 ε 分两类，后果天差地别：</p>
+<ul>
+<li><strong>零均值的随机噪声</strong>：ε 平均为 0，只是上下抖动。多打几次取平均就能压下去（闭环第 10 期标准误 $SE=\sigma/\sqrt{n}$，样本翻 4 倍误差减半）。</li>
+<li><strong>有偏的系统误差</strong>：ε 有个固定的偏心 $b\neq 0$。这种误差<strong>取平均也消不掉</strong>——它像第 14 期随机游走里的<strong>漂移项</strong>，一直往一个方向推。AI 裁判的三大名坑全是这类：</li>
+<li><strong>位置偏差</strong>：偏爱排在前面的回答；</li>
+<li><strong>长度偏差</strong>：偏爱更长的回答；</li>
+<li><strong>自我偏好偏差</strong>：偏爱自己风格的输出（自奖励里尤其致命）。</li>
+</ul>
+<p>一句话记住：<strong>随机噪声靠平均能治，系统偏差靠平均只会更确信地错下去。</strong></p>
+<h3>3. 怎么量裁判准不准：一致率 vs Cohen's κ</h3>
+<p>不能只看「跟人类判定一致的比例」——因为好回答本来就多，全蒙「好」也能蒙出高一致率。要用<strong> chance-corrected 的κ系数</strong>（ Cohen's kappa）：</p>
+<blockquote><strong>κ = (p_o − p_e) / (1 − p_e)</strong></blockquote>
+<blockquote>p_o = 实际一致率，p_e = 随机情况下的期望一致率。</blockquote>
+<p>κ 扣掉了「碰巧蒙对」的部分：κ=1 完全一致，κ=0 跟随机没区别。这正是第 2 期贝叶斯「要把先验/base rate 扣掉」的同一个直觉。题目 1 会手算给你看——75% 的一致率，κ 可能只有 0.49。</p>
+<h3>4. Bradley–Terry 闭环：裁判只是把「人」换成了「模型」</h3>
+<p>AI 裁判两两比较、给回答排序，底层模型跟第 15 期人类偏好<strong>完全同构</strong>：</p>
+<blockquote><strong>P(y_w ≻ y_l) = σ(r_w − r_l) = 1 / (1 + e^{−(r_w−r_l)})</strong></blockquote>
+<p>所以第 15 期的整套数学（BT 模型、−logσ 损失）原封不动照搬，唯一变化是偏好标签的来源从「人」变成了「模型」。这也是 RLAIF 能无缝接进 DPO 的原因（第 16 期）。</p>
+<h3>5. Self-Rewarding：生成与评判的「正飞轮」与不动点</h3>
+<p>自奖励模型最迷人的发现是：<strong>模型当裁判的能力也会随迭代提升</strong>。把它写成一个耦合系统（概率主线）：</p>
+<blockquote>设第 t 轮<strong>生成质量</strong> $g_t$、<strong>裁判准确率</strong> $a_t$；</blockquote>
+<blockquote>裁判越准，训练信号越可信；模型越强，评判也越准。取 $a_t = 0.5+0.5g_t$。</blockquote>
+<blockquote>每轮提升：<strong>Δg = η · a_t · (1 − g_t)</strong>（信号质量 × 剩余提升空间），η 是学习步长。</blockquote>
+<p>两个力同时起作用：</p>
+<ul>
+<li><strong>正飞轮</strong>：$g_t$ 涨 → $a_t$ 涨 → 信号更干净 → $g_t$ 涨得更快；</li>
+<li><strong>边际递减</strong>：$(1-g_t)$ 随 $g_t$ 逼近上限而缩小 → 提升自然放缓。</li>
+</ul>
+<p>不动点在 $g^*=1$（此时 $1-g=0$，Δg=0）——理想情况下平滑收敛（题目 4 手算前几轮）。<strong>但只要裁判有系统偏差 $b$，递推里就多出一个漂移项</strong>，把策略往「讨好裁判」的方向推，越过真实质量、停在虚假高点——这就是第 15 期的 <strong>reward hacking</strong>，也是第 17 期模式塌缩的同一台机器（闭环第 19 期单点主导、第 14 期带漂移随机游走）。</p>
+<h3>6. 三种翻车与对应解药</h3>
+<ul>
+<li><strong>长度/位置偏差</strong> → 位置交换配对测试、长度归一化、多样本多数投票（注意：投票只降随机方差，<strong>不消系统偏差</strong>，见题目 3）。</li>
+<li><strong>自我偏好偏差</strong> → 生成模型与裁判模型<strong>分离</strong>（用另一个更强的模型当裁判）、或定期用人类/外部锚校准。</li>
+<li><strong>奖励黑客 / 塌陷</strong> → 设停止准则（闭环第 20 期最优停止）、调小步长 β（第 14、16 期）、监控多样性与裁判一致性 κ，而不是只盯分数涨。</li>
+</ul>
+<h3>7. 闭环地图</h3>
+<ul>
+<li><strong>第 15 期 RLHF / BT 模型</strong>：AI 裁判与人类偏好同构，σ(r_w−r_l) 照搬。</li>
+<li><strong>第 16 期 DPO / 第 17 期 迭代 DPO、SPIN</strong>：自奖励的训练算法与循环骨架直接沿用。</li>
+<li><strong>第 7 期 HMM / 第 8 期 卡尔曼滤波</strong>：真实质量是隐藏状态，裁判分数是带噪观测。</li>
+<li><strong>第 2 期贝叶斯</strong>：κ 扣 base rate、带噪打分反推真实偏好，都是后验推断。</li>
+<li><strong>第 10 期 SE / 第 6 期大数定律</strong>：多次打分取平均降随机噪声；但偏差会让大样本收敛到<strong>错误的</strong>0.7（题目 3）。</li>
+<li><strong>第 14 期随机游走 / 第 19 期重尾</strong>：系统偏差 = 漂移项，自我强化 = 单点主导。</li>
+<li><strong>第 20 期最优停止</strong>：正飞轮该在哪停——验证集一致性不再涨就是信号。</li>
+</ul>
+<hr>
+<h2>三、四道代表题（你先总结，再点开对答案）</h2>
+<details class="qz">
+<summary>题目 1 · 裁判准不准：一致率会骗人，κ 不骗人</summary>
+<blockquote><strong>解题思路</strong>：AI 裁判与人类裁判各自对 100 条回答判「好 / 差」。人类判 60 好、40 差；AI 判 55 好、45 差；其中两者都判「好」的有 45 条，都判「差」的有 30 条。</blockquote>
+<blockquote>- 实际一致率 $p_o$ = (45 + 30)/100 = <strong>0.75</strong>，看着挺高。</blockquote>
+<blockquote>- 随机情况下期望一致率：都判好 = 0.60×0.55 = 0.33；都判差 = 0.40×0.45 = 0.18 → $p_e$ = 0.33 + 0.18 = <strong>0.51</strong>。</blockquote>
+<blockquote>- Cohen's κ = ($p_o$ − $p_e$)/($1−p_e$) = (0.75 − 0.51)/(1 − 0.51) = 0.24/0.49 ≈ <strong>0.49</strong>。</blockquote>
+<blockquote>- 直觉：因为「好回答」占比高，就算瞎蒙也有 51% 的期望一致率。扣掉这部分后，真实的一致性只有中等水平——κ≈0.49 远没有 75% 听起来那么美。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：实际一致率 <strong>75%</strong>，但 κ ≈ <strong>0.49</strong>（中等一致）。教训：评估 AI 裁判绝不能只看表面一致率，必须用 κ 这类 chance-corrected 指标把「蒙对」的部分扣掉（闭环第 2 期把 base rate 扣除的贝叶斯直觉）。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 2 · 带噪裁判的贝叶斯反推：偏心会稀释证据</summary>
+<blockquote><strong>解题思路</strong>：两个回答 A、B，事先不分优劣：P(A 更好) = P(B 更好) = 0.5。AI 裁判判「A 更好」。</blockquote>
+<blockquote>- <strong>情形一（无偏差，纯随机噪声）</strong>：裁判判对的概率 = 0.8。</blockquote>
+<blockquote>  后验 P(A 更好 | 判 A 好) = (0.5×0.8)/(0.5×0.8 + 0.5×0.2) = 0.4/0.5 = <strong>0.8</strong>。干净的裁判，一次判定就把信心从 0.5 提到 0.8。</blockquote>
+<blockquote>- <strong>情形二（A 恰好更长，裁判有长度偏差）</strong>：裁判判对的能力还是 0.8，但因为偏爱长的 A，即使 B 更好也有 0.35 的概率错判成 A 好。</blockquote>
+<blockquote>  后验 = (0.5×0.8)/(0.5×0.8 + 0.5×0.35) = 0.4/(0.4+0.175) = 0.4/0.575 ≈ <strong>0.696</strong>。</blockquote>
+<blockquote>- 对比：同样的打分，有偏差时证据的含金量被稀释（0.8 → 0.696）——因为「判 A 好」这件事，有一部分其实是长度在说话，不是质量在说话。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：无偏差时后验 ≈ <strong>0.8</strong>；有长度偏差时后验 ≈ <strong>0.696</strong>。系统偏差会污染似然、稀释证据，让裁判的打分「没那么可信」（闭环第 2 期贝叶斯、第 8 期观测噪声）。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 3 · 位置偏差：为什么多次投票也救不了</summary>
+<blockquote><strong>解题思路</strong>：AI 裁判有个位置偏差——总是偏向<strong>排在前面</strong>的回答，偏向概率为 0.7。用它比较 A、B。</blockquote>
+<blockquote>- 第一轮 A 在前、B 在后：裁判判「A 更好」的概率 = 0.7 → 多半判 A 好。</blockquote>
+<blockquote>- 第二轮<strong>交换位置</strong>，B 在前、A 在后：裁判判「B 更好」的概率 = 0.7 → 多半判 B 好。</blockquote>
+<blockquote>- 同一对回答，换个位置结论就翻转 → 说明判定由<strong>位置</strong>而非质量决定。这就是配对交换测试（pairwise swap test）能揪出位置偏差的道理。</blockquote>
+<blockquote>- 关键追问：那 A 始终放前面、让裁判投 100 次票能纠正吗？不能。大数定律（第 6 期）告诉我们，投票比例会收敛到 <strong>0.7 而不是真实质量</strong>——投票只能压低随机方差（第 10 期 $SE=\sigma/\sqrt{n}$），<strong>消不掉系统偏差</strong>。偏差是漂移，不是抖动。</blockquote>
+<blockquote>- 正确做法：位置均衡（每种顺序都测一遍）、把两次判定不一致的样本丢弃或降权、对偏差做校准。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：交换位置后结论翻转（各 0.7 偏向在前者），暴露位置偏差；多数投票无法纠正——大样本只会<strong>更确信地收敛到错误的 0.7</strong>。系统偏差要靠位置均衡 / 校准 / 丢弃不一致样本来治，而不是靠堆票数（闭环第 6 期大数定律、第 10 期标准误、第 14 期漂移）。</blockquote>
+</details>
+<details class="qz">
+<summary>题目 4 · 自奖励正飞轮：收敛到哪，又怎么会塌</summary>
+<blockquote><strong>解题思路</strong>：设第 t 轮生成质量 $g_t$，裁判准确率 $a_t=0.5+0.5g_t$（模型越强评判越准）。每轮提升 Δg = η·a_t·(1−g_t)，取 η=0.2，初始 $g_0=0.1$。</blockquote>
+<blockquote>- t=0→1：$a_0$=0.55，Δg=0.2×0.55×0.9=0.099 → $g_1$≈0.199</blockquote>
+<blockquote>- t=1→2：$a_1$=0.5+0.5×0.199≈0.600，Δg=0.2×0.600×0.801≈0.096 → $g_2$≈0.295</blockquote>
+<blockquote>- t=2→3：$a_2$≈0.648，Δg=0.2×0.648×0.705≈0.091 → $g_3$≈0.386</blockquote>
+<blockquote>- 走势：0.10 → 0.20 → 0.30 → 0.39，稳稳上升但<strong>增速放缓</strong>。正飞轮（a 随 g 涨）推着走，边际递减（1−g 缩小）刹着车。</blockquote>
+<blockquote>- 不动点：Δg=0 要求 a=0（不可能）或 g=1 → 理想情况下 $g^*=1$ 平滑收敛。</blockquote>
+<blockquote>- <strong>翻车情形</strong>：若裁判有自我偏好偏差 b，递推里多出漂移项 δ·b，策略被推向「讨好裁判的套路」而非真实质量，停在虚假高点——这就是 reward hacking / 模式塌缩（闭环第 15、17、19 期）。对策：外部锚分离裁判、β 控步长、验证集一致性 κ 不再涨就停（第 20 期）。</blockquote>
+<blockquote></blockquote>
+<blockquote><strong>答案</strong>：无偏差时前几轮 g≈0.10→0.20→0.30→0.39，增速放缓、平滑收敛到 $g^*=1$；有系统偏差时漂移项把策略推向讨好裁判的虚假高点而塌陷。正飞轮能不能转下去，取决于裁判的噪声是<strong>零均值</strong>（可平均掉）还是<strong>有偏</strong>（会自我强化）。</blockquote>
+</details>
+<hr>
+<h2>四、明日预告</h2>
+<p><strong>第 19 期（概念序列第 39 项）：因果推断与混杂（相关 ≠ 因果，怎么才算「真的是它干的」）</strong></p>
+<p>这一期我们把「裁判」彻底交给模型，核心矛盾是<strong>带噪观测与自我强化</strong>。下一期换个更根本的问题：就算我们观测到 A 和 B 总一起出现，凭什么说 A 导致了 B？从「冰淇淋销量 ↔ 溺水人数」的混杂变量，到 do-演算与因果图——把第 11 期埋下的「相关 ≠ 因果」这颗种子，正式长成一棵能指导决策的树。我们会用概率语言讲清：为什么随机对照试验（RCT）是识别因果的黄金标准，以及观察数据里隐藏的偏差要靠什么才能剥掉。</p></div></body></html>

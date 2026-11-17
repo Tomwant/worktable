@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>财务知识 第14期 · 人工成本占比</title>
+<style>
+:root{
+  --ink:#2f6b5e;
+  --ink-deep:#24544a;
+  --ink-soft:#e7f0ed;
+  --gold:#c9a961;
+  --gold-soft:#f7f1e4;
+  --gold-text:#8a6f2e;
+  --line:#e3e8e5;
+  --bg:#f4f8f6;
+  --card:#ffffff;
+  --text:#24332f;
+  --muted:#6c7f78;
+  --r:16px;
+  --gap:18px;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  font-family:-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.75;
+  -webkit-text-size-adjust:100%;
+}
+.wrap{max-width:880px;margin:0 auto;padding:28px 18px 48px;}
+
+/* 头部 */
+.hero{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(135deg,var(--ink-deep) 0%,var(--ink) 62%,#3f8574 100%);
+  border-radius:var(--r);
+  padding:30px 30px 26px;
+  color:#fff;
+  box-shadow:0 10px 28px rgba(36,84,74,.18);
+}
+.hero::after{
+  content:"";
+  position:absolute;
+  right:-70px;top:-90px;
+  width:260px;height:260px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(201,169,97,.38),rgba(201,169,97,0) 70%);
+  pointer-events:none;
+}
+.issue{
+  display:inline-block;
+  background:rgba(255,255,255,.14);
+  border:1px solid rgba(255,255,255,.28);
+  color:#f6e9c9;
+  font-size:13px;
+  letter-spacing:.06em;
+  padding:4px 13px;
+  border-radius:999px;
+  margin-bottom:14px;
+}
+.hero h1{font-size:30px;line-height:1.3;margin:0 0 8px;font-weight:700;letter-spacing:.02em;}
+.hero .sub{font-size:16px;opacity:.92;margin:0 0 18px;font-weight:400;}
+.meta{display:flex;flex-wrap:wrap;gap:10px 24px;font-size:13px;opacity:.9;position:relative;z-index:1;}
+.meta span b{font-weight:600;color:#f6e9c9;}
+
+/* 卡片 */
+.card{
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  padding:24px 26px;
+  margin-top:var(--gap);
+  box-shadow:0 4px 16px rgba(47,107,94,.06);
+}
+.card h2{
+  font-size:20px;
+  margin:0 0 4px;
+  color:var(--ink-deep);
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.card h2::before{
+  content:"";
+  width:5px;height:20px;
+  border-radius:3px;
+  background:linear-gradient(180deg,var(--gold),#e0c78c);
+  flex:0 0 auto;
+}
+.lead{color:var(--muted);font-size:14px;margin:0 0 18px;}
+p{margin:12px 0;}
+strong{color:var(--ink-deep);}
+
+/* 场景 */
+.scene{
+  background:linear-gradient(180deg,#fbfdfc,#f6faf8);
+  border-left:3px solid var(--gold);
+  border-radius:10px;
+  padding:16px 18px;
+}
+.scene .who{font-weight:700;color:var(--ink-deep);}
+
+/* 公式卡 */
+.formulas{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:16px;}
+.f{
+  border:1px solid var(--line);
+  border-radius:12px;
+  padding:14px 16px;
+  background:#fdfefe;
+}
+.f .ft{font-size:14px;font-weight:700;color:var(--ink-deep);margin-bottom:6px;}
+.f .fx{font-size:14px;line-height:1.7;color:#334741;}
+.f .fd{font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.6;}
+.eq{
+  display:block;
+  background:var(--ink-soft);
+  color:var(--ink-deep);
+  border-radius:8px;
+  padding:7px 10px;
+  margin:6px 0;
+  font-weight:600;
+  font-size:13.5px;
+}
+
+/* 算例 */
+.assume{
+  background:var(--gold-soft);
+  border-radius:10px;
+  padding:14px 16px;
+  font-size:14px;
+  color:#6f5c2c;
+  margin-bottom:18px;
+}
+.assume b{color:var(--gold-text);}
+.step{border-top:1px solid var(--line);padding-top:14px;margin-top:16px;}
+.step:first-of-type{border-top:none;margin-top:0;padding-top:0;}
+.step h3{font-size:15.5px;margin:0 0 8px;color:var(--ink-deep);}
+.step .num{
+  display:inline-block;
+  width:24px;height:24px;
+  line-height:24px;
+  text-align:center;
+  border-radius:50%;
+  background:var(--ink);
+  color:#fff;
+  font-size:12.5px;
+  margin-right:8px;
+}
+.calc{
+  font-size:14.5px;
+  background:#fbfcfb;
+  border:1px solid var(--line);
+  border-radius:10px;
+  padding:10px 14px;
+  margin:8px 0;
+}
+.calc div{margin:4px 0;}
+.calc .res{color:var(--ink-deep);font-weight:700;}
+.bars{margin:14px 0 4px;}
+.bar-row{display:flex;align-items:center;gap:10px;margin:9px 0;}
+.bar-label{width:150px;flex:0 0 auto;font-size:13px;color:#445851;}
+.bar-track{flex:1 1 auto;height:14px;background:#eef3f0;border-radius:999px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:999px;background:linear-gradient(90deg,var(--ink),#69a996);}
+.bar-fill.warn{background:linear-gradient(90deg,var(--gold),#ddc389);}
+.concl{
+  background:var(--ink-soft);
+  border-radius:10px;
+  padding:14px 16px;
+  margin-top:16px;
+  font-size:14.5px;
+  color:var(--ink-deep);
+}
+.tie{
+  font-size:13.5px;
+  color:var(--muted);
+  border-top:1px dashed var(--line);
+  padding-top:12px;
+  margin-top:16px;
+}
+
+/* 红线 */
+.rules{counter-reset:rule;list-style:none;padding:0;margin:12px 0 0;}
+.rules li{
+  position:relative;
+  padding:12px 14px 12px 46px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  margin-bottom:10px;
+  font-size:14.5px;
+  background:#fdfefe;
+}
+.rules li::before{
+  counter-increment:rule;
+  content:counter(rule);
+  position:absolute;
+  left:13px;top:12px;
+  width:22px;height:22px;
+  line-height:22px;
+  text-align:center;
+  border-radius:6px;
+  background:var(--gold-soft);
+  color:var(--gold-text);
+  font-size:12.5px;
+  font-weight:700;
+}
+
+/* 自测题 */
+.quiz{
+  border:1px solid #e3e8e5;
+  border-radius:12px;
+  background:#fff;
+  margin-bottom:12px;
+  transition:border-color .2s ease,box-shadow .2s ease,transform .2s ease;
+}
+.quiz:hover{
+  border-color:#2f6b5e;
+  box-shadow:0 6px 18px rgba(47,107,94,.12);
+  transform:translateY(-1px);
+}
+.quiz summary{
+  display:flex;
+  align-items:flex-start;
+  gap:12px;
+  padding:14px 16px;
+  cursor:pointer;
+  user-select:none;
+  list-style:none;
+}
+.quiz summary::-webkit-details-marker{display:none;}
+.quiz summary::marker{content:"";}
+.q{flex:1 1 auto;font-size:15px;font-weight:600;line-height:1.6;}
+.peek{
+  flex:0 0 auto;
+  background:#f7f1e4;
+  color:#8a6f2e;
+  font-size:12.5px;
+  border-radius:999px;
+  padding:3px 11px 3px 9px;
+  white-space:nowrap;
+}
+.arw{display:inline-block;margin-left:5px;transition:transform .2s ease;}
+details[open] .peek{background:#e7f0ed;color:#2a5b50;}
+details[open] .peek .arw{transform:rotate(180deg);}
+.t-off{display:none;}
+details[open] .t-on{display:none;}
+details[open] .t-off{display:inline;}
+.ans{
+  border-top:1px dashed #e3e8e5;
+  padding:12px 16px 14px;
+  background:#fbfcfb;
+  font-size:14.5px;
+  line-height:1.8;
+  animation:fadeIn .25s ease;
+}
+@keyframes fadeIn{
+  from{opacity:0;transform:translateY(-4px);}
+  to{opacity:1;transform:translateY(0);}
+}
+.ans .line{display:block;margin:3px 0;}
+
+/* 页脚 */
+.foot{
+  margin-top:24px;
+  padding:18px 20px;
+  border-radius:var(--r);
+  background:#eaf1ee;
+  color:#527068;
+  font-size:13px;
+}
+.foot .next{font-weight:700;color:var(--ink-deep);}
+
+@media (max-width:600px){
+  .wrap{padding:16px 12px 36px;}
+  .hero{padding:22px 18px 20px;}
+  .hero h1{font-size:24px;}
+  .hero .sub{font-size:14.5px;}
+  .card{padding:18px 16px;}
+  .card h2{font-size:18px;}
+  .bar-label{width:104px;font-size:12px;}
+  .formulas{grid-template-columns:1fr;}
+  .peek{font-size:12px;}
+  .q{font-size:14px;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <span class="issue">财务知识 · 第 14 期</span>
+    <h1>人工成本占比：多一个人，多出的不只是工资</h1>
+    <p class="sub">一家店每赚 100 元，有多少发给了员工？这笔账怎么算才不漏项。</p>
+    <div class="meta">
+      <span>日期：<b>2026-11-17</b></span>
+      <span>关键词：<b>人工成本占比 · 全口径人工 · 社保公积金 · 单人综合成本 · 人效</b></span>
+    </div>
+  </header>
+
+  <main>
+
+    <section class="card">
+      <h2>先看一个真实场景</h2>
+      <p class="lead">两家面馆流水差不多，为什么一家赚钱一家不赚钱？</p>
+      <div class="scene">
+        <p><span class="who">王总</span>管着三家面馆。这个月他盯着报表犯嘀咕：A 店和 B 店流水只差四万，可 B 店的利润明显薄一截。他第一反应是"B 店食材浪费大"，想让店长查厨房。</p>
+        <p>但他的财务顾问把两张工资表拉出来，只问了一句：<strong>"B 店是不是比 A 店多养了一个人？而且你算人工的时候，把社保算进去了吗？"</strong></p>
+        <p>一查：B 店确实多配了一名服务员，而老板心里的"人工成本"只是每月发出的工资，从没把单位缴纳的社保公积金算进去。结果是——<strong>多一个人，不只是多一份工资，还带出一份社保，并且这笔更大的支出，被 B 店更小的流水放大成了更高的占比。</strong></p>
+        <p>对同时管多家店的经营者来说，人工成本占比是最容易被"感觉"代替"计算"的指标。这一期就把它彻底讲透。</p>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>定义与公式</h2>
+      <p class="lead">人工成本占比衡量的是门店为"人"付出的代价占收入的分量。难点不在除号，而在分子——绝大多数老板都算漏了。</p>
+      <div class="formulas">
+
+        <div class="f">
+          <div class="ft">1. 人工成本占比（基础口径）</div>
+          <span class="eq">人工成本占比 = 月人工成本 ÷ 月营业收入 × 100%</span>
+          <div class="fd">回答"每赚 100 元，有多少发给员工"。分母用不含税营业收入，取稳定期平均数。</div>
+        </div>
+
+        <div class="f">
+          <div class="ft">2. 人工成本的完整构成（关键）</div>
+          <span class="eq">人工成本 = 工资 + 奖金绩效 + 加班费 + 单位缴纳的社保公积金 + 员工福利（餐补、宿舍、工装等）+ 兼职 / 劳务派遣费用</span>
+          <div class="fd">单位缴纳的社保公积金常被漏掉，它通常是工资的 25%–40%，漏算会严重低估真实人工负担。</div>
+        </div>
+
+        <div class="f">
+          <div class="ft">3. 人工占毛利比（更严格的口径）</div>
+          <span class="eq">人工占毛利比 = 人工成本 ÷ 毛利 × 100%</span>
+          <div class="fd">毛利才是真正能拿来覆盖人工的钱。低毛利业态（如零售）看这个比例比看占营业额更有意义。</div>
+        </div>
+
+        <div class="f">
+          <div class="ft">4. 单人综合成本</div>
+          <span class="eq">单人综合成本 = 该岗位工资 + 单位社保公积金 + 分摊的奖金福利</span>
+          <div class="fd">"加一个人到底多花钱"要用综合成本，不是只加工资。这是排班和增编决策的底层数字。</div>
+        </div>
+
+        <div class="f">
+          <div class="ft">5. 与第 12 期人效的关系</div>
+          <span class="eq">人工成本占比 ≈ 单人综合成本 ÷ 人均营业额</span>
+          <div class="fd">人均营业额就是第 12 期的"人效"。占比高，要么是人均成本太高，要么是人效太低——这是定位问题的两个抓手。</div>
+        </div>
+
+        <div class="f">
+          <div class="ft">6. 人工成本容忍上限</div>
+          <span class="eq">人工成本容忍上限 = 目标占比红线 × 营业额</span>
+          <div class="fd">排班前先算出"这个月人工最多能花多少"，再倒推能排多少人、多少工时，预算才控得住。</div>
+        </div>
+
+      </div>
+      <div class="tie">往期呼应：本期承接第 12 期「人效与坪效」（人均营业额就是人效），并与第 13 期「租金占比」并列——人工和租金通常是一家店最大的两笔固定成本。忘了人效口径可回看第 12 期，本期可独立看懂。</div>
+    </section>
+
+    <section class="card">
+      <h2>可直接套用的算例</h2>
+      <p class="lead">还是王总的 A、B 两店，我们一步步算到能拍板的结论。</p>
+
+      <div class="assume">
+        <b>已知条件：</b>为便于演示，单位社保公积金统一按全职工资的 25% 估算（各地比例不同，实操请代入本地费率）；营业额为不含税口径；数字取整便于跟算。<br>
+        <b>A 店：</b>月营业额 300,000 元。<b>B 店：</b>月营业额 260,000 元，比 A 店多配 1 名服务员。
+      </div>
+
+      <div class="step">
+        <h3><span class="num">1</span>把两家店的人工成本明细列全</h3>
+        <div class="calc">
+          <div><b>A 店：</b></div>
+          <div>店长 9,000 + 厨师 2 名 16,000 + 服务员 4 名 20,000 + 兼职 5,000 = 工资小计 50,000</div>
+          <div>单位社保公积金 = 全职工资（9,000 + 16,000 + 20,000 = 45,000）× 25% = <span class="res">11,250</span></div>
+          <div>奖金 3,000 + 员工餐福利 2,750 = 5,750</div>
+          <div>人工成本合计 = 50,000 + 11,250 + 5,750 = <span class="res">67,000 元</span></div>
+        </div>
+        <div class="calc">
+          <div><b>B 店：</b></div>
+          <div>店长 9,000 + 厨师 2 名 16,000 + 服务员 5 名 25,000 + 兼职 6,000 = 工资小计 56,000</div>
+          <div>单位社保公积金 = 全职工资（9,000 + 16,000 + 25,000 = 50,000）× 25% = <span class="res">12,500</span></div>
+          <div>奖金 2,000 + 员工餐福利 2,500 = 4,500</div>
+          <div>人工成本合计 = 56,000 + 12,500 + 4,500 = <span class="res">73,000 元</span></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h3><span class="num">2</span>算人工成本占比——直觉再次翻车</h3>
+        <div class="calc">
+          <div>人工成本占比 = 人工成本 ÷ 月营业收入 × 100%</div>
+          <div>A 店 = 67,000 ÷ 300,000 × 100% ≈ <span class="res">22.33%</span></div>
+          <div>B 店 = 73,000 ÷ 260,000 × 100% ≈ <span class="res">28.08%</span></div>
+        </div>
+        <p>B 店人工只比 A 店多 6,000 元（约 9%），占比却从 22.33% 跳到 28.08%，硬生生高出近 6 个百分点。原因有两层：<strong>分子多了，分母还小了。</strong></p>
+        <div class="bars">
+          <div class="bar-row"><div class="bar-label">A 店 · 22.33%</div><div class="bar-track"><div class="bar-fill" style="width:74.4%"></div></div></div>
+          <div class="bar-row"><div class="bar-label">B 店 · 28.08%</div><div class="bar-track"><div class="bar-fill warn" style="width:93.6%"></div></div></div>
+          <div class="bar-row"><div class="bar-label">餐饮警戒线 30%</div><div class="bar-track"><div class="bar-fill warn" style="width:100%"></div></div></div>
+        </div>
+      </div>
+
+      <div class="step">
+        <h3><span class="num">3</span>归因：多的那 6,000 元是怎么来的</h3>
+        <p>王总以为"B 店多发的就是一份服务员工资"。但按全口径拆开看：</p>
+        <div class="calc">
+          <div>多 1 名服务员，工资 +5,000 元</div>
+          <div>连带单位社保公积金 +5,000 × 25% = <span class="res">+1,250 元</span></div>
+          <div>该岗位单人综合成本 = 5,000 + 1,250 = <span class="res">6,250 元 / 月</span></div>
+          <div>两店人工差额 ≈ 6,000 元，正好就是这多出来的一个人（含社保）。</div>
+        </div>
+        <p>更关键的是：这笔 6,250 元要由 B 店更少的营业额（26 万 vs 30 万）来摊，<strong>分母小，占比就被双重放大</strong>。这就是为什么 B 店利润薄——不是食材浪费，是人配多了。</p>
+      </div>
+
+      <div class="step">
+        <h3><span class="num">4</span>算到能拍板：减一个人能省多少、占比降到多少</h3>
+        <div class="calc">
+          <div>若 B 店减掉这 1 名服务员：人工成本 = 73,000 − 6,250 = <span class="res">66,750 元</span></div>
+          <div>新占比 = 66,750 ÷ 260,000 × 100% ≈ <span class="res">25.67%</span>（回到警戒区以内）</div>
+          <div>若要压到 A 店 22.33% 的水平：人工上限 = 260,000 × 22.33% ≈ <span class="res">58,058 元</span></div>
+          <div>即需在现有基础上再省 73,000 − 58,058 ≈ <span class="res">14,942 元 / 月</span>，约等于再优化 2 个人的综合成本。</div>
+        </div>
+      </div>
+
+      <div class="concl">
+        <strong>结论：</strong>B 店的问题不在厨房，在排班。仅减掉 1 名冗余服务员，每月就能省约 6,250 元，人工占比从 28.08% 降到 25.67%。<br>
+        <strong>但别只想着裁人：</strong>占比高也可能是人效低——B 店流水比 A 店低 13%，若不先弄清是客流不足还是人浮于事，一味减员可能把服务拖垮、流水更低。<strong>正确顺序是：先看人效，再看占比，最后才决定增编还是减编。</strong>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>给经营者的判断标准与红线</h2>
+      <p class="lead">以下区间是经验参考，最终要用自己门店的毛利率和本地社保费率来校准。</p>
+      <ol class="rules">
+        <li><strong>看区间：</strong>餐饮（含社保全口径）人工成本占比 20%–25% 算健康，25%–30% 是警戒，超过 30% 需立即干预；零售/便利店毛利率低，宜控制在 8%–15%；服务型业态（美容、早教）人工占比天然偏高，可到 35%–45%，但必须靠高毛利支撑。<strong>毛利率越低，能承受的人工占比越低。</strong></li>
+        <li><strong>一定用全口径：</strong>分子必须含单位缴纳的社保公积金、奖金、加班费、福利、兼职劳务，别只算实发工资。社保公积金通常占工资 25%–40%，只看工资会让你把 28% 的真实占比误判成 20% 的"安全值"。</li>
+        <li><strong>多店用同口径占比排名，别比绝对金额：</strong>营业额低的店，同样的人数占比会被放大。每月把各店人工占比拉通排序，超过 30% 或环比上升 2 个百分点以上的店列入重点复盘——这往往比看利润更早暴露问题。</li>
+        <li><strong>占比要和人效一起看：</strong>占比高但人效也高（高客单、重服务）未必是坏事；占比低但人效更低，可能是人手不足、服务掉队。判断顺序是"先看人效（第 12 期），再看占比"，别单凭一个比率下结论。</li>
+        <li><strong>排班前先设人工上限：</strong>用"目标占比红线 × 预估营业额"算出本月人工预算上限，再倒推可排的工时和人数；淡旺季用滚动 12 个月或"人工占毛利比"来平抑波动，避免淡季单月误判而误伤团队。</li>
+      </ol>
+    </section>
+
+    <section class="card">
+      <h2>今日自测题</h2>
+      <p class="lead">先自己算一遍，再点答案对一下。</p>
+
+      <details class="quiz">
+        <summary>
+          <span class="q">Q1：某奶茶店月营业额 200,000 元，全职工资合计 40,000 元，单位社保公积金按工资的 25% 计，兼职费用 8,000 元，奖金福利 4,000 元。求该店人工成本占营业额的比例。</span>
+          <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+        </summary>
+        <div class="ans">A1：<span class="line">单位社保公积金 = 40,000 × 25% = 10,000 元。</span><span class="line">人工成本合计 = 40,000（工资）+ 10,000（社保）+ 8,000（兼职）+ 4,000（奖金福利）= 62,000 元。</span><span class="line">人工成本占比 = 62,000 ÷ 200,000 × 100% = 31%。</span><span class="line">结论：31% 已超过餐饮 30% 的干预线，人工负担偏重，需要排查人效或排班。</span></div>
+      </details>
+
+      <details class="quiz">
+        <summary>
+          <span class="q">Q2：承上题，若该店要把人工成本占比降到 28%，在其他条件不变的情况下，每月人工成本最多是多少？需要比现在减少多少元？</span>
+          <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+        </summary>
+        <div class="ans">A2：<span class="line">目标人工成本上限 = 目标占比 × 营业额 = 28% × 200,000 = 56,000 元。</span><span class="line">当前人工成本为 62,000 元（见 Q1）。</span><span class="line">需减少 = 62,000 − 56,000 = 6,000 元 / 月。</span><span class="line">结论：每月需压缩人工 6,000 元才能把占比压到 28%；因为没有余地去动工资标准，通常要从优化工时或减少冗余人手入手。</span></div>
+      </details>
+
+      <details class="quiz">
+        <summary>
+          <span class="q">Q3（判断题）："只要把每月实发工资总额控制好，人工成本占比就不会超标。"这个说法对吗？为什么？</span>
+          <span class="peek"><span class="t-on">看答案</span><span class="t-off">收起</span><span class="arw">▾</span></span>
+        </summary>
+        <div class="ans">A3：错。<span class="line">第一，人工成本是全口径，除实发工资外还包括单位缴纳的社保公积金（通常为工资的 25%–40%）、奖金、加班费、福利和兼职劳务，只盯工资会系统性低估真实负担。</span><span class="line">第二，占比 = 人工成本 ÷ 营业额，是相对指标，还受分母影响：即便工资不变，营业额下滑也会推高占比。</span><span class="line">结论：控制占比必须同时管住"全口径人工成本"和"营业额"两端，光控制实发工资远远不够。</span></div>
+      </details>
+
+    </section>
+
+  </main>
+
+  <footer class="foot">
+    <p>本期为单文件自包含讲义，公式与数字均可独立复算；自测题答案以浏览器原生折叠方式呈现，无需联网、无需执行脚本。</p>
+    <p class="next">下期预告：食材成本率——人工、租金之后，餐饮第三大成本就是食材，讲完"人"和"场地"，下一个就讲"料"。</p>
+  </footer>
+
+</div>
+</body>
+</html>
